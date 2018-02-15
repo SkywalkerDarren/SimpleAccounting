@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Simple Accounting</string>
+    <string name="action_settings">Settings</string>
+    <string name="type_image">表示类型的图片</string>
+    <string name="bills_date">Date</string>
+    <string name="income">收入：</string>
+    <string name="expense">支出：</string>
+</resources>
