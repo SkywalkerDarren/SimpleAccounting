@@ -13,7 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.oushangfeng.pinnedsectionitemdecoration.PinnedHeaderItemDecoration;
+import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import org.joda.time.DateTime;
 
@@ -40,10 +40,11 @@ public class BillListFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mBillListRecyclerView.setLayoutManager(layoutManager);
         mBillListRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
-        mBillListRecyclerView.addItemDecoration(new PinnedHeaderItemDecoration.Builder(BillEntity.HEADER)
-                .enableDivider(true)
-                .disableHeaderClick(true)
-                .create());
+        mBillListRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mBillAdapter));
+//        mBillListRecyclerView.addItemDecoration(new PinnedHeaderItemDecoration.Builder(BillEntity.HEADER)
+//                .enableDivider(true)
+//                .disableHeaderClick(true)
+//                .create());
         updateUI();
         return view;
     }
@@ -52,12 +53,12 @@ public class BillListFragment extends Fragment {
         BillLab lab = BillLab.getInstance(getActivity());
         DateTime now = DateTime.now();
         List<Bill> bills = lab.getsBills(now.getYear(), now.monthOfYear().get());
-        List<BillEntity.BillInfo> infos = new BillEntity().getBillsWithDayDivider(bills, lab);
+//        List<BillEntity.BillInfo> infos = new BillEntity().getBillsWithDayDivider(bills, lab);
         if (mBillAdapter == null) {
-            mBillAdapter = new BillAdapter(infos);
+            mBillAdapter = new BillAdapter(bills);
             mBillListRecyclerView.setAdapter(mBillAdapter);
         } else {
-            mBillAdapter.setNewData(infos);
+            mBillAdapter.setNewData(bills);
             mBillAdapter.notifyDataSetChanged();
         }
     }
