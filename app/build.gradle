@@ -29,8 +29,7 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:26.0.0-beta1'
     implementation 'com.android.support:design:26.0.0-beta1'
     implementation 'joda-time:joda-time:2.3'
-    compile 'com.timehop.stickyheadersrecyclerview:library:0.4.3'
+//    compile 'com.timehop.stickyheadersrecyclerview:library:0.4.3'
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
-//    compile 'com.oushangfeng:PinnedSectionItemDecoration:1.2.4'
-
+    compile 'com.oushangfeng:PinnedSectionItemDecoration:1.2.4'
 }

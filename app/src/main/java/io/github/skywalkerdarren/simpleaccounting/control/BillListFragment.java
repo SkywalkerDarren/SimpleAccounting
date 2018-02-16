@@ -13,7 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
+import com.oushangfeng.pinnedsectionitemdecoration.PinnedHeaderItemDecoration;
 
 import org.joda.time.DateTime;
 
@@ -22,6 +22,8 @@ import java.util.List;
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
+
+import static io.github.skywalkerdarren.simpleaccounting.control.BillAdapter.HEADER;
 
 /**
  * Created by darren on 2018/1/31.
@@ -40,7 +42,7 @@ public class BillListFragment extends Fragment {
         mBillListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         updateUI();
         mBillListRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
-        mBillListRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mBillAdapter));
+        mBillListRecyclerView.addItemDecoration(new PinnedHeaderItemDecoration.Builder(HEADER).create());
         return view;
     }
 
@@ -48,11 +50,13 @@ public class BillListFragment extends Fragment {
         BillLab lab = BillLab.getInstance(getActivity());
         DateTime now = DateTime.now();
         List<Bill> bills = lab.getsBills(now.getYear(), now.monthOfYear().get());
+        List<BillAdapter.BillInfo> billInfoList = BillAdapter.BillInfo.getBillInfoList(bills, lab);
+
         if (mBillAdapter == null) {
-            mBillAdapter = new BillAdapter(bills);
+            mBillAdapter = new BillAdapter(billInfoList);
             mBillListRecyclerView.setAdapter(mBillAdapter);
         } else {
-            mBillAdapter.setBills(bills);
+            mBillAdapter.setBills(billInfoList);
             mBillAdapter.notifyDataSetChanged();
         }
     }
