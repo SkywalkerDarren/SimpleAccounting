@@ -37,15 +37,10 @@ public class BillListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_bill_list, container, false);
 
         mBillListRecyclerView = view.findViewById(R.id.bill_recycle_view);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        mBillListRecyclerView.setLayoutManager(layoutManager);
+        mBillListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        updateUI();
         mBillListRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         mBillListRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mBillAdapter));
-//        mBillListRecyclerView.addItemDecoration(new PinnedHeaderItemDecoration.Builder(BillEntity.HEADER)
-//                .enableDivider(true)
-//                .disableHeaderClick(true)
-//                .create());
-        updateUI();
         return view;
     }
 
@@ -53,12 +48,11 @@ public class BillListFragment extends Fragment {
         BillLab lab = BillLab.getInstance(getActivity());
         DateTime now = DateTime.now();
         List<Bill> bills = lab.getsBills(now.getYear(), now.monthOfYear().get());
-//        List<BillEntity.BillInfo> infos = new BillEntity().getBillsWithDayDivider(bills, lab);
         if (mBillAdapter == null) {
             mBillAdapter = new BillAdapter(bills);
             mBillListRecyclerView.setAdapter(mBillAdapter);
         } else {
-            mBillAdapter.setNewData(bills);
+            mBillAdapter.setBills(bills);
             mBillAdapter.notifyDataSetChanged();
         }
     }

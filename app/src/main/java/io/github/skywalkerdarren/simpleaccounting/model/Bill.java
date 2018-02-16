@@ -1,16 +1,9 @@
 package io.github.skywalkerdarren.simpleaccounting.model;
 
-import android.text.TextUtils;
-
-import com.chad.library.adapter.base.entity.MultiItemEntity;
-
 import org.joda.time.DateTime;
 
 import java.math.BigDecimal;
 import java.util.UUID;
-
-import static io.github.skywalkerdarren.simpleaccounting.control.BillEntity.WITHOUT_REMARK;
-import static io.github.skywalkerdarren.simpleaccounting.control.BillEntity.WITH_REMARK;
 
 /**
  * Created by darren on 2018/1/29.
@@ -18,7 +11,7 @@ import static io.github.skywalkerdarren.simpleaccounting.control.BillEntity.WITH
  * 记录账单详细信息
  */
 
-public class Bill implements MultiItemEntity {
+public class Bill {
     /**
      * 账单ID号
      */
@@ -120,8 +113,4 @@ public class Bill implements MultiItemEntity {
         mRemark = remark;
     }
 
-    @Override
-    public int getItemType() {
-        return TextUtils.isEmpty(getRemark()) ? WITHOUT_REMARK : WITH_REMARK;
-    }
 }

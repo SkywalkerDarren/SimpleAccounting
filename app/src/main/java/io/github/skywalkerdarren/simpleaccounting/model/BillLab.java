@@ -54,8 +54,8 @@ public class BillLab {
         mContext = context.getApplicationContext();
         mDatabase = new BillBaseHelper(context).getWritableDatabase();
 
-        // 临时生成10个账单
-        for (int i = 0; i < 10; i++) {
+        // 临时生成1个账单
+        for (int i = 0; i < 1; i++) {
             Bill bill = new Bill();
             if (new Random().nextInt(2) > 0) {
                 bill.setRemark("这是备注：#" + i);
@@ -207,10 +207,18 @@ public class BillLab {
         try {
             cursor = getBillsInfoCursor(start, end, isExpense);
             cursor.moveToFirst();
-            statics.put(EXPENSE, new BigDecimal(cursor.getString(0)));
+            String num = cursor.getString(0);
+            if (num == null) {
+                num = "0";
+            }
+            statics.put(EXPENSE, new BigDecimal(num));
             cursor = getBillsInfoCursor(start, end, isIncome);
             cursor.moveToFirst();
-            statics.put(INCOME, new BigDecimal(cursor.getString(0)));
+            num = cursor.getString(0);
+            if (num == null) {
+                num = "0";
+            }
+            statics.put(INCOME, new BigDecimal(num));
             statics.put(SUM, statics.get(INCOME).subtract(statics.get(EXPENSE)));
         } finally {
             if (cursor != null) {
