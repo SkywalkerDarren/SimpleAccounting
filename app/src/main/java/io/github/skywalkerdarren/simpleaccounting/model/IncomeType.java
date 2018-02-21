@@ -1,14 +1,10 @@
 package io.github.skywalkerdarren.simpleaccounting.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 /**
  * Created by darren on 2018/2/12.
  */
 
-public class IncomeType implements Type {
+public class IncomeType extends Type {
     /**
      * 收入类型
      */
@@ -19,20 +15,16 @@ public class IncomeType implements Type {
         return sIncomeType;
     }
 
-    private static final List<String> TYPE = new ArrayList<>();
+    public static final String[] VALUES = {"兼职", "奖金", "工资", "理财投资", "红包", "其他",};
 
-    private static final String[] VALUES = {"其他", "工资", "奖金", "红包", "转账", "投资"};
 
-    @Override
-    public List<String> getType() {
-        if (TYPE.size() < VALUES.length) {
-            Collections.addAll(TYPE, VALUES);
-        }
-        return TYPE;
+    public static String[] getValues() {
+        return VALUES;
     }
 
     @Override
     public boolean getExpense() {
         return false;
     }
+
 }

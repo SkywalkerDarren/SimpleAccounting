@@ -17,6 +17,7 @@ import java.util.UUID;
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
+import io.github.skywalkerdarren.simpleaccounting.model.Type;
 
 import static io.github.skywalkerdarren.simpleaccounting.model.BillLab.EXPENSE;
 import static io.github.skywalkerdarren.simpleaccounting.model.BillLab.INCOME;
@@ -50,9 +51,10 @@ public class BillAdapter extends BaseMultiItemQuickAdapter<BillAdapter.BillInfo,
             case WITH_REMARK:
                 helper.setText(R.id.remark_text_view, item.getRemark());
             case WITHOUT_REMARK:
+                helper.setImageResource(R.id.type_image_view, Type.getType().get(item.getBillType()));
                 helper.setText(R.id.title_text_view, item.getTitle());
-                helper.setText(R.id.balance_text_view, item.getBalance().toString());
-                helper.setTextColor(R.id.balance_text_view, item.isExpense() ? Color.GREEN : Color.RED);
+                helper.setText(R.id.balance_text_view, item.getBalance());
+                helper.setTextColor(R.id.balance_text_view, item.isExpense() ? Color.RED : Color.GREEN);
                 break;
             case HEADER:
                 helper.setText(R.id.bills_date_text_view, item.getDateTime().toString("yyyy-MM-dd"));

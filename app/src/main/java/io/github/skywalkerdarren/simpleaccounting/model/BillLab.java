@@ -54,34 +54,46 @@ public class BillLab {
         mContext = context.getApplicationContext();
         mDatabase = new BillBaseHelper(context).getWritableDatabase();
 
-        // 临时生成1个账单
-        for (int i = 0; i < 1; i++) {
-            Bill bill = new Bill();
-            if (new Random().nextInt(2) > 0) {
-                bill.setRemark("这是备注：#" + i);
-            } else {
-                bill.setRemark("");
-            }
-            bill.setBalance(new BigDecimal(new Random().nextInt(10000)));
-            bill.setDate(DateTime.now());
-
-            // 1/5的几率为收入类型
-            if (new Random().nextInt(5) < 1) {
-                int position = new Random().nextInt(IncomeType.getInstance().getType().size());
-                String type = IncomeType.getInstance().getType().get(position);
-                bill.setExpense(IncomeType.getInstance());
-                bill.setType(type);
-                bill.setName("这是" + type + "：#" + i);
-            } else {
-                int position = new Random().nextInt(ExpenseType.getInstance().getType().size());
-                String type = ExpenseType.getInstance().getType().get(position);
-                bill.setExpense(ExpenseType.getInstance());
-
-                bill.setType(type);
-                bill.setName("这是" + type + "：#" + i);
-            }
+        // 临时生成0个账单
+        for (int i = 0; i < 0; i++) {
+            Bill bill = createRandomBill(i);
             addBill(bill);
         }
+    }
+
+    /**
+     * 随机创建一个账单
+     *
+     * @param i 编号
+     * @return 账单
+     */
+    @NonNull
+    public static Bill createRandomBill(int i) {
+        Bill bill = new Bill();
+        if (new Random().nextInt(2) > 0) {
+            bill.setRemark("这是备注：#" + i);
+        } else {
+            bill.setRemark("");
+        }
+        bill.setBalance(new BigDecimal(new Random().nextDouble() * 1000).setScale(2, BigDecimal.ROUND_HALF_UP));
+        bill.setDate(DateTime.now());
+
+        // 1/5的几率为收入类型
+        if (new Random().nextInt(5) < 1) {
+            int position = new Random().nextInt(IncomeType.getValues().length);
+            String type = IncomeType.getValues()[position];
+            bill.setExpense(IncomeType.getInstance());
+            bill.setType(type);
+            bill.setName("这是" + type + "：#" + i);
+        } else {
+            int position = new Random().nextInt(ExpenseType.getValues().length);
+            String type = ExpenseType.getValues()[position];
+            bill.setExpense(ExpenseType.getInstance());
+
+            bill.setType(type);
+            bill.setName("这是" + type + "：#" + i);
+        }
+        return bill;
     }
 
     /**
