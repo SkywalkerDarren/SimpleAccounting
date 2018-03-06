@@ -102,6 +102,7 @@ public class BillAdapter extends BaseMultiItemQuickAdapter<BillAdapter.BillInfo,
 
         public static List<BillInfo> getBillInfoList(List<Bill> bills, BillLab billLab) {
             List<BillInfo> billInfoList = new ArrayList<>();
+            // 上一个账单的年月日
             DateTime date = null;
             for (int i = 0; i < bills.size(); i++) {
                 Bill bill = bills.get(i);
@@ -109,11 +110,13 @@ public class BillAdapter extends BaseMultiItemQuickAdapter<BillAdapter.BillInfo,
                 int y = dateTime.getYear();
                 int m = dateTime.getMonthOfYear();
                 int d = dateTime.getDayOfMonth();
+                // 当前账单的年月日
                 DateTime currentDate = new DateTime(y, m, d, 0, 0);
+                // 如果当前帐单与上一张单年月日不同，则添加账单
                 if (date == null || !date.equals(currentDate)) {
                     date = currentDate;
-                    BigDecimal income = billLab.getDayStatics(y, m, d).get(INCOME);
-                    BigDecimal expense = billLab.getDayStatics(y, m, d).get(EXPENSE);
+                    BigDecimal income = billLab.getStatics(date, date.plusDays(1)).get(INCOME);
+                    BigDecimal expense = billLab.getStatics(date, date.plusDays(1)).get(EXPENSE);
                     billInfoList.add(new BillInfo(new DateHeaderDivider(date, income, expense)));
                 }
                 billInfoList.add(new BillInfo(bill));

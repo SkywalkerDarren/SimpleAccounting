@@ -29,7 +29,7 @@ public class BillActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_statics:
+                case R.id.navigation_account:
                     Toast.makeText(BillActivity.this, "static", Toast.LENGTH_SHORT).show();
                     mAddBillButton.setVisibility(View.INVISIBLE);
                     sViewPager.setCurrentItem(0);
@@ -115,7 +115,7 @@ public class BillActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
-                        navigation.setSelectedItemId(R.id.navigation_statics);
+                        navigation.setSelectedItemId(R.id.navigation_account);
                         mAddBillButton.setVisibility(View.INVISIBLE);
                         break;
                     case 1:

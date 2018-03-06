@@ -1,9 +1,12 @@
 package io.github.skywalkerdarren.simpleaccounting.control;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,28 +17,40 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.oushangfeng.pinnedsectionitemdecoration.PinnedHeaderItemDecoration;
 
 import org.joda.time.DateTime;
 
 import java.util.List;
+import java.util.UUID;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
 
-import static com.chad.library.adapter.base.BaseQuickAdapter.ALPHAIN;
 import static io.github.skywalkerdarren.simpleaccounting.control.BillAdapter.HEADER;
+import static io.github.skywalkerdarren.simpleaccounting.model.BillLab.EXPENSE;
+import static io.github.skywalkerdarren.simpleaccounting.model.BillLab.INCOME;
 
 /**
  * Created by darren on 2018/1/31.
  */
 
 public class BillListFragment extends Fragment implements View.OnClickListener {
+    private static final int REQUEST_DATE_TIME = 0;
     private RecyclerView mBillListRecyclerView;
     private BillAdapter mBillAdapter;
     private TextView mAddBillTextView;
-    BillLab mBillLab;
+    private BillLab mBillLab;
+    private DateTime mDate;
+
+    private TextView mIncomeTextView;
+    private TextView mExpenseTextView;
+    private TextView mBudgeTextView;
+    private TextView mMonthIncomeTextView;
+    private TextView mMonthExpenseTextView;
+    private TextView mSetBudgeTextView;
 
     @Nullable
     @Override
@@ -43,20 +58,49 @@ public class BillListFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_bill_list, container, false);
         mAddBillTextView = view.findViewById(R.id.add_bill_text_view);
         mBillListRecyclerView = view.findViewById(R.id.bill_recycle_view);
+        mIncomeTextView = view.findViewById(R.id.money_income_text_view);
+        mExpenseTextView = view.findViewById(R.id.money_expense_text_view);
+        mBudgeTextView = view.findViewById(R.id.money_budge_text_view);
+        mMonthIncomeTextView = view.findViewById(R.id.month_income_text_view);
+        mMonthExpenseTextView = view.findViewById(R.id.month_expense_text_view);
+        mSetBudgeTextView = view.findViewById(R.id.set_budge_text_view);
+        mDate = DateTime.now();
+
+        mMonthIncomeTextView.setOnClickListener(view1 -> {
+            MonthPickerDialog monthPickerDialog = MonthPickerDialog.newInstance(mDate);
+            monthPickerDialog.setTargetFragment(BillListFragment.this, REQUEST_DATE_TIME);
+            monthPickerDialog.show(getFragmentManager(), "month picker");
+        });
+
 
         mAddBillTextView.setOnClickListener(this);
 
         mBillListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         updateUI();
-        mBillListRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         mBillListRecyclerView.addItemDecoration(new PinnedHeaderItemDecoration.Builder(HEADER).create());
         return view;
     }
 
+    /**
+     * UI刷新
+     * 放置经常需要刷新的视图
+     */
     public void updateUI() {
-        DateTime now = DateTime.now();
-        List<Bill> bills = mBillLab.getsBills(now.getYear(), now.monthOfYear().get());
+        List<Bill> bills = mBillLab.getsBills(mDate.getYear(), mDate.monthOfYear().get());
         List<BillAdapter.BillInfo> billInfoList = BillAdapter.BillInfo.getBillInfoList(bills, mBillLab);
+
+        DateTime month = new DateTime(mDate.getYear(), mDate.getMonthOfYear(), 1, 0, 0);
+        mIncomeTextView.setText(mBillLab.getStatics(month, month.plusMonths(1)).get(INCOME).toString());
+        mExpenseTextView.setText(mBillLab.getStatics(month, month.plusMonths(1)).get(EXPENSE).toString());
+        // TODO 设置预算
+        mBudgeTextView.setText("0");
+
+        mMonthIncomeTextView.setText(mDate.getMonthOfYear() + "月收入");
+        mMonthExpenseTextView.setText(mDate.getMonthOfYear() + "月支出");
+        mSetBudgeTextView.setText("设置预算");
+
+        // 设定空布局
         if (billInfoList.size() < 1) {
             mAddBillTextView.setVisibility(View.VISIBLE);
             mBillListRecyclerView.setVisibility(View.INVISIBLE);
@@ -65,14 +109,32 @@ public class BillListFragment extends Fragment implements View.OnClickListener {
             mAddBillTextView.setVisibility(View.GONE);
             mBillListRecyclerView.setVisibility(View.VISIBLE);
         }
+        // 刷新列表
         if (mBillAdapter == null) {
             mBillAdapter = new BillAdapter(billInfoList);
-            mBillAdapter.openLoadAnimation(ALPHAIN);
+            mBillAdapter.openLoadAnimation(view -> new Animator[]{
+                    ObjectAnimator.ofFloat(view, "alpha", 0f, 1f),
+            });
+            mBillAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                    if (adapter.getItemViewType(position) != HEADER) {
+                        BillAdapter.BillInfo billInfo = (BillAdapter.BillInfo) adapter.getData().get(position);
+                        UUID billId = billInfo.getUUID();
+                        Intent intent = BillPagerDetailActivity
+                                .newIntent(getActivity(), mBillLab.getBill(billId));
+                        startActivity(intent);
+                    }
+                }
+            });
+            mBillAdapter.isFirstOnly(false);
             mBillListRecyclerView.setAdapter(mBillAdapter);
         } else {
             mBillAdapter.setBills(billInfoList);
             mBillAdapter.notifyDataSetChanged();
         }
+
+
     }
 
     @Override
@@ -110,8 +172,13 @@ public class BillListFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    public static Fragment newInstance() {
-        return new BillListFragment();
+    public static BillListFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        BillListFragment fragment = new BillListFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -124,6 +191,18 @@ public class BillListFragment extends Fragment implements View.OnClickListener {
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (Activity.RESULT_OK != resultCode) {
+            return;
+        }
+        if (requestCode == REQUEST_DATE_TIME) {
+            DateTime dateTime = (DateTime) data.getSerializableExtra(MonthPickerDialog.EXTRA_DATE);
+            mDate = dateTime;
+            updateUI();
         }
     }
 }

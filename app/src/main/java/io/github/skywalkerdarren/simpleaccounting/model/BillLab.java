@@ -204,17 +204,14 @@ public class BillLab {
     /**
      * 日结算统计
      *
-     * @param year  年
-     * @param month 月
-     * @param day   日
+     * @param start 起始时间
+     * @param end 结束时间
      * @return 统计表
      */
-    public Map<String, BigDecimal> getDayStatics(int year, int month, int day) {
+    public Map<String, BigDecimal> getStatics(DateTime start, DateTime end) {
         final String isExpense = "1";
         final String isIncome = "0";
         Map<String, BigDecimal> statics = new HashMap<>(7);
-        DateTime start = new DateTime(year, month, day, 0, 0);
-        DateTime end = start.plusDays(1);
         BillCursorWrapper cursor = null;
         try {
             cursor = getBillsInfoCursor(start, end, isExpense);

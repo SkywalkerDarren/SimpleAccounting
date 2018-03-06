@@ -2,6 +2,7 @@ package io.github.skywalkerdarren.simpleaccounting.model;
 
 import org.joda.time.DateTime;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -11,7 +12,7 @@ import java.util.UUID;
  * 记录账单详细信息
  */
 
-public class Bill {
+public class Bill implements Serializable {
     /**
      * 账单ID号
      */
