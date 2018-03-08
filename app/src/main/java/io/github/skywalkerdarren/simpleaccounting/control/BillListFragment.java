@@ -5,8 +5,11 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.oushangfeng.pinnedsectionitemdecoration.PinnedHeaderItemDecoration;
 
 import org.joda.time.DateTime;
@@ -115,19 +117,16 @@ public class BillListFragment extends Fragment implements View.OnClickListener {
             mBillAdapter.openLoadAnimation(view -> new Animator[]{
                     ObjectAnimator.ofFloat(view, "alpha", 0f, 1f),
             });
-            mBillAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                    if (adapter.getItemViewType(position) != HEADER) {
-                        BillAdapter.BillInfo billInfo = (BillAdapter.BillInfo) adapter.getData().get(position);
-                        UUID billId = billInfo.getUUID();
-                        Intent intent = BillPagerDetailActivity
-                                .newIntent(getActivity(), mBillLab.getBill(billId));
-                        startActivity(intent);
-                    }
+            mBillAdapter.setOnItemClickListener((adapter, view, position) -> {
+                if (adapter.getItemViewType(position) != HEADER) {
+                    BillAdapter.BillInfo billInfo = (BillAdapter.BillInfo) adapter.getData().get(position);
+                    UUID billId = billInfo.getUUID();
+                    Intent intent = BillPagerDetailActivity
+                            .newIntent(getActivity(), mBillLab.getBill(billId));
+                    ActivityOptionsCompat options = getElementAnimator(view);
+                    startActivity(intent, options.toBundle());
                 }
             });
-            mBillAdapter.isFirstOnly(false);
             mBillListRecyclerView.setAdapter(mBillAdapter);
         } else {
             mBillAdapter.setBills(billInfoList);
@@ -135,6 +134,23 @@ public class BillListFragment extends Fragment implements View.OnClickListener {
         }
 
 
+    }
+
+    @NonNull
+    private ActivityOptionsCompat getElementAnimator(View view) {
+        Pair<View, String> imagePair = new Pair<>(
+                view.findViewById(R.id.type_image_view),
+                "type_image_view");
+        Pair<View, String> balancePair = new Pair<>(
+                view.findViewById(R.id.balance_text_view),
+                "balance_text_view");
+        Pair<View, String> titlePair = new Pair<>(
+                view.findViewById(R.id.title_text_view),
+                "title_text_view"
+        );
+        return ActivityOptionsCompat.
+                makeSceneTransitionAnimation(getActivity(),
+                        imagePair);
     }
 
     @Override

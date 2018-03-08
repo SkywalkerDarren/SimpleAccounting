@@ -1,8 +1,10 @@
 package io.github.skywalkerdarren.simpleaccounting.control;
 
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +30,9 @@ public class BillDetailFragment extends Fragment {
     private TextView mDateTextView;
     private TextView mBalanceTextView;
     private TextView mRemarkTextView;
+    private CardView mTitleCardView;
+    private CardView mDetailCardView;
+    private CardView mRemarkCardView;
 
     /**
      * Use this factory method to create a new instance of
@@ -63,12 +68,16 @@ public class BillDetailFragment extends Fragment {
         mDateTextView = view.findViewById(R.id.bill_date_text_view);
         mTitleTextView = view.findViewById(R.id.title_text_view);
         mRemarkTextView = view.findViewById(R.id.bill_remark_text_view);
+        mTitleCardView = view.findViewById(R.id.title_card_view);
+        mDetailCardView = view.findViewById(R.id.detail_card_view);
+        mRemarkCardView = view.findViewById(R.id.remark_card_view);
 
         mTypeImageView.setImageResource(Type.getType().get(mBill.getType()));
         mBalanceTextView.setText(mBill.getBalance().toString());
+        mBalanceTextView.setTextColor(mBill.isExpense() ? Color.RED : Color.GREEN);
         mRemarkTextView.setText(mBill.getRemark());
         mTitleTextView.setText(mBill.getName());
-        mDateTextView.setText(mBill.getDate().toString("yyyy-MM-dd"));
+        mDateTextView.setText(mBill.getDate().toString("yyyy-MM-dd hh:mm"));
         return view;
     }
 

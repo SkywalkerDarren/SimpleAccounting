@@ -22,4 +22,9 @@ public class BillPagerDetailActivity extends BaseFragmentActivity {
         return BillDetailFragment.newInstance(mBill);
     }
 
+    @Override
+    public void onBackPressed() {
+        supportFinishAfterTransition();
+        super.onBackPressed();
+    }
 }

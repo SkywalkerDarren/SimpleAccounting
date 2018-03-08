@@ -41,7 +41,6 @@ public class ExampleInstrumentedTest {
                     bill.getRemark());
         }
 
-        Log.d("test", "useAppContext: " + lab.getStatics(y, m, d).get("income"));
 
         assertEquals("io.github.skywalkerdarren.simpleaccounting", appContext.getPackageName());
     }
