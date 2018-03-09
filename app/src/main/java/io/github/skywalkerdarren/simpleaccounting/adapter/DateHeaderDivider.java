@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.control;
+package io.github.skywalkerdarren.simpleaccounting.adapter;
 
 import org.joda.time.DateTime;
 

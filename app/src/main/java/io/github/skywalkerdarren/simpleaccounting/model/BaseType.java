@@ -6,6 +6,7 @@ import java.util.List;
 
 /**
  * Created by darren on 2018/2/12.
+ * 基本账单类型
  */
 
 public abstract class BaseType {

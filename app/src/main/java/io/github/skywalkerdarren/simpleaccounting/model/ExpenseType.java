@@ -15,8 +15,8 @@ public class ExpenseType extends BaseType {
      */
     private static final ExpenseType EXPENSE_TYPE = new ExpenseType();
 
-    public static ExpenseType getInstance() {
-        return EXPENSE_TYPE;
+    public static List<BaseType> getTypeList() {
+        return EXPENSE_TYPE.getTypes();
     }
 
     private ExpenseType() {

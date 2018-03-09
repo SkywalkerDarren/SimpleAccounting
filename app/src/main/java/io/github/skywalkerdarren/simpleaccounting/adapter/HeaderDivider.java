@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.control;
+package io.github.skywalkerdarren.simpleaccounting.adapter;
 
 /**
  * Created by darren on 2018/2/16.

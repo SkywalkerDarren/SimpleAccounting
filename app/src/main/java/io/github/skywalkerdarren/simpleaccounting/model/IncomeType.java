@@ -15,8 +15,8 @@ public class IncomeType extends BaseType {
      */
     private static final IncomeType INCOME_TYPE = new IncomeType();
 
-    public static IncomeType getInstance() {
-        return INCOME_TYPE;
+    public static List<BaseType> getTypeList() {
+        return INCOME_TYPE.getTypes();
     }
 
     private IncomeType() {

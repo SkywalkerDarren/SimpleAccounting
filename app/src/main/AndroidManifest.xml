@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme.NoActionBar">
 
         <activity
-            android:name=".control.BillActivity"
+            android:name=".UI.BillActivity"
             android:label="@string/title_activity_bill"
             android:launchMode="singleTop">
             <intent-filter>
@@ -22,15 +22,15 @@
         </activity>
 
         <activity
-            android:name=".control.BillListActivity"
+            android:name=".UI.BillListActivity"
             android:label="@string/app_name" />
 
         <activity
-            android:name=".control.BillPagerDetailActivity"
+            android:name=".UI.BillPagerDetailActivity"
             android:label="@string/detail_bill" />
 
         <activity
-            android:name=".control.BillEditActivity"
+            android:name=".UI.BillEditActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
 
     </application>

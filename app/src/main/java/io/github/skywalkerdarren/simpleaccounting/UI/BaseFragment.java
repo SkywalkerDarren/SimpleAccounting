@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.control;
+package io.github.skywalkerdarren.simpleaccounting.UI;
 
 import android.graphics.Color;
 import android.support.annotation.IdRes;
@@ -10,6 +10,8 @@ import android.view.View;
 
 /**
  * Created by darren on 2018/3/8.
+ * fragment基类
+ * 可自定义toolbar
  */
 
 public abstract class BaseFragment extends Fragment {

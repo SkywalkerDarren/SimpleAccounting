@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.control;
+package io.github.skywalkerdarren.simpleaccounting.adapter;
 
 import android.graphics.Color;
 import android.support.annotation.DrawableRes;
@@ -16,11 +16,8 @@ import java.util.List;
 import java.util.UUID;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
-import io.github.skywalkerdarren.simpleaccounting.model.BaseType;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
-import io.github.skywalkerdarren.simpleaccounting.model.ExpenseType;
-import io.github.skywalkerdarren.simpleaccounting.model.IncomeType;
 
 import static io.github.skywalkerdarren.simpleaccounting.model.BillLab.EXPENSE;
 import static io.github.skywalkerdarren.simpleaccounting.model.BillLab.INCOME;
@@ -54,8 +51,6 @@ public class BillAdapter extends BaseMultiItemQuickAdapter<BillAdapter.BillInfo,
             case WITH_REMARK:
                 helper.setText(R.id.remark_text_view, item.getRemark());
             case WITHOUT_REMARK:
-                boolean isExpense = item.isExpense();
-                BaseType type = isExpense ? ExpenseType.getInstance() : IncomeType.getInstance();
                 helper.setTextColor(R.id.balance_text_view, item.isExpense() ? Color.RED : Color.GREEN);
                 helper.setImageResource(R.id.type_image_view, item.getBillTypeResId());
                 helper.setText(R.id.title_text_view, item.getTitle());

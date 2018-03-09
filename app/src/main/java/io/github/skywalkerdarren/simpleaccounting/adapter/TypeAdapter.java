@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.control;
+package io.github.skywalkerdarren.simpleaccounting.adapter;
 
 import android.support.annotation.Nullable;
 
@@ -12,6 +12,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.BaseType;
 
 /**
  * Created by darren on 2018/3/8.
+ * 类型适配器
  */
 
 public class TypeAdapter extends BaseQuickAdapter<BaseType, BaseViewHolder> {

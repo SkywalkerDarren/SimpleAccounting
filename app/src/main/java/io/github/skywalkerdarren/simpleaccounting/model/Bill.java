@@ -91,8 +91,7 @@ public class Bill implements Serializable {
             Log.e("test", "getTypeResId: 无资源");
             return 0;
         }
-        BaseType type = isExpense() ? ExpenseType.getInstance() : IncomeType.getInstance();
-        List<BaseType> types = type.getTypes();
+        List<BaseType> types = isExpense() ? ExpenseType.getTypeList() : IncomeType.getTypeList();
         for (BaseType t : types) {
             if (t.getName().equals(getTypeName())) {
                 return t.getTypeId();

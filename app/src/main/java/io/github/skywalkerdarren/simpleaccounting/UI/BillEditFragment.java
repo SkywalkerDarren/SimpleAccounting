@@ -1,9 +1,8 @@
-package io.github.skywalkerdarren.simpleaccounting.control;
+package io.github.skywalkerdarren.simpleaccounting.UI;
 
 
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,15 +23,14 @@ import org.joda.time.DateTime;
 import java.math.BigDecimal;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
+import io.github.skywalkerdarren.simpleaccounting.adapter.TypeAdapter;
 import io.github.skywalkerdarren.simpleaccounting.model.BaseType;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
 import io.github.skywalkerdarren.simpleaccounting.model.IncomeType;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link BillEditFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * 账单编辑或创建的fragment
  */
 public class BillEditFragment extends BaseFragment {
     private static final String ARG_BILL = "bill";
@@ -97,7 +95,7 @@ public class BillEditFragment extends BaseFragment {
         mBill.setBalance(new BigDecimal(mBalanceTextView.getText().toString()));
         mBill.setType(mTitleTextView.getText().toString());
         // TODO 改类型
-        for (BaseType type : IncomeType.getInstance().getTypes()) {
+        for (BaseType type : IncomeType.getTypeList()) {
             if (type.getName().equals(mBill.getTypeName())) {
                 mBill.setExpense(type);
             }
@@ -127,7 +125,7 @@ public class BillEditFragment extends BaseFragment {
         actionBar.setTitle(R.string.edit_bill);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        TypeAdapter adapter = new TypeAdapter(IncomeType.getInstance().getTypes());
+        TypeAdapter adapter = new TypeAdapter(IncomeType.getTypeList());
         adapter.setOnItemClickListener((adapter1, view12, position) -> {
             BaseType type = (BaseType) adapter1.getData().get(position);
             mTitleTextView.setText(type.getName());

@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.control;
+package io.github.skywalkerdarren.simpleaccounting.UI;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
@@ -28,10 +28,11 @@ import java.util.List;
 import java.util.UUID;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
+import io.github.skywalkerdarren.simpleaccounting.adapter.BillAdapter;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
 
-import static io.github.skywalkerdarren.simpleaccounting.control.BillAdapter.HEADER;
+import static io.github.skywalkerdarren.simpleaccounting.adapter.BillAdapter.HEADER;
 import static io.github.skywalkerdarren.simpleaccounting.model.BillLab.EXPENSE;
 import static io.github.skywalkerdarren.simpleaccounting.model.BillLab.INCOME;
 
