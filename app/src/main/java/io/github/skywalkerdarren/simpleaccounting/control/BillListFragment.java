@@ -98,8 +98,8 @@ public class BillListFragment extends Fragment implements View.OnClickListener {
         // TODO 设置预算
         mBudgeTextView.setText("0");
 
-        mMonthIncomeTextView.setText(mDate.getMonthOfYear() + "月收入");
-        mMonthExpenseTextView.setText(mDate.getMonthOfYear() + "月支出");
+        mMonthIncomeTextView.setText(mDate.getMonthOfYear() + getString(R.string.month_income));
+        mMonthExpenseTextView.setText(mDate.getMonthOfYear() + getString(R.string.month_expense));
         mSetBudgeTextView.setText("设置预算");
 
         // 设定空布局
@@ -201,13 +201,21 @@ public class BillListFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.add_bill_text_view:
-                Bill bill = BillLab.createRandomBill(233);
-                mBillLab.addBill(bill);
+                addBill();
                 updateUI();
                 break;
             default:
                 break;
         }
+    }
+
+    /**
+     * 新建账单
+     */
+    public void addBill() {
+        Bill bill = new Bill();
+        Intent intent = BillEditActivity.newIntent(getActivity(), bill);
+        startActivity(intent);
     }
 
     @Override

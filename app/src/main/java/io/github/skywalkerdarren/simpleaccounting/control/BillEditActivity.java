@@ -6,12 +6,16 @@ import android.support.v4.app.Fragment;
 
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 
-public class BillPagerDetailActivity extends BaseFragmentActivity {
+/**
+ * Created by darren on 2018/3/8.
+ */
+
+public class BillEditActivity extends BaseFragmentActivity {
     private static final String EXTRA_BILL = "bill";
     private Bill mBill;
 
     public static Intent newIntent(Context context, Bill bill) {
-        Intent intent = new Intent(context, BillPagerDetailActivity.class);
+        Intent intent = new Intent(context, BillEditActivity.class);
         intent.putExtra(EXTRA_BILL, bill);
         return intent;
     }
@@ -23,13 +27,6 @@ public class BillPagerDetailActivity extends BaseFragmentActivity {
 
     @Override
     public Fragment createFragment() {
-        return BillDetailFragment.newInstance(mBill);
+        return BillEditFragment.newInstance(mBill);
     }
-
-
-    @Override
-    public void onBackPressed() {
-        supportFinishAfterTransition();
-    }
-
 }

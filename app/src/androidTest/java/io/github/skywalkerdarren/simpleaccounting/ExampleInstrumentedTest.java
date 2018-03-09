@@ -37,7 +37,7 @@ public class ExampleInstrumentedTest {
             Log.d("test", bill.getName() + "\t" +
                     (bill.isExpense() ? bill.getBalance().negate() : bill.getBalance()) + "\t" +
                     bill.getDate() + "\t" +
-                    bill.getType() + "\t" +
+                    bill.getTypeName() + "\t" +
                     bill.getRemark());
         }
 

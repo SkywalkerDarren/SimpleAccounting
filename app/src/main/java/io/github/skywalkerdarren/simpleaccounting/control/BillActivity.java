@@ -1,5 +1,6 @@
 package io.github.skywalkerdarren.simpleaccounting.control;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -15,7 +16,6 @@ import android.widget.Toast;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
-import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
 
 public class BillActivity extends AppCompatActivity {
 
@@ -61,13 +61,9 @@ public class BillActivity extends AppCompatActivity {
         mAddBillButton = findViewById(R.id.add_bill_fab);
 
         mAddBillButton.setOnClickListener(view -> {
-            Bill bill = BillLab.createRandomBill(666);
-            BillLab lab = BillLab.getInstance(getApplicationContext());
-            lab.addBill(bill);
-            for (Fragment fragment :
-                    getSupportFragmentManager().getFragments()) {
-                fragment.onResume();
-            }
+            Bill bill = new Bill();
+            Intent intent = BillEditActivity.newIntent(this, bill);
+            startActivity(intent);
         });
 
         FragmentManager fragmentManager = getSupportFragmentManager();

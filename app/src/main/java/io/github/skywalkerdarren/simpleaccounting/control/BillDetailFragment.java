@@ -1,11 +1,18 @@
 package io.github.skywalkerdarren.simpleaccounting.control;
 
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -13,14 +20,14 @@ import android.widget.TextView;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
-import io.github.skywalkerdarren.simpleaccounting.model.Type;
+import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link BillDetailFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BillDetailFragment extends Fragment {
+public class BillDetailFragment extends BaseFragment {
     private static final String ARG_BILL = "bill";
 
     // TODO: Rename and change types of parameters
@@ -33,6 +40,8 @@ public class BillDetailFragment extends Fragment {
     private CardView mTitleCardView;
     private CardView mDetailCardView;
     private CardView mRemarkCardView;
+    private FloatingActionButton mEditFab;
+    private ActionBar mActionBar;
 
     /**
      * Use this factory method to create a new instance of
@@ -56,7 +65,25 @@ public class BillDetailFragment extends Fragment {
         if (getArguments() == null) {
             return;
         }
+        setHasOptionsMenu(true);
         mBill = (Bill) getArguments().getSerializable(ARG_BILL);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d("test", "onOptionsItemSelected: " + item.getItemId() + " " + R.id.homeAsUp);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -71,14 +98,34 @@ public class BillDetailFragment extends Fragment {
         mTitleCardView = view.findViewById(R.id.title_card_view);
         mDetailCardView = view.findViewById(R.id.detail_card_view);
         mRemarkCardView = view.findViewById(R.id.remark_card_view);
+        mEditFab = view.findViewById(R.id.bill_edit_fab);
+        mActionBar = initToolbar(R.id.toolbar, view);
 
-        mTypeImageView.setImageResource(Type.getType().get(mBill.getType()));
+        mActionBar.setTitle(R.string.detail_bill);
+        mActionBar.setDisplayHomeAsUpEnabled(true);
+
+        updateUI();
+
+        mEditFab.setOnClickListener(view1 -> {
+            Intent intent = BillEditActivity.newIntent(getActivity(), mBill);
+            startActivity(intent);
+        });
+        return view;
+    }
+
+    private void updateUI() {
+        mTypeImageView.setImageResource(mBill.getTypeResId());
         mBalanceTextView.setText(mBill.getBalance().toString());
         mBalanceTextView.setTextColor(mBill.isExpense() ? Color.RED : Color.GREEN);
         mRemarkTextView.setText(mBill.getRemark());
         mTitleTextView.setText(mBill.getName());
         mDateTextView.setText(mBill.getDate().toString("yyyy-MM-dd hh:mm"));
-        return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mBill = BillLab.getInstance(getActivity()).getBill(mBill.getId());
+        updateUI();
+    }
 }

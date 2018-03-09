@@ -58,6 +58,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/ic_add_menu" />
+        app:srcCompat="@drawable/ic_add_menu"
+        android:focusable="true" />
 
 </android.support.constraint.ConstraintLayout>

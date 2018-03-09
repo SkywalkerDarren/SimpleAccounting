@@ -1,6 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.control;
 
 import android.graphics.Color;
+import android.support.annotation.DrawableRes;
 import android.text.TextUtils;
 
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
@@ -15,9 +16,11 @@ import java.util.List;
 import java.util.UUID;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
+import io.github.skywalkerdarren.simpleaccounting.model.BaseType;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
-import io.github.skywalkerdarren.simpleaccounting.model.Type;
+import io.github.skywalkerdarren.simpleaccounting.model.ExpenseType;
+import io.github.skywalkerdarren.simpleaccounting.model.IncomeType;
 
 import static io.github.skywalkerdarren.simpleaccounting.model.BillLab.EXPENSE;
 import static io.github.skywalkerdarren.simpleaccounting.model.BillLab.INCOME;
@@ -51,10 +54,12 @@ public class BillAdapter extends BaseMultiItemQuickAdapter<BillAdapter.BillInfo,
             case WITH_REMARK:
                 helper.setText(R.id.remark_text_view, item.getRemark());
             case WITHOUT_REMARK:
-                helper.setImageResource(R.id.type_image_view, Type.getType().get(item.getBillType()));
+                boolean isExpense = item.isExpense();
+                BaseType type = isExpense ? ExpenseType.getInstance() : IncomeType.getInstance();
+                helper.setTextColor(R.id.balance_text_view, item.isExpense() ? Color.RED : Color.GREEN);
+                helper.setImageResource(R.id.type_image_view, item.getBillTypeResId());
                 helper.setText(R.id.title_text_view, item.getTitle());
                 helper.setText(R.id.balance_text_view, item.getBalance());
-                helper.setTextColor(R.id.balance_text_view, item.isExpense() ? Color.RED : Color.GREEN);
                 break;
             case HEADER:
                 helper.setText(R.id.bills_date_text_view, item.getDateTime().toString("yyyy-MM-dd"));
@@ -75,7 +80,9 @@ public class BillAdapter extends BaseMultiItemQuickAdapter<BillAdapter.BillInfo,
         private String mRemark;
         private String mBalance;
         private boolean mIsExpense;
-        private String mBillType;
+        private String mBillTypeName;
+        @DrawableRes
+        private int mBillTypeResId;
 
         private String mIncome;
         private String mExpense;
@@ -89,7 +96,8 @@ public class BillAdapter extends BaseMultiItemQuickAdapter<BillAdapter.BillInfo,
             mRemark = bill.getRemark();
             mBalance = bill.getBalance().toString();
             mIsExpense = bill.isExpense();
-            mBillType = bill.getType();
+            mBillTypeName = bill.getTypeName();
+            mBillTypeResId = bill.getTypeResId();
             mDateTime = bill.getDate();
         }
 
@@ -134,73 +142,43 @@ public class BillAdapter extends BaseMultiItemQuickAdapter<BillAdapter.BillInfo,
             return mRemark;
         }
 
-        public String getBillType() {
-            return mBillType;
+        @DrawableRes
+        public int getBillTypeResId() {
+            return mBillTypeResId;
         }
 
-        public void setBillType(String type) {
-            mBillType = type;
+        public String getBillTypeName() {
+            return mBillTypeName;
         }
 
         public UUID getUUID() {
             return mUUID;
         }
 
-        public void setUUID(UUID UUID) {
-            mUUID = UUID;
-        }
-
         public String getTitle() {
             return mTitle;
-        }
-
-        public void setTitle(String title) {
-            mTitle = title;
-        }
-
-        public void setRemark(String remark) {
-            mRemark = remark;
         }
 
         public String getBalance() {
             return mBalance;
         }
 
-        public void setBalance(String balance) {
-            mBalance = balance;
-        }
-
         public boolean isExpense() {
             return mIsExpense;
-        }
-
-        public void setExpense(boolean expense) {
-            mIsExpense = expense;
         }
 
         public String getIncome() {
             return mIncome;
         }
 
-        public void setIncome(String income) {
-            mIncome = income;
-        }
-
         public String getExpense() {
             return mExpense;
-        }
-
-        public void setExpense(String expense) {
-            mExpense = expense;
         }
 
         public DateTime getDateTime() {
             return mDateTime;
         }
 
-        public void setDateTime(DateTime dateTime) {
-            mDateTime = dateTime;
-        }
     }
 
 }

@@ -3,6 +3,7 @@ package io.github.skywalkerdarren.simpleaccounting.model;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
@@ -53,21 +54,15 @@ public class BillLab {
         // 数据库方式
         mContext = context.getApplicationContext();
         mDatabase = new BillBaseHelper(context).getWritableDatabase();
-
-        // 临时生成0个账单
-        for (int i = 0; i < 0; i++) {
-            Bill bill = createRandomBill(i);
-            addBill(bill);
-        }
     }
 
     /**
      * 随机创建一个账单
-     *
      * @param i 编号
      * @return 账单
      */
     @NonNull
+    @Deprecated
     public static Bill createRandomBill(int i) {
         Bill bill = new Bill();
         if (new Random().nextInt(2) > 0) {
@@ -82,13 +77,11 @@ public class BillLab {
         if (new Random().nextInt(5) < 1) {
             int position = new Random().nextInt(IncomeType.getValues().length);
             String type = IncomeType.getValues()[position];
-            bill.setExpense(IncomeType.getInstance());
             bill.setType(type);
             bill.setName("这是" + type + "：#" + i);
         } else {
             int position = new Random().nextInt(ExpenseType.getValues().length);
             String type = ExpenseType.getValues()[position];
-            bill.setExpense(ExpenseType.getInstance());
 
             bill.setType(type);
             bill.setName("这是" + type + "：#" + i);
@@ -110,7 +103,7 @@ public class BillLab {
         values.put(BillTable.Cols.IS_EXPENSE, bill.isExpense() ? 1 : 0);
         values.put(BillTable.Cols.NAME, bill.getName());
         values.put(BillTable.Cols.REMARK, bill.getRemark());
-        values.put(BillTable.Cols.TYPE, bill.getType());
+        values.put(BillTable.Cols.TYPE, bill.getTypeName());
         return values;
     }
 
@@ -166,14 +159,13 @@ public class BillLab {
      * @return 对应bill
      */
     public Bill getBill(UUID id) {
-        BillCursorWrapper cursor = queryBills(BillTable.Cols.UUID + " = ?",
-                new String[]{id.toString()});
         Bill bill;
-        try {
+        try (BillCursorWrapper cursor = queryBills(BillTable.Cols.UUID + " = ?",
+                new String[]{id.toString()})) {
             cursor.moveToFirst();
             bill = cursor.getBill();
-        } finally {
-            cursor.close();
+        } catch (CursorIndexOutOfBoundsException e) {
+            bill = null;
         }
         return bill;
     }
@@ -186,16 +178,13 @@ public class BillLab {
         DateTime start = new DateTime(year, month, 1, 0, 0);
         DateTime end = start.plusMonths(1);
 
-        BillCursorWrapper billCursorWrapper = queryBills(BillTable.Cols.DATE + " BETWEEN ? AND ?",
-                new String[]{String.valueOf(start.getMillis()), String.valueOf(end.getMillis())});
-        try {
+        try (BillCursorWrapper billCursorWrapper = queryBills(BillTable.Cols.DATE + " BETWEEN ? AND ?",
+                new String[]{String.valueOf(start.getMillis()), String.valueOf(end.getMillis())})) {
             billCursorWrapper.moveToFirst();
             while (!billCursorWrapper.isAfterLast()) {
                 bills.add(billCursorWrapper.getBill());
                 billCursorWrapper.moveToNext();
             }
-        } finally {
-            billCursorWrapper.close();
         }
         return bills;
     }
@@ -275,5 +264,11 @@ public class BillLab {
         mDatabase.delete(BillTable.NAME,
                 BillTable.Cols.UUID + " = ?",
                 new String[]{id.toString()});
+    }
+
+    public void updateBill(Bill bill) {
+        ContentValues values = getContentValues(bill);
+        mDatabase.update(BillTable.NAME, values, BillTable.Cols.UUID + " = ?",
+                new String[]{bill.getId().toString()});
     }
 }

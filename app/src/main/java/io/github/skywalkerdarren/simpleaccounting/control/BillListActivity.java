@@ -7,4 +7,9 @@ public class BillListActivity extends BaseFragmentActivity {
     public Fragment createFragment() {
         return new BillListFragment();
     }
+
+    @Override
+    public void setOnCreate() {
+
+    }
 }

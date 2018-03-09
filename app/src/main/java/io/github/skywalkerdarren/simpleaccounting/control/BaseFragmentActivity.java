@@ -15,10 +15,14 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 public abstract class BaseFragmentActivity extends AppCompatActivity {
     public abstract Fragment createFragment();
 
+    public abstract void setOnCreate();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment);
+
+        setOnCreate();
 
         // 以代码的方式将fragment添加给activity，需要直接调用activity的FragmentManager
         FragmentManager fm = getSupportFragmentManager();

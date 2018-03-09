@@ -1,9 +1,13 @@
 package io.github.skywalkerdarren.simpleaccounting.model;
 
+import android.support.annotation.DrawableRes;
+import android.util.Log;
+
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -77,15 +81,32 @@ public class Bill implements Serializable {
         mName = name;
     }
 
-    public String getType() {
+    public String getTypeName() {
         return mType;
+    }
+
+    public @DrawableRes
+    int getTypeResId() {
+        if (getTypeName() == null) {
+            Log.e("test", "getTypeResId: 无资源");
+            return 0;
+        }
+        BaseType type = isExpense() ? ExpenseType.getInstance() : IncomeType.getInstance();
+        List<BaseType> types = type.getTypes();
+        for (BaseType t : types) {
+            if (t.getName().equals(getTypeName())) {
+                return t.getTypeId();
+            }
+        }
+        Log.e("test", "getTypeResId: 无资源");
+        return 0;
     }
 
     public void setType(String type) {
         mType = type;
     }
 
-    public void setExpense(Type type) {
+    public void setExpense(BaseType type) {
         isExpense = type.getExpense();
     }
 

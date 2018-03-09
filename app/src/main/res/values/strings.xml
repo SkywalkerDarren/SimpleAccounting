@@ -18,4 +18,11 @@
     <string name="recorder">记录人</string>
     <string name="time">时间</string>
     <string name="remark">备注</string>
+    <string name="month">月</string>
+    <string name="year">年</string>
+    <string name="detail_bill">详细账单</string>
+    <string name="edit_bill">编辑账单</string>
+    <string name="save">保存</string>
+    <string name="month_income">月收入</string>
+    <string name="month_expense">月支出</string>
 </resources>
