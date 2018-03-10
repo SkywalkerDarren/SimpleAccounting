@@ -50,7 +50,7 @@
         <Key
             android:codes="43"
             android:keyLabel="@string/plus_sign"
-            android:keyHeight="100dp"
+            android:keyHeight="101dp"
             android:keyEdgeFlags="right" />
     </Row>
     <Row>
@@ -80,7 +80,8 @@
         <Key
             android:codes="61"
             android:keyLabel="@string/equal_sign"
-            android:keyWidth="40%p" />
+            android:keyWidth="50%p"
+            android:keyEdgeFlags="right" />
     </Row>
 
 </Keyboard>

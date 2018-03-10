@@ -3,8 +3,8 @@ package io.github.skywalkerdarren.simpleaccounting.UI;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -15,9 +15,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -101,7 +101,13 @@ public class BillEditFragment extends BaseFragment {
         }
     }
 
+    /**
+     * 保存账单
+     */
     private void saveBill() {
+        if (TextUtils.isEmpty(mBalanceEditText.getText())) {
+            return;
+        }
         mBill.setName(mTitleTextView.getText().toString());
         mBill.setDate(mDateTime);
         mBill.setRemark(mRemarkEditText.getText().toString());
@@ -122,6 +128,7 @@ public class BillEditFragment extends BaseFragment {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -138,7 +145,7 @@ public class BillEditFragment extends BaseFragment {
 
         // 自定义导航栏
         ActionBar actionBar = initToolbar(R.id.toolbar, view);
-        actionBar.setTitle(R.string.edit_bill);
+        actionBar.setTitle("");
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(android.support.design.R.drawable.abc_ic_ab_back_material);
 
@@ -208,18 +215,24 @@ public class BillEditFragment extends BaseFragment {
             mRemarkEditText.setText(mBill.getRemark());
         }
 
-        if (mBill.getBalance() == null) {
-            mBill.setBalance(BigDecimal.ZERO);
-        }
-
-        mBalanceEditText.setText(mBill.getBalance().toString());
         mNumPad.setStrReceiver(mBalanceEditText);
-        mBalanceEditText.setOnClickListener(view1 -> {
-            InputMethodManager imm = (InputMethodManager) getActivity()
-                    .getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
-            mNumPad.setVisibility(View.VISIBLE);
+
+        mBalanceEditText.setOnTouchListener((View view16, MotionEvent motionEvent) -> {
+            mRemarkEditText.clearFocus();
+            mNumPad.hideSysKeyboard();
+            mNumPad.showKeyboard();
+            return true;
         });
+        mBalanceEditText.setOnFocusChangeListener((view15, b) -> {
+            if (!b) {
+                mNumPad.hideKeyboard();
+            }
+        });
+
+        mRemarkEditText.setOnClickListener((view1) -> {
+            mNumPad.hideKeyboard();
+        });
+
         mDateImageView.setOnClickListener(view13 -> {
             DatePickerFragment datePicker = DatePickerFragment.newInstance(mDateTime);
             datePicker.setTargetFragment(this, REQUEST_DATE);

@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -21,23 +23,25 @@ import io.github.skywalkerdarren.simpleaccounting.model.CalculateUtil;
 
 public class NumPad extends LinearLayout {
     private EditText mEditText;
+    private Context mContext;
 
 
     public NumPad(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init(context);
+        mContext = context;
+        init();
     }
 
-    private void init(Context context) {
+    private void init() {
         setOrientation(VERTICAL);
-        LayoutInflater.from(context).inflate(R.layout.num_pad, this, true);
+        LayoutInflater.from(mContext).inflate(R.layout.num_pad, this, true);
 
         KeyboardView keyboardView = findViewById(R.id.num_keyboard);
-        Keyboard keyboard = new Keyboard(context, R.xml.keyboard);
+        Keyboard keyboard = new Keyboard(mContext, R.xml.keyboard);
 
         keyboardView.setKeyboard(keyboard);
         keyboardView.setEnabled(true);
-
+        keyboardView.setPreviewEnabled(false);
         keyboardView.setOnKeyboardActionListener(new KeyboardView.OnKeyboardActionListener() {
             @Override
             public void onPress(int i) {
@@ -99,11 +103,32 @@ public class NumPad extends LinearLayout {
 
             }
         });
+
     }
 
     private CharSequence processExp() {
         //TODO 处理表达式
         return null;
+    }
+
+    public void hideKeyboard() {
+        int visibility = getVisibility();
+        if (visibility == View.VISIBLE) {
+            setVisibility(View.GONE);
+        }
+    }
+
+    public void hideSysKeyboard() {
+        InputMethodManager imm = (InputMethodManager) mContext
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(this.getWindowToken(), 0);
+    }
+
+    public void showKeyboard() {
+        int visibility = getVisibility();
+        if (visibility == View.GONE || visibility == View.INVISIBLE) {
+            setVisibility(View.VISIBLE);
+        }
     }
 
     public void setStrReceiver(EditText balanceEditText) {
