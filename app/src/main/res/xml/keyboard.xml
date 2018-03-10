@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
+    android:horizontalGap="1dp"
+    android:keyHeight="50dp"
+    android:keyWidth="25%p"
+    android:verticalGap="1dp">
+    <Row>
+        <Key
+            android:codes="-3"
+            android:keyLabel="@string/clear_sign"
+            android:keyEdgeFlags="left" />
+        <Key
+            android:codes="47"
+            android:keyLabel="@string/divide_sign" />
+        <Key
+            android:codes="42"
+            android:keyLabel="@string/multiply_sign" />
+        <Key
+            android:codes="-5"
+            android:keyIcon="@drawable/ic_backspace_white_18dp"
+            android:keyEdgeFlags="right" />
+    </Row>
+    <Row>
+        <Key
+            android:codes="55"
+            android:keyLabel="7"
+            android:keyEdgeFlags="left" />
+        <Key
+            android:codes="56"
+            android:keyLabel="8" />
+        <Key
+            android:codes="57"
+            android:keyLabel="9" />
+        <Key
+            android:codes="45"
+            android:keyLabel="@string/minus_sign"
+            android:keyEdgeFlags="right" />
+    </Row>
+    <Row>
+        <Key
+            android:codes="52"
+            android:keyLabel="4"
+            android:keyEdgeFlags="left" />
+        <Key
+            android:codes="53"
+            android:keyLabel="5" />
+        <Key
+            android:codes="54"
+            android:keyLabel="6" />
+        <Key
+            android:codes="43"
+            android:keyLabel="@string/plus_sign"
+            android:keyHeight="100dp"
+            android:keyEdgeFlags="right" />
+    </Row>
+    <Row>
+        <Key
+            android:codes="49"
+            android:keyLabel="1"
+            android:keyEdgeFlags="left" />
+        <Key
+            android:codes="50"
+            android:keyLabel="2" />
+        <Key
+            android:codes="51"
+            android:keyLabel="3" />
+        <Key
+            android:codes="-99"
+            android:keyHeight="0dp"
+            android:keyEdgeFlags="right" />
+    </Row>
+    <Row>
+        <Key
+            android:codes="46"
+            android:keyLabel="@string/dot_sign"
+            android:keyEdgeFlags="left" />
+        <Key
+            android:codes="48"
+            android:keyLabel="0" />
+        <Key
+            android:codes="61"
+            android:keyLabel="@string/equal_sign"
+            android:keyWidth="40%p" />
+    </Row>
+
+</Keyboard>

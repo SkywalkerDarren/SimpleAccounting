@@ -1,5 +1,6 @@
 package io.github.skywalkerdarren.simpleaccounting.adapter;
 
+import android.animation.Animator;
 import android.graphics.Color;
 import android.support.annotation.DrawableRes;
 import android.text.TextUtils;
@@ -51,10 +52,16 @@ public class BillAdapter extends BaseMultiItemQuickAdapter<BillAdapter.BillInfo,
             case WITH_REMARK:
                 helper.setText(R.id.remark_text_view, item.getRemark());
             case WITHOUT_REMARK:
-                helper.setTextColor(R.id.balance_text_view, item.isExpense() ? Color.RED : Color.GREEN);
+                helper.setTextColor(R.id.balance_edit_text, item.isExpense() ?
+                        Color.rgb(0xFF, 0x45, 0x00) :
+                        Color.rgb(0xAD, 0xFF, 0x2F));
                 helper.setImageResource(R.id.type_image_view, item.getBillTypeResId());
                 helper.setText(R.id.title_text_view, item.getTitle());
-                helper.setText(R.id.balance_text_view, item.getBalance());
+                helper.setText(R.id.balance_edit_text, item.getBalance());
+                helper.addOnClickListener(R.id.content_card_view);
+                helper.addOnClickListener(R.id.image_card_view);
+                helper.addOnLongClickListener(R.id.content_card_view);
+                helper.addOnLongClickListener(R.id.image_card_view);
                 break;
             case HEADER:
                 helper.setText(R.id.bills_date_text_view, item.getDateTime().toString("yyyy-MM-dd"));
@@ -66,6 +73,14 @@ public class BillAdapter extends BaseMultiItemQuickAdapter<BillAdapter.BillInfo,
         }
     }
 
+
+    @Override
+    protected void startAnim(Animator anim, int index) {
+        if (index < 8) {
+            anim.setStartDelay(index * 15);
+
+        }
+    }
 
     public static class BillInfo implements MultiItemEntity {
         private int mType;

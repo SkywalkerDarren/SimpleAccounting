@@ -1,0 +1,92 @@
+package io.github.skywalkerdarren.simpleaccounting.UI;
+
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.DatePicker;
+
+import org.joda.time.DateTime;
+
+import io.github.skywalkerdarren.simpleaccounting.R;
+
+/**
+ * Created by darren on 2018/1/26.
+ */
+
+public class DatePickerFragment extends DialogFragment {
+    public static final String EXTRA_DATE =
+            "io.github.skywalkerdarren.simpleaccounting.date";
+
+    private static final String ARG_DATE = "date";
+    private DatePicker mDatePicker;
+
+    /**
+     * 封装到datePicker的newInstance
+     *
+     * @param date
+     * @return
+     */
+    public static DatePickerFragment newInstance(DateTime date) {
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_DATE, date);
+        DatePickerFragment fragment = new DatePickerFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    /**
+     * 发送结果
+     *
+     * @param resultCode 结果代码：决定下一步该采取什么行动
+     * @param date
+     */
+    private void sendResult(int resultCode, DateTime date) {
+        if (getTargetFragment() == null) {
+            return;
+        }
+        Intent intent = new Intent();
+        // Intent：包含extra数据
+        intent.putExtra(EXTRA_DATE, date);
+        // 通过请求代码，为当前请求返回结果代码，并传递包含返回消息的intent
+        getTargetFragment()
+                .onActivityResult(getTargetRequestCode(), resultCode, intent);
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        // 从args中获取消息
+        DateTime date = (DateTime) getArguments().getSerializable(ARG_DATE);
+        int year = date.getYear();
+        int month = date.getMonthOfYear();
+        int day = date.getDayOfMonth();
+
+        View v = LayoutInflater.from(getActivity())
+                .inflate(R.layout.dialog_date, null);
+
+        mDatePicker = v.findViewById(R.id.dialog_date_picker);
+        mDatePicker.init(year, month, day, null);
+
+        return new AlertDialog.Builder(getActivity())
+                // 设定布局
+                .setView(v)
+                .setTitle(R.string.date_picker_title)
+                .setPositiveButton(android.R.string.ok,
+                        (dialog, which) -> {
+                            DateTime datetime = new DateTime(mDatePicker.getYear(),
+                                    mDatePicker.getMonth(),
+                                    mDatePicker.getDayOfMonth(),
+                                    date.getHourOfDay(),
+                                    date.getMinuteOfHour());
+                            // 返回结果：成功，日期
+                            sendResult(Activity.RESULT_OK, datetime);
+                        })
+                .create();
+    }
+}

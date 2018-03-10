@@ -17,7 +17,7 @@ import android.widget.Toast;
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 
-public class BillActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     private static ViewPager sViewPager;
 
@@ -30,17 +30,17 @@ public class BillActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_account:
-                    Toast.makeText(BillActivity.this, "static", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "static", Toast.LENGTH_SHORT).show();
                     mAddBillButton.setVisibility(View.INVISIBLE);
                     sViewPager.setCurrentItem(0);
                     return true;
                 case R.id.navigation_bill:
-                    Toast.makeText(BillActivity.this, "bill", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "bill", Toast.LENGTH_SHORT).show();
                     mAddBillButton.setVisibility(View.VISIBLE);
                     sViewPager.setCurrentItem(1);
                     return true;
                 case R.id.navigation_discovery:
-                    Toast.makeText(BillActivity.this, "discovery", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "discovery", Toast.LENGTH_SHORT).show();
                     mAddBillButton.setVisibility(View.INVISIBLE);
                     sViewPager.setCurrentItem(2);
                     return true;
@@ -60,6 +60,7 @@ public class BillActivity extends AppCompatActivity {
         sViewPager = findViewById(R.id.content_view_pager);
         mAddBillButton = findViewById(R.id.add_bill_fab);
 
+        // TODO 增加动画
         mAddBillButton.setOnClickListener(view -> {
             Bill bill = new Bill();
             Intent intent = BillEditActivity.newIntent(this, bill);

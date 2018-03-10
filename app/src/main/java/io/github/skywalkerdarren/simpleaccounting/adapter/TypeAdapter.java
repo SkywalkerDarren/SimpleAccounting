@@ -1,5 +1,6 @@
 package io.github.skywalkerdarren.simpleaccounting.adapter;
 
+import android.animation.Animator;
 import android.support.annotation.Nullable;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -24,5 +25,13 @@ public class TypeAdapter extends BaseQuickAdapter<BaseType, BaseViewHolder> {
     protected void convert(BaseViewHolder helper, BaseType item) {
         helper.setText(R.id.type_text_view, item.getName());
         helper.setImageResource(R.id.type_image_view, item.getTypeId());
+    }
+
+    @Override
+    protected void startAnim(Animator anim, int index) {
+        if (index < 20) {
+            anim.setStartDelay(index * 15);
+        }
+        super.startAnim(anim, index);
     }
 }

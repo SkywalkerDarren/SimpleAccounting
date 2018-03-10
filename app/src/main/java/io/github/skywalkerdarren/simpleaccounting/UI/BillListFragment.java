@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.oushangfeng.pinnedsectionitemdecoration.PinnedHeaderItemDecoration;
 
 import org.joda.time.DateTime;
@@ -42,6 +43,7 @@ import static io.github.skywalkerdarren.simpleaccounting.model.BillLab.INCOME;
 
 public class BillListFragment extends Fragment implements View.OnClickListener {
     private static final int REQUEST_DATE_TIME = 0;
+    private static final int REQUEST_DESTROY = 1;
     private RecyclerView mBillListRecyclerView;
     private BillAdapter mBillAdapter;
     private TextView mAddBillTextView;
@@ -54,6 +56,8 @@ public class BillListFragment extends Fragment implements View.OnClickListener {
     private TextView mMonthIncomeTextView;
     private TextView mMonthExpenseTextView;
     private TextView mSetBudgeTextView;
+
+    private int mTempPosition;
 
     @Nullable
     @Override
@@ -98,7 +102,6 @@ public class BillListFragment extends Fragment implements View.OnClickListener {
         mExpenseTextView.setText(mBillLab.getStatics(month, month.plusMonths(1)).get(EXPENSE).toString());
         // TODO 设置预算
         mBudgeTextView.setText("0");
-
         mMonthIncomeTextView.setText(mDate.getMonthOfYear() + getString(R.string.month_income));
         mMonthExpenseTextView.setText(mDate.getMonthOfYear() + getString(R.string.month_expense));
         mSetBudgeTextView.setText("设置预算");
@@ -115,19 +118,7 @@ public class BillListFragment extends Fragment implements View.OnClickListener {
         // 刷新列表
         if (mBillAdapter == null) {
             mBillAdapter = new BillAdapter(billInfoList);
-            mBillAdapter.openLoadAnimation(view -> new Animator[]{
-                    ObjectAnimator.ofFloat(view, "alpha", 0f, 1f),
-            });
-            mBillAdapter.setOnItemClickListener((adapter, view, position) -> {
-                if (adapter.getItemViewType(position) != HEADER) {
-                    BillAdapter.BillInfo billInfo = (BillAdapter.BillInfo) adapter.getData().get(position);
-                    UUID billId = billInfo.getUUID();
-                    Intent intent = BillPagerDetailActivity
-                            .newIntent(getActivity(), mBillLab.getBill(billId));
-                    ActivityOptionsCompat options = getElementAnimator(view);
-                    startActivity(intent, options.toBundle());
-                }
-            });
+            configAdapter();
             mBillListRecyclerView.setAdapter(mBillAdapter);
         } else {
             mBillAdapter.setBills(billInfoList);
@@ -137,21 +128,80 @@ public class BillListFragment extends Fragment implements View.OnClickListener {
 
     }
 
+    /**
+     * 为适配器做详细设置
+     */
+    private void configAdapter() {
+        mBillAdapter.openLoadAnimation(view -> new Animator[]{
+                ObjectAnimator.ofFloat(view, "alpha", 0f, 1f),
+        });
+        mBillAdapter.isFirstOnly(false);
+        mBillAdapter.setOnItemClickListener((adapter, view, position) -> {
+            if (adapter.getItemViewType(position) != HEADER) {
+                BillAdapter.BillInfo billInfo = (BillAdapter.BillInfo) adapter.getData().get(position);
+                UUID billId = billInfo.getUUID();
+                Intent intent = BillDetailPagerActivity
+                        .newIntent(getActivity(), mBillLab.getBill(billId));
+                ActivityOptionsCompat options = getElementAnimator(view);
+                startActivity(intent, options.toBundle());
+            }
+        });
+        mBillAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+            BillAdapter.BillInfo billInfo = (BillAdapter.BillInfo) adapter.getData().get(position);
+            UUID billId = billInfo.getUUID();
+            Intent intent = BillDetailPagerActivity
+                    .newIntent(getActivity(), mBillLab.getBill(billId));
+            View rootView = adapter.getViewByPosition(mBillListRecyclerView, position, R.id.bill_item);
+            ActivityOptionsCompat options = getElementAnimator(rootView);
+            startActivity(intent, options.toBundle());
+        });
+        mBillAdapter.setOnItemLongClickListener((adapter, view, position) -> {
+            if (adapter.getItemViewType(position) != HEADER) {
+                createAlertDialog(adapter, position);
+            }
+            return false;
+        });
+        mBillAdapter.setOnItemChildLongClickListener((adapter, view, position) -> {
+            if (adapter.getItemViewType(position) != HEADER) {
+                createAlertDialog(adapter, position);
+            }
+            return false;
+        });
+    }
+
+    /**
+     * 创建删除对话框并保存临时位置
+     *
+     * @param adapter  适配器
+     * @param position 位置
+     */
+    private void createAlertDialog(BaseQuickAdapter adapter, int position) {
+        BillAdapter.BillInfo billInfo = (BillAdapter.BillInfo) adapter.getData().get(position);
+        UUID billId = billInfo.getUUID();
+        DeleteBillAlertDialog dialog = DeleteBillAlertDialog.newInstance(billId);
+        dialog.setTargetFragment(this, REQUEST_DESTROY);
+        dialog.show(getFragmentManager(), "alertDialog");
+        mTempPosition = position;
+    }
+
+    /**
+     * 设置共享元素转场动画
+     * @param view 转场视图
+     * @return 动画包
+     */
     @NonNull
     private ActivityOptionsCompat getElementAnimator(View view) {
         Pair<View, String> imagePair = new Pair<>(
                 view.findViewById(R.id.type_image_view),
                 "type_image_view");
         Pair<View, String> balancePair = new Pair<>(
-                view.findViewById(R.id.balance_text_view),
+                view.findViewById(R.id.balance_edit_text),
                 "balance_text_view");
         Pair<View, String> titlePair = new Pair<>(
                 view.findViewById(R.id.title_text_view),
                 "title_text_view"
         );
-        return ActivityOptionsCompat.
-                makeSceneTransitionAnimation(getActivity(),
-                        imagePair);
+        return ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), imagePair);
     }
 
     @Override
@@ -224,10 +274,17 @@ public class BillListFragment extends Fragment implements View.OnClickListener {
         if (Activity.RESULT_OK != resultCode) {
             return;
         }
-        if (requestCode == REQUEST_DATE_TIME) {
-            DateTime dateTime = (DateTime) data.getSerializableExtra(MonthPickerDialog.EXTRA_DATE);
-            mDate = dateTime;
-            updateUI();
+        switch (requestCode) {
+            case REQUEST_DATE_TIME:
+                DateTime dateTime = (DateTime) data.getSerializableExtra(MonthPickerDialog.EXTRA_DATE);
+                mDate = dateTime;
+                updateUI();
+                break;
+            case REQUEST_DESTROY:
+                mBillAdapter.remove(mTempPosition);
+                break;
+            default:
+                break;
         }
     }
 }

@@ -1,6 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.UI;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -42,6 +43,7 @@ public class BillDetailFragment extends BaseFragment {
     private CardView mRemarkCardView;
     private FloatingActionButton mEditFab;
     private ActionBar mActionBar;
+    private static final int REQUEST_DESTROY = 0;
 
     /**
      * Use this factory method to create a new instance of
@@ -72,6 +74,7 @@ public class BillDetailFragment extends BaseFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_detail, menu);
     }
 
     @Override
@@ -80,6 +83,11 @@ public class BillDetailFragment extends BaseFragment {
         switch (item.getItemId()) {
             case android.R.id.home:
                 getActivity().onBackPressed();
+                return true;
+            case R.id.del:
+                DeleteBillAlertDialog dialog = DeleteBillAlertDialog.newInstance(mBill.getId());
+                dialog.setTargetFragment(this, REQUEST_DESTROY);
+                dialog.show(getFragmentManager(), "alertDialog");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -91,7 +99,7 @@ public class BillDetailFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_bill_detail, container, false);
         mTypeImageView = view.findViewById(R.id.type_image_view);
-        mBalanceTextView = view.findViewById(R.id.balance_text_view);
+        mBalanceTextView = view.findViewById(R.id.balance_edit_text);
         mDateTextView = view.findViewById(R.id.bill_date_text_view);
         mTitleTextView = view.findViewById(R.id.title_text_view);
         mRemarkTextView = view.findViewById(R.id.bill_remark_text_view);
@@ -106,6 +114,7 @@ public class BillDetailFragment extends BaseFragment {
 
         updateUI();
 
+        // TODO 增加动画
         mEditFab.setOnClickListener(view1 -> {
             Intent intent = BillEditActivity.newIntent(getActivity(), mBill);
             startActivity(intent);
@@ -116,7 +125,9 @@ public class BillDetailFragment extends BaseFragment {
     private void updateUI() {
         mTypeImageView.setImageResource(mBill.getTypeResId());
         mBalanceTextView.setText(mBill.getBalance().toString());
-        mBalanceTextView.setTextColor(mBill.isExpense() ? Color.RED : Color.GREEN);
+        mBalanceTextView.setTextColor(mBill.isExpense() ?
+                Color.rgb(0xFF, 0x45, 0x00) :
+                Color.rgb(0xAD, 0xFF, 0x2F));
         mRemarkTextView.setText(mBill.getRemark());
         mTitleTextView.setText(mBill.getName());
         mDateTextView.setText(mBill.getDate().toString("yyyy-MM-dd hh:mm"));
@@ -127,5 +138,22 @@ public class BillDetailFragment extends BaseFragment {
         super.onResume();
         mBill = BillLab.getInstance(getActivity()).getBill(mBill.getId());
         updateUI();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_DESTROY:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        getActivity().finish();
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            default:
+                break;
+        }
     }
 }

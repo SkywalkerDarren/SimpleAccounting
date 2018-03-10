@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="io.github.skywalkerdarren.simpleaccounting.UI.BillPagerDetailActivity">
+    tools:context="io.github.skywalkerdarren.simpleaccounting.UI.BillDetailPagerActivity">
 
     <!--<view-->
     <!--android:id="@+id/line"-->
@@ -287,7 +287,7 @@
             android:minHeight="8dp">
 
             <TextView
-                android:id="@+id/balance_text_view"
+                android:id="@+id/balance_edit_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
