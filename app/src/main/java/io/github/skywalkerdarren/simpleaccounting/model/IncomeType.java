@@ -30,9 +30,9 @@ public class IncomeType extends BaseType {
     @Override
     protected List<BaseType> setDefaultTypes() {
         List<BaseType> types = new ArrayList<>(6);
+        types.add(new IncomeType("工资", R.drawable.type_image_wage));
         types.add(new IncomeType("兼职", R.drawable.type_image_part_time));
         types.add(new IncomeType("奖金", R.drawable.type_image_prize));
-        types.add(new IncomeType("工资", R.drawable.type_image_wage));
         types.add(new IncomeType("理财投资", R.drawable.type_image_invest));
         types.add(new IncomeType("红包", R.drawable.type_image_red_package));
         types.add(new IncomeType("其他", R.drawable.type_image_other));

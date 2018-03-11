@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.UI;
+package io.github.skywalkerdarren.simpleaccounting.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,19 +10,16 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 
 /**
  * Created by darren on 2018/2/21.
+ * 用于包裹fragment的基类activity
  */
 
 public abstract class BaseFragmentActivity extends AppCompatActivity {
     public abstract Fragment createFragment();
 
-    public abstract void setOnCreate();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment);
-
-        setOnCreate();
 
         // 以代码的方式将fragment添加给activity，需要直接调用activity的FragmentManager
         FragmentManager fm = getSupportFragmentManager();

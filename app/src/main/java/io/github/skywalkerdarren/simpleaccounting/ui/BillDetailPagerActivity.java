@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.UI;
+package io.github.skywalkerdarren.simpleaccounting.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,13 +16,10 @@ public class BillDetailPagerActivity extends BaseFragmentActivity {
         return intent;
     }
 
-    @Override
-    public void setOnCreate() {
-        mBill = (Bill) getIntent().getSerializableExtra(EXTRA_BILL);
-    }
 
     @Override
     public Fragment createFragment() {
+        mBill = (Bill) getIntent().getSerializableExtra(EXTRA_BILL);
         return BillDetailFragment.newInstance(mBill);
     }
 

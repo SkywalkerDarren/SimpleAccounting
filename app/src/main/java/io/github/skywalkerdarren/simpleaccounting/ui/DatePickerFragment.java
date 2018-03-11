@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.UI;
+package io.github.skywalkerdarren.simpleaccounting.ui;
 
 import android.app.Activity;
 import android.app.Dialog;

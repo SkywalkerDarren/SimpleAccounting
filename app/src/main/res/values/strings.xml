@@ -1,18 +1,17 @@
 <resources>
-    <string name="app_name">Simple Accounting</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name">必记</string>
+    <string name="action_settings">设置</string>
     <string name="type_image">表示类型的图片</string>
-    <string name="bills_date">Date</string>
+    <string name="bills_date">日期</string>
     <string name="income">收入：</string>
     <string name="expense">支出：</string>
     <string name="bill_tab_item">账单</string>
     <string name="statics_tab_item">统计</string>
     <string name="discovery_tab_item">发现</string>
-    <string name="title_activity_bill">BillActivity</string>
+    <string name="title_activity_bill">必记</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="start_accounting">点此开始记账</string>
+    <string name="start_accounting">当月账单为空\n是否要增加新的账单？</string>
     <string name="current_type">当前类型</string>
     <string name="account">账户</string>
     <string name="recorder">记录人</string>
@@ -34,5 +33,5 @@
     <string name="dot_sign">.</string>
     <string name="equal_sign">＝</string>
     <string name="plus_sign">＋</string>
-    <string name="zero">0</string>
+    <string name="zero">0.00</string>
 </resources>

@@ -6,33 +6,27 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/add_bill_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/start_accounting"
-        android:textAlignment="center"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/constraintLayout"
+        android:id="@+id/head_constraint_layout"
         android:layout_width="match_parent"
         android:layout_height="160dp"
         android:background="@drawable/head_background"
-        android:visibility="visible">
+        android:elevation="3dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="24dp"
+            android:gravity="center"
             android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@+id/view"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -41,7 +35,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:textSize="24sp"
                 android:textStyle="bold"
                 tools:text="233" />
 
@@ -50,6 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
+                android:textColor="@color/white"
                 tools:text="1月收入" />
         </LinearLayout>
 
@@ -57,6 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
+            android:gravity="center"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -67,6 +64,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
+                android:textColor="@color/white"
                 android:textSize="30sp"
                 android:textStyle="bold"
                 tools:text="233" />
@@ -76,15 +74,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
+                android:textColor="@color/white"
                 tools:text="设置预算" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="24dp"
+            android:gravity="center"
             android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@+id/view"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -93,25 +94,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:textSize="24sp"
                 android:textStyle="bold"
-                tools:text="233" />
+                tools:text="2339999" />
 
             <TextView
                 android:id="@+id/month_expense_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="@color/white"
                 tools:text="1月支出" />
         </LinearLayout>
-
-        <View
-            android:id="@+id/view"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
     </android.support.constraint.ConstraintLayout>
 
     <android.support.v7.widget.RecyclerView
@@ -119,7 +114,6 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#fafafa"
-        android:visibility="invisible"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -127,8 +121,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
-
+        app:layout_constraintTop_toBottomOf="@+id/head_constraint_layout">
     </android.support.v7.widget.RecyclerView>
+
 
 </android.support.constraint.ConstraintLayout>

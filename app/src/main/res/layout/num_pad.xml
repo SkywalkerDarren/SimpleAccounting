@@ -11,9 +11,9 @@
         android:layout_alignParentBottom="true"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:background="@color/grey500"
-        android:keyBackground="@color/grey50"
-        android:keyTextColor="@color/black"
+        android:background="@color/key_divider"
+        android:keyBackground="@color/key_bg"
+        android:keyTextColor="@color/white"
         android:keyTextSize="20dp"
         android:paddingTop="1px"
         android:shadowRadius="0" />

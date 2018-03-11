@@ -1,7 +1,8 @@
-package io.github.skywalkerdarren.simpleaccounting.UI;
+package io.github.skywalkerdarren.simpleaccounting.ui;
 
 
 import android.animation.Animator;
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -22,6 +23,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import org.joda.time.DateTime;
 
@@ -128,6 +131,7 @@ public class BillEditFragment extends BaseFragment {
         }
     }
 
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -147,7 +151,7 @@ public class BillEditFragment extends BaseFragment {
         ActionBar actionBar = initToolbar(R.id.toolbar, view);
         actionBar.setTitle("");
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeAsUpIndicator(android.support.design.R.drawable.abc_ic_ab_back_material);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
 
         TypeAdapter adapter = new TypeAdapter(ExpenseType.getTypeList());
         adapter.openLoadAnimation(view14 -> new Animator[]{
@@ -157,12 +161,8 @@ public class BillEditFragment extends BaseFragment {
                 }
 
         );
-        adapter.setOnItemClickListener((adapter1, view12, position) -> {
-            Toast.makeText(getContext(), "expense", Toast.LENGTH_SHORT).show();
-            BaseType type = (BaseType) adapter1.getData().get(position);
-            mTitleTextView.setText(type.getName());
-            mTypeImageView.setImageResource(type.getTypeId());
-        });
+        adapter.setOnItemClickListener((adapter1, view12, position) -> clickTypeItem(adapter1, position));
+        adapter.setOnItemChildClickListener((adapter12, view17, position) -> clickTypeItem(adapter12, position));
         mTypeRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
         mTypeRecyclerView.setAdapter(adapter);
 
@@ -177,6 +177,7 @@ public class BillEditFragment extends BaseFragment {
                     mTitleTextView.setText(types.get(0).getName());
                     mTypeImageView.setImageResource(types.get(0).getTypeId());
                     mBalanceEditText.setTextColor(getResources().getColor(R.color.greenyellow));
+                    typeImageAnimator();
                     break;
                 case 1:
                     types = ExpenseType.getTypeList();
@@ -185,6 +186,7 @@ public class BillEditFragment extends BaseFragment {
                     mTypeImageView.setImageResource(types.get(0).getTypeId());
                     adapter.setNewData(ExpenseType.getTypeList());
                     mBalanceEditText.setTextColor(getResources().getColor(R.color.orangered));
+                    typeImageAnimator();
                     break;
                 default:
                     break;
@@ -239,6 +241,35 @@ public class BillEditFragment extends BaseFragment {
             datePicker.show(getFragmentManager(), "datePicker");
         });
         return view;
+    }
+
+    /**
+     * 选择类型
+     */
+    public void clickTypeItem(BaseQuickAdapter adapter1, int position) {
+        BaseType type = (BaseType) adapter1.getData().get(position);
+        mTitleTextView.setText(type.getName());
+        mTypeImageView.setImageResource(type.getTypeId());
+
+        typeImageAnimator();
+    }
+
+    private void typeImageAnimator() {
+        ObjectAnimator animatorX1 = ObjectAnimator.ofFloat(mTypeImageView, "scaleX", 1f, 0.5f);
+        ObjectAnimator animatorY1 = ObjectAnimator.ofFloat(mTypeImageView, "scaleY", 1f, 0.5f);
+        AnimatorSet set1 = new AnimatorSet();
+        set1.setDuration(50);
+        set1.playTogether(animatorX1, animatorY1);
+
+        ObjectAnimator animatorX2 = ObjectAnimator.ofFloat(mTypeImageView, "scaleX", 0.5f, 1f);
+        ObjectAnimator animatorY2 = ObjectAnimator.ofFloat(mTypeImageView, "scaleY", 0.5f, 1f);
+        AnimatorSet set2 = new AnimatorSet();
+        set2.setDuration(100);
+        set2.playTogether(animatorX2, animatorY2);
+
+        AnimatorSet set = new AnimatorSet();
+        set.playSequentially(set1, set2);
+        set.start();
     }
 
     @Override

@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.UI;
+package io.github.skywalkerdarren.simpleaccounting.ui;
 
 import android.graphics.Color;
 import android.support.annotation.IdRes;

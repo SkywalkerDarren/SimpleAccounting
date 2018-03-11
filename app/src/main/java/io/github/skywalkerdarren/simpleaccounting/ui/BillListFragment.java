@@ -1,7 +1,8 @@
-package io.github.skywalkerdarren.simpleaccounting.UI;
+package io.github.skywalkerdarren.simpleaccounting.ui;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -41,12 +43,11 @@ import static io.github.skywalkerdarren.simpleaccounting.model.BillLab.INCOME;
  * Created by darren on 2018/1/31.
  */
 
-public class BillListFragment extends Fragment implements View.OnClickListener {
+public class BillListFragment extends Fragment {
     private static final int REQUEST_DATE_TIME = 0;
     private static final int REQUEST_DESTROY = 1;
     private RecyclerView mBillListRecyclerView;
     private BillAdapter mBillAdapter;
-    private TextView mAddBillTextView;
     private BillLab mBillLab;
     private DateTime mDate;
 
@@ -59,11 +60,11 @@ public class BillListFragment extends Fragment implements View.OnClickListener {
 
     private int mTempPosition;
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_bill_list, container, false);
-        mAddBillTextView = view.findViewById(R.id.add_bill_text_view);
         mBillListRecyclerView = view.findViewById(R.id.bill_recycle_view);
         mIncomeTextView = view.findViewById(R.id.money_income_text_view);
         mExpenseTextView = view.findViewById(R.id.money_expense_text_view);
@@ -80,7 +81,6 @@ public class BillListFragment extends Fragment implements View.OnClickListener {
         });
 
 
-        mAddBillTextView.setOnClickListener(this);
 
         mBillListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -93,9 +93,8 @@ public class BillListFragment extends Fragment implements View.OnClickListener {
      * UI刷新
      * 放置经常需要刷新的视图
      */
+    @SuppressLint("SetTextI18n")
     public void updateUI() {
-        List<Bill> bills = mBillLab.getsBills(mDate.getYear(), mDate.monthOfYear().get());
-        List<BillAdapter.BillInfo> billInfoList = BillAdapter.BillInfo.getBillInfoList(bills, mBillLab);
 
         DateTime month = new DateTime(mDate.getYear(), mDate.getMonthOfYear(), 1, 0, 0);
         mIncomeTextView.setText(mBillLab.getStatics(month, month.plusMonths(1)).get(INCOME).toString());
@@ -106,16 +105,18 @@ public class BillListFragment extends Fragment implements View.OnClickListener {
         mMonthExpenseTextView.setText(mDate.getMonthOfYear() + getString(R.string.month_expense));
         mSetBudgeTextView.setText("设置预算");
 
-        // 设定空布局
-        if (billInfoList.size() < 1) {
-            mAddBillTextView.setVisibility(View.VISIBLE);
-            mBillListRecyclerView.setVisibility(View.INVISIBLE);
-            return;
-        } else {
-            mAddBillTextView.setVisibility(View.GONE);
-            mBillListRecyclerView.setVisibility(View.VISIBLE);
-        }
-        // 刷新列表
+        List<Bill> bills = mBillLab.getsBills(mDate.getYear(), mDate.monthOfYear().get());
+        List<BillAdapter.BillInfo> billInfoList = BillAdapter.BillInfo.getBillInfoList(bills, mBillLab);
+
+        updateAdapter(billInfoList);
+    }
+
+    /**
+     * 刷新列表
+     *
+     * @param billInfoList 新数据
+     */
+    private void updateAdapter(List<BillAdapter.BillInfo> billInfoList) {
         if (mBillAdapter == null) {
             mBillAdapter = new BillAdapter(billInfoList);
             configAdapter();
@@ -124,49 +125,56 @@ public class BillListFragment extends Fragment implements View.OnClickListener {
             mBillAdapter.setBills(billInfoList);
             mBillAdapter.notifyDataSetChanged();
         }
+    }
 
-
+    /**
+     * 当没有账单的时候的空视图
+     *
+     * @return 空视图
+     */
+    private View emptyView() {
+        @SuppressLint("InflateParams") View v = LayoutInflater.from(getContext()).inflate(R.layout.empty_layout, null);
+        TextView addTextView = v.findViewById(R.id.add_bill_text_view);
+        ImageView addImageView = v.findViewById(R.id.add_bill_image_view);
+        View.OnClickListener addBillListener = view -> {
+            addBill();
+            updateUI();
+        };
+        addImageView.setOnClickListener(addBillListener);
+        addTextView.setOnClickListener(addBillListener);
+        return v;
     }
 
     /**
      * 为适配器做详细设置
      */
     private void configAdapter() {
+        mBillAdapter.setEmptyView(emptyView());
         mBillAdapter.openLoadAnimation(view -> new Animator[]{
                 ObjectAnimator.ofFloat(view, "alpha", 0f, 1f),
         });
         mBillAdapter.isFirstOnly(false);
         mBillAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (adapter.getItemViewType(position) != HEADER) {
-                BillAdapter.BillInfo billInfo = (BillAdapter.BillInfo) adapter.getData().get(position);
-                UUID billId = billInfo.getUUID();
-                Intent intent = BillDetailPagerActivity
-                        .newIntent(getActivity(), mBillLab.getBill(billId));
-                ActivityOptionsCompat options = getElementAnimator(view);
-                startActivity(intent, options.toBundle());
+                clickBillItem(adapter, view, position);
             }
         });
         mBillAdapter.setOnItemChildClickListener((adapter, view, position) -> {
-            BillAdapter.BillInfo billInfo = (BillAdapter.BillInfo) adapter.getData().get(position);
-            UUID billId = billInfo.getUUID();
-            Intent intent = BillDetailPagerActivity
-                    .newIntent(getActivity(), mBillLab.getBill(billId));
-            View rootView = adapter.getViewByPosition(mBillListRecyclerView, position, R.id.bill_item);
-            ActivityOptionsCompat options = getElementAnimator(rootView);
-            startActivity(intent, options.toBundle());
+            View v = adapter.getViewByPosition(mBillListRecyclerView, position, R.id.bill_item);
+            clickBillItem(adapter, v, position);
         });
-        mBillAdapter.setOnItemLongClickListener((adapter, view, position) -> {
-            if (adapter.getItemViewType(position) != HEADER) {
-                createAlertDialog(adapter, position);
-            }
-            return false;
-        });
-        mBillAdapter.setOnItemChildLongClickListener((adapter, view, position) -> {
-            if (adapter.getItemViewType(position) != HEADER) {
-                createAlertDialog(adapter, position);
-            }
-            return false;
-        });
+    }
+
+    /**
+     * 点击账单列表事件
+     */
+    private void clickBillItem(BaseQuickAdapter adapter, View view, int position) {
+        BillAdapter.BillInfo billInfo = (BillAdapter.BillInfo) adapter.getData().get(position);
+        UUID billId = billInfo.getUUID();
+        Intent intent = BillDetailPagerActivity
+                .newIntent(getActivity(), mBillLab.getBill(billId));
+        ActivityOptionsCompat options = getElementAnimator(view);
+        startActivity(intent, options.toBundle());
     }
 
     /**
@@ -194,13 +202,6 @@ public class BillListFragment extends Fragment implements View.OnClickListener {
         Pair<View, String> imagePair = new Pair<>(
                 view.findViewById(R.id.type_image_view),
                 "type_image_view");
-        Pair<View, String> balancePair = new Pair<>(
-                view.findViewById(R.id.balance_edit_text),
-                "balance_text_view");
-        Pair<View, String> titlePair = new Pair<>(
-                view.findViewById(R.id.title_text_view),
-                "title_text_view"
-        );
         return ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), imagePair);
     }
 
@@ -248,18 +249,6 @@ public class BillListFragment extends Fragment implements View.OnClickListener {
         return fragment;
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.add_bill_text_view:
-                addBill();
-                updateUI();
-                break;
-            default:
-                break;
-        }
-    }
-
     /**
      * 新建账单
      */
@@ -276,13 +265,12 @@ public class BillListFragment extends Fragment implements View.OnClickListener {
         }
         switch (requestCode) {
             case REQUEST_DATE_TIME:
-                DateTime dateTime = (DateTime) data.getSerializableExtra(MonthPickerDialog.EXTRA_DATE);
-                mDate = dateTime;
+                mDate = (DateTime) data.getSerializableExtra(MonthPickerDialog.EXTRA_DATE);
                 updateUI();
                 break;
-            case REQUEST_DESTROY:
-                mBillAdapter.remove(mTempPosition);
-                break;
+//            case REQUEST_DESTROY:
+//                onResume();
+//                break;
             default:
                 break;
         }

@@ -4,6 +4,9 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#ff4081</color>
 
+    <color name="key_bg">#353343</color>
+    <color name="key_divider">#403e4b</color>
+
     <color name="red50">#fde0dc</color>
     <color name="red100">#f9bdbb</color>
     <color name="red200">#f69988</color>
@@ -282,7 +285,7 @@
     <color name="transparent">#00000000</color>
 
     <!--白色 -->
-    <color name="white">#FFFFFF</color>
+    <color name="white">#ffffff</color>
     <!--象牙色 -->
     <color name="ivory">#FFFFF0</color>
     <!--亮黄色 -->

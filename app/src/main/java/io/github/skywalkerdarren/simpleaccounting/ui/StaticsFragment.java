@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.UI;
+package io.github.skywalkerdarren.simpleaccounting.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,10 +10,10 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link DiscoveryFragment#newInstance} factory method to
+ * Use the {@link StaticsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DiscoveryFragment extends Fragment {
+public class StaticsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -23,7 +23,7 @@ public class DiscoveryFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public DiscoveryFragment() {
+    public StaticsFragment() {
         // Required empty public constructor
     }
 
@@ -31,11 +31,11 @@ public class DiscoveryFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment DiscoveryFragment.
+     * @return A new instance of fragment StaticsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DiscoveryFragment newInstance() {
-        DiscoveryFragment fragment = new DiscoveryFragment();
+    public static StaticsFragment newInstance() {
+        StaticsFragment fragment = new StaticsFragment();
         return fragment;
     }
 
@@ -51,10 +51,8 @@ public class DiscoveryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_discovery, container, false);
-
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_statics, container, false);
         return view;
     }
-
-
 }

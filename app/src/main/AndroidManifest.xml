@@ -4,14 +4,13 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar">
+        android:theme="@style/AppTheme">
 
         <activity
-            android:name=".UI.MainActivity"
+            android:name=".ui.MainActivity"
             android:label="@string/title_activity_bill"
             android:launchMode="singleTop">
             <intent-filter>
@@ -22,15 +21,15 @@
         </activity>
 
         <activity
-            android:name=".UI.BillListActivity"
+            android:name=".ui.BillListActivity"
             android:label="@string/app_name" />
 
         <activity
-            android:name=".UI.BillDetailPagerActivity"
+            android:name=".ui.BillDetailPagerActivity"
             android:label="@string/detail_bill" />
 
         <activity
-            android:name=".UI.BillEditActivity"
+            android:name=".ui.BillEditActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
     </application>

@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.UI;
+package io.github.skywalkerdarren.simpleaccounting.ui;
 
 
 import android.app.Activity;
@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.CardView;
@@ -117,7 +118,9 @@ public class BillDetailFragment extends BaseFragment {
         // TODO 增加动画
         mEditFab.setOnClickListener(view1 -> {
             Intent intent = BillEditActivity.newIntent(getActivity(), mBill);
-            startActivity(intent);
+            intent.putExtra(BillEditActivity.EXTRA_TRANS, BillEditActivity.CIRCLE_UP);
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity());
+            startActivity(intent, options.toBundle());
         });
         return view;
     }

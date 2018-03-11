@@ -1,10 +1,11 @@
-package io.github.skywalkerdarren.simpleaccounting.UI;
+package io.github.skywalkerdarren.simpleaccounting.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -64,7 +65,9 @@ public class MainActivity extends AppCompatActivity {
         mAddBillButton.setOnClickListener(view -> {
             Bill bill = new Bill();
             Intent intent = BillEditActivity.newIntent(this, bill);
-            startActivity(intent);
+            intent.putExtra(BillEditActivity.EXTRA_TRANS, BillEditActivity.SLIDE_UP);
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this);
+            startActivity(intent, options.toBundle());
         });
 
         FragmentManager fragmentManager = getSupportFragmentManager();

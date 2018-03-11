@@ -1,6 +1,5 @@
 package io.github.skywalkerdarren.simpleaccounting.adapter;
 
-import android.animation.Animator;
 import android.graphics.Color;
 import android.support.annotation.DrawableRes;
 import android.text.TextUtils;
@@ -45,7 +44,6 @@ public class BillAdapter extends BaseMultiItemQuickAdapter<BillAdapter.BillInfo,
         setNewData(bills);
     }
 
-
     @Override
     protected void convert(BaseViewHolder helper, BillInfo item) {
         switch (item.getItemType()) {
@@ -62,6 +60,7 @@ public class BillAdapter extends BaseMultiItemQuickAdapter<BillAdapter.BillInfo,
                 helper.addOnClickListener(R.id.image_card_view);
                 helper.addOnLongClickListener(R.id.content_card_view);
                 helper.addOnLongClickListener(R.id.image_card_view);
+                helper.setAlpha(R.id.bill_item, 0);
                 break;
             case HEADER:
                 helper.setText(R.id.bills_date_text_view, item.getDateTime().toString("yyyy-MM-dd"));
@@ -70,15 +69,6 @@ public class BillAdapter extends BaseMultiItemQuickAdapter<BillAdapter.BillInfo,
                 break;
             default:
                 break;
-        }
-    }
-
-
-    @Override
-    protected void startAnim(Animator anim, int index) {
-        if (index < 8) {
-            anim.setStartDelay(index * 15);
-
         }
     }
 
