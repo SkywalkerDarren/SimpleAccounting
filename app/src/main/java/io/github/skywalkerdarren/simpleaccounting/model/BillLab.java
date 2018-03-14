@@ -11,9 +11,7 @@ import org.joda.time.DateTime;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
@@ -147,11 +145,6 @@ public class BillLab {
         return new BillCursorWrapper(cursor);
     }
 
-    private BillCursorWrapper rawQueryBills(String sql, String[] whereArgs) {
-        Cursor cursor = mDatabase.rawQuery(sql, whereArgs);
-        return new BillCursorWrapper(cursor);
-    }
-
     /**
      * 根据账单id从数据库中找到bill
      *
@@ -197,34 +190,55 @@ public class BillLab {
      * @param end 结束时间
      * @return 统计表
      */
-    public Map<String, BigDecimal> getStatics(DateTime start, DateTime end) {
+    public Stats getStats(DateTime start, DateTime end) {
         final String isExpense = "1";
         final String isIncome = "0";
-        Map<String, BigDecimal> statics = new HashMap<>(7);
-        BillCursorWrapper cursor = null;
-        try {
-            cursor = getBillsInfoCursor(start, end, isExpense);
+        String income = getStats(start, end, isIncome);
+        String expense = getStats(start, end, isExpense);
+
+        return new Stats(new BigDecimal(income), new BigDecimal(expense));
+    }
+
+    @NonNull
+    private String getStats(DateTime start, DateTime end, String isExpense) {
+        String balance;
+        try (BillCursorWrapper cursor = getBillsInfoCursor(start, end, isExpense)) {
             cursor.moveToFirst();
             String num = cursor.getString(0);
             if (num == null) {
                 num = "0";
             }
-            statics.put(EXPENSE, new BigDecimal(num));
-            cursor = getBillsInfoCursor(start, end, isIncome);
-            cursor.moveToFirst();
-            num = cursor.getString(0);
-            if (num == null) {
-                num = "0";
-            }
-            statics.put(INCOME, new BigDecimal(num));
-            statics.put(SUM, statics.get(INCOME).subtract(statics.get(EXPENSE)));
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
+            balance = num;
+        }
+        return balance;
+    }
+
+    /**
+     * 统计结果类
+     */
+    public class Stats {
+
+        private BigDecimal income;
+        private BigDecimal expense;
+        private BigDecimal sum;
+
+        public Stats(BigDecimal income, BigDecimal expense) {
+            this.income = income;
+            this.expense = expense;
+            sum = income.subtract(expense);
         }
 
-        return statics;
+        public BigDecimal getIncome() {
+            return income;
+        }
+
+        public BigDecimal getExpense() {
+            return expense;
+        }
+
+        public BigDecimal getSum() {
+            return sum;
+        }
     }
 
     /**

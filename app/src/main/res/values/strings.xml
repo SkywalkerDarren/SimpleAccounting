@@ -5,9 +5,9 @@
     <string name="bills_date">日期</string>
     <string name="income">收入：</string>
     <string name="expense">支出：</string>
-    <string name="bill_tab_item">账单</string>
-    <string name="statics_tab_item">统计</string>
-    <string name="discovery_tab_item">发现</string>
+    <string name="bill">账单</string>
+    <string name="stats">统计</string>
+    <string name="discovery">发现</string>
     <string name="title_activity_bill">必记</string>
 
     <!-- TODO: Remove or change this placeholder text -->

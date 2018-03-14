@@ -2,18 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_account"
+        android:id="@+id/navigation_stats"
         android:icon="@drawable/navigation_account"
-        android:title="@string/statics_tab_item" />
+        android:title="@string/stats" />
 
     <item
         android:id="@+id/navigation_bill"
         android:icon="@drawable/navigation_bill"
-        android:title="@string/bill_tab_item" />
+        android:title="@string/bill" />
 
     <item
         android:id="@+id/navigation_discovery"
         android:icon="@drawable/navigation_discovery"
-        android:title="@string/discovery_tab_item" />
+        android:title="@string/discovery" />
 
 </menu>

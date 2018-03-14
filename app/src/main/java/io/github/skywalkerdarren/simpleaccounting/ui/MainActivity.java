@@ -20,7 +20,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static ViewPager sViewPager;
+    private ViewPager sViewPager;
 
     private FloatingActionButton mAddBillButton;
 
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_account:
+                case R.id.navigation_stats:
                     mAddBillButton.setVisibility(View.INVISIBLE);
                     sViewPager.setCurrentItem(0);
                     return true;
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
             public Fragment getItem(int position) {
                 switch (position) {
                     case 0:
-                        return StaticsFragment.newInstance();
+                        return StatsFragment.newInstance();
                     case 1:
                         return BillListFragment.newInstance();
                     case 2:
@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
-                        navigation.setSelectedItemId(R.id.navigation_account);
+                        navigation.setSelectedItemId(R.id.navigation_stats);
                         mAddBillButton.setVisibility(View.INVISIBLE);
                         break;
                     case 1:

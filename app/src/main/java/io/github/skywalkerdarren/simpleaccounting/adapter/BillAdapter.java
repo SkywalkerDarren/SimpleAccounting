@@ -21,9 +21,6 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
 
-import static io.github.skywalkerdarren.simpleaccounting.model.BillLab.EXPENSE;
-import static io.github.skywalkerdarren.simpleaccounting.model.BillLab.INCOME;
-
 /**
  * Created by darren on 2018/2/12.
  *
@@ -144,8 +141,8 @@ public class BillAdapter extends BaseMultiItemQuickAdapter<BillAdapter.BillInfo,
                 // 如果当前帐单与上一张单年月日不同，则添加账单
                 if (date == null || !date.equals(currentDate)) {
                     date = currentDate;
-                    BigDecimal income = billLab.getStatics(date, date.plusDays(1)).get(INCOME);
-                    BigDecimal expense = billLab.getStatics(date, date.plusDays(1)).get(EXPENSE);
+                    BigDecimal income = billLab.getStats(date, date.plusDays(1)).getIncome();
+                    BigDecimal expense = billLab.getStats(date, date.plusDays(1)).getExpense();
                     billInfoList.add(new BillInfo(new DateHeaderDivider(date, income, expense)));
                 }
                 billInfoList.add(new BillInfo(bill));

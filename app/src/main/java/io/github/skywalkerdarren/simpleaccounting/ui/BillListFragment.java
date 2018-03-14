@@ -38,8 +38,6 @@ import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
 
 import static io.github.skywalkerdarren.simpleaccounting.adapter.BillAdapter.HEADER;
-import static io.github.skywalkerdarren.simpleaccounting.model.BillLab.EXPENSE;
-import static io.github.skywalkerdarren.simpleaccounting.model.BillLab.INCOME;
 
 /**
  * Created by darren on 2018/1/31.
@@ -103,8 +101,8 @@ public class BillListFragment extends Fragment implements View.OnTouchListener {
     public void updateUI() {
 
         DateTime month = new DateTime(mDate.getYear(), mDate.getMonthOfYear(), 1, 0, 0);
-        mIncomeTextView.setText(mBillLab.getStatics(month, month.plusMonths(1)).get(INCOME).toString());
-        mExpenseTextView.setText(mBillLab.getStatics(month, month.plusMonths(1)).get(EXPENSE).toString());
+        mIncomeTextView.setText(mBillLab.getStats(month, month.plusMonths(1)).getIncome().toString());
+        mExpenseTextView.setText(mBillLab.getStats(month, month.plusMonths(1)).getExpense().toString());
         // TODO 设置预算
         mBudgeTextView.setText("0");
         mMonthIncomeTextView.setText(mDate.getMonthOfYear() + getString(R.string.month_income));
