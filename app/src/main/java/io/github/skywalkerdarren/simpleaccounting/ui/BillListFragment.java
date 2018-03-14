@@ -13,10 +13,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -43,9 +45,8 @@ import static io.github.skywalkerdarren.simpleaccounting.model.BillLab.INCOME;
  * Created by darren on 2018/1/31.
  */
 
-public class BillListFragment extends Fragment {
+public class BillListFragment extends Fragment implements View.OnTouchListener {
     private static final int REQUEST_DATE_TIME = 0;
-    private static final int REQUEST_DESTROY = 1;
     private RecyclerView mBillListRecyclerView;
     private BillAdapter mBillAdapter;
     private BillLab mBillLab;
@@ -57,8 +58,12 @@ public class BillListFragment extends Fragment {
     private TextView mMonthIncomeTextView;
     private TextView mMonthExpenseTextView;
     private TextView mSetBudgeTextView;
+    private int mX;
+    private int mY;
 
     private int mTempPosition;
+
+    private Intent mIntent;
 
 
     @Nullable
@@ -86,6 +91,7 @@ public class BillListFragment extends Fragment {
 
         updateUI();
         mBillListRecyclerView.addItemDecoration(new PinnedHeaderItemDecoration.Builder(HEADER).create());
+        mBillListRecyclerView.setOnTouchListener(this);
         return view;
     }
 
@@ -171,25 +177,21 @@ public class BillListFragment extends Fragment {
     private void clickBillItem(BaseQuickAdapter adapter, View view, int position) {
         BillAdapter.BillInfo billInfo = (BillAdapter.BillInfo) adapter.getData().get(position);
         UUID billId = billInfo.getUUID();
-        Intent intent = BillDetailPagerActivity
-                .newIntent(getActivity(), mBillLab.getBill(billId));
-        ActivityOptionsCompat options = getElementAnimator(view);
-        startActivity(intent, options.toBundle());
-    }
+        int[] location1 = new int[2];
+        int[] location2 = new int[2];
+        View center = view.findViewById(R.id.image_card_view);
+        center.getLocationInWindow(location1);
+        center.getLocationOnScreen(location2);
+        mX = mBillAdapter.getX();
+        mY = mBillAdapter.getY();
+        Log.d("test", "clickBillItem: x " + mX + " y " + mY);
+        // TODO 颜色
+        mIntent = BillDetailPagerActivity
+                .newIntent(getActivity(), mBillLab.getBill(billId), mX, mY, R.color.orangea200);
 
-    /**
-     * 创建删除对话框并保存临时位置
-     *
-     * @param adapter  适配器
-     * @param position 位置
-     */
-    private void createAlertDialog(BaseQuickAdapter adapter, int position) {
-        BillAdapter.BillInfo billInfo = (BillAdapter.BillInfo) adapter.getData().get(position);
-        UUID billId = billInfo.getUUID();
-        DeleteBillAlertDialog dialog = DeleteBillAlertDialog.newInstance(billId);
-        dialog.setTargetFragment(this, REQUEST_DESTROY);
-        dialog.show(getFragmentManager(), "alertDialog");
-        mTempPosition = position;
+        mIntent.putExtra(BillDetailPagerActivity.EXTRA_START_COLOR, R.color.orangea200);
+        ActivityOptionsCompat options = getElementAnimator(view);
+        startActivity(mIntent, options.toBundle());
     }
 
     /**
@@ -274,5 +276,13 @@ public class BillListFragment extends Fragment {
             default:
                 break;
         }
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        mX = (int) motionEvent.getRawX();
+        mY = (int) motionEvent.getRawY();
+        Log.d("test", "onTouch() called with: x = [" + mX + "], y = [" + mY + "]");
+        return false;
     }
 }

@@ -10,5 +10,5 @@ public interface Expression {
      *
      * @return 只包含数字，加减乘除，小数点的表达式
      */
-    CharSequence createExpression();
+    String createExpression();
 }

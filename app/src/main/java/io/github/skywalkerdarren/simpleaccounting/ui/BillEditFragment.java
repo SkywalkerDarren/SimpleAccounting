@@ -3,11 +3,14 @@ package io.github.skywalkerdarren.simpleaccounting.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
+import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,9 +19,11 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.BounceInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -46,6 +51,8 @@ import io.github.skywalkerdarren.simpleaccounting.model.IncomeType;
 public class BillEditFragment extends BaseFragment {
     private static final String ARG_BILL = "bill";
     private static final int REQUEST_DATE = 0;
+    private static final String ARG_CX = "cx";
+    private static final String ARG_CY = "cy";
     private Bill mBill;
     private ImageView mTypeImageView;
     private ImageView mDateImageView;
@@ -57,6 +64,7 @@ public class BillEditFragment extends BaseFragment {
     private SegmentedButtonGroup mTypeSbg;
     private boolean mIsExpense = true;
     private NumPad mNumPad;
+    private Animator mStart;
 
 
     /**
@@ -67,10 +75,12 @@ public class BillEditFragment extends BaseFragment {
      * @return A new instance of fragment BillEditFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static BillEditFragment newInstance(Bill bill) {
+    public static BillEditFragment newInstance(Bill bill, int centerX, int centerY) {
         BillEditFragment fragment = new BillEditFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_BILL, bill);
+        args.putInt(ARG_CX, centerX);
+        args.putInt(ARG_CY, centerY);
         fragment.setArguments(args);
         return fragment;
     }
@@ -94,8 +104,11 @@ public class BillEditFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_save_item:
-                saveBill();
-                Toast.makeText(getActivity(), "点击保存并退出", Toast.LENGTH_SHORT).show();
+                if (saveBill()) {
+                    Toast.makeText(getActivity(), "点击保存并退出", Toast.LENGTH_SHORT).show();
+                } else {
+                    return true;
+                }
             case android.R.id.home:
                 getActivity().onBackPressed();
                 return true;
@@ -107,14 +120,20 @@ public class BillEditFragment extends BaseFragment {
     /**
      * 保存账单
      */
-    private void saveBill() {
+    private boolean saveBill() {
         if (TextUtils.isEmpty(mBalanceEditText.getText())) {
-            return;
+            return false;
+        }
+        try {
+            BigDecimal r = new BigDecimal(mBalanceEditText.getText().toString());
+            mBill.setBalance(r);
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "表达式错误", Toast.LENGTH_SHORT);
+            return false;
         }
         mBill.setName(mTitleTextView.getText().toString());
         mBill.setDate(mDateTime);
         mBill.setRemark(mRemarkEditText.getText().toString());
-        mBill.setBalance(new BigDecimal(mBalanceEditText.getText().toString()));
         mBill.setType(mTitleTextView.getText().toString());
         List<BaseType> types = mIsExpense ? ExpenseType.getTypeList() : IncomeType.getTypeList();
         for (BaseType type : types) {
@@ -129,6 +148,7 @@ public class BillEditFragment extends BaseFragment {
         } else {
             lab.updateBill(mBill);
         }
+        return true;
     }
 
 
@@ -153,20 +173,20 @@ public class BillEditFragment extends BaseFragment {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
 
+        // 配置适配器
         TypeAdapter adapter = new TypeAdapter(ExpenseType.getTypeList());
         adapter.openLoadAnimation(view14 -> new Animator[]{
                         ObjectAnimator.ofFloat(view14, "scaleY", 1, 1.1f, 1),
                         ObjectAnimator.ofFloat(view14, "scaleX", 1, 1.1f, 1),
                         ObjectAnimator.ofFloat(view14, "alpha", 0f, 1f)
                 }
-
         );
         adapter.setOnItemClickListener((adapter1, view12, position) -> clickTypeItem(adapter1, position));
         adapter.setOnItemChildClickListener((adapter12, view17, position) -> clickTypeItem(adapter12, position));
         mTypeRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
         mTypeRecyclerView.setAdapter(adapter);
 
-
+        // 配置选择按钮
         mTypeSbg.setOnClickedButtonListener(position -> {
             List<BaseType> types;
             switch (position) {
@@ -194,23 +214,16 @@ public class BillEditFragment extends BaseFragment {
             adapter.notifyDataSetChanged();
         });
 
-
+        // 配置账单信息
         if (mBill.getDate() == null) {
             mDateTime = DateTime.now();
+            mTitleTextView.setText(adapter.getData().get(0).getName());
+            mTypeImageView.setImageResource(adapter.getData().get(0).getTypeId());
         } else {
             mDateTime = mBill.getDate();
-        }
-
-        if (!TextUtils.isEmpty(mBill.getName())) {
             mTitleTextView.setText(mBill.getName());
-        } else {
-            mTitleTextView.setText(adapter.getData().get(0).getName());
-        }
-
-        if (!TextUtils.isEmpty(mBill.getTypeName())) {
             mTypeImageView.setImageResource(mBill.getTypeResId());
-        } else {
-            mTypeImageView.setImageResource(adapter.getData().get(0).getTypeId());
+            mBalanceEditText.setText(mBill.getBalance().toString());
         }
 
         if (!TextUtils.isEmpty(mBill.getRemark())) {
@@ -218,27 +231,52 @@ public class BillEditFragment extends BaseFragment {
         }
 
         mNumPad.setStrReceiver(mBalanceEditText);
-
-        mBalanceEditText.setOnTouchListener((View view16, MotionEvent motionEvent) -> {
+        mBalanceEditText.setOnTouchListener((view16, motionEvent) -> {
             mRemarkEditText.clearFocus();
             mNumPad.hideSysKeyboard();
-            mNumPad.showKeyboard();
+            new Handler().postDelayed(() -> mNumPad.showKeyboard(), 200);
             return true;
         });
+
         mBalanceEditText.setOnFocusChangeListener((view15, b) -> {
             if (!b) {
                 mNumPad.hideKeyboard();
             }
         });
 
-        mRemarkEditText.setOnClickListener((view1) -> {
-            mNumPad.hideKeyboard();
-        });
+        mRemarkEditText.setOnClickListener((view1) -> mNumPad.hideKeyboard());
 
         mDateImageView.setOnClickListener(view13 -> {
             DatePickerFragment datePicker = DatePickerFragment.newInstance(mDateTime);
             datePicker.setTargetFragment(this, REQUEST_DATE);
             datePicker.show(getFragmentManager(), "datePicker");
+        });
+
+//         启动动画
+        view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop,
+                                       int oldRight, int oldBottom) {
+                v.removeOnLayoutChangeListener(this);
+                int cx = getArguments().getInt(ARG_CX);
+                int cy = getArguments().getInt(ARG_CY);
+
+                // get the hypothenuse so the radius is from one corner to the other
+                int w = v.getWidth();
+                int h = v.getHeight();
+                int radius = (int) Math.hypot(w, h);
+                Animator reveal = ViewAnimationUtils.createCircularReveal(v, cx, cy, 0, radius);
+                reveal.setInterpolator(new FastOutSlowInInterpolator());
+                ObjectAnimator colorChange = new ObjectAnimator();
+                colorChange.setIntValues(getResources().getColor(R.color.colorPrimary),
+                        getResources().getColor(R.color.transparent));
+                colorChange.setEvaluator(new ArgbEvaluator());
+                colorChange.addUpdateListener(valueAnimator -> view.setBackgroundColor((Integer) valueAnimator.getAnimatedValue()));
+                AnimatorSet set = new AnimatorSet();
+                set.playTogether(reveal, colorChange);
+                set.setDuration(500);
+                set.start();
+            }
         });
         return view;
     }
@@ -250,21 +288,25 @@ public class BillEditFragment extends BaseFragment {
         BaseType type = (BaseType) adapter1.getData().get(position);
         mTitleTextView.setText(type.getName());
         mTypeImageView.setImageResource(type.getTypeId());
-
         typeImageAnimator();
     }
 
+    /**
+     * 类型图片动画
+     */
     private void typeImageAnimator() {
-        ObjectAnimator animatorX1 = ObjectAnimator.ofFloat(mTypeImageView, "scaleX", 1f, 0.5f);
-        ObjectAnimator animatorY1 = ObjectAnimator.ofFloat(mTypeImageView, "scaleY", 1f, 0.5f);
+        ObjectAnimator animatorX1 = ObjectAnimator.ofFloat(mTypeImageView, "scaleX", 0.5f, 0f);
+        ObjectAnimator animatorY1 = ObjectAnimator.ofFloat(mTypeImageView, "scaleY", 0.5f, 0f);
         AnimatorSet set1 = new AnimatorSet();
-        set1.setDuration(50);
+        set1.setDuration(100);
+        set1.setInterpolator(new AccelerateInterpolator());
         set1.playTogether(animatorX1, animatorY1);
 
-        ObjectAnimator animatorX2 = ObjectAnimator.ofFloat(mTypeImageView, "scaleX", 0.5f, 1f);
-        ObjectAnimator animatorY2 = ObjectAnimator.ofFloat(mTypeImageView, "scaleY", 0.5f, 1f);
+        ObjectAnimator animatorX2 = ObjectAnimator.ofFloat(mTypeImageView, "scaleX", 0f, 1f);
+        ObjectAnimator animatorY2 = ObjectAnimator.ofFloat(mTypeImageView, "scaleY", 0f, 1f);
         AnimatorSet set2 = new AnimatorSet();
-        set2.setDuration(100);
+        set2.setDuration(600);
+        set2.setInterpolator(new BounceInterpolator());
         set2.playTogether(animatorX2, animatorY2);
 
         AnimatorSet set = new AnimatorSet();

@@ -3,6 +3,8 @@ package io.github.skywalkerdarren.simpleaccounting.adapter;
 import android.graphics.Color;
 import android.support.annotation.DrawableRes;
 import android.text.TextUtils;
+import android.view.MotionEvent;
+import android.view.View;
 
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -27,10 +29,12 @@ import static io.github.skywalkerdarren.simpleaccounting.model.BillLab.INCOME;
  *
  */
 
-public class BillAdapter extends BaseMultiItemQuickAdapter<BillAdapter.BillInfo, BaseViewHolder> {
+public class BillAdapter extends BaseMultiItemQuickAdapter<BillAdapter.BillInfo, BaseViewHolder> implements View.OnTouchListener {
     public static final int WITHOUT_REMARK = 0;
     public static final int WITH_REMARK = 1;
     public static final int HEADER = 2;
+    private int mX;
+    private int mY;
 
 
     public BillAdapter(List<BillInfo> bills) {
@@ -61,6 +65,8 @@ public class BillAdapter extends BaseMultiItemQuickAdapter<BillAdapter.BillInfo,
                 helper.addOnLongClickListener(R.id.content_card_view);
                 helper.addOnLongClickListener(R.id.image_card_view);
                 helper.setAlpha(R.id.bill_item, 0);
+                helper.setOnTouchListener(R.id.content_card_view, this);
+                helper.setOnTouchListener(R.id.image_card_view, this);
                 break;
             case HEADER:
                 helper.setText(R.id.bills_date_text_view, item.getDateTime().toString("yyyy-MM-dd"));
@@ -70,6 +76,21 @@ public class BillAdapter extends BaseMultiItemQuickAdapter<BillAdapter.BillInfo,
             default:
                 break;
         }
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        mX = (int) motionEvent.getRawX();
+        mY = (int) motionEvent.getRawY();
+        return false;
+    }
+
+    public int getX() {
+        return mX;
+    }
+
+    public int getY() {
+        return mY;
     }
 
     public static class BillInfo implements MultiItemEntity {

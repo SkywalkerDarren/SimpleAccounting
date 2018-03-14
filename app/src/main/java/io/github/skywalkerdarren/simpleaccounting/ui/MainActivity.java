@@ -1,5 +1,6 @@
 package io.github.skywalkerdarren.simpleaccounting.ui;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,7 +14,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
@@ -26,22 +26,18 @@ public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_account:
-                    Toast.makeText(MainActivity.this, "static", Toast.LENGTH_SHORT).show();
                     mAddBillButton.setVisibility(View.INVISIBLE);
                     sViewPager.setCurrentItem(0);
                     return true;
                 case R.id.navigation_bill:
-                    Toast.makeText(MainActivity.this, "bill", Toast.LENGTH_SHORT).show();
                     mAddBillButton.setVisibility(View.VISIBLE);
                     sViewPager.setCurrentItem(1);
                     return true;
                 case R.id.navigation_discovery:
-                    Toast.makeText(MainActivity.this, "discovery", Toast.LENGTH_SHORT).show();
                     mAddBillButton.setVisibility(View.INVISIBLE);
                     sViewPager.setCurrentItem(2);
                     return true;
@@ -61,12 +57,18 @@ public class MainActivity extends AppCompatActivity {
         sViewPager = findViewById(R.id.content_view_pager);
         mAddBillButton = findViewById(R.id.add_bill_fab);
 
-        // TODO 增加动画
+        // 点击增加按钮事件
         mAddBillButton.setOnClickListener(view -> {
             Bill bill = new Bill();
             Intent intent = BillEditActivity.newIntent(this, bill);
             intent.putExtra(BillEditActivity.EXTRA_TRANS, BillEditActivity.SLIDE_UP);
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this);
+            intent.putExtra(BillEditActivity.EXTRA_CENTER_X,
+                    (int) view.getX() + view.getWidth() / 2);
+            intent.putExtra(BillEditActivity.EXTRA_CENTER_Y,
+                    (int) view.getY() + view.getHeight() / 2);
+
+            ActivityOptionsCompat options = ActivityOptionsCompat
+                    .makeSceneTransitionAnimation(this);
             startActivity(intent, options.toBundle());
         });
 
@@ -75,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         sViewPager.setAdapter(new FragmentPagerAdapter(fragmentManager) {
             /**
              * 导航栏一共3个页面 固定
-             * @return
+             * @return 3
              */
             @Override
             public int getCount() {
@@ -138,6 +140,10 @@ public class MainActivity extends AppCompatActivity {
         });
         sViewPager.setCurrentItem(1);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
+
+    private ObjectAnimator buttonAnimator(View view) {
+        return null;
     }
 
 }

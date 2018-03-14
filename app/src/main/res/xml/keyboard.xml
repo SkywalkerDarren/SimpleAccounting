@@ -78,7 +78,7 @@
             android:codes="48"
             android:keyLabel="0" />
         <Key
-            android:codes="61"
+            android:codes="-4"
             android:keyLabel="@string/equal_sign"
             android:keyWidth="50%p"
             android:keyEdgeFlags="right" />
