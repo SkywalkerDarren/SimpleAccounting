@@ -1,5 +1,8 @@
 package io.github.skywalkerdarren.simpleaccounting.ui;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +17,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
@@ -30,15 +35,12 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_stats:
-                    mAddBillButton.setVisibility(View.INVISIBLE);
                     sViewPager.setCurrentItem(0);
                     return true;
                 case R.id.navigation_bill:
-                    mAddBillButton.setVisibility(View.VISIBLE);
                     sViewPager.setCurrentItem(1);
                     return true;
                 case R.id.navigation_discovery:
-                    mAddBillButton.setVisibility(View.INVISIBLE);
                     sViewPager.setCurrentItem(2);
                     return true;
                 default:
@@ -101,16 +103,7 @@ public class MainActivity extends AppCompatActivity {
         sViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                switch (position) {
-                    case 0:
-                        mAddBillButton.setAlpha(positionOffset);
-                        break;
-                    case 1:
-                        mAddBillButton.setAlpha(1 - positionOffset);
-                        break;
-                    default:
-                        break;
-                }
+
             }
 
             @Override
@@ -118,15 +111,15 @@ public class MainActivity extends AppCompatActivity {
                 switch (position) {
                     case 0:
                         navigation.setSelectedItemId(R.id.navigation_stats);
-                        mAddBillButton.setVisibility(View.INVISIBLE);
+                        buttonAnimator(mAddBillButton, true).start();
                         break;
                     case 1:
                         navigation.setSelectedItemId(R.id.navigation_bill);
-                        mAddBillButton.setVisibility(View.VISIBLE);
+                        buttonAnimator(mAddBillButton, false).start();
                         break;
                     case 2:
                         navigation.setSelectedItemId(R.id.navigation_discovery);
-                        mAddBillButton.setVisibility(View.INVISIBLE);
+                        buttonAnimator(mAddBillButton, true).start();
                         break;
                     default:
                         break;
@@ -142,8 +135,39 @@ public class MainActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
-    private ObjectAnimator buttonAnimator(View view) {
-        return null;
+    private AnimatorSet buttonAnimator(View view, boolean disapper) {
+        float start = disapper ? 1 : 0;
+        float end = disapper ? 0 : 1;
+        ObjectAnimator alpha = ObjectAnimator.ofFloat(view, "alpha", start, end);
+        ObjectAnimator rotation = ObjectAnimator.ofFloat(view, "rotation", 0f, 360f);
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, "scaleX", start, end);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, "scaleY", start, end);
+        AnimatorSet set = new AnimatorSet();
+        set.playTogether(alpha, rotation, scaleX, scaleY);
+        set.setDuration(250);
+        if (disapper) {
+            set.setInterpolator(new AccelerateInterpolator());
+        } else {
+            set.setInterpolator(new DecelerateInterpolator());
+        }
+        set.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                if (disapper) {
+                    view.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                if (!disapper) {
+                    view.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        return set;
     }
 
 }
