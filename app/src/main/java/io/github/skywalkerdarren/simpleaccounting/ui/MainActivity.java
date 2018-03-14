@@ -62,13 +62,10 @@ public class MainActivity extends AppCompatActivity {
         // 点击增加按钮事件
         mAddBillButton.setOnClickListener(view -> {
             Bill bill = new Bill();
-            Intent intent = BillEditActivity.newIntent(this, bill);
+            int x = (int) view.getX() + view.getWidth() / 2;
+            int y = (int) view.getY() + view.getHeight() / 2;
+            Intent intent = BillEditActivity.newIntent(this, bill, x, y);
             intent.putExtra(BillEditActivity.EXTRA_TRANS, BillEditActivity.SLIDE_UP);
-            intent.putExtra(BillEditActivity.EXTRA_CENTER_X,
-                    (int) view.getX() + view.getWidth() / 2);
-            intent.putExtra(BillEditActivity.EXTRA_CENTER_Y,
-                    (int) view.getY() + view.getHeight() / 2);
-
             ActivityOptionsCompat options = ActivityOptionsCompat
                     .makeSceneTransitionAnimation(this);
             startActivity(intent, options.toBundle());

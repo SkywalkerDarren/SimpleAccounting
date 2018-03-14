@@ -213,22 +213,10 @@
 
     </android.support.constraint.ConstraintLayout>
 
-    <!--<FrameLayout-->
-    <!--android:id="@+id/keyboard_frame_layout"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:background="@color/grey50"-->
-    <!--app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--app:layout_constraintStart_toStartOf="parent"-->
-    <!--app:layout_constraintEnd_toEndOf="parent" >-->
-    <!---->
-
-    <!--</FrameLayout>-->
     <io.github.skywalkerdarren.simpleaccounting.ui.NumPad
         android:id="@+id/num_key_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

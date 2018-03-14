@@ -118,11 +118,11 @@ public class BillDetailFragment extends BaseFragment {
 
         // 编辑按钮点击事件
         mEditFab.setOnClickListener(view1 -> {
-            Intent intent = BillEditActivity.newIntent(getActivity(), mBill);
             int[] location = new int[2];
             view1.getLocationInWindow(location);
-            intent.putExtra(BillEditActivity.EXTRA_CENTER_X, (int) view1.getX() + view1.getWidth() / 2);
-            intent.putExtra(BillEditActivity.EXTRA_CENTER_Y, (int) view1.getY() + view1.getHeight() / 2);
+            int x = (int) view1.getX() + view1.getWidth() / 2;
+            int y = (int) view1.getY() + view1.getHeight() / 2;
+            Intent intent = BillEditActivity.newIntent(getActivity(), mBill, x, y);
             intent.putExtra(BillEditActivity.EXTRA_TRANS, BillEditActivity.CIRCLE_UP);
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity());
             startActivity(intent, options.toBundle());

@@ -23,9 +23,11 @@ public class BillEditActivity extends BaseFragmentActivity {
     public static final String SLIDE_UP = "slide up";
     public static final String CIRCLE_UP = "circle up";
 
-    public static Intent newIntent(Context context, Bill bill) {
+    public static Intent newIntent(Context context, Bill bill, int x, int y) {
         Intent intent = new Intent(context, BillEditActivity.class);
         intent.putExtra(EXTRA_BILL, bill);
+        intent.putExtra(EXTRA_CENTER_X, x);
+        intent.putExtra(EXTRA_CENTER_Y, y);
         return intent;
     }
 
@@ -51,19 +53,19 @@ public class BillEditActivity extends BaseFragmentActivity {
 
     @Override
     public void onBackPressed() {
+        NumPad numPad = findViewById(R.id.num_key_view);
+        if (numPad.getVisibility() == View.VISIBLE) {
+            numPad.hideKeyboard();
+            return;
+        }
         supportFinishAfterTransition();
     }
 
     @Override
     public Fragment createFragment() {
-//        View view = findViewById(R.id.fragment_container);
-//        view.setBackgroundColor(getResources().getColor(R.color.grey400));
         Bill bill = (Bill) getIntent().getSerializableExtra(EXTRA_BILL);
-        View v = findViewById(R.id.fragment_container);
-        int w = v.getWidth() / 2;
-        int h = v.getHeight() / 2;
-        int cx = getIntent().getIntExtra(EXTRA_CENTER_X, w);
-        int cy = getIntent().getIntExtra(EXTRA_CENTER_Y, h);
+        int cx = getIntent().getIntExtra(EXTRA_CENTER_X, 0);
+        int cy = getIntent().getIntExtra(EXTRA_CENTER_Y, 0);
         return BillEditFragment.newInstance(bill, cx, cy);
     }
 }

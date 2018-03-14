@@ -254,7 +254,8 @@ public class BillListFragment extends Fragment implements View.OnTouchListener {
      */
     public void addBill() {
         Bill bill = new Bill();
-        Intent intent = BillEditActivity.newIntent(getActivity(), bill);
+        Intent intent = BillEditActivity.newIntent(getActivity(), bill,
+                mBillAdapter.getX(), mBillAdapter.getY());
         startActivity(intent);
     }
 

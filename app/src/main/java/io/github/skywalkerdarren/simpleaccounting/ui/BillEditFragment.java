@@ -110,6 +110,7 @@ public class BillEditFragment extends BaseFragment {
                     return true;
                 }
             case android.R.id.home:
+                mNumPad.setVisibility(View.INVISIBLE);
                 getActivity().onBackPressed();
                 return true;
             default:
