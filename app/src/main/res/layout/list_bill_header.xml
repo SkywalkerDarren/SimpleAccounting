@@ -28,7 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="0dp"
-        android:text="@string/expense" />
+        android:text="@string/expense_s" />
 
     <TextView
         android:id="@+id/bill_expense_text_view"
@@ -42,7 +42,7 @@
         android:id="@+id/text_view_income"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/income" />
+        android:text="@string/income_s" />
 
     <TextView
         android:id="@+id/bill_income_text_view"

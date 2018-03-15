@@ -59,10 +59,6 @@ public class BillListFragment extends Fragment implements View.OnTouchListener {
     private int mX;
     private int mY;
 
-    private int mTempPosition;
-
-    private Intent mIntent;
-
 
     @Nullable
     @Override
@@ -184,12 +180,12 @@ public class BillListFragment extends Fragment implements View.OnTouchListener {
         mY = mBillAdapter.getY();
         Log.d("test", "clickBillItem: x " + mX + " y " + mY);
         // TODO 颜色
-        mIntent = BillDetailPagerActivity
+        Intent intent = BillDetailPagerActivity
                 .newIntent(getActivity(), mBillLab.getBill(billId), mX, mY, R.color.orangea200);
 
-        mIntent.putExtra(BillDetailPagerActivity.EXTRA_START_COLOR, R.color.orangea200);
+        intent.putExtra(BillDetailPagerActivity.EXTRA_START_COLOR, R.color.orangea200);
         ActivityOptionsCompat options = getElementAnimator(view);
-        startActivity(mIntent, options.toBundle());
+        startActivity(intent, options.toBundle());
     }
 
     /**
@@ -221,6 +217,7 @@ public class BillListFragment extends Fragment implements View.OnTouchListener {
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(BillListFragment.class.getName(), "onResume() called");
         updateUI();
     }
 
@@ -269,9 +266,6 @@ public class BillListFragment extends Fragment implements View.OnTouchListener {
                 mDate = (DateTime) data.getSerializableExtra(MonthPickerDialog.EXTRA_DATE);
                 updateUI();
                 break;
-//            case REQUEST_DESTROY:
-//                onResume();
-//                break;
             default:
                 break;
         }
@@ -281,7 +275,6 @@ public class BillListFragment extends Fragment implements View.OnTouchListener {
     public boolean onTouch(View view, MotionEvent motionEvent) {
         mX = (int) motionEvent.getRawX();
         mY = (int) motionEvent.getRawY();
-        Log.d("test", "onTouch() called with: x = [" + mX + "], y = [" + mY + "]");
         return false;
     }
 }

@@ -32,6 +32,7 @@
             android:name=".ui.BillEditActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
+
     </application>
 
 </manifest>

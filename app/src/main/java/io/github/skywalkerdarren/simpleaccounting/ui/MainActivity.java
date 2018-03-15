@@ -65,14 +65,11 @@ public class MainActivity extends AppCompatActivity {
             int x = (int) view.getX() + view.getWidth() / 2;
             int y = (int) view.getY() + view.getHeight() / 2;
             Intent intent = BillEditActivity.newIntent(this, bill, x, y);
-            intent.putExtra(BillEditActivity.EXTRA_TRANS, BillEditActivity.SLIDE_UP);
             ActivityOptionsCompat options = ActivityOptionsCompat
                     .makeSceneTransitionAnimation(this);
             startActivity(intent, options.toBundle());
         });
-
         FragmentManager fragmentManager = getSupportFragmentManager();
-
         sViewPager.setAdapter(new FragmentPagerAdapter(fragmentManager) {
             /**
              * 导航栏一共3个页面 固定

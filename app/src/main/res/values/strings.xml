@@ -3,8 +3,8 @@
     <string name="action_settings">设置</string>
     <string name="type_image">表示类型的图片</string>
     <string name="bills_date">日期</string>
-    <string name="income">收入：</string>
-    <string name="expense">支出：</string>
+    <string name="income_s">收入：</string>
+    <string name="expense_s">支出：</string>
     <string name="bill">账单</string>
     <string name="stats">统计</string>
     <string name="discovery">发现</string>
@@ -37,4 +37,10 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="journal">流水</string>
+    <string name="classify">分类</string>
+    <string name="balance">盈余</string>
+    <string name="income">收入</string>
+    <string name="expense">支出</string>
+    <string name="months">月份</string>
 </resources>

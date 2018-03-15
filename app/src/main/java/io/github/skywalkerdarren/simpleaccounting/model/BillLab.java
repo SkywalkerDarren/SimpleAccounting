@@ -182,13 +182,22 @@ public class BillLab {
         return bills;
     }
 
+    public List<Stats> getAnnualStats(int year) {
+        List<Stats> statsList = new ArrayList<>(12);
+        for (int i = 1; i <= 12; i++) {
+            DateTime start = new DateTime(year, i, 1, 0, 0);
+            DateTime end = start.plusMonths(1);
+            statsList.add(getStats(start, end));
+        }
+        return statsList;
+    }
 
     /**
-     * 日结算统计
+     * 一段时间的账单结算统计
      *
      * @param start 起始时间
      * @param end 结束时间
-     * @return 统计表
+     * @return 包括支出，收入，盈余的统计结果
      */
     public Stats getStats(DateTime start, DateTime end) {
         final String isExpense = "1";
