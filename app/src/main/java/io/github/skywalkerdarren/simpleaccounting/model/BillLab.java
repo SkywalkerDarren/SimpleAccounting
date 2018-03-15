@@ -182,11 +182,36 @@ public class BillLab {
         return bills;
     }
 
+    /**
+     * 年度统计
+     *
+     * @param year 年份
+     * @return 统计列表
+     */
     public List<Stats> getAnnualStats(int year) {
         List<Stats> statsList = new ArrayList<>(12);
         for (int i = 1; i <= 12; i++) {
             DateTime start = new DateTime(year, i, 1, 0, 0);
             DateTime end = start.plusMonths(1);
+            statsList.add(getStats(start, end));
+        }
+        return statsList;
+    }
+
+    /**
+     * 月度统计
+     *
+     * @param year  年份
+     * @param month 月份
+     * @return 统计列表
+     */
+    public List<Stats> getMonthStats(int year, int month) {
+        List<Stats> statsList = new ArrayList<>(12);
+        DateTime dateTime = new DateTime(year, month, 1, 0, 0);
+        int days = dateTime.plusMonths(1).minus(1L).getDayOfMonth();
+        for (int i = 1; i <= days; i++) {
+            DateTime start = new DateTime(year, month, i, 0, 0);
+            DateTime end = start.plusDays(1);
             statsList.add(getStats(start, end));
         }
         return statsList;

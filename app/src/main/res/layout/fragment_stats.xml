@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -68,25 +69,67 @@
 
     </Toolbar>
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/select_constraint_layout"
+    <LinearLayout
+        android:id="@+id/select_linear_layout"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar">
 
-        <TextView
-            android:id="@+id/textView2"
+        <co.ceryle.segmentedbutton.SegmentedButtonGroup
+            android:id="@+id/date_sbg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="TextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </android.support.constraint.ConstraintLayout>
+            android:layout_gravity="center"
+            android:layout_marginRight="8dp"
+            app:sbg_animateSelector="fastOutSlowIn"
+            app:sbg_animateSelectorDuration="500"
+            app:sbg_backgroundColor="@color/white"
+            app:sbg_borderColor="@color/amber700"
+            app:sbg_borderSize="1dp"
+            app:sbg_position="1"
+            app:sbg_radius="5dp"
+            app:sbg_rippleColor="@color/amber700"
+            app:sbg_selectorColor="@color/amber700"
+            tools:layout_editor_absoluteX="190dp"
+            tools:layout_editor_absoluteY="12dp">
+
+            <co.ceryle.segmentedbutton.SegmentedButton
+                android:id="@+id/month_sb"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="1dp"
+                app:sb_rippleColor="@color/white"
+                app:sb_text="@string/month"
+                app:sb_textColor="@color/amber700"
+                app:sb_textColor_onSelection="@color/white" />
+
+            <co.ceryle.segmentedbutton.SegmentedButton
+                android:id="@+id/year_sb"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="1dp"
+                app:sb_rippleColor="@color/white"
+                app:sb_text="@string/year"
+                app:sb_textColor="@color/amber700"
+                app:sb_textColor_onSelection="@color/white" />
+
+        </co.ceryle.segmentedbutton.SegmentedButtonGroup>
+
+        <TextView
+            android:id="@+id/date_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteX="290dp"
+            tools:layout_editor_absoluteY="21dp"
+            tools:text="@sample/tools:date/mmddyy" />
+    </LinearLayout>
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/stats_line_chart"
@@ -94,7 +137,7 @@
         android:layout_height="180dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/select_constraint_layout">
+        app:layout_constraintTop_toBottomOf="@+id/select_linear_layout">
 
     </com.github.mikephil.charting.charts.LineChart>
 
@@ -292,6 +335,7 @@
             android:gravity="center">
 
             <TextView
+                android:id="@+id/month_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
