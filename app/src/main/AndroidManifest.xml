@@ -32,7 +32,14 @@
             android:name=".ui.BillEditActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
-
+        <receiver android:name=".ui.DesktopWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/bill_widget" />
+        </receiver>
     </application>
 
 </manifest>

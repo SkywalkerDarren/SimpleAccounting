@@ -10,11 +10,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.transition.Fade;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.transition.Explode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -88,6 +90,8 @@ public class BillEditFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setEnterTransition(new Explode());
+        setExitTransition(new Fade());
         if (getArguments() != null) {
             mBill = (Bill) getArguments().getSerializable(ARG_BILL);
         }
@@ -107,11 +111,14 @@ public class BillEditFragment extends BaseFragment {
                 if (saveBill()) {
                     Toast.makeText(getActivity(), "点击保存并退出", Toast.LENGTH_SHORT).show();
                 } else {
+                    // 保存失败直接返回
                     return true;
                 }
             case android.R.id.home:
                 mNumPad.setVisibility(View.INVISIBLE);
                 getActivity().onBackPressed();
+                Intent intent = new Intent(DesktopWidget.EXTRA_ACTION_UP);
+                getActivity().sendBroadcast(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -261,11 +268,14 @@ public class BillEditFragment extends BaseFragment {
                 v.removeOnLayoutChangeListener(this);
                 int cx = getArguments().getInt(ARG_CX);
                 int cy = getArguments().getInt(ARG_CY);
-
                 // get the hypothenuse so the radius is from one corner to the other
                 int w = v.getWidth();
                 int h = v.getHeight();
                 int radius = (int) Math.hypot(w, h);
+                if (cx == 0 && cy == 0) {
+                    cx = w / 2;
+                    cy = h / 2;
+                }
                 Animator reveal = ViewAnimationUtils.createCircularReveal(v, cx, cy, 0, radius);
                 reveal.setInterpolator(new FastOutSlowInInterpolator());
                 ObjectAnimator colorChange = new ObjectAnimator();

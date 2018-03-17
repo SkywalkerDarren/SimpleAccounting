@@ -1,77 +1,25 @@
 package io.github.skywalkerdarren.simpleaccounting.ui;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.ColorRes;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.MarkerView;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.utils.MPPointF;
-
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 import co.ceryle.segmentedbutton.SegmentedButtonGroup;
 import io.github.skywalkerdarren.simpleaccounting.R;
-import io.github.skywalkerdarren.simpleaccounting.adapter.StatsAdapter;
-import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link StatsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class StatsFragment extends Fragment implements View.OnClickListener {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    private BillLab mBillLab;
-    private SegmentedButtonGroup stats_sbg;
-
-    private LineChart mLineChart;
-    private TextView mIncomeStatsTextView;
-    private TextView mExpenseStatsTextView;
-    private TextView mBalanceStatsTextView;
-    private CardView mIncomeStatsCardView;
-    private CardView mExpenseStatsCardView;
-    private CardView mBalanceStatsCardView;
-    private RecyclerView mStatsRecyclerView;
-    private StatsAdapter mStatsAdapter;
-
-    boolean mShowIncome = true;
-    boolean mShowExpense = true;
-    boolean mShowBalance = true;
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public StatsFragment() {
-        // Required empty public constructor
-    }
+public class StatsFragment extends Fragment {
+    private static final String ARG_POSITION = "mPosition";
+    private SegmentedButtonGroup mStatsSbg;
+    private int mPosition = 1;
 
     /**
      * Use this factory method to create a new instance of
@@ -79,7 +27,6 @@ public class StatsFragment extends Fragment implements View.OnClickListener {
      *
      * @return A new instance of fragment StatsFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static StatsFragment newInstance() {
         StatsFragment fragment = new StatsFragment();
         return fragment;
@@ -88,198 +35,56 @@ public class StatsFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBillLab = BillLab.getInstance(getActivity());
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        if (savedInstanceState == null) {
+            mPosition = 1;
+        } else {
+            mPosition = savedInstanceState.getInt(ARG_POSITION) - 1;
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_stats, container, false);
-        mLineChart = view.findViewById(R.id.stats_line_chart);
-        mIncomeStatsCardView = view.findViewById(R.id.income_card_view);
-        mIncomeStatsTextView = view.findViewById(R.id.income_text_view);
-        mExpenseStatsCardView = view.findViewById(R.id.expense_card_view);
-        mExpenseStatsTextView = view.findViewById(R.id.expense_text_view);
-        mBalanceStatsCardView = view.findViewById(R.id.balance_card_view);
-        mBalanceStatsTextView = view.findViewById(R.id.balance_text_view);
-        mStatsRecyclerView = view.findViewById(R.id.stats_recycler_view);
+        mStatsSbg = view.findViewById(R.id.stats_sbg);
 
-        mStatsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mExpenseStatsCardView.setOnClickListener(this);
-        mIncomeStatsCardView.setOnClickListener(this);
-        mBalanceStatsCardView.setOnClickListener(this);
+        FragmentManager fm = getFragmentManager();
+        final Fragment journalFragment = JournalFragment.newInstance();
+        final Fragment classifyFragment = ClassifyFragment.newInstance();
+        FragmentTransaction ft = fm.beginTransaction();
+        switch (mPosition) {
+            case 1:
+                ft.add(R.id.fragment_container, journalFragment).commit();
+                break;
+            default:
+                ft.add(R.id.fragment_container, classifyFragment).commit();
+                break;
+        }
 
-        // TODO 动态年份
-        configChartStyle();
-        updateUI();
+        mStatsSbg.setOnClickedButtonListener(position -> {
+            switch (position) {
+                case 0:
+                    fm.beginTransaction().replace(R.id.fragment_container, classifyFragment).commit();
+                    break;
+                case 1:
+                    fm.beginTransaction().replace(R.id.fragment_container, journalFragment).commit();
+                    break;
+                default:
+                    break;
+            }
+        });
         return view;
     }
 
-    /**
-     * 更新数据
-     */
-    @SuppressLint("SetTextI18n")
-    private void updateLineDataSets(List<BillLab.Stats> statsList, boolean showIncome, boolean showExpense, boolean showSum) {
-        BigDecimal sumIncome = BigDecimal.ZERO;
-        BigDecimal sumExpense = BigDecimal.ZERO;
-        BigDecimal sumBalance = BigDecimal.ZERO;
-        List<ILineDataSet> lineDataSets = new ArrayList<>(3);
-        List<Entry> income = new ArrayList<>();
-        List<Entry> expense = new ArrayList<>();
-        List<Entry> sum = new ArrayList<>();
-        for (int i = 0; i < statsList.size(); i++) {
-            BillLab.Stats stats = statsList.get(i);
-            expense.add(new Entry(i, stats.getExpense().floatValue()));
-            income.add(new Entry(i, stats.getIncome().floatValue()));
-            sum.add(new Entry(i, stats.getSum().floatValue()));
-            sumExpense = sumExpense.add(stats.getExpense());
-            sumIncome = sumIncome.add(stats.getIncome());
-            sumBalance = sumBalance.add(stats.getSum());
-        }
-        mBalanceStatsTextView.setText(sumBalance.toString());
-        mExpenseStatsTextView.setText(sumExpense.toString());
-        mIncomeStatsTextView.setText(sumIncome.toString());
-        final LineDataSet incomeSet = new LineDataSet(income, "");
-        final LineDataSet balanceSet = new LineDataSet(sum, "");
-        final LineDataSet expenseSet = new LineDataSet(expense, "");
-        configDataSet(incomeSet, R.color.income);
-        configDataSet(balanceSet, R.color.balance);
-        configDataSet(expenseSet, R.color.expense);
-        incomeSet.setVisible(showIncome);
-        balanceSet.setVisible(showSum);
-        expenseSet.setVisible(showExpense);
-        lineDataSets.add(incomeSet);
-        lineDataSets.add(balanceSet);
-        lineDataSets.add(expenseSet);
-        mLineChart.setData(new LineData(lineDataSets));
-        mLineChart.notifyDataSetChanged();
-        mLineChart.animateY(300, Easing.EasingOption.EaseOutCirc);
-        mLineChart.invalidate();
-    }
-
-    /**
-     * 放一些需要经常更新的方法
-     */
-    public void updateUI() {
-        int year = 2018;
-        List<BillLab.Stats> statsList = mBillLab.getAnnualStats(year);
-        if (mStatsAdapter == null) {
-            mStatsAdapter = new StatsAdapter(statsList);
-        } else {
-            mStatsAdapter.setNewData(statsList);
-            mStatsAdapter.notifyDataSetChanged();
-        }
-        if (mStatsRecyclerView.getAdapter() == null) {
-            mStatsRecyclerView.setAdapter(mStatsAdapter);
-        }
-        updateLineDataSets(statsList, true, true, true);
+    @Override
+    public void onPause() {
+        super.onPause();
+        mPosition = mStatsSbg.getPosition();
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        updateUI();
-    }
-
-
-    @Override
-    public void onClick(View view) {
-
-        switch (view.getId()) {
-            case R.id.income_card_view:
-                mShowIncome = !mShowIncome;
-                Log.d(StatsFragment.class.getName(), "onClick: ");
-                break;
-            case R.id.expense_card_view:
-                mShowExpense = !mShowExpense;
-                break;
-            case R.id.balance_card_view:
-                mShowBalance = !mShowBalance;
-                break;
-            default:
-                break;
-        }
-        int year = 2018;
-        List<BillLab.Stats> statsList = mBillLab.getAnnualStats(year);
-        updateLineDataSets(statsList, mShowIncome, mShowExpense, mShowBalance);
-    }
-
-    /**
-     * 配置图表样式
-     */
-    private void configChartStyle() {
-        Description description = new Description();
-        description.setEnabled(false);
-        mLineChart.setDescription(description);
-        mLineChart.setScaleEnabled(false);
-        mLineChart.getAxisRight().setEnabled(false);
-        mLineChart.setMarker(new TopHighLight(getActivity()));
-
-        Legend legend = mLineChart.getLegend();
-        legend.setEnabled(false);
-
-        XAxis xAxis = mLineChart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setDrawGridLines(false);
-        xAxis.setLabelCount(12, true);
-        xAxis.setValueFormatter((value, axis) -> (int) (value + 1) + "月");
-
-        YAxis yAxis = mLineChart.getAxisLeft();
-        yAxis.setGridColor(getResources().getColor(R.color.grey300));
-        yAxis.setAxisLineColor(getResources().getColor(R.color.transparent));
-        yAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
-        yAxis.setLabelCount(5, false);
-    }
-
-    /**
-     * 配置曲线样式
-     *
-     * @param colorId 颜色
-     */
-    private void configDataSet(LineDataSet set, @ColorRes int colorId) {
-        int color = getResources().getColor(colorId);
-        set.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
-        set.setDrawFilled(true);
-        set.setDrawValues(false);
-        set.setHighlightEnabled(true);
-        set.setColor(color);
-        set.setLineWidth(1.5f);
-        set.setCircleColor(color);
-        set.setCircleRadius(2.5f);
-        set.setFillColor(color);
-        set.setCircleHoleRadius(1.5f);
-        set.setHighLightColor(color);
-    }
-
-    /**
-     * 顶部标志
-     */
-    private class TopHighLight extends MarkerView {
-
-        DecimalFormat mFormat;
-        TextView mMarkerTextView;
-
-        public TopHighLight(Context context) {
-            super(context, R.layout.marker_view);
-            mMarkerTextView = findViewById(R.id.marker_text_view);
-            mFormat = new DecimalFormat("###,###,##0.##");
-        }
-
-        @Override
-        public void refreshContent(Entry e, Highlight highlight) {
-            mMarkerTextView.setText(mFormat.format(e.getY()));
-            mMarkerTextView.setTextColor(getResources().getColor(R.color.orange800));
-            super.refreshContent(e, highlight);
-        }
-
-        @Override
-        public MPPointF getOffset() {
-            return new MPPointF(10, -40);
-        }
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(ARG_POSITION, mStatsSbg.getPosition() + 1);
     }
 }

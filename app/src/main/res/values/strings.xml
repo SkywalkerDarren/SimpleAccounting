@@ -43,4 +43,5 @@
     <string name="income">收入</string>
     <string name="expense">支出</string>
     <string name="months">月份</string>
+    <string name="add_bill">添加账单</string>
 </resources>

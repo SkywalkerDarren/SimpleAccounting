@@ -17,11 +17,8 @@ import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 
 public class BillEditActivity extends BaseFragmentActivity {
     private static final String EXTRA_BILL = "bill";
-    public static final String EXTRA_TRANS = "io.github.skywalkerdarren.simpleaccounting.transition";
     public static final String EXTRA_CENTER_X = "io.github.skywalkerdarren.simpleaccounting.centerX";
     public static final String EXTRA_CENTER_Y = "io.github.skywalkerdarren.simpleaccounting.centerY";
-    public static final String SLIDE_UP = "slide up";
-    public static final String CIRCLE_UP = "circle up";
 
     public static Intent newIntent(Context context, Bill bill, int x, int y) {
         Intent intent = new Intent(context, BillEditActivity.class);

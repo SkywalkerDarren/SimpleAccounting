@@ -64,7 +64,7 @@ public class DatePickerFragment extends DialogFragment {
         // 从args中获取消息
         DateTime date = (DateTime) getArguments().getSerializable(ARG_DATE);
         int year = date.getYear();
-        int month = date.getMonthOfYear();
+        int month = date.getMonthOfYear() - 1;
         int day = date.getDayOfMonth();
 
         View v = LayoutInflater.from(getActivity())
@@ -80,7 +80,7 @@ public class DatePickerFragment extends DialogFragment {
                 .setPositiveButton(android.R.string.ok,
                         (dialog, which) -> {
                             DateTime datetime = new DateTime(mDatePicker.getYear(),
-                                    mDatePicker.getMonth(),
+                                    mDatePicker.getMonth() + 1,
                                     mDatePicker.getDayOfMonth(),
                                     date.getHourOfDay(),
                                     date.getMinuteOfHour());

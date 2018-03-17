@@ -4,27 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--<android.support.design.widget.CoordinatorLayout-->
-    <!--android:id="@+id/content_coordinator_layout"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--app:layout_constraintTop_toTopOf="parent"-->
-    <!--app:layout_constraintStart_toStartOf="parent"-->
-    <!--app:layout_constraintEnd_toEndOf="parent"-->
-    <!--app:layout_constraintBottom_toTopOf="@+id/bottom_constraint_layout">-->
-
-    <!---->
-
-    <!--</android.support.design.widget.CoordinatorLayout>-->
-    <!--<android.support.design.widget.AppBarLayout-->
-    <!--android:id="@+id/appbar"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:orientation="vertical">-->
-
-    <!---->
-
-    <!--</android.support.design.widget.AppBarLayout>-->
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -39,7 +18,7 @@
 
         <co.ceryle.segmentedbutton.SegmentedButtonGroup
             android:id="@+id/type_sbg"
-            android:layout_width="100dp"
+            android:layout_width="90dp"
             android:layout_height="28dp"
             android:layout_gravity="center_horizontal"
             android:layout_margin="4dp"
@@ -55,7 +34,7 @@
             app:sbg_borderColor="@color/amber700"
             app:sbg_borderSize="1dp"
             app:sbg_position="1"
-            app:sbg_radius="2dp"
+            app:sbg_radius="14dp"
             app:sbg_rippleColor="@color/amber700"
             app:sbg_selectorColor="@color/amber700">
 

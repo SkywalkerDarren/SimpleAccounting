@@ -22,7 +22,7 @@ public class StatsAdapter extends BaseQuickAdapter<BillLab.Stats, BaseViewHolder
 
     @Override
     protected void convert(BaseViewHolder helper, BillLab.Stats item) {
-        helper.setText(R.id.income_text_view, item.getIncome().toString());
+        helper.setText(R.id.textview1, item.getIncome().toString());
         helper.setText(R.id.expense_text_view, item.getExpense().toString());
         helper.setText(R.id.balance_text_view, item.getSum().toString());
         helper.setText(R.id.month_text_view, helper.getAdapterPosition() + 1 + "");

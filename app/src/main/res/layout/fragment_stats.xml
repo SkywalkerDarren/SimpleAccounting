@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -17,7 +16,7 @@
 
         <co.ceryle.segmentedbutton.SegmentedButtonGroup
             android:id="@+id/stats_sbg"
-            android:layout_width="100dp"
+            android:layout_width="90dp"
             android:layout_height="28dp"
             android:layout_gravity="center_horizontal"
             android:layout_margin="4dp"
@@ -27,13 +26,14 @@
             app:layout_constraintEnd_toStartOf="@+id/remark_edit_text"
             app:layout_constraintStart_toEndOf="@+id/date_image_view"
             app:layout_constraintTop_toTopOf="parent"
-            app:sbg_animateSelector="fastOutSlowIn"
-            app:sbg_animateSelectorDuration="500"
+            app:sbg_animateSelector="fastOutSlowIn|decelerate"
+            app:sbg_animateSelectorDuration="300"
             app:sbg_backgroundColor="@color/white"
             app:sbg_borderColor="@color/amber700"
             app:sbg_borderSize="1dp"
             app:sbg_position="1"
-            app:sbg_radius="2dp"
+            app:sbg_radius="14dp"
+            app:sbg_ripple="true"
             app:sbg_rippleColor="@color/amber700"
             app:sbg_selectorColor="@color/amber700">
 
@@ -43,8 +43,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:paddingBottom="4dp"
-                android:paddingEnd="2dp"
-                android:paddingStart="2dp"
                 android:paddingTop="4dp"
                 app:sb_rippleColor="@color/white"
                 app:sb_text="@string/classify"
@@ -57,8 +55,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:paddingBottom="4dp"
-                android:paddingEnd="2dp"
-                android:paddingStart="2dp"
                 android:paddingTop="4dp"
                 app:sb_rippleColor="@color/white"
                 app:sb_text="@string/journal"
@@ -69,292 +65,16 @@
 
     </Toolbar>
 
-    <LinearLayout
-        android:id="@+id/select_linear_layout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:padding="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar">
-
-        <co.ceryle.segmentedbutton.SegmentedButtonGroup
-            android:id="@+id/date_sbg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginRight="8dp"
-            app:sbg_animateSelector="fastOutSlowIn"
-            app:sbg_animateSelectorDuration="500"
-            app:sbg_backgroundColor="@color/white"
-            app:sbg_borderColor="@color/amber700"
-            app:sbg_borderSize="1dp"
-            app:sbg_position="1"
-            app:sbg_radius="5dp"
-            app:sbg_rippleColor="@color/amber700"
-            app:sbg_selectorColor="@color/amber700"
-            tools:layout_editor_absoluteX="190dp"
-            tools:layout_editor_absoluteY="12dp">
-
-            <co.ceryle.segmentedbutton.SegmentedButton
-                android:id="@+id/month_sb"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:padding="1dp"
-                app:sb_rippleColor="@color/white"
-                app:sb_text="@string/month"
-                app:sb_textColor="@color/amber700"
-                app:sb_textColor_onSelection="@color/white" />
-
-            <co.ceryle.segmentedbutton.SegmentedButton
-                android:id="@+id/year_sb"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:padding="1dp"
-                app:sb_rippleColor="@color/white"
-                app:sb_text="@string/year"
-                app:sb_textColor="@color/amber700"
-                app:sb_textColor_onSelection="@color/white" />
-
-        </co.ceryle.segmentedbutton.SegmentedButtonGroup>
-
-        <TextView
-            android:id="@+id/date_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:layout_editor_absoluteX="290dp"
-            tools:layout_editor_absoluteY="21dp"
-            tools:text="@sample/tools:date/mmddyy" />
-    </LinearLayout>
-
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/stats_line_chart"
-        android:layout_width="match_parent"
-        android:layout_height="180dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/select_linear_layout">
-
-    </com.github.mikephil.charting.charts.LineChart>
-
-    <LinearLayout
-        android:id="@+id/head_linear_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="false"
-        android:orientation="horizontal"
-        android:padding="8dp"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/stats_line_chart">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <android.support.v7.widget.CardView
-                android:id="@+id/expense_card_view"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardBackgroundColor="@color/expense"
-                app:cardCornerRadius="12dp"
-                app:cardUseCompatPadding="true">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:fontFamily="sans-serif"
-                    android:text="@string/expense"
-                    android:textColor="@color/white"
-                    android:textStyle="bold" />
-
-            </android.support.v7.widget.CardView>
-
-            <TextView
-                android:id="@+id/expense_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/zero"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <android.support.v7.widget.CardView
-                android:id="@+id/income_card_view"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardBackgroundColor="@color/income"
-                app:cardCornerRadius="12dp"
-                app:cardUseCompatPadding="true">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/income"
-                    android:textColor="@color/white"
-                    android:textStyle="bold" />
-
-            </android.support.v7.widget.CardView>
-
-            <TextView
-                android:id="@+id/income_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/zero"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <android.support.v7.widget.CardView
-                android:id="@+id/balance_card_view"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardBackgroundColor="@color/balance"
-                app:cardCornerRadius="12dp"
-                app:cardUseCompatPadding="true">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/balance"
-                    android:textColor="@color/white"
-                    android:textStyle="bold" />
-
-            </android.support.v7.widget.CardView>
-
-            <TextView
-                android:id="@+id/balance_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/zero"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linear_layout1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/grey50"
-        android:baselineAligned="false"
-        android:elevation="2dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/head_linear_layout">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/income"
-                android:textAlignment="center"
-                android:textColor="@color/income"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/expense"
-                android:textAlignment="center"
-                android:textColor="@color/expense"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/balance"
-                android:textAlignment="center"
-                android:textColor="@color/balance"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <TextView
-                android:id="@+id/month_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/months"
-                android:textAlignment="center"
-                android:textColor="@color/grey500"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/stats_recycler_view"
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linear_layout1" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+    </FrameLayout>
 
 
 </android.support.constraint.ConstraintLayout>

@@ -5,6 +5,7 @@
     <color name="colorAccent">#424242</color>
 
     <color name="key_bg">#353343</color>
+    <color name="key_bg_press">#4a485e</color>
     <color name="key_divider">#403e4b</color>
     <color name="income">#aed581</color>
     <color name="expense">#ffab40</color>

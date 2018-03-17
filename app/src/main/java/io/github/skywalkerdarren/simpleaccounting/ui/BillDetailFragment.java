@@ -123,7 +123,6 @@ public class BillDetailFragment extends BaseFragment {
             int x = (int) view1.getX() + view1.getWidth() / 2;
             int y = (int) view1.getY() + view1.getHeight() / 2;
             Intent intent = BillEditActivity.newIntent(getActivity(), mBill, x, y);
-            intent.putExtra(BillEditActivity.EXTRA_TRANS, BillEditActivity.CIRCLE_UP);
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity());
             startActivity(intent, options.toBundle());
         });
