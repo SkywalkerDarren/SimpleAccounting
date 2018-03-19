@@ -1,56 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:background="@color/grey50">
 
-    <TextView
-        android:id="@+id/textview1"
+    <LinearLayout
+        android:id="@+id/income_linear_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="48dp"
-        android:text="@string/income_s" />
+        android:layout_marginRight="16dp"
+        android:gravity="center"
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/income_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textview2"
-        android:layout_alignBottom="@+id/textview2"
-        android:layout_marginStart="8dp"
-        android:layout_toEndOf="@+id/textview1"
-        tools:text="1234" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/income_s" />
 
-    <TextView
-        android:id="@+id/textview2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textview1"
-        android:layout_alignBottom="@+id/textview1"
-        android:layout_marginStart="8dp"
-        android:layout_toEndOf="@+id/income_text_view"
-        android:text="@string/expense_s" />
+        <TextView
+            android:id="@+id/income_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            tools:text="1234" />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/expense_text_view"
+    <LinearLayout
+        android:id="@+id/expense_linear_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textview2"
-        android:layout_alignBottom="@+id/textview2"
-        android:layout_marginStart="8dp"
-        android:layout_toEndOf="@+id/textview2"
-        tools:text="1234" />
+        android:layout_marginRight="16dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/expense_s" />
+
+        <TextView
+            android:id="@+id/expense_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            tools:text="1234" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/add_bill_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:layout_marginStart="8dp"
-        android:layout_toEndOf="@+id/expense_text_view"
         android:text="@string/add_bill" />
 
-</RelativeLayout>
+</LinearLayout>

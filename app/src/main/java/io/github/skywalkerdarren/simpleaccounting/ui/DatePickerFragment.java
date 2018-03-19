@@ -16,7 +16,10 @@ import org.joda.time.DateTime;
 import io.github.skywalkerdarren.simpleaccounting.R;
 
 /**
- * Created by darren on 2018/1/26.
+ * 日期选择对话框
+ *
+ * @author darren
+ * @date 2018/1/26
  */
 
 public class DatePickerFragment extends DialogFragment {

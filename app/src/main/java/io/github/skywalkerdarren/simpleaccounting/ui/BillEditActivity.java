@@ -12,7 +12,10 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 
 /**
- * Created by darren on 2018/3/8.
+ * 编辑账单
+ *
+ * @author darren
+ * @date 2018/3/8
  */
 
 public class BillEditActivity extends BaseFragmentActivity {
@@ -20,31 +23,17 @@ public class BillEditActivity extends BaseFragmentActivity {
     public static final String EXTRA_CENTER_X = "io.github.skywalkerdarren.simpleaccounting.centerX";
     public static final String EXTRA_CENTER_Y = "io.github.skywalkerdarren.simpleaccounting.centerY";
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        super.onCreate(savedInstanceState, persistentState);
+    }
+
     public static Intent newIntent(Context context, Bill bill, int x, int y) {
         Intent intent = new Intent(context, BillEditActivity.class);
         intent.putExtra(EXTRA_BILL, bill);
         intent.putExtra(EXTRA_CENTER_X, x);
         intent.putExtra(EXTRA_CENTER_Y, y);
         return intent;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-
-//        switch (getIntent().getStringExtra(EXTRA_TRANS)) {
-//            case SLIDE_UP:
-////                getWindow().setEnterTransition(new Slide());
-////                getWindow().setExitTransition(new Slide());
-//                break;
-//            case CIRCLE_UP:
-////                getWindow().setEnterTransition(new Fade());
-////                getWindow().setExitTransition(new Fade());
-//                break;
-//            default:
-//                break;
-//        }
-        super.onCreate(savedInstanceState, persistentState);
-
     }
 
 

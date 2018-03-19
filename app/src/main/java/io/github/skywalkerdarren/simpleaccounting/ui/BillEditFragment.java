@@ -49,6 +49,9 @@ import io.github.skywalkerdarren.simpleaccounting.model.IncomeType;
 
 /**
  * 账单编辑或创建的fragment
+ *
+ * @author darren
+ * @date 2018/2/21
  */
 public class BillEditFragment extends BaseFragment {
     private static final String ARG_BILL = "bill";
@@ -66,26 +69,7 @@ public class BillEditFragment extends BaseFragment {
     private SegmentedButtonGroup mTypeSbg;
     private boolean mIsExpense = true;
     private NumPad mNumPad;
-    private Animator mStart;
 
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param bill 要编辑的账单
-     * @return A new instance of fragment BillEditFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static BillEditFragment newInstance(Bill bill, int centerX, int centerY) {
-        BillEditFragment fragment = new BillEditFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(ARG_BILL, bill);
-        args.putInt(ARG_CX, centerX);
-        args.putInt(ARG_CY, centerY);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,68 +81,6 @@ public class BillEditFragment extends BaseFragment {
         }
         setHasOptionsMenu(true);
     }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_edit, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_save_item:
-                if (saveBill()) {
-                    Toast.makeText(getActivity(), "点击保存并退出", Toast.LENGTH_SHORT).show();
-                } else {
-                    // 保存失败直接返回
-                    return true;
-                }
-            case android.R.id.home:
-                mNumPad.setVisibility(View.INVISIBLE);
-                getActivity().onBackPressed();
-                Intent intent = new Intent(DesktopWidget.EXTRA_ACTION_UP);
-                getActivity().sendBroadcast(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    /**
-     * 保存账单
-     */
-    private boolean saveBill() {
-        if (TextUtils.isEmpty(mBalanceEditText.getText())) {
-            return false;
-        }
-        try {
-            BigDecimal r = new BigDecimal(mBalanceEditText.getText().toString());
-            mBill.setBalance(r);
-        } catch (Exception e) {
-            Toast.makeText(getContext(), "表达式错误", Toast.LENGTH_SHORT);
-            return false;
-        }
-        mBill.setName(mTitleTextView.getText().toString());
-        mBill.setDate(mDateTime);
-        mBill.setRemark(mRemarkEditText.getText().toString());
-        mBill.setType(mTitleTextView.getText().toString());
-        List<BaseType> types = mIsExpense ? ExpenseType.getTypeList() : IncomeType.getTypeList();
-        for (BaseType type : types) {
-            if (type.getName().equals(mBill.getTypeName())) {
-                mBill.setExpense(type);
-            }
-        }
-
-        BillLab lab = BillLab.getInstance(getActivity());
-        if (lab.getBill(mBill.getId()) == null) {
-            lab.addBill(mBill);
-        } else {
-            lab.updateBill(mBill);
-        }
-        return true;
-    }
-
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -285,12 +207,92 @@ public class BillEditFragment extends BaseFragment {
                 colorChange.addUpdateListener(valueAnimator -> view.setBackgroundColor((Integer) valueAnimator.getAnimatedValue()));
                 AnimatorSet set = new AnimatorSet();
                 set.playTogether(reveal, colorChange);
-                set.setDuration(500);
+                set.setDuration(350);
                 set.start();
             }
         });
         return view;
     }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param bill 要编辑的账单
+     * @return A new instance of fragment BillEditFragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static BillEditFragment newInstance(Bill bill, int centerX, int centerY) {
+        BillEditFragment fragment = new BillEditFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_BILL, bill);
+        args.putInt(ARG_CX, centerX);
+        args.putInt(ARG_CY, centerY);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_edit, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_save_item:
+                if (saveBill()) {
+                    Toast.makeText(getActivity(), "点击保存并退出", Toast.LENGTH_SHORT).show();
+                } else {
+                    // 保存失败直接返回
+                    return true;
+                }
+            case android.R.id.home:
+                mNumPad.setVisibility(View.INVISIBLE);
+                getActivity().onBackPressed();
+                Intent intent = new Intent(DesktopWidget.EXTRA_ACTION_UP);
+                getActivity().sendBroadcast(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * 保存账单
+     */
+    private boolean saveBill() {
+        if (TextUtils.isEmpty(mBalanceEditText.getText())) {
+            return false;
+        }
+        try {
+            BigDecimal r = new BigDecimal(mBalanceEditText.getText().toString());
+            mBill.setBalance(r);
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "表达式错误", Toast.LENGTH_SHORT);
+            return false;
+        }
+        mBill.setName(mTitleTextView.getText().toString());
+        mBill.setDate(mDateTime);
+        mBill.setRemark(mRemarkEditText.getText().toString());
+        mBill.setType(mTitleTextView.getText().toString());
+        List<BaseType> types = mIsExpense ? ExpenseType.getTypeList() : IncomeType.getTypeList();
+        for (BaseType type : types) {
+            if (type.getName().equals(mBill.getTypeName())) {
+                mBill.setExpense(type);
+            }
+        }
+
+        BillLab lab = BillLab.getInstance(getActivity());
+        if (lab.getBill(mBill.getId()) == null) {
+            lab.addBill(mBill);
+        } else {
+            lab.updateBill(mBill);
+        }
+        return true;
+    }
+
 
     /**
      * 选择类型
@@ -337,5 +339,10 @@ public class BillEditFragment extends BaseFragment {
             default:
                 break;
         }
+    }
+
+    @Override
+    protected void updateUI() {
+
     }
 }

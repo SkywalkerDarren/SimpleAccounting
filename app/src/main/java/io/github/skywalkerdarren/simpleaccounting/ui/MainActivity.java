@@ -23,6 +23,12 @@ import android.view.animation.DecelerateInterpolator;
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 
+/**
+ * 主界面
+ *
+ * @author darren
+ * @date 2018/2/21
+ */
 public class MainActivity extends AppCompatActivity {
 
     private ViewPager sViewPager;
@@ -129,6 +135,13 @@ public class MainActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
+    /**
+     * 按钮动画
+     *
+     * @param view     视图
+     * @param disapper 是否消失
+     * @return 动画组
+     */
     private AnimatorSet buttonAnimator(View view, boolean disapper) {
         float start = disapper ? 1 : 0;
         float end = disapper ? 0 : 1;

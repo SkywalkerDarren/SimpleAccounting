@@ -1,39 +1,50 @@
 package io.github.skywalkerdarren.simpleaccounting.adapter;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
-import android.support.annotation.DrawableRes;
-import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.chad.library.adapter.base.entity.MultiItemEntity;
 
-import org.joda.time.DateTime;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
-import io.github.skywalkerdarren.simpleaccounting.model.Bill;
-import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
 
 /**
- * Created by darren on 2018/2/12.
+ * 账单适配器
+ * 将帐单列表适配到recycler view
  *
+ * @author darren
+ * @date 2018/2/12
  */
 
-public class BillAdapter extends BaseMultiItemQuickAdapter<BillAdapter.BillInfo, BaseViewHolder> implements View.OnTouchListener {
+public class BillAdapter extends BaseMultiItemQuickAdapter<BillInfo, BaseViewHolder> implements View.OnTouchListener {
+
+    /**
+     * 不带备注的账单
+     */
     public static final int WITHOUT_REMARK = 0;
+
+    /**
+     * 带备注的账单
+     */
     public static final int WITH_REMARK = 1;
+
+    /**
+     * 分隔符
+     */
     public static final int HEADER = 2;
+
     private int mX;
     private int mY;
 
-
+    /**
+     * 将帐单列表适配到适配器中
+     *
+     * @param bills 含分隔符的账单信息列表
+     */
     public BillAdapter(List<BillInfo> bills) {
         super(bills);
         addItemType(WITH_REMARK, R.layout.list_bill_item);
@@ -41,6 +52,11 @@ public class BillAdapter extends BaseMultiItemQuickAdapter<BillAdapter.BillInfo,
         addItemType(HEADER, R.layout.list_bill_header);
     }
 
+    /**
+     * 设置新帐单
+     *
+     * @param bills 含分隔符的账单信息列表
+     */
     public void setBills(List<BillInfo> bills) {
         setNewData(bills);
     }
@@ -75,6 +91,7 @@ public class BillAdapter extends BaseMultiItemQuickAdapter<BillAdapter.BillInfo,
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         mX = (int) motionEvent.getRawX();
@@ -82,121 +99,23 @@ public class BillAdapter extends BaseMultiItemQuickAdapter<BillAdapter.BillInfo,
         return false;
     }
 
+    /**
+     * 获得在屏幕中的x坐标
+     *
+     * @return x坐标
+     */
     public int getX() {
         return mX;
     }
 
+    /**
+     * 获得在屏幕中的y坐标
+     *
+     * @return y坐标
+     */
     public int getY() {
         return mY;
     }
 
-    public static class BillInfo implements MultiItemEntity {
-        private int mType;
-
-        private UUID mUUID;
-        private String mTitle;
-        private String mRemark;
-        private String mBalance;
-        private boolean mIsExpense;
-        private String mBillTypeName;
-        @DrawableRes
-        private int mBillTypeResId;
-
-        private String mIncome;
-        private String mExpense;
-
-        private DateTime mDateTime;
-
-        public BillInfo(Bill bill) {
-            mType = TextUtils.isEmpty(bill.getRemark()) ? WITHOUT_REMARK : WITH_REMARK;
-            mUUID = bill.getId();
-            mTitle = bill.getName();
-            mRemark = bill.getRemark();
-            mBalance = bill.getBalance().toString();
-            mIsExpense = bill.isExpense();
-            mBillTypeName = bill.getTypeName();
-            mBillTypeResId = bill.getTypeResId();
-            mDateTime = bill.getDate();
-        }
-
-        public BillInfo(DateHeaderDivider header) {
-            mType = HEADER;
-            mDateTime = header.getDate();
-            mExpense = header.getExpense();
-            mIncome = header.getIncome();
-        }
-
-        public static List<BillInfo> getBillInfoList(List<Bill> bills, BillLab billLab) {
-            List<BillInfo> billInfoList = new ArrayList<>();
-            // 上一个账单的年月日
-            DateTime date = null;
-            for (int i = 0; i < bills.size(); i++) {
-                Bill bill = bills.get(i);
-                DateTime dateTime = bill.getDate();
-                int y = dateTime.getYear();
-                int m = dateTime.getMonthOfYear();
-                int d = dateTime.getDayOfMonth();
-                // 当前账单的年月日
-                DateTime currentDate = new DateTime(y, m, d, 0, 0);
-                // 如果当前帐单与上一张单年月日不同，则添加账单
-                if (date == null || !date.equals(currentDate)) {
-                    date = currentDate;
-                    BigDecimal income = billLab.getStats(date, date.plusDays(1)).getIncome();
-                    BigDecimal expense = billLab.getStats(date, date.plusDays(1)).getExpense();
-                    billInfoList.add(new BillInfo(new DateHeaderDivider(date, income, expense)));
-                }
-                billInfoList.add(new BillInfo(bill));
-
-            }
-            return billInfoList;
-        }
-
-        @Override
-        public int getItemType() {
-            return mType;
-        }
-
-        public String getRemark() {
-            return mRemark;
-        }
-
-        @DrawableRes
-        public int getBillTypeResId() {
-            return mBillTypeResId;
-        }
-
-        public String getBillTypeName() {
-            return mBillTypeName;
-        }
-
-        public UUID getUUID() {
-            return mUUID;
-        }
-
-        public String getTitle() {
-            return mTitle;
-        }
-
-        public String getBalance() {
-            return mBalance;
-        }
-
-        public boolean isExpense() {
-            return mIsExpense;
-        }
-
-        public String getIncome() {
-            return mIncome;
-        }
-
-        public String getExpense() {
-            return mExpense;
-        }
-
-        public DateTime getDateTime() {
-            return mDateTime;
-        }
-
-    }
 
 }

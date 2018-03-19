@@ -12,8 +12,10 @@ import java.util.UUID;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
 
 /**
- * Created by darren on 2018/3/9.
  * 删除帐单对话框
+ *
+ * @author darren
+ * @date 2018/3/9
  */
 
 public class DeleteBillAlertDialog extends DialogFragment {

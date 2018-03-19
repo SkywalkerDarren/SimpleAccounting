@@ -23,7 +23,10 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.CalculateUtil;
 
 /**
- * Created by darren on 2018/3/10.
+ * 自定义键盘
+ *
+ * @author darren
+ * @date 2018/3/10
  */
 
 public class NumPad extends LinearLayout {
@@ -31,13 +34,20 @@ public class NumPad extends LinearLayout {
     private Context mContext;
     private final float y = getTranslationY();
 
-
+    /**
+     * 小键盘构造
+     *
+     * @param context 应用上下文
+     */
     public NumPad(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
         init();
     }
 
+    /**
+     * 键盘初始化
+     */
     private void init() {
         setOrientation(VERTICAL);
         LayoutInflater.from(mContext).inflate(R.layout.num_pad, this, true);
@@ -135,6 +145,11 @@ public class NumPad extends LinearLayout {
 
     }
 
+    /**
+     * 处理表达式
+     *
+     * @return 合法表达式
+     */
     private String processExp() {
         String exp = mEditText.getText().toString()
                 .replaceAll("×", "*")
@@ -142,6 +157,9 @@ public class NumPad extends LinearLayout {
         return exp;
     }
 
+    /**
+     * 隐藏自定义键盘
+     */
     public void hideKeyboard() {
         int visibility = getVisibility();
         if (visibility == View.VISIBLE) {
@@ -162,13 +180,18 @@ public class NumPad extends LinearLayout {
         }
     }
 
-
+    /**
+     * 隐藏系统键盘
+     */
     public void hideSysKeyboard() {
         InputMethodManager imm = (InputMethodManager) mContext
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(this.getWindowToken(), 0);
     }
 
+    /**
+     * 显示自定义键盘
+     */
     public void showKeyboard() {
         int visibility = getVisibility();
         if (visibility == View.GONE || visibility == View.INVISIBLE) {
@@ -183,6 +206,11 @@ public class NumPad extends LinearLayout {
         }
     }
 
+    /**
+     * 设置响应该自定义键盘的edit text
+     *
+     * @param balanceEditText
+     */
     public void setStrReceiver(EditText balanceEditText) {
         mEditText = balanceEditText;
     }

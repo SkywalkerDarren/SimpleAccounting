@@ -46,7 +46,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
  * Use the {@link JournalFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class JournalFragment extends Fragment implements View.OnClickListener {
+public class JournalFragment extends BaseFragment implements View.OnClickListener {
     private BillLab mBillLab;
 
     private SegmentedButtonGroup mDateSbg;
@@ -64,19 +64,6 @@ public class JournalFragment extends Fragment implements View.OnClickListener {
     boolean mShowExpense = true;
     boolean mShowBalance = true;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment JournalFragment.
-     */
-    public static JournalFragment newInstance() {
-        JournalFragment fragment = new JournalFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @SuppressLint("RtlHardcoded")
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,7 +80,7 @@ public class JournalFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_journal, container, false);
         mLineChart = view.findViewById(R.id.stats_line_chart);
         mIncomeStatsCardView = view.findViewById(R.id.income_card_view);
-        mIncomeStatsTextView = view.findViewById(R.id.textview1);
+        mIncomeStatsTextView = view.findViewById(R.id.income_text_view);
         mExpenseStatsCardView = view.findViewById(R.id.expense_card_view);
         mExpenseStatsTextView = view.findViewById(R.id.expense_text_view);
         mBalanceStatsCardView = view.findViewById(R.id.balance_card_view);
@@ -108,6 +95,19 @@ public class JournalFragment extends Fragment implements View.OnClickListener {
         configChartStyle();
         updateUI();
         return view;
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @return A new instance of fragment JournalFragment.
+     */
+    public static JournalFragment newInstance() {
+        JournalFragment fragment = new JournalFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     /**
@@ -155,6 +155,7 @@ public class JournalFragment extends Fragment implements View.OnClickListener {
     /**
      * 放一些需要经常更新的方法
      */
+    @Override
     public void updateUI() {
         int year = 2018;
         List<BillLab.Stats> statsList = mBillLab.getAnnualStats(year);
@@ -168,12 +169,6 @@ public class JournalFragment extends Fragment implements View.OnClickListener {
             mStatsRecyclerView.setAdapter(mStatsAdapter);
         }
         updateLineDataSets(statsList, true, true, true);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        updateUI();
     }
 
 

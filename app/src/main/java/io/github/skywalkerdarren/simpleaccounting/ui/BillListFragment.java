@@ -1,7 +1,5 @@
 package io.github.skywalkerdarren.simpleaccounting.ui;
 
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -9,11 +7,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.animation.AlphaInAnimation;
 import com.oushangfeng.pinnedsectionitemdecoration.PinnedHeaderItemDecoration;
 
 import org.joda.time.DateTime;
@@ -34,16 +31,20 @@ import java.util.UUID;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.BillAdapter;
+import io.github.skywalkerdarren.simpleaccounting.adapter.BillInfo;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
 
 import static io.github.skywalkerdarren.simpleaccounting.adapter.BillAdapter.HEADER;
 
 /**
- * Created by darren on 2018/1/31.
+ * 账单列表fragment
+ *
+ * @author darren
+ * @date 2018/1/31
  */
 
-public class BillListFragment extends Fragment implements View.OnTouchListener {
+public class BillListFragment extends BaseFragment implements View.OnTouchListener {
     private static final int REQUEST_DATE_TIME = 0;
     private RecyclerView mBillListRecyclerView;
     private BillAdapter mBillAdapter;
@@ -60,6 +61,14 @@ public class BillListFragment extends Fragment implements View.OnTouchListener {
     private int mY;
 
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        mBillLab = BillLab.getInstance(getActivity());
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -80,11 +89,11 @@ public class BillListFragment extends Fragment implements View.OnTouchListener {
         });
 
 
-
         mBillListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         updateUI();
         mBillListRecyclerView.addItemDecoration(new PinnedHeaderItemDecoration.Builder(HEADER).create());
+
         mBillListRecyclerView.setOnTouchListener(this);
         return view;
     }
@@ -93,6 +102,7 @@ public class BillListFragment extends Fragment implements View.OnTouchListener {
      * UI刷新
      * 放置经常需要刷新的视图
      */
+    @Override
     @SuppressLint("SetTextI18n")
     public void updateUI() {
 
@@ -105,8 +115,8 @@ public class BillListFragment extends Fragment implements View.OnTouchListener {
         mMonthExpenseTextView.setText(mDate.getMonthOfYear() + getString(R.string.month_expense));
         mSetBudgeTextView.setText("设置预算");
 
-        List<Bill> bills = mBillLab.getsBills(mDate.getYear(), mDate.monthOfYear().get());
-        List<BillAdapter.BillInfo> billInfoList = BillAdapter.BillInfo.getBillInfoList(bills, mBillLab);
+        List<BillInfo> billInfoList = BillInfo
+                .getBillInfoList(mDate.getYear(), mDate.getMonthOfYear(), getActivity());
 
         updateAdapter(billInfoList);
     }
@@ -116,7 +126,7 @@ public class BillListFragment extends Fragment implements View.OnTouchListener {
      *
      * @param billInfoList 新数据
      */
-    private void updateAdapter(List<BillAdapter.BillInfo> billInfoList) {
+    private void updateAdapter(List<BillInfo> billInfoList) {
         if (mBillAdapter == null) {
             mBillAdapter = new BillAdapter(billInfoList);
             configAdapter();
@@ -150,9 +160,7 @@ public class BillListFragment extends Fragment implements View.OnTouchListener {
      */
     private void configAdapter() {
         mBillAdapter.setEmptyView(emptyView());
-        mBillAdapter.openLoadAnimation(view -> new Animator[]{
-                ObjectAnimator.ofFloat(view, "alpha", 0f, 1f),
-        });
+        mBillAdapter.openLoadAnimation(new AlphaInAnimation());
         mBillAdapter.isFirstOnly(false);
         mBillAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (adapter.getItemViewType(position) != HEADER) {
@@ -169,7 +177,7 @@ public class BillListFragment extends Fragment implements View.OnTouchListener {
      * 点击账单列表事件
      */
     private void clickBillItem(BaseQuickAdapter adapter, View view, int position) {
-        BillAdapter.BillInfo billInfo = (BillAdapter.BillInfo) adapter.getData().get(position);
+        BillInfo billInfo = (BillInfo) adapter.getData().get(position);
         UUID billId = billInfo.getUUID();
         int[] location1 = new int[2];
         int[] location2 = new int[2];
@@ -178,7 +186,6 @@ public class BillListFragment extends Fragment implements View.OnTouchListener {
         center.getLocationOnScreen(location2);
         mX = mBillAdapter.getX();
         mY = mBillAdapter.getY();
-        Log.d("test", "clickBillItem: x " + mX + " y " + mY);
         // TODO 颜色
         Intent intent = BillDetailPagerActivity
                 .newIntent(getActivity(), mBillLab.getBill(billId), mX, mY, R.color.orangea200);
@@ -202,23 +209,9 @@ public class BillListFragment extends Fragment implements View.OnTouchListener {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        mBillLab = BillLab.getInstance(getActivity());
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_bill, menu);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(BillListFragment.class.getName(), "onResume() called");
-        updateUI();
     }
 
     @Override
@@ -236,7 +229,11 @@ public class BillListFragment extends Fragment implements View.OnTouchListener {
         return super.onOptionsItemSelected(item);
     }
 
-
+    /**
+     * 账单示例构造
+     *
+     * @return 当前账单
+     */
     public static BillListFragment newInstance() {
 
         Bundle args = new Bundle();

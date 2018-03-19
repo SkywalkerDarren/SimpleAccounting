@@ -6,7 +6,10 @@ import java.util.List;
 import io.github.skywalkerdarren.simpleaccounting.R;
 
 /**
- * Created by darren on 2018/2/12.
+ * 支出类型
+ *
+ * @author darren
+ * @date 2018/2/12
  */
 
 public class ExpenseType extends BaseType {
@@ -15,14 +18,26 @@ public class ExpenseType extends BaseType {
      */
     private static final ExpenseType EXPENSE_TYPE = new ExpenseType();
 
+    /**
+     * @return 支出类型列表
+     */
     public static List<BaseType> getTypeList() {
         return EXPENSE_TYPE.getTypes();
     }
 
+    /**
+     * 必要的空构造方法
+     */
     private ExpenseType() {
         super();
     }
 
+    /**
+     * 新建支出类型
+     *
+     * @param name 名称
+     * @param id   资源图片id
+     */
     public ExpenseType(String name, int id) {
         super(name, id);
     }

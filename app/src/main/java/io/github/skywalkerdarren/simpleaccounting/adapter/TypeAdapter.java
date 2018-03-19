@@ -12,8 +12,10 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.BaseType;
 
 /**
- * Created by darren on 2018/3/8.
  * 类型适配器
+ *
+ * @author darren
+ * @date 2018/3/8
  */
 
 public class TypeAdapter extends BaseQuickAdapter<BaseType, BaseViewHolder> {
@@ -31,6 +33,7 @@ public class TypeAdapter extends BaseQuickAdapter<BaseType, BaseViewHolder> {
 
     @Override
     protected void startAnim(Animator anim, int index) {
+        // 前20个项目需要动画延迟
         if (index < 20) {
             int col = 4;
             int delay = index / col + index % col;

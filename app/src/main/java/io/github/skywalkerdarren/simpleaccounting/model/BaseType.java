@@ -1,27 +1,55 @@
 package io.github.skywalkerdarren.simpleaccounting.model;
 
+import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 
 import java.util.List;
 
+import io.github.skywalkerdarren.simpleaccounting.R;
+
 /**
- * Created by darren on 2018/2/12.
  * 基本账单类型
+ *
+ * @author darren
+ * @date 2018/2/12
  */
 
 public abstract class BaseType {
 
-    protected List<BaseType> mBaseTypes;
+    private List<BaseType> mBaseTypes;
     private String mName;
     @DrawableRes
     private int mResId;
+    @ColorRes
+    private int mColorId;
 
+    /**
+     * 必要的空构造方法
+     */
     protected BaseType() {
     }
 
+    /**
+     * 通过名称，资源id，构造新的类型
+     *
+     * @param name 类型名称
+     * @param id   对应资源id
+     */
     public BaseType(String name, @DrawableRes int id) {
+        this(name, id, R.color.amber500);
+    }
+
+    /**
+     * 通过名称，资源id，构造新的类型
+     *
+     * @param name    类型名称
+     * @param resId   对应资源id
+     * @param colorId 对应背景颜色id
+     */
+    public BaseType(String name, @DrawableRes int resId, @ColorRes int colorId) {
         mName = name;
-        mResId = id;
+        mResId = resId;
+        mColorId = colorId;
     }
 
 
@@ -38,7 +66,7 @@ public abstract class BaseType {
     }
 
     /**
-     * 设定类型集
+     * 设定默认类型集
      *
      * @return 类型集
      */
@@ -68,5 +96,14 @@ public abstract class BaseType {
     public @DrawableRes
     int getTypeId() {
         return mResId;
+    }
+
+    /**
+     * 获取当前类型的背景颜色id
+     *
+     * @return 颜色id
+     */
+    public int getColorId() {
+        return mColorId;
     }
 }

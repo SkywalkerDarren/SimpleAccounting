@@ -6,17 +6,6 @@
     android:layout_height="match_parent"
     tools:context="io.github.skywalkerdarren.simpleaccounting.ui.BillDetailPagerActivity">
 
-    <!--<view-->
-    <!--android:id="@+id/line"-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_height="1dp"-->
-    <!--android:layout_marginTop="16dp"-->
-    <!--android:background="@drawable/dash_line"-->
-    <!--android:layerType="software"-->
-    <!--app:layout_constraintRight_toRightOf="parent"-->
-    <!--app:layout_constraintStart_toStartOf="parent"-->
-    <!--app:layout_constraintTop_toBottomOf="@+id/type_image_view" />-->
-
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"

@@ -4,52 +4,58 @@
     android:id="@+id/bills_header"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
-    android:gravity="center_vertical"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/bills_date_text_view"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/bills_date"
-        tools:text="2018-2-2" />
+        android:background="@android:color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        <TextView
+            android:id="@+id/bills_date_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/bills_date"
+            tools:text="2018-2-2" />
 
-    <TextView
-        android:id="@+id/text_view_expense"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="0dp"
-        android:text="@string/expense_s" />
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
-    <TextView
-        android:id="@+id/bill_expense_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="16dp"
-        android:textColor="@android:color/holo_red_light"
-        tools:text="1000" />
+        <TextView
+            android:id="@+id/text_view_expense"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="0dp"
+            android:text="@string/expense_s" />
 
-    <TextView
-        android:id="@+id/text_view_income"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/income_s" />
+        <TextView
+            android:id="@+id/bill_expense_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:textColor="@android:color/holo_red_light"
+            tools:text="1000" />
 
-    <TextView
-        android:id="@+id/bill_income_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textColor="@android:color/holo_green_light"
-        tools:text="10000" />
+        <TextView
+            android:id="@+id/text_view_income"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/income_s" />
+
+        <TextView
+            android:id="@+id/bill_income_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:textAlignment="center"
+            android:textColor="@android:color/holo_green_light"
+            tools:text="10000" />
+    </LinearLayout>
 </LinearLayout>

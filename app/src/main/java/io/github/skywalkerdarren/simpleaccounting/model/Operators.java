@@ -10,10 +10,12 @@ import java.util.HashMap;
  * 运算符类
  * 设定各种运算符，大数或长整数的运算
  *
- * @author 杨弘
+ * @author darren
+ * @date 2018/3/10
  */
 public class Operators {
     private final static MathContext MC = new MathContext(64, RoundingMode.HALF_UP);
+
     /**
      * 存放运算符的哈希表，通过运算符字符串获取Operator运算符
      *

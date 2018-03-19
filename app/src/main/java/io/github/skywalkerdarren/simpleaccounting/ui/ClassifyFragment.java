@@ -21,20 +21,6 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 public class ClassifyFragment extends Fragment {
 
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment ClassifyFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ClassifyFragment newInstance() {
-        ClassifyFragment fragment = new ClassifyFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @SuppressLint("RtlHardcoded")
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,6 +34,19 @@ public class ClassifyFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_classify, container, false);
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @return A new instance of fragment ClassifyFragment.
+     */
+    public static ClassifyFragment newInstance() {
+        ClassifyFragment fragment = new ClassifyFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
     }
 
 }

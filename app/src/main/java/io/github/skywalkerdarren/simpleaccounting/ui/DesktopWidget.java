@@ -15,11 +15,13 @@ import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
 
 /**
- * Created by darren on 2018/3/16.
+ * 桌面小部件
+ *
+ * @author darren
+ * @date 2018/3/16
  */
 
 public class DesktopWidget extends AppWidgetProvider {
-    private static final String TAG = "test";
     private static final int REQUEST_BILL = 0;
     public static final String EXTRA_ACTION_UP = "android.appwidget.action.APPWIDGET_UPDATE";
     private ComponentName mComponentName;
@@ -41,7 +43,6 @@ public class DesktopWidget extends AppWidgetProvider {
     }
 
     private void refreshData(Context context, AppWidgetManager appWidgetManager) {
-//        Toast.makeText(context, "refresh", Toast.LENGTH_SHORT).show();
         Intent intent = BillEditActivity.newIntent(context, new Bill(), 0, 0);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, REQUEST_BILL,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);

@@ -9,12 +9,13 @@ import android.support.v7.app.AppCompatActivity;
 import io.github.skywalkerdarren.simpleaccounting.R;
 
 /**
- * Created by darren on 2018/2/21.
  * 用于包裹fragment的基类activity
+ *
+ * @author darren
+ * @date 2018/2/21
  */
 
 public abstract class BaseFragmentActivity extends AppCompatActivity {
-    public abstract Fragment createFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,10 +29,17 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
         // 如果没找到则是没创建
         if (fragment == null) {
             // 创建CrimeFragment新视图
-//            fragment = new CrimeFragment();
             fragment = createFragment();
             FragmentTransaction ft = fm.beginTransaction();
             ft.add(R.id.fragment_container, fragment).commit();
         }
     }
+
+    /**
+     * 构建一个fragment给fragment manager
+     *
+     * @return 构建完成的fragment
+     */
+    public abstract Fragment createFragment();
+
 }

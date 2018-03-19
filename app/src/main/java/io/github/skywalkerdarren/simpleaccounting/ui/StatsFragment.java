@@ -21,17 +21,6 @@ public class StatsFragment extends Fragment {
     private SegmentedButtonGroup mStatsSbg;
     private int mPosition = 1;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment StatsFragment.
-     */
-    public static StatsFragment newInstance() {
-        StatsFragment fragment = new StatsFragment();
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +69,17 @@ public class StatsFragment extends Fragment {
     public void onPause() {
         super.onPause();
         mPosition = mStatsSbg.getPosition();
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @return A new instance of fragment StatsFragment.
+     */
+    public static StatsFragment newInstance() {
+        StatsFragment fragment = new StatsFragment();
+        return fragment;
     }
 
     @Override

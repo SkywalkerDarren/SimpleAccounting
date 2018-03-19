@@ -17,7 +17,10 @@ import org.joda.time.DateTime;
 import io.github.skywalkerdarren.simpleaccounting.R;
 
 /**
- * Created by darren on 2018/2/22.
+ * 月份选择对话框
+ *
+ * @author darren
+ * @date 2018/2/22
  */
 
 public class MonthPickerDialog extends DialogFragment {
@@ -26,6 +29,12 @@ public class MonthPickerDialog extends DialogFragment {
     private NumberPicker mYearPicker;
     private NumberPicker mMonthPicker;
 
+    /**
+     * 构造对话框构造
+     *
+     * @param dateTime 初始日期
+     * @return 对话框
+     */
     public static MonthPickerDialog newInstance(DateTime dateTime) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_DATE_TIME, dateTime);

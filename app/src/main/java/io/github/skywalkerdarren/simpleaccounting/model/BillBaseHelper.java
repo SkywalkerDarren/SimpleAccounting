@@ -5,20 +5,29 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
- * Created by darren on 2018/1/30.
  * 账单表数据库辅助类
+ *
+ * @author darren
+ * @date 2018/1/30
  */
 
 public class BillBaseHelper extends SQLiteOpenHelper {
+
     /**
      * 数据库版本号
      */
     private static final int VERSION = 1;
+
     /**
      * 数据库名字
      */
     private static final String DATABASE_NAME = "Bills.db";
 
+    /**
+     * 构造bill账单游标
+     *
+     * @param context 应用上下文
+     */
     public BillBaseHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION);
     }

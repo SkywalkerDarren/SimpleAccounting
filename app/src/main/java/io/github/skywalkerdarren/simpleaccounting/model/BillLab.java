@@ -18,11 +18,13 @@ import java.util.UUID;
 import static io.github.skywalkerdarren.simpleaccounting.model.BillDbSchema.BillTable;
 
 /**
- * Created by darren on 2018/1/29.
  * 账单库类
  * 从库中获取特定账单
  * 前期使用特定临时账单
  * 后期用数据库持久化代替
+ *
+ * @author darren
+ * @date 2018/1/29
  */
 
 public class BillLab {
@@ -48,6 +50,11 @@ public class BillLab {
         }
     }
 
+    /**
+     * 构造账单库
+     *
+     * @param context 应用上下文
+     */
     private BillLab(Context context) {
         // 数据库方式
         mContext = context.getApplicationContext();
@@ -56,6 +63,7 @@ public class BillLab {
 
     /**
      * 随机创建一个账单
+     *
      * @param i 编号
      * @return 账单
      */
@@ -221,7 +229,7 @@ public class BillLab {
      * 一段时间的账单结算统计
      *
      * @param start 起始时间
-     * @param end 结束时间
+     * @param end   结束时间
      * @return 包括支出，收入，盈余的统计结果
      */
     public Stats getStats(DateTime start, DateTime end) {
@@ -314,6 +322,11 @@ public class BillLab {
                 new String[]{id.toString()});
     }
 
+    /**
+     * 更新账单
+     *
+     * @param bill 账单
+     */
     public void updateBill(Bill bill) {
         ContentValues values = getContentValues(bill);
         mDatabase.update(BillTable.NAME, values, BillTable.Cols.UUID + " = ?",

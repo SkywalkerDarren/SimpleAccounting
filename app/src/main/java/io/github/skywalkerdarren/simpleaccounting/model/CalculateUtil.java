@@ -12,20 +12,21 @@ import java.util.regex.Pattern;
 import io.github.skywalkerdarren.simpleaccounting.model.Operators.Operator;
 
 /**
- * Created by darren on 2018/3/10.
  * 大数计算工具
+ *
+ * @author darren
+ * @date 2018/3/10
  */
 
 public class CalculateUtil {
-    //TODO 计算器
 
     /**
      * 获取计算结果
      *
-     * @return
+     * @return 计算结果
      */
     public static BigDecimal getResult(Expression expression) {
-        String exp = ConvertToExpression(expression);
+        String exp = convertToExpression(expression);
         BigDecimal r;
         try {
             r = new BigDecimal(new CalculateUtil().getResult(exp));
@@ -97,13 +98,6 @@ public class CalculateUtil {
      * @param exp 表达式数组
      */
     private boolean checkExpression(List<String> exp) {
-        List<String> expression = exp;
-
-//        for (String s : exp) {
-//            if (!s.matches(" *")) {
-//                expression.add(s);
-//            }
-//        }
 
         int l = 0, r = 0;
         //      neg,    num,    double, single, left,   right
@@ -125,7 +119,7 @@ public class CalculateUtil {
         // 初始化一个无效入口
         int i = 0, j = 0;
         boolean single = false;
-        String start = expression.get(0);
+        String start = exp.get(0);
         try {
             single = Operators.operatorHashMap.get(start).getAry() == 1;
         } catch (NullPointerException ignored) {
@@ -138,33 +132,33 @@ public class CalculateUtil {
                 patternHex.matcher(start).matches() ||
                 patternExp.matcher(start).matches()) {
             j = 1;
-        } else if (start.equals("-") || start.equals("+")) {
+        } else if ("-".equals(start) || "+".equals(start)) {
             j = 0;
-        } else if (start.equals("(")) {
+        } else if ("(".equals(start)) {
             l = 1;
             j = 4;
         } else if (single) {
             j = 3;
         }
 
-        for (int k = 1; k < expression.size(); k++) {
+        for (int k = 1; k < exp.size(); k++) {
             i = j;
-            if (patternFloat.matcher(expression.get(k)).matches() ||
-                    patternInteger.matcher(expression.get(k)).matches() ||
-                    patternHex.matcher(expression.get(k)).matches() ||
-                    patternExp.matcher(expression.get(k)).matches()) {
+            if (patternFloat.matcher(exp.get(k)).matches() ||
+                    patternInteger.matcher(exp.get(k)).matches() ||
+                    patternHex.matcher(exp.get(k)).matches() ||
+                    patternExp.matcher(exp.get(k)).matches()) {
                 j = 1;
-            } else if (i == 4 && (expression.get(k).equals("-") || expression.get(k).equals("+"))) {
+            } else if (i == 4 && ("-".equals(exp.get(k)) || "+".equals(exp.get(k)))) {
                 j = 0;
-            } else if (expression.get(k).equals("(")) {
+            } else if ("(".equals(exp.get(k))) {
                 l++;
                 j = 4;
-            } else if (expression.get(k).equals(")")) {
+            } else if (")".equals(exp.get(k))) {
                 r++;
                 j = 5;
-            } else if (Operators.operatorHashMap.get(expression.get(k)).getAry() == 2) {
+            } else if (Operators.operatorHashMap.get(exp.get(k)).getAry() == 2) {
                 j = 2;
-            } else if (Operators.operatorHashMap.get(expression.get(k)).getAry() == 1) {
+            } else if (Operators.operatorHashMap.get(exp.get(k)).getAry() == 1) {
                 j = 3;
             }
 
@@ -188,18 +182,18 @@ public class CalculateUtil {
         if (TextUtils.isEmpty(exp)) {
             return true;
         }
-        final boolean N = false;
-        final boolean Y = true;
+        final boolean n = false;
+        final boolean y = true;
         final boolean[][] fsm = new boolean[][]{
                 // num
-                {Y, Y, Y},
+                {y, y, y},
                 // dot
-                {Y, N, N},
+                {y, n, n},
                 // sign
-                {Y, N, N},
+                {y, n, n},
         };
 
-        int j = 2, k = 0;
+        int j = 2, k;
         char c = exp.charAt(0);
         if (c >= '0' && c <= '9') {
             k = 0;
@@ -248,7 +242,7 @@ public class CalculateUtil {
                 // 运算符
                 switch (s) {
                     case ")":
-                        while (!flag.peek().equals("(")) {
+                        while (!"(".equals(flag.peek())) {
                             calcExp(val, flag);
                         }
                         flag.pop();
@@ -268,7 +262,7 @@ public class CalculateUtil {
                 }
             }
         }
-        while (!flag.peek().equals("@")) {
+        while (!"@".equals(flag.peek())) {
             calcExp(val, flag);
         }
         if (val.isEmpty()) {
@@ -310,7 +304,13 @@ public class CalculateUtil {
         }
     }
 
-    public static String ConvertToExpression(Expression exp) {
+    /**
+     * 转换到表达式
+     *
+     * @param exp 原始表达式
+     * @return 表达式
+     */
+    private static String convertToExpression(Expression exp) {
         return exp.createExpression();
     }
 }

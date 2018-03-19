@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,6 +34,10 @@ import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
  * A simple {@link Fragment} subclass.
  * Use the {@link BillDetailFragment#newInstance} factory method to
  * create an instance of this fragment.
+ * 账单细节fragment
+ *
+ * @author darren
+ * @date 2018/2/21
  */
 public class BillDetailFragment extends BaseFragment {
     private static final String ARG_BILL = "bill";
@@ -40,7 +45,6 @@ public class BillDetailFragment extends BaseFragment {
     private static final String ARG_CY = "cy";
     private static final String ARG_START_COLOR = "startColor";
 
-    // TODO: Rename and change types of parameters
     private Bill mBill;
     private ImageView mTypeImageView;
     private TextView mTitleTextView;
@@ -51,22 +55,6 @@ public class BillDetailFragment extends BaseFragment {
     private ActionBar mActionBar;
     private static final int REQUEST_DESTROY = 0;
 
-    /**
-     * @param bill 存储的账单
-     * @param cx x中心点
-     *@param cy y中心点
-     */
-    public static BillDetailFragment newInstance(Bill bill, int cx, int cy, @ColorRes int startColor) {
-        BillDetailFragment fragment = new BillDetailFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(ARG_BILL, bill);
-        args.putInt(ARG_CX, cx);
-        args.putInt(ARG_CY, cy);
-        args.putInt(ARG_START_COLOR, startColor);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,28 +63,6 @@ public class BillDetailFragment extends BaseFragment {
         }
         setHasOptionsMenu(true);
         mBill = (Bill) getArguments().getSerializable(ARG_BILL);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_detail, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                getActivity().onBackPressed();
-                return true;
-            case R.id.del:
-                DeleteBillAlertDialog dialog = DeleteBillAlertDialog.newInstance(mBill.getId());
-                dialog.setTargetFragment(this, REQUEST_DESTROY);
-                dialog.show(getFragmentManager(), "alertDialog");
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override
@@ -142,7 +108,6 @@ public class BillDetailFragment extends BaseFragment {
 
                 Animator reveal = ViewAnimationUtils.createCircularReveal(v, cx, cy - 45, 0, radius);
                 reveal.setInterpolator(new DecelerateInterpolator());
-                reveal.setDuration(1000);
                 ObjectAnimator colorChange = new ObjectAnimator();
                 colorChange.setIntValues(getResources().getColor(startColor),
                         getResources().getColor(R.color.transparent));
@@ -150,15 +115,55 @@ public class BillDetailFragment extends BaseFragment {
                 colorChange.addUpdateListener(valueAnimator -> view.setBackgroundColor((Integer) valueAnimator.getAnimatedValue()));
                 AnimatorSet set = new AnimatorSet();
                 set.playTogether(reveal, colorChange);
-                set.setDuration(1000);
-                set.setInterpolator(new DecelerateInterpolator());
+                set.setDuration(350);
+                set.setInterpolator(new AccelerateInterpolator());
                 set.start();
             }
         });
         return view;
     }
 
-    private void updateUI() {
+    /**
+     * @param bill 存储的账单
+     * @param cx   x中心点
+     * @param cy   y中心点
+     */
+    public static BillDetailFragment newInstance(Bill bill, int cx, int cy, @ColorRes int startColor) {
+        BillDetailFragment fragment = new BillDetailFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_BILL, bill);
+        args.putInt(ARG_CX, cx);
+        args.putInt(ARG_CY, cy);
+        args.putInt(ARG_START_COLOR, startColor);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_detail, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                return true;
+            case R.id.del:
+                DeleteBillAlertDialog dialog = DeleteBillAlertDialog.newInstance(mBill.getId());
+                dialog.setTargetFragment(this, REQUEST_DESTROY);
+                dialog.show(getFragmentManager(), "alertDialog");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void updateUI() {
+        mBill = BillLab.getInstance(getActivity()).getBill(mBill.getId());
         mTypeImageView.setImageResource(mBill.getTypeResId());
         mBalanceTextView.setText(mBill.getBalance().toString());
         mBalanceTextView.setTextColor(mBill.isExpense() ?
@@ -167,13 +172,6 @@ public class BillDetailFragment extends BaseFragment {
         mRemarkTextView.setText(mBill.getRemark());
         mTitleTextView.setText(mBill.getName());
         mDateTextView.setText(mBill.getDate().toString("yyyy-MM-dd hh:mm"));
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mBill = BillLab.getInstance(getActivity()).getBill(mBill.getId());
-        updateUI();
     }
 
     @Override

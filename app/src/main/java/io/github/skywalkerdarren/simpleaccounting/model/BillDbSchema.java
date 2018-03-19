@@ -1,8 +1,10 @@
 package io.github.skywalkerdarren.simpleaccounting.model;
 
 /**
- * Created by darren on 2018/1/30.
  * 定义账单表
+ *
+ * @author darren
+ * @date 2018/1/30
  */
 
 public class BillDbSchema {

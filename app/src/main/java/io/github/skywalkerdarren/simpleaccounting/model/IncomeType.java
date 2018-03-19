@@ -6,7 +6,10 @@ import java.util.List;
 import io.github.skywalkerdarren.simpleaccounting.R;
 
 /**
- * Created by darren on 2018/2/12.
+ * 收入类型
+ *
+ * @author darren
+ * @date 2018/2/12
  */
 
 public class IncomeType extends BaseType {
@@ -15,14 +18,26 @@ public class IncomeType extends BaseType {
      */
     private static final IncomeType INCOME_TYPE = new IncomeType();
 
+    /**
+     * @return 获得收入类型
+     */
     public static List<BaseType> getTypeList() {
         return INCOME_TYPE.getTypes();
     }
 
+    /**
+     * 必要的空构造方法
+     */
     private IncomeType() {
         super();
     }
 
+    /**
+     * 新建收入类型
+     *
+     * @param name 名称
+     * @param id   资源图片id
+     */
     public IncomeType(String name, int id) {
         super(name, id);
     }
