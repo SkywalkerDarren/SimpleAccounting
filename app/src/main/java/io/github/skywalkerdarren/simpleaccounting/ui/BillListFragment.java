@@ -92,7 +92,9 @@ public class BillListFragment extends BaseFragment implements View.OnTouchListen
         mBillListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         updateUI();
-        mBillListRecyclerView.addItemDecoration(new PinnedHeaderItemDecoration.Builder(HEADER).create());
+        mBillListRecyclerView.addItemDecoration(new PinnedHeaderItemDecoration.Builder(HEADER)
+//                .enableDivider(true)
+                .create());
 
         mBillListRecyclerView.setOnTouchListener(this);
         return view;
