@@ -10,7 +10,6 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.Slide;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -178,7 +177,6 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
         switch (view.getId()) {
             case R.id.income_card_view:
                 mShowIncome = !mShowIncome;
-                Log.d(StatsFragment.class.getName(), "onClick: ");
                 break;
             case R.id.expense_card_view:
                 mShowExpense = !mShowExpense;

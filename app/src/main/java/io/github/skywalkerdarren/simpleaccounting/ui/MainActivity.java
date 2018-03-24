@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             public Fragment getItem(int position) {
                 switch (position) {
                     case 0:
-                        return StatsFragment.newInstance();
+                        return AccountFragment.newInstance();
                     case 1:
                         return BillListFragment.newInstance();
                     case 2:

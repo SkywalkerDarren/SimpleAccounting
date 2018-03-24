@@ -1,7 +1,5 @@
 package io.github.skywalkerdarren.simpleaccounting.ui;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -163,20 +161,20 @@ public class NumPad extends LinearLayout {
     public void hideKeyboard() {
         int visibility = getVisibility();
         if (visibility == View.VISIBLE) {
-            setAlpha(1);
-            ObjectAnimator alpha = ObjectAnimator.ofFloat(this, "alpha", 1, 0);
-            ObjectAnimator slide = ObjectAnimator.ofFloat(this, "translationY", y, y + getHeight());
-            AnimatorSet set = new AnimatorSet();
-            set.playTogether(alpha, slide);
-            set.setDuration(100);
-            set.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    super.onAnimationEnd(animation);
-                    setVisibility(View.GONE);
-                }
-            });
-            set.start();
+//            setAlpha(1);
+//            ObjectAnimator alpha = ObjectAnimator.ofFloat(this, "alpha", 1, 0);
+//            ObjectAnimator slide = ObjectAnimator.ofFloat(this, "translationY", y, y + getHeight());
+//            AnimatorSet set = new AnimatorSet();
+//            set.playTogether(alpha, slide);
+//            set.setDuration(100);
+//            set.addListener(new AnimatorListenerAdapter() {
+//                @Override
+//                public void onAnimationEnd(Animator animation) {
+//                    super.onAnimationEnd(animation);
+//                }
+//            });
+//            set.start();
+            setVisibility(View.GONE);
         }
     }
 

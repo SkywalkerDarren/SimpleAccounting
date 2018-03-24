@@ -68,8 +68,8 @@ public class BillAdapter extends BaseMultiItemQuickAdapter<BillInfo, BaseViewHol
                 helper.setText(R.id.remark_text_view, item.getRemark());
             case WITHOUT_REMARK:
                 helper.setTextColor(R.id.balance_edit_text, item.isExpense() ?
-                        Color.rgb(0xFF, 0x45, 0x00) :
-                        Color.rgb(0xAD, 0xFF, 0x2F));
+                        Color.rgb(0xff, 0x70, 0x43) :
+                        Color.rgb(0x7C, 0xB3, 0x42));
                 helper.setImageResource(R.id.type_image_view, item.getBillTypeResId());
                 helper.setText(R.id.title_text_view, item.getTitle());
                 helper.setText(R.id.balance_edit_text, item.getBalance());

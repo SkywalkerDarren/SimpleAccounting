@@ -11,10 +11,6 @@ import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -44,7 +40,7 @@ import static io.github.skywalkerdarren.simpleaccounting.adapter.BillAdapter.HEA
  * @date 2018/1/31
  */
 
-public class BillListFragment extends BaseFragment implements View.OnTouchListener {
+public class BillListFragment extends BaseFragment {
     private static final int REQUEST_DATE_TIME = 0;
     private RecyclerView mBillListRecyclerView;
     private BillAdapter mBillAdapter;
@@ -57,6 +53,7 @@ public class BillListFragment extends BaseFragment implements View.OnTouchListen
     private TextView mMonthIncomeTextView;
     private TextView mMonthExpenseTextView;
     private TextView mSetBudgeTextView;
+    private ImageView mStatsImageView;
     private int mX;
     private int mY;
 
@@ -80,7 +77,13 @@ public class BillListFragment extends BaseFragment implements View.OnTouchListen
         mMonthIncomeTextView = view.findViewById(R.id.month_income_text_view);
         mMonthExpenseTextView = view.findViewById(R.id.month_expense_text_view);
         mSetBudgeTextView = view.findViewById(R.id.set_budge_text_view);
+        mStatsImageView = view.findViewById(R.id.stats_image_view);
         mDate = DateTime.now();
+
+        mStatsImageView.setOnClickListener(view1 -> {
+            Intent intent = StatsActivity.newIntent(getActivity());
+            startActivity(intent);
+        });
 
         mMonthIncomeTextView.setOnClickListener(view1 -> {
             MonthPickerDialog monthPickerDialog = MonthPickerDialog.newInstance(mDate);
@@ -93,10 +96,8 @@ public class BillListFragment extends BaseFragment implements View.OnTouchListen
 
         updateUI();
         mBillListRecyclerView.addItemDecoration(new PinnedHeaderItemDecoration.Builder(HEADER)
-//                .enableDivider(true)
                 .create());
 
-        mBillListRecyclerView.setOnTouchListener(this);
         return view;
     }
 
@@ -146,14 +147,18 @@ public class BillListFragment extends BaseFragment implements View.OnTouchListen
      */
     private View emptyView() {
         @SuppressLint("InflateParams") View v = LayoutInflater.from(getContext()).inflate(R.layout.empty_layout, null);
-        TextView addTextView = v.findViewById(R.id.add_bill_text_view);
-        ImageView addImageView = v.findViewById(R.id.add_bill_image_view);
+        @SuppressLint("ClickableViewAccessibility")
+        View.OnTouchListener onTouchListener = (view, motionEvent) -> {
+            mX = (int) motionEvent.getRawX();
+            mY = (int) motionEvent.getRawY();
+            return false;
+        };
         View.OnClickListener addBillListener = view -> {
             addBill();
             updateUI();
         };
-        addImageView.setOnClickListener(addBillListener);
-        addTextView.setOnClickListener(addBillListener);
+        v.setOnTouchListener(onTouchListener);
+        v.setOnClickListener(addBillListener);
         return v;
     }
 
@@ -164,14 +169,10 @@ public class BillListFragment extends BaseFragment implements View.OnTouchListen
         mBillAdapter.setEmptyView(emptyView());
         mBillAdapter.openLoadAnimation(new AlphaInAnimation());
         mBillAdapter.isFirstOnly(false);
-        mBillAdapter.setOnItemClickListener((adapter, view, position) -> {
+        mBillAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             if (adapter.getItemViewType(position) != HEADER) {
                 clickBillItem(adapter, view, position);
             }
-        });
-        mBillAdapter.setOnItemChildClickListener((adapter, view, position) -> {
-            View v = adapter.getViewByPosition(mBillListRecyclerView, position, R.id.bill_item);
-            clickBillItem(adapter, v, position);
         });
     }
 
@@ -208,27 +209,6 @@ public class BillListFragment extends BaseFragment implements View.OnTouchListen
                 view.findViewById(R.id.type_image_view),
                 "type_image_view");
         return ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), imagePair);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_bill, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -270,10 +250,4 @@ public class BillListFragment extends BaseFragment implements View.OnTouchListen
         }
     }
 
-    @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
-        mX = (int) motionEvent.getRawX();
-        mY = (int) motionEvent.getRawY();
-        return false;
-    }
 }

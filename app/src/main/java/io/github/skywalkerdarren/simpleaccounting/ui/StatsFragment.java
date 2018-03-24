@@ -2,8 +2,8 @@ package io.github.skywalkerdarren.simpleaccounting.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +19,7 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 public class StatsFragment extends Fragment {
     private static final String ARG_POSITION = "mPosition";
     private SegmentedButtonGroup mStatsSbg;
+    private ViewPager mViewPager;
     private int mPosition = 1;
 
     @Override
@@ -29,6 +30,7 @@ public class StatsFragment extends Fragment {
         } else {
             mPosition = savedInstanceState.getInt(ARG_POSITION) - 1;
         }
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -36,31 +38,46 @@ public class StatsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_stats, container, false);
         mStatsSbg = view.findViewById(R.id.stats_sbg);
+        mViewPager = view.findViewById(R.id.fragment_container);
 
-        FragmentManager fm = getFragmentManager();
-        final Fragment journalFragment = JournalFragment.newInstance();
-        final Fragment classifyFragment = ClassifyFragment.newInstance();
-        FragmentTransaction ft = fm.beginTransaction();
-        switch (mPosition) {
-            case 1:
-                ft.add(R.id.fragment_container, journalFragment).commit();
-                break;
-            default:
-                ft.add(R.id.fragment_container, classifyFragment).commit();
-                break;
-        }
+        mViewPager.setAdapter(new FragmentStatePagerAdapter(getChildFragmentManager()) {
+            @Override
+            public Fragment getItem(int position) {
+                switch (position) {
+                    case 0:
+                        return ClassifyFragment.newInstance();
+                    case 1:
+                        return JournalFragment.newInstance();
+                    default:
+                        return null;
+                }
+            }
+
+            @Override
+            public int getCount() {
+                return 2;
+            }
+        });
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mStatsSbg.setPosition(position, true);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        mViewPager.setCurrentItem(1);
 
         mStatsSbg.setOnClickedButtonListener(position -> {
-            switch (position) {
-                case 0:
-                    fm.beginTransaction().replace(R.id.fragment_container, classifyFragment).commit();
-                    break;
-                case 1:
-                    fm.beginTransaction().replace(R.id.fragment_container, journalFragment).commit();
-                    break;
-                default:
-                    break;
-            }
+            mViewPager.setCurrentItem(position);
         });
         return view;
     }
