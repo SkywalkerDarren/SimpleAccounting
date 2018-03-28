@@ -25,7 +25,7 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.BounceInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -167,7 +167,7 @@ public class BillEditFragment extends BaseFragment {
             new Handler().postDelayed(() -> mNumPad.showKeyboard(), 200);
             return true;
         });
-
+        mBalanceEditText.setSelection(mBalanceEditText.getText().length());
         mBalanceEditText.setOnFocusChangeListener((view15, b) -> {
             if (!b) {
                 mNumPad.hideKeyboard();
@@ -221,7 +221,6 @@ public class BillEditFragment extends BaseFragment {
      * @param bill 要编辑的账单
      * @return A new instance of fragment BillEditFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static BillEditFragment newInstance(Bill bill, int centerX, int centerY) {
         BillEditFragment fragment = new BillEditFragment();
         Bundle args = new Bundle();
@@ -318,8 +317,8 @@ public class BillEditFragment extends BaseFragment {
         ObjectAnimator animatorX2 = ObjectAnimator.ofFloat(mTypeImageView, "scaleX", 0f, 1f);
         ObjectAnimator animatorY2 = ObjectAnimator.ofFloat(mTypeImageView, "scaleY", 0f, 1f);
         AnimatorSet set2 = new AnimatorSet();
-        set2.setDuration(600);
-        set2.setInterpolator(new BounceInterpolator());
+        set2.setDuration(200);
+        set2.setInterpolator(new DecelerateInterpolator());
         set2.playTogether(animatorX2, animatorY2);
 
         AnimatorSet set = new AnimatorSet();

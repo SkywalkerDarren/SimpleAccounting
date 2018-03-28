@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.transition.Fade;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,16 +21,15 @@ public class StatsFragment extends Fragment {
     private static final String ARG_POSITION = "mPosition";
     private SegmentedButtonGroup mStatsSbg;
     private ViewPager mViewPager;
-    private int mPosition = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null) {
-            mPosition = 1;
         } else {
-            mPosition = savedInstanceState.getInt(ARG_POSITION) - 1;
         }
+        setEnterTransition(new Fade());
+        setExitTransition(new Fade());
         setHasOptionsMenu(true);
     }
 
@@ -85,7 +85,6 @@ public class StatsFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        mPosition = mStatsSbg.getPosition();
     }
 
     /**

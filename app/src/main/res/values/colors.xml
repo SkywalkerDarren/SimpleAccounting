@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#ffb300</color>
-    <color name="colorPrimaryDark">#c68400</color>
+    <color name="colorPrimaryDark">#ec9e00</color>
     <color name="colorAccent">#ffe54c</color>
 
     <color name="key_bg">#353343</color>
@@ -482,7 +482,7 @@
     <!--碧绿色 -->
     <color name="aquamarine">#7FFFD4</color>
     <!--黄绿色 -->
-    <color name="chartreuse">#7FFF00</color>
+    <color name="chartreuse">#7fff00</color>
     <!--草绿色 -->
     <color name="lawngreen">#7CFC00</color>
     <!--中暗蓝色 -->

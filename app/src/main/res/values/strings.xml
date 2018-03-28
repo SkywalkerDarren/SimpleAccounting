@@ -44,4 +44,18 @@
     <string name="expense">支出</string>
     <string name="months">月份</string>
     <string name="add_bill">添加账单</string>
+    <string name="net_assets">净资产</string>
+    <string name="asset_analysis">资产分析</string>
+    <string name="liability_s">负债：</string>
+    <string name="total_assets_s">总资产：</string>
+    <string name="my_account_l">我的账户（</string>
+    <string name="my_account_r">）</string>
+    <string name="my_transfer">我的转账</string>
+    <string name="lend">借出</string>
+    <string name="should_receipt">应收款</string>
+    <string name="borrow">借入</string>
+    <string name="should_repayment">应还款</string>
+    <string name="no_stats">暂无统计数据</string>
+    <string name="end_date">结束日期</string>
+    <string name="start_date">起始日期</string>
 </resources>

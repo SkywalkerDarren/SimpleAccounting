@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.joda.time.DateTime;
 
@@ -138,15 +139,20 @@ public class BillLab {
      *
      * @param whereClause where子句
      * @param whereArgs   查询参数
+     * @param orderBy     顺序
      * @return 游标
      */
-    private BillCursorWrapper queryBills(String[] columns, String whereClause, String[] whereArgs, String orderBy) {
+    private BillCursorWrapper queryBills(@Nullable String[] columns,
+                                         @Nullable String whereClause,
+                                         @Nullable String[] whereArgs,
+                                         @Nullable String groupBy,
+                                         @Nullable String orderBy) {
         Cursor cursor = mDatabase.query(
                 BillTable.NAME,
                 columns,
                 whereClause,
                 whereArgs,
-                null,
+                groupBy,
                 null,
                 orderBy
         );
@@ -226,6 +232,38 @@ public class BillLab {
     }
 
     /**
+     * 按类型从高到低的获得每个类型的统计数据
+     *
+     * @param start     起始日期
+     * @param end       结束日期
+     * @param isExpense 是否为支出
+     * @return 统计数据
+     */
+    public List<TypeStats> getTypeStats(DateTime start, DateTime end, boolean isExpense) {
+        List<BaseType> types = isExpense ? ExpenseType.getTypeList() : IncomeType.getTypeList();
+        List<TypeStats> typeStats = new ArrayList<>(10);
+        try (BillCursorWrapper cursor = getTypesInfoCursor(start, end, isExpense ? "1" : "0")) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                String name = cursor.getString(0);
+                int i = 0;
+                for (; i < types.size(); i++) {
+                    if (name.equals(types.get(i).getName())) {
+                        break;
+                    }
+                }
+                typeStats.add(new TypeStats(types.get(i),
+                        new BigDecimal(cursor.getString(1))));
+                cursor.moveToNext();
+            }
+        }
+        if (typeStats.size() < 1) {
+            return null;
+        }
+        return typeStats;
+    }
+
+    /**
      * 一段时间的账单结算统计
      *
      * @param start 起始时间
@@ -253,6 +291,27 @@ public class BillLab {
             balance = num;
         }
         return balance;
+    }
+
+    /**
+     * 类型统计类
+     */
+    public class TypeStats {
+        private BaseType mType;
+        private BigDecimal sum;
+
+        public TypeStats(BaseType type, BigDecimal sum) {
+            mType = type;
+            this.sum = sum;
+        }
+
+        public BaseType getType() {
+            return mType;
+        }
+
+        public BigDecimal getSum() {
+            return sum;
+        }
     }
 
     /**
@@ -297,7 +356,27 @@ public class BillLab {
                 new String[]{"sum(" + BillTable.Cols.BALANCE + ")"},
                 BillTable.Cols.DATE + " BETWEEN ? AND ? and " + BillTable.Cols.IS_EXPENSE + " == ?",
                 new String[]{String.valueOf(start.getMillis()), String.valueOf(end.getMillis()), s},
+                null,
                 BillTable.Cols.DATE + " DESC"
+        );
+    }
+
+    /**
+     * 统计每个支出或收入种类的求和游标，从高到低排列
+     *
+     * @param start 开始日期
+     * @param end   结束日期
+     * @param s     "1"是支出类型 "0"是收入类型
+     * @return 游标
+     */
+    @NonNull
+    private BillCursorWrapper getTypesInfoCursor(DateTime start, DateTime end, String s) {
+        return queryBills(
+                new String[]{BillTable.Cols.TYPE, "sum(" + BillTable.Cols.BALANCE + ")"},
+                BillTable.Cols.DATE + " BETWEEN ? AND ? and " + BillTable.Cols.IS_EXPENSE + " == ?",
+                new String[]{String.valueOf(start.getMillis()), String.valueOf(end.getMillis()), s},
+                BillTable.Cols.TYPE,
+                "sum(" + BillTable.Cols.BALANCE + ") DESC"
         );
     }
 

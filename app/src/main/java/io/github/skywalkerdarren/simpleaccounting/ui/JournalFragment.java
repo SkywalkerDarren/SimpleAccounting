@@ -9,12 +9,11 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.transition.Slide;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -30,12 +29,13 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.MPPointF;
 
+import org.joda.time.DateTime;
+
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import co.ceryle.segmentedbutton.SegmentedButtonGroup;
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.StatsAdapter;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
@@ -48,8 +48,8 @@ import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
 public class JournalFragment extends BaseFragment implements View.OnClickListener {
     private BillLab mBillLab;
 
-    private SegmentedButtonGroup mDateSbg;
     private LineChart mLineChart;
+    private TextView mDateTextView;
     private TextView mIncomeStatsTextView;
     private TextView mExpenseStatsTextView;
     private TextView mBalanceStatsTextView;
@@ -58,18 +58,16 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
     private CardView mBalanceStatsCardView;
     private RecyclerView mStatsRecyclerView;
     private StatsAdapter mStatsAdapter;
+    private int mYear = DateTime.now().getYear();
 
-    boolean mShowIncome = true;
-    boolean mShowExpense = true;
-    boolean mShowBalance = true;
+    private boolean mShowIncome = true;
+    private boolean mShowExpense = true;
+    private boolean mShowBalance = true;
 
-    @SuppressLint("RtlHardcoded")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBillLab = BillLab.getInstance(getActivity());
-        setEnterTransition(new Slide(Gravity.RIGHT));
-        setExitTransition(new Slide(Gravity.RIGHT));
     }
 
     @Override
@@ -85,7 +83,12 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
         mBalanceStatsCardView = view.findViewById(R.id.balance_card_view);
         mBalanceStatsTextView = view.findViewById(R.id.balance_text_view);
         mStatsRecyclerView = view.findViewById(R.id.stats_recycler_view);
+        mDateTextView = view.findViewById(R.id.date_text_view);
 
+        mDateTextView.setText(mYear + "");
+        mDateTextView.setOnClickListener(view1 -> {
+            Toast.makeText(getActivity(), "点击年", Toast.LENGTH_SHORT).show();
+        });
         mStatsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mExpenseStatsCardView.setOnClickListener(this);
         mIncomeStatsCardView.setOnClickListener(this);
@@ -156,8 +159,7 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
      */
     @Override
     public void updateUI() {
-        int year = 2018;
-        List<BillLab.Stats> statsList = mBillLab.getAnnualStats(year);
+        List<BillLab.Stats> statsList = mBillLab.getAnnualStats(mYear);
         if (mStatsAdapter == null) {
             mStatsAdapter = new StatsAdapter(statsList);
         } else {

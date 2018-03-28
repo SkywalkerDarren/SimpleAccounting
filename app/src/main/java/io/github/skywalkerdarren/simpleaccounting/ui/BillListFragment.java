@@ -2,7 +2,9 @@ package io.github.skywalkerdarren.simpleaccounting.ui;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +24,7 @@ import com.oushangfeng.pinnedsectionitemdecoration.PinnedHeaderItemDecoration;
 
 import org.joda.time.DateTime;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,6 +45,7 @@ import static io.github.skywalkerdarren.simpleaccounting.adapter.BillAdapter.HEA
 
 public class BillListFragment extends BaseFragment {
     private static final int REQUEST_DATE_TIME = 0;
+    private static final String SHARED_BUDGET = "budget";
     private RecyclerView mBillListRecyclerView;
     private BillAdapter mBillAdapter;
     private BillLab mBillLab;
@@ -54,8 +58,10 @@ public class BillListFragment extends BaseFragment {
     private TextView mMonthExpenseTextView;
     private TextView mSetBudgeTextView;
     private ImageView mStatsImageView;
+    private ImageView mDateImageView;
     private int mX;
     private int mY;
+    private SharedPreferences mSharedPref;
 
 
     @Override
@@ -78,6 +84,9 @@ public class BillListFragment extends BaseFragment {
         mMonthExpenseTextView = view.findViewById(R.id.month_expense_text_view);
         mSetBudgeTextView = view.findViewById(R.id.set_budge_text_view);
         mStatsImageView = view.findViewById(R.id.stats_image_view);
+        mDateImageView = view.findViewById(R.id.date_image_view);
+
+        mSharedPref = getActivity().getSharedPreferences(SHARED_BUDGET, Context.MODE_PRIVATE);
         mDate = DateTime.now();
 
         mStatsImageView.setOnClickListener(view1 -> {
@@ -85,7 +94,7 @@ public class BillListFragment extends BaseFragment {
             startActivity(intent);
         });
 
-        mMonthIncomeTextView.setOnClickListener(view1 -> {
+        mDateImageView.setOnClickListener(view1 -> {
             MonthPickerDialog monthPickerDialog = MonthPickerDialog.newInstance(mDate);
             monthPickerDialog.setTargetFragment(BillListFragment.this, REQUEST_DATE_TIME);
             monthPickerDialog.show(getFragmentManager(), "month picker");
@@ -112,11 +121,23 @@ public class BillListFragment extends BaseFragment {
         DateTime month = new DateTime(mDate.getYear(), mDate.getMonthOfYear(), 1, 0, 0);
         mIncomeTextView.setText(mBillLab.getStats(month, month.plusMonths(1)).getIncome().toString());
         mExpenseTextView.setText(mBillLab.getStats(month, month.plusMonths(1)).getExpense().toString());
-        // TODO 设置预算
-        mBudgeTextView.setText("0");
+
+        mBudgeTextView.setText(mSharedPref.getString(SHARED_BUDGET, "0"));
         mMonthIncomeTextView.setText(mDate.getMonthOfYear() + getString(R.string.month_income));
         mMonthExpenseTextView.setText(mDate.getMonthOfYear() + getString(R.string.month_expense));
         mSetBudgeTextView.setText("设置预算");
+
+        // TODO: 2018/3/25 预算选择逻辑 新小窗口
+        mSetBudgeTextView.setOnClickListener(view -> {
+            BigDecimal decimal = new BigDecimal(1000);
+
+            SharedPreferences.Editor editor = mSharedPref.edit();
+            mSetBudgeTextView.setText(decimal.toString());
+            mBudgeTextView.setText(decimal.subtract(
+                    new BigDecimal(mExpenseTextView.getText().toString())).toString());
+            editor.putString(SHARED_BUDGET, decimal.toString());
+            editor.apply();
+        });
 
         List<BillInfo> billInfoList = BillInfo
                 .getBillInfoList(mDate.getYear(), mDate.getMonthOfYear(), getActivity());
