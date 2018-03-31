@@ -34,7 +34,8 @@ public class TypeAdapter extends BaseQuickAdapter<Type, BaseViewHolder> {
     @Override
     protected void startAnim(Animator anim, int index) {
         // 前20个项目需要动画延迟
-        if (index < 20) {
+        int num = 20;
+        if (index < num) {
             int col = 4;
             int delay = index / col + index % col;
             anim.setStartDelay(delay * 75);

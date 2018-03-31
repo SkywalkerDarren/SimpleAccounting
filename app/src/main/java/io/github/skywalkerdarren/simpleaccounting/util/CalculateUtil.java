@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.model;
+package io.github.skywalkerdarren.simpleaccounting.util;
 
 import android.text.TextUtils;
 
@@ -8,8 +8,6 @@ import java.util.EmptyStackException;
 import java.util.List;
 import java.util.Stack;
 import java.util.regex.Pattern;
-
-import io.github.skywalkerdarren.simpleaccounting.model.Operators.Operator;
 
 /**
  * 大数计算工具
@@ -291,7 +289,7 @@ public class CalculateUtil {
         BigDecimal a;
         BigDecimal c;
         String f = flag.pop();
-        Operator op = Operators.operatorHashMap.get(f);
+        Operators.Operator op = Operators.operatorHashMap.get(f);
         switch (op.getAry()) {
             case 2:
                 b = val.pop();

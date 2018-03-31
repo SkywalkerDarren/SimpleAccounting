@@ -11,7 +11,7 @@ import java.math.BigDecimal;
  * @date 2018/2/16
  */
 
-public class DateHeaderDivider implements HeaderDivider {
+class DateHeaderDivider implements HeaderDivider {
     private DateTime mDateTime;
     private int y;
     private int m;
@@ -19,7 +19,7 @@ public class DateHeaderDivider implements HeaderDivider {
     private BigDecimal mIncome;
     private BigDecimal mExpense;
 
-    public DateHeaderDivider(DateTime dateTime, BigDecimal income, BigDecimal expense) {
+    DateHeaderDivider(DateTime dateTime, BigDecimal income, BigDecimal expense) {
         y = dateTime.getYear();
         m = dateTime.getMonthOfYear();
         d = dateTime.getDayOfMonth();
@@ -33,7 +33,7 @@ public class DateHeaderDivider implements HeaderDivider {
      *
      * @return 日期
      */
-    public DateTime getDate() {
+    DateTime getDate() {
         return mDateTime;
     }
 

@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
+    android:orientation="vertical"
+    tools:ignore="ContentDescription">
 
 
     <android.support.constraint.ConstraintLayout
@@ -26,7 +26,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:clickable="true"
-            android:focusable="auto"
+            android:focusable="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/toolbar_stats" />
@@ -146,8 +146,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/head_constraint_layout">
-    </android.support.v7.widget.RecyclerView>
+        app:layout_constraintTop_toBottomOf="@+id/head_constraint_layout"></android.support.v7.widget.RecyclerView>
 
 
 </android.support.constraint.ConstraintLayout>

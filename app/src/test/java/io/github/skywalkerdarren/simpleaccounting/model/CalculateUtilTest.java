@@ -2,6 +2,8 @@ package io.github.skywalkerdarren.simpleaccounting.model;
 
 import org.junit.Test;
 
+import io.github.skywalkerdarren.simpleaccounting.util.CalculateUtil;
+
 /**
  * Created by darren on 2018/3/12.
  */

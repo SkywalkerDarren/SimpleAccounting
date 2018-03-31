@@ -27,7 +27,6 @@ import static io.github.skywalkerdarren.simpleaccounting.model.DbSchema.BillTabl
 
 public class BillLab {
     private static BillLab sBillLab;
-    private Context mContext;
     private SQLiteDatabase mDatabase;
 
     /**
@@ -37,8 +36,7 @@ public class BillLab {
      */
     private BillLab(Context context) {
         // 数据库方式
-        mContext = context.getApplicationContext();
-        mDatabase = new DbBaseHelper(context).getWritableDatabase();
+        mDatabase = new DbBaseHelper(context.getApplicationContext()).getWritableDatabase();
     }
 
     /**

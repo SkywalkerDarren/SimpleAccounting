@@ -25,12 +25,12 @@ public class BillAdapter extends BaseMultiItemQuickAdapter<BillInfo, BaseViewHol
     /**
      * 不带备注的账单
      */
-    public static final int WITHOUT_REMARK = 0;
+    static final int WITHOUT_REMARK = 0;
 
     /**
      * 带备注的账单
      */
-    public static final int WITH_REMARK = 1;
+    static final int WITH_REMARK = 1;
 
     /**
      * 分隔符

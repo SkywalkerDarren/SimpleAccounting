@@ -18,7 +18,7 @@ import android.widget.Toast;
 import java.math.BigDecimal;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
-import io.github.skywalkerdarren.simpleaccounting.model.CalculateUtil;
+import io.github.skywalkerdarren.simpleaccounting.util.CalculateUtil;
 
 /**
  * 自定义键盘
@@ -108,7 +108,7 @@ public class NumPad extends LinearLayout {
                 if (editable != null) {
                     if (!CalculateUtil.dynamicCheckExperssion(editable.toString())) {
                         int index = editable.length();
-                        if (editable != null && editable.length() > 0) {
+                        if (editable.length() > 0) {
                             editable.delete(index - 1, index);
                         }
                     }
@@ -161,19 +161,6 @@ public class NumPad extends LinearLayout {
     public void hideKeyboard() {
         int visibility = getVisibility();
         if (visibility == View.VISIBLE) {
-//            setAlpha(1);
-//            ObjectAnimator alpha = ObjectAnimator.ofFloat(this, "alpha", 1, 0);
-//            ObjectAnimator slide = ObjectAnimator.ofFloat(this, "translationY", y, y + getHeight());
-//            AnimatorSet set = new AnimatorSet();
-//            set.playTogether(alpha, slide);
-//            set.setDuration(100);
-//            set.addListener(new AnimatorListenerAdapter() {
-//                @Override
-//                public void onAnimationEnd(Animator animation) {
-//                    super.onAnimationEnd(animation);
-//                }
-//            });
-//            set.start();
             setVisibility(View.GONE);
         }
     }

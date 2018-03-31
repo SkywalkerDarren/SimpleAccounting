@@ -7,8 +7,8 @@
     <Row>
         <Key
             android:codes="-3"
-            android:keyLabel="@string/clear_sign"
-            android:keyEdgeFlags="left" />
+            android:keyEdgeFlags="left"
+            android:keyLabel="@string/clear_sign" />
         <Key
             android:codes="47"
             android:keyLabel="@string/divide_sign" />
@@ -17,14 +17,14 @@
             android:keyLabel="@string/multiply_sign" />
         <Key
             android:codes="-5"
-            android:keyIcon="@drawable/ic_backspace_white_18dp"
-            android:keyEdgeFlags="right" />
+            android:keyEdgeFlags="right"
+            android:keyIcon="@drawable/ic_backspace_white_18dp" />
     </Row>
     <Row>
         <Key
             android:codes="55"
-            android:keyLabel="7"
-            android:keyEdgeFlags="left" />
+            android:keyEdgeFlags="left"
+            android:keyLabel="7" />
         <Key
             android:codes="56"
             android:keyLabel="8" />
@@ -33,14 +33,14 @@
             android:keyLabel="9" />
         <Key
             android:codes="45"
-            android:keyLabel="@string/minus_sign"
-            android:keyEdgeFlags="right" />
+            android:keyEdgeFlags="right"
+            android:keyLabel="@string/minus_sign" />
     </Row>
     <Row>
         <Key
             android:codes="52"
-            android:keyLabel="4"
-            android:keyEdgeFlags="left" />
+            android:keyEdgeFlags="left"
+            android:keyLabel="4" />
         <Key
             android:codes="53"
             android:keyLabel="5" />
@@ -49,15 +49,15 @@
             android:keyLabel="6" />
         <Key
             android:codes="43"
-            android:keyLabel="@string/plus_sign"
+            android:keyEdgeFlags="right"
             android:keyHeight="101dp"
-            android:keyEdgeFlags="right" />
+            android:keyLabel="@string/plus_sign" />
     </Row>
     <Row>
         <Key
             android:codes="49"
-            android:keyLabel="1"
-            android:keyEdgeFlags="left" />
+            android:keyEdgeFlags="left"
+            android:keyLabel="1" />
         <Key
             android:codes="50"
             android:keyLabel="2" />
@@ -66,22 +66,22 @@
             android:keyLabel="3" />
         <Key
             android:codes="-99"
-            android:keyHeight="0dp"
-            android:keyEdgeFlags="right" />
+            android:keyEdgeFlags="right"
+            android:keyHeight="0dp" />
     </Row>
     <Row>
         <Key
             android:codes="46"
-            android:keyLabel="@string/dot_sign"
-            android:keyEdgeFlags="left" />
+            android:keyEdgeFlags="left"
+            android:keyLabel="@string/dot_sign" />
         <Key
             android:codes="48"
             android:keyLabel="0" />
         <Key
             android:codes="-4"
+            android:keyEdgeFlags="right"
             android:keyLabel="@string/equal_sign"
-            android:keyWidth="50%p"
-            android:keyEdgeFlags="right" />
+            android:keyWidth="50%p" />
     </Row>
 
 </Keyboard>

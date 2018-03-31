@@ -1,5 +1,6 @@
 package io.github.skywalkerdarren.simpleaccounting.model;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -20,17 +21,15 @@ import io.github.skywalkerdarren.simpleaccounting.model.DbSchema.TypeTable.Cols;
 
 public class TypeLab {
     private static TypeLab sTypeLab;
-    private Context mContext;
     private SQLiteDatabase mDatabase;
 
     private TypeLab(Context context) {
-        mContext = context.getApplicationContext();
-        mDatabase = new DbBaseHelper(mContext).getWritableDatabase();
+        mDatabase = new DbBaseHelper(context.getApplicationContext()).getWritableDatabase();
     }
 
     public static TypeLab getInstance(Context context) {
         if (sTypeLab == null) {
-            return new TypeLab(context);
+            return sTypeLab = new TypeLab(context);
         } else {
             return sTypeLab;
         }
@@ -111,7 +110,7 @@ public class TypeLab {
     }
 
     private TypeCursorWrapper queryTypes(String where, String[] args) {
-        Cursor cursor = mDatabase.query(DbSchema.TypeTable.NAME,
+        @SuppressLint("Recycle") Cursor cursor = mDatabase.query(DbSchema.TypeTable.NAME,
                 null,
                 where,
                 args,

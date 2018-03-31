@@ -1,5 +1,6 @@
 package io.github.skywalkerdarren.simpleaccounting.model;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
@@ -17,6 +18,7 @@ import java.util.List;
 
 public class StatsLab {
 
+    @SuppressLint("StaticFieldLeak")
     private static StatsLab sStatsLab;
     private Context mContext;
     private SQLiteDatabase mDatabase;
@@ -30,7 +32,7 @@ public class StatsLab {
     private StatsLab(Context context) {
         // 数据库方式
         mContext = context.getApplicationContext();
-        mDatabase = new DbBaseHelper(context).getReadableDatabase();
+        mDatabase = new DbBaseHelper(mContext).getReadableDatabase();
     }
 
     /**
@@ -69,7 +71,8 @@ public class StatsLab {
      */
     public List<Stats> getAnnualStats(int year) {
         List<Stats> statsList = new ArrayList<>(12);
-        for (int i = 1; i <= 12; i++) {
+        final int month = 12;
+        for (int i = 1; i <= month; i++) {
             DateTime start = new DateTime(year, i, 1, 0, 0);
             DateTime end = start.plusMonths(1);
             statsList.add(getStats(start, end));
@@ -206,7 +209,7 @@ public class StatsLab {
         private Type mType;
         private BigDecimal sum;
 
-        public TypeStats(Type type, BigDecimal sum) {
+        TypeStats(Type type, BigDecimal sum) {
             mType = type;
             this.sum = sum;
         }
@@ -229,7 +232,7 @@ public class StatsLab {
         private BigDecimal expense;
         private BigDecimal sum;
 
-        public Stats(BigDecimal income, BigDecimal expense) {
+        Stats(BigDecimal income, BigDecimal expense) {
             this.income = income;
             this.expense = expense;
             sum = income.subtract(expense);

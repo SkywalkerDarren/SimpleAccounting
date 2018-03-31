@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.model;
+package io.github.skywalkerdarren.simpleaccounting.util;
 
 import java.math.BigDecimal;
 import java.util.EmptyStackException;

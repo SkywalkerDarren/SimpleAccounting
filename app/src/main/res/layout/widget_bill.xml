@@ -3,14 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:background="@color/grey50">
+    android:background="@color/grey50"
+    android:gravity="center">
 
     <LinearLayout
         android:id="@+id/income_linear_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -23,7 +23,7 @@
             android:id="@+id/income_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             tools:text="1234" />
     </LinearLayout>
 
@@ -31,7 +31,7 @@
         android:id="@+id/expense_linear_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -44,7 +44,7 @@
             android:id="@+id/expense_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             tools:text="1234" />
     </LinearLayout>
 

@@ -53,7 +53,7 @@ public class BillInfo implements MultiItemEntity {
      * 构造账单摘要
      *
      * @param bill 账单
-     * @param type
+     * @param type 类型
      */
     private BillInfo(Bill bill, Type type) {
         mType = TextUtils.isEmpty(bill.getRemark()) ? WITHOUT_REMARK : WITH_REMARK;

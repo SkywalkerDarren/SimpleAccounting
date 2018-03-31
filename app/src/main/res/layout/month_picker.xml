@@ -6,7 +6,6 @@
     android:gravity="center"
     android:orientation="horizontal">
 
-
     <NumberPicker
         android:id="@+id/year_picker"
         android:layout_width="wrap_content"

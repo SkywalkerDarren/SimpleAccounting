@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:gravity="center">
+    android:gravity="center"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/textView3"
@@ -16,8 +16,8 @@
         android:id="@+id/start_date_picker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:datePickerMode="spinner"
-        android:calendarViewShown="false" />
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner" />
 
     <TextView
         android:id="@+id/textView5"
@@ -30,6 +30,6 @@
         android:id="@+id/end_date_picker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:datePickerMode="spinner"
-        android:calendarViewShown="false" />
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner" />
 </LinearLayout>

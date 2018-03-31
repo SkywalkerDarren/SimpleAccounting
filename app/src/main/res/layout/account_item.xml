@@ -35,6 +35,7 @@
                 android:id="@+id/account_type_image_view"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
+                android:contentDescription="@string/account_image"
                 app:srcCompat="@drawable/account_cash" />
         </android.support.v7.widget.CardView>
 

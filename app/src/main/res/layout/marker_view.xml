@@ -4,6 +4,4 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:textColor="@color/red400"
-    android:textStyle="bold">
-
-</TextView>
+    android:textStyle="bold" />

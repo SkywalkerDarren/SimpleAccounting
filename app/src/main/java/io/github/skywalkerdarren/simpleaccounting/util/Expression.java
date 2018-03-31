@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.model;
+package io.github.skywalkerdarren.simpleaccounting.util;
 
 /**
  * 处理表达式

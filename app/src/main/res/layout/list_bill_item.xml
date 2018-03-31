@@ -10,12 +10,12 @@
 
     <android.support.v7.widget.CardView
         android:id="@+id/content_card_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?attr/selectableItemBackground"
         android:longClickable="true"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         app:cardCornerRadius="5dp"
         app:cardElevation="0dp"
         app:cardUseCompatPadding="true">
