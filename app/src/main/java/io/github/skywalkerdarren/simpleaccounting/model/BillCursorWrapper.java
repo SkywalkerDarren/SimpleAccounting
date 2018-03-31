@@ -26,19 +26,11 @@ class BillCursorWrapper extends CursorWrapper {
      * @return 对应账单
      */
     Bill getBill() {
-        String uuid = getString(getColumnIndex(DbSchema.BillTable.Cols.UUID));
-        String name = getString(getColumnIndex(DbSchema.BillTable.Cols.NAME));
-        String balance = getString(getColumnIndex(DbSchema.BillTable.Cols.BALANCE));
-        long date = getLong(getColumnIndex(DbSchema.BillTable.Cols.DATE));
-        String type = getString(getColumnIndex(DbSchema.BillTable.Cols.TYPE_ID));
-        String remark = getString(getColumnIndex(DbSchema.BillTable.Cols.REMARK));
-
-        Bill bill = new Bill(UUID.fromString(uuid));
-        bill.setName(name);
-        bill.setBalance(new BigDecimal(balance));
-        bill.setDate(new DateTime(date));
-        bill.setRemark(remark);
-        bill.setTypeId(UUID.fromString(type));
-        return bill;
+        return new Bill(UUID.fromString(getString(getColumnIndex(DbSchema.BillTable.Cols.UUID))))
+                .setName(getString(getColumnIndex(DbSchema.BillTable.Cols.NAME)))
+                .setBalance(new BigDecimal(getString(getColumnIndex(DbSchema.BillTable.Cols.BALANCE))))
+                .setDate(new DateTime(getLong(getColumnIndex(DbSchema.BillTable.Cols.DATE))))
+                .setRemark(getString(getColumnIndex(DbSchema.BillTable.Cols.REMARK)))
+                .setTypeId(UUID.fromString(getString(getColumnIndex(DbSchema.BillTable.Cols.TYPE_ID))));
     }
 }
