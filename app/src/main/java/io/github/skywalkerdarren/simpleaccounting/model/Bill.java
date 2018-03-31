@@ -100,16 +100,16 @@ public class Bill implements Serializable {
         return this;
     }
 
-    public Bill setTypeId(UUID typeId) {
-        mTypeId = typeId;
-        return this;
-    }
-
     /**
      * @return 账单类型名
      */
     public UUID getTypeId() {
         return mTypeId;
+    }
+
+    public Bill setTypeId(UUID typeId) {
+        mTypeId = typeId;
+        return this;
     }
 
     /**

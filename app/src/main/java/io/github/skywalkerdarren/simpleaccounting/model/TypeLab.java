@@ -36,17 +36,6 @@ public class TypeLab {
         }
     }
 
-    private TypeCursorWrapper queryTypes(String where, String[] args) {
-        Cursor cursor = mDatabase.query(DbSchema.TypeTable.NAME,
-                null,
-                where,
-                args,
-                null,
-                null,
-                null);
-        return new TypeCursorWrapper(cursor);
-    }
-
     private static ContentValues getContentValues(Type type) {
         ContentValues values = new ContentValues();
         values.put(Cols.UUID, type.getId().toString());
@@ -55,33 +44,6 @@ public class TypeLab {
         values.put(Cols.RES_ID, type.getTypeId());
         values.put(Cols.IS_EXPENSE, type.getExpense() ? 1 : 0);
         return values;
-    }
-
-    public Type getType(UUID uuid) {
-        try (TypeCursorWrapper cursor = queryTypes(Cols.UUID + " == ?",
-                new String[]{uuid.toString()})) {
-            cursor.moveToFirst();
-            return cursor.getType();
-        }
-    }
-
-    /**
-     * 获取类型集合
-     *
-     * @param isExpense true为支出类型
-     * @return 类型集
-     */
-    public List<Type> getTypes(boolean isExpense) {
-        List<Type> types = new ArrayList<>(10);
-        try (TypeCursorWrapper cursor = queryTypes(Cols.IS_EXPENSE + "== ?",
-                new String[]{isExpense ? "1" : "0"})) {
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                types.add(cursor.getType());
-                cursor.moveToNext();
-            }
-        }
-        return types;
     }
 
     /**
@@ -146,5 +108,43 @@ public class TypeLab {
             sqLiteDatabase.insert(DbSchema.TypeTable.NAME, null,
                     getContentValues(type));
         }
+    }
+
+    private TypeCursorWrapper queryTypes(String where, String[] args) {
+        Cursor cursor = mDatabase.query(DbSchema.TypeTable.NAME,
+                null,
+                where,
+                args,
+                null,
+                null,
+                null);
+        return new TypeCursorWrapper(cursor);
+    }
+
+    public Type getType(UUID uuid) {
+        try (TypeCursorWrapper cursor = queryTypes(Cols.UUID + " == ?",
+                new String[]{uuid.toString()})) {
+            cursor.moveToFirst();
+            return cursor.getType();
+        }
+    }
+
+    /**
+     * 获取类型集合
+     *
+     * @param isExpense true为支出类型
+     * @return 类型集
+     */
+    public List<Type> getTypes(boolean isExpense) {
+        List<Type> types = new ArrayList<>(10);
+        try (TypeCursorWrapper cursor = queryTypes(Cols.IS_EXPENSE + "== ?",
+                new String[]{isExpense ? "1" : "0"})) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                types.add(cursor.getType());
+                cursor.moveToNext();
+            }
+        }
+        return types;
     }
 }

@@ -22,6 +22,18 @@ public class StatsLab {
     private SQLiteDatabase mDatabase;
 
     /**
+     * 构造统计库
+     * 只读
+     *
+     * @param context 应用上下文
+     */
+    private StatsLab(Context context) {
+        // 数据库方式
+        mContext = context.getApplicationContext();
+        mDatabase = new DbBaseHelper(context).getReadableDatabase();
+    }
+
+    /**
      * 单例
      * 获取统计数据库
      *
@@ -34,18 +46,6 @@ public class StatsLab {
         } else {
             return sStatsLab;
         }
-    }
-
-    /**
-     * 构造统计库
-     * 只读
-     *
-     * @param context 应用上下文
-     */
-    private StatsLab(Context context) {
-        // 数据库方式
-        mContext = context.getApplicationContext();
-        mDatabase = new DbBaseHelper(context).getReadableDatabase();
     }
 
     private StatsCursorWrapper queryStats(String[] cols, String where, String[] args,
@@ -160,6 +160,46 @@ public class StatsLab {
     }
 
     /**
+     * 统计收入或支出总额的游标
+     *
+     * @param start 开始日期
+     * @param end   结束日期
+     * @param s     "1"是支出类型 "0"是收入类型
+     * @return 游标
+     */
+    @NonNull
+    private StatsCursorWrapper getBillsInfoCursor(DateTime start, DateTime end, String s) {
+        return queryStats(
+                new String[]{"sum(" + DbSchema.BillTable.Cols.BALANCE + ")"},
+                DbSchema.BillTable.Cols.DATE + " BETWEEN ? AND ? and " +
+                        DbSchema.TypeTable.Cols.IS_EXPENSE + " == ?",
+                new String[]{String.valueOf(start.getMillis()), String.valueOf(end.getMillis()), s},
+                null,
+                DbSchema.BillTable.Cols.DATE + " DESC"
+        );
+    }
+
+    /**
+     * 统计每个支出或收入种类的求和游标，从高到低排列
+     *
+     * @param start 开始日期
+     * @param end   结束日期
+     * @param s     "1"是支出类型 "0"是收入类型
+     * @return 游标
+     */
+    @NonNull
+    private StatsCursorWrapper getTypesInfoCursor(DateTime start, DateTime end, String s) {
+        return queryStats(
+                new String[]{DbSchema.TypeTable.Cols.NAME, "sum(" + DbSchema.BillTable.Cols.BALANCE + ")"},
+                DbSchema.BillTable.Cols.DATE + " BETWEEN ? AND ? and " +
+                        DbSchema.TypeTable.Cols.IS_EXPENSE + " == ?",
+                new String[]{String.valueOf(start.getMillis()), String.valueOf(end.getMillis()), s},
+                DbSchema.TypeTable.Cols.NAME,
+                "sum(" + DbSchema.BillTable.Cols.BALANCE + ") DESC"
+        );
+    }
+
+    /**
      * 类型统计类
      */
     public class TypeStats {
@@ -206,45 +246,5 @@ public class StatsLab {
         public BigDecimal getSum() {
             return sum;
         }
-    }
-
-    /**
-     * 统计收入或支出总额的游标
-     *
-     * @param start 开始日期
-     * @param end   结束日期
-     * @param s     "1"是支出类型 "0"是收入类型
-     * @return 游标
-     */
-    @NonNull
-    private StatsCursorWrapper getBillsInfoCursor(DateTime start, DateTime end, String s) {
-        return queryStats(
-                new String[]{"sum(" + DbSchema.BillTable.Cols.BALANCE + ")"},
-                DbSchema.BillTable.Cols.DATE + " BETWEEN ? AND ? and " +
-                        DbSchema.TypeTable.Cols.IS_EXPENSE + " == ?",
-                new String[]{String.valueOf(start.getMillis()), String.valueOf(end.getMillis()), s},
-                null,
-                DbSchema.BillTable.Cols.DATE + " DESC"
-        );
-    }
-
-    /**
-     * 统计每个支出或收入种类的求和游标，从高到低排列
-     *
-     * @param start 开始日期
-     * @param end   结束日期
-     * @param s     "1"是支出类型 "0"是收入类型
-     * @return 游标
-     */
-    @NonNull
-    private StatsCursorWrapper getTypesInfoCursor(DateTime start, DateTime end, String s) {
-        return queryStats(
-                new String[]{DbSchema.TypeTable.Cols.NAME, "sum(" + DbSchema.BillTable.Cols.BALANCE + ")"},
-                DbSchema.BillTable.Cols.DATE + " BETWEEN ? AND ? and " +
-                        DbSchema.TypeTable.Cols.IS_EXPENSE + " == ?",
-                new String[]{String.valueOf(start.getMillis()), String.valueOf(end.getMillis()), s},
-                DbSchema.TypeTable.Cols.NAME,
-                "sum(" + DbSchema.BillTable.Cols.BALANCE + ") DESC"
-        );
     }
 }

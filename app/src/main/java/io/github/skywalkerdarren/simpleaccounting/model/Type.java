@@ -36,36 +36,10 @@ public class Type {
     }
 
     /**
-     * 设定类型名称
-     */
-    public Type setName(String name) {
-        mName = name;
-        return this;
-    }
-
-    /**
      * 设定类型图标资源
      */
     public Type setResId(int resId) {
         mResId = resId;
-        return this;
-    }
-
-    /**
-     * 设定颜色资源
-     */
-    public Type setColorId(int colorId) {
-        mColorId = colorId;
-        return this;
-    }
-
-    /**
-     * 设定是否为支出
-     *
-     * @param expense true为支出
-     */
-    public Type setExpense(boolean expense) {
-        mIsExpense = expense;
         return this;
     }
 
@@ -79,12 +53,30 @@ public class Type {
     }
 
     /**
+     * 设定是否为支出
+     *
+     * @param expense true为支出
+     */
+    public Type setExpense(boolean expense) {
+        mIsExpense = expense;
+        return this;
+    }
+
+    /**
      * 获取当前类型名称
      *
      * @return 名称
      */
     public String getName() {
         return mName;
+    }
+
+    /**
+     * 设定类型名称
+     */
+    public Type setName(String name) {
+        mName = name;
+        return this;
     }
 
     /**
@@ -104,6 +96,14 @@ public class Type {
      */
     public int getColorId() {
         return mColorId;
+    }
+
+    /**
+     * 设定颜色资源
+     */
+    public Type setColorId(int colorId) {
+        mColorId = colorId;
+        return this;
     }
 
     /**

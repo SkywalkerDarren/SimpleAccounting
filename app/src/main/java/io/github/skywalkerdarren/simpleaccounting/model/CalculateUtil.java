@@ -20,6 +20,14 @@ import io.github.skywalkerdarren.simpleaccounting.model.Operators.Operator;
 
 public class CalculateUtil {
 
+    private static final int LENGTH = 32;
+
+    //    private int radix = NORMAL;
+    private static Pattern patternFloat = Pattern.compile("[-+]?\\d+\\.\\d+");
+    private static Pattern patternExp = Pattern.compile("[-+]?\\d+\\.\\d+[Ee]+\\++\\d+");
+    private static Pattern patternInteger = Pattern.compile("[-+]?\\d+");
+    private static Pattern patternHex = Pattern.compile("[-+]?[\\d[a-f][A-F]]+");
+
     /**
      * 获取计算结果
      *
@@ -36,14 +44,65 @@ public class CalculateUtil {
         return r;
     }
 
-//    private int radix = NORMAL;
+    /**
+     * 动态的检查表达式合法性
+     * 不完全确保正确，但可以有效的进行行为约束，空串也合法
+     *
+     * @param exp 未完成的表达式
+     * @return true为合法
+     */
+    public static boolean dynamicCheckExperssion(String exp) {
+        if (TextUtils.isEmpty(exp)) {
+            return true;
+        }
+        final boolean n = false;
+        final boolean y = true;
+        final boolean[][] fsm = new boolean[][]{
+                // num
+                {y, y, y},
+                // dot
+                {y, n, n},
+                // sign
+                {y, n, n},
+        };
 
-    private static final int LENGTH = 32;
+        int j = 2, k;
+        char c = exp.charAt(0);
+        if (c >= '0' && c <= '9') {
+            k = 0;
+        } else if (c == '.') {
+            k = 1;
+        } else {
+            k = 2;
+        }
 
-    private static Pattern patternFloat = Pattern.compile("[-+]?\\d+\\.\\d+");
-    private static Pattern patternExp = Pattern.compile("[-+]?\\d+\\.\\d+[Ee]+\\++\\d+");
-    private static Pattern patternInteger = Pattern.compile("[-+]?\\d+");
-    private static Pattern patternHex = Pattern.compile("[-+]?[\\d[a-f][A-F]]+");
+        for (int i = 1; i < exp.length(); i++) {
+            j = k;
+
+            if (c >= '0' && c <= '9') {
+                k = 0;
+            } else if (c == '.') {
+                k = 1;
+            } else {
+                k = 2;
+            }
+
+            if (!fsm[j][k]) {
+                return false;
+            }
+        }
+        return fsm[j][k];
+    }
+
+    /**
+     * 转换到表达式
+     *
+     * @param exp 原始表达式
+     * @return 表达式
+     */
+    private static String convertToExpression(Expression exp) {
+        return exp.createExpression();
+    }
 
     /**
      * 通过表达式获取计算结果
@@ -172,56 +231,6 @@ public class CalculateUtil {
     }
 
     /**
-     * 动态的检查表达式合法性
-     * 不完全确保正确，但可以有效的进行行为约束，空串也合法
-     *
-     * @param exp 未完成的表达式
-     * @return true为合法
-     */
-    public static boolean dynamicCheckExperssion(String exp) {
-        if (TextUtils.isEmpty(exp)) {
-            return true;
-        }
-        final boolean n = false;
-        final boolean y = true;
-        final boolean[][] fsm = new boolean[][]{
-                // num
-                {y, y, y},
-                // dot
-                {y, n, n},
-                // sign
-                {y, n, n},
-        };
-
-        int j = 2, k;
-        char c = exp.charAt(0);
-        if (c >= '0' && c <= '9') {
-            k = 0;
-        } else if (c == '.') {
-            k = 1;
-        } else {
-            k = 2;
-        }
-
-        for (int i = 1; i < exp.length(); i++) {
-            j = k;
-
-            if (c >= '0' && c <= '9') {
-                k = 0;
-            } else if (c == '.') {
-                k = 1;
-            } else {
-                k = 2;
-            }
-
-            if (!fsm[j][k]) {
-                return false;
-            }
-        }
-        return fsm[j][k];
-    }
-
-    /**
      * 表达式处理的核心方法
      *
      * @param expression: 一个由单个数值或符号构成的表达式数组(e.g., s[] = {"3.56","+","4"})
@@ -302,15 +311,5 @@ public class CalculateUtil {
             default:
                 break;
         }
-    }
-
-    /**
-     * 转换到表达式
-     *
-     * @param exp 原始表达式
-     * @return 表达式
-     */
-    private static String convertToExpression(Expression exp) {
-        return exp.createExpression();
     }
 }

@@ -31,6 +31,17 @@ public class BillLab {
     private SQLiteDatabase mDatabase;
 
     /**
+     * 构造账单库
+     *
+     * @param context 应用上下文
+     */
+    private BillLab(Context context) {
+        // 数据库方式
+        mContext = context.getApplicationContext();
+        mDatabase = new DbBaseHelper(context).getWritableDatabase();
+    }
+
+    /**
      * 单例
      * 获取账单数据库
      *
@@ -43,17 +54,6 @@ public class BillLab {
         } else {
             return sBillLab;
         }
-    }
-
-    /**
-     * 构造账单库
-     *
-     * @param context 应用上下文
-     */
-    private BillLab(Context context) {
-        // 数据库方式
-        mContext = context.getApplicationContext();
-        mDatabase = new DbBaseHelper(context).getWritableDatabase();
     }
 
     /**

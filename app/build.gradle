@@ -15,10 +15,10 @@ android {
         debug {
             applicationIdSuffix ".debug"
         }
-//        release {
-//            minifyEnabled false
-//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-//        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
     }
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
@@ -29,6 +29,9 @@ android {
         dexInProcess true
         preDexLibraries true
         javaMaxHeapSize "2g"//越大越好
+    }
+    dataBinding {
+        enabled = true
     }
 }
 
