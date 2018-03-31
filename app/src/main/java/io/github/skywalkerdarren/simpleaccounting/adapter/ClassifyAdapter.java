@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
-import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
+import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
 
 /**
  * 分类页面的统计数据适配器
@@ -18,22 +18,22 @@ import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
  * @date 2018/3/25
  */
 
-public class ClassifyAdapter extends BaseQuickAdapter<BillLab.TypeStats, BaseViewHolder> {
+public class ClassifyAdapter extends BaseQuickAdapter<StatsLab.TypeStats, BaseViewHolder> {
     private BigDecimal mSum;
 
-    public ClassifyAdapter(@Nullable List<BillLab.TypeStats> data) {
+    public ClassifyAdapter(@Nullable List<StatsLab.TypeStats> data) {
         super(R.layout.classify_item, data);
         if (data == null) {
             return;
         }
         mSum = BigDecimal.ZERO;
-        for (BillLab.TypeStats stats : data) {
+        for (StatsLab.TypeStats stats : data) {
             mSum = mSum.add(stats.getSum());
         }
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, BillLab.TypeStats item) {
+    protected void convert(BaseViewHolder helper, StatsLab.TypeStats item) {
         helper.setText(R.id.type_text_view, item.getType().getName());
         helper.setImageResource(R.id.type_image_view, item.getType().getTypeId());
         helper.setText(R.id.balance_text_view, item.getSum().toString());

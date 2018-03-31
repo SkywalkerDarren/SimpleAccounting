@@ -15,7 +15,7 @@ import java.util.UUID;
  * @date 2018/1/30
  */
 
-public class BillCursorWrapper extends CursorWrapper {
+class BillCursorWrapper extends CursorWrapper {
     public BillCursorWrapper(Cursor cursor) {
         super(cursor);
     }
@@ -26,22 +26,19 @@ public class BillCursorWrapper extends CursorWrapper {
      * @return 对应账单
      */
     public Bill getBill() {
-        String uuid = getString(getColumnIndex(BillDbSchema.BillTable.Cols.UUID));
-        String name = getString(getColumnIndex(BillDbSchema.BillTable.Cols.NAME));
-        String balance = getString(getColumnIndex(BillDbSchema.BillTable.Cols.BALANCE));
-        long date = getLong(getColumnIndex(BillDbSchema.BillTable.Cols.DATE));
-        int isExpense = getInt(getColumnIndex(BillDbSchema.BillTable.Cols.IS_EXPENSE));
-        String type = getString(getColumnIndex(BillDbSchema.BillTable.Cols.TYPE));
-        String remark = getString(getColumnIndex(BillDbSchema.BillTable.Cols.REMARK));
+        String uuid = getString(getColumnIndex(DbSchema.BillTable.Cols.UUID));
+        String name = getString(getColumnIndex(DbSchema.BillTable.Cols.NAME));
+        String balance = getString(getColumnIndex(DbSchema.BillTable.Cols.BALANCE));
+        long date = getLong(getColumnIndex(DbSchema.BillTable.Cols.DATE));
+        String type = getString(getColumnIndex(DbSchema.BillTable.Cols.TYPE_ID));
+        String remark = getString(getColumnIndex(DbSchema.BillTable.Cols.REMARK));
 
         Bill bill = new Bill(UUID.fromString(uuid));
         bill.setName(name);
         bill.setBalance(new BigDecimal(balance));
         bill.setDate(new DateTime(date));
         bill.setRemark(remark);
-        bill.setType(type);
-        bill.setExpense(isExpense > 0);
-
+        bill.setTypeId(UUID.fromString(type));
         return bill;
     }
 }

@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
-import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
+import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -91,7 +91,7 @@ public class PieChartFragment extends BaseFragment {
         description.setEnabled(false);
         mPieChart.setDescription(description);
 
-        BillLab.Stats stats = BillLab.getInstance(getContext())
+        StatsLab.Stats stats = StatsLab.getInstance(getContext())
                 .getStats(mStartDateTime, mEndDateTime);
         String s = mIsExpense ? stats.getExpense().toString() : stats.getIncome().toString();
         mPieChart.setCenterText(generateCenterText(s));
@@ -120,13 +120,13 @@ public class PieChartFragment extends BaseFragment {
 
     @Override
     protected void updateUI() {
-        List<BillLab.TypeStats> typeStats = BillLab.getInstance(getContext())
+        List<StatsLab.TypeStats> typeStats = StatsLab.getInstance(getContext())
                 .getTypeStats(mStartDateTime, mEndDateTime, mIsExpense);
 
         List<PieEntry> pieEntries = new ArrayList<>(10);
         List<Integer> colorList = new ArrayList<>(10);
         if (typeStats != null) {
-            for (BillLab.TypeStats stats : typeStats) {
+            for (StatsLab.TypeStats stats : typeStats) {
                 PieEntry entry = new PieEntry(stats.getSum().floatValue(), stats.getType().getName());
                 colorList.add(stats.getType().getColorId());
                 pieEntries.add(entry);

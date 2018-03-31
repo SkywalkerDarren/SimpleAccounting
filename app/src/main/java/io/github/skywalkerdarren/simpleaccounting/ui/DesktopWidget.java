@@ -12,7 +12,7 @@ import org.joda.time.DateTime;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
-import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
+import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
 
 /**
  * 桌面小部件
@@ -46,7 +46,7 @@ public class DesktopWidget extends AppWidgetProvider {
         Intent intent = BillEditActivity.newIntent(context, new Bill(), 0, 0);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, REQUEST_BILL,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        BillLab.Stats stats = BillLab.getInstance(context)
+        StatsLab.Stats stats = StatsLab.getInstance(context)
                 .getAnnualStats(DateTime.now().getYear())
                 .get(DateTime.now().getMonthOfYear() - 1);
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_bill);

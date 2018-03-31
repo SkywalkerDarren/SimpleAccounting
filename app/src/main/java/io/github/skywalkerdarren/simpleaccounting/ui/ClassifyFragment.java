@@ -25,7 +25,7 @@ import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.ClassifyAdapter;
-import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
+import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
 
 import static io.github.skywalkerdarren.simpleaccounting.ui.PeriodDialogFragment.EXTRA_END_DATE;
 import static io.github.skywalkerdarren.simpleaccounting.ui.PeriodDialogFragment.EXTRA_START_DATE;
@@ -88,7 +88,7 @@ public class ClassifyFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void setStatsData(boolean t, ClassifyAdapter adapter) {
-        List<BillLab.TypeStats> typeStats = BillLab.getInstance(getContext())
+        List<StatsLab.TypeStats> typeStats = StatsLab.getInstance(getContext())
                 .getTypeStats(mDateTimeStart, mDateTimeEnd, t);
         adapter.setNewData(typeStats);
         adapter.openLoadAnimation(t ?
@@ -142,7 +142,7 @@ public class ClassifyFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     protected void updateUI() {
-        List<BillLab.TypeStats> typeStats = BillLab.getInstance(getContext())
+        List<StatsLab.TypeStats> typeStats = StatsLab.getInstance(getContext())
                 .getTypeStats(mDateTimeStart, mDateTimeEnd, mIsExpense);
         ClassifyAdapter adapter = new ClassifyAdapter(typeStats);
         adapter.setEmptyView(EmptyView());

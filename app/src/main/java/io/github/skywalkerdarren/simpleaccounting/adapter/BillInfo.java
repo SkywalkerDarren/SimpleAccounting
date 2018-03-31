@@ -16,6 +16,9 @@ import java.util.UUID;
 
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
+import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
+import io.github.skywalkerdarren.simpleaccounting.model.Type;
+import io.github.skywalkerdarren.simpleaccounting.model.TypeLab;
 
 import static io.github.skywalkerdarren.simpleaccounting.adapter.BillAdapter.HEADER;
 import static io.github.skywalkerdarren.simpleaccounting.adapter.BillAdapter.WITHOUT_REMARK;
@@ -50,16 +53,17 @@ public class BillInfo implements MultiItemEntity {
      * 构造账单摘要
      *
      * @param bill 账单
+     * @param type
      */
-    private BillInfo(Bill bill) {
+    private BillInfo(Bill bill, Type type) {
         mType = TextUtils.isEmpty(bill.getRemark()) ? WITHOUT_REMARK : WITH_REMARK;
         mUUID = bill.getId();
         mTitle = bill.getName();
         mRemark = bill.getRemark();
         mBalance = bill.getBalance().toString();
-        mIsExpense = bill.isExpense();
-        mBillTypeName = bill.getTypeName();
-        mBillTypeResId = bill.getTypeResId();
+        mIsExpense = type.getExpense();
+        mBillTypeName = type.getName();
+        mBillTypeResId = type.getTypeId();
         mDateTime = bill.getDate();
     }
 
@@ -84,12 +88,15 @@ public class BillInfo implements MultiItemEntity {
      */
     public static List<BillInfo> getBillInfoList(int year, int month, Context context) {
         BillLab billLab = BillLab.getInstance(context);
+        TypeLab typeLab = TypeLab.getInstance(context);
+        StatsLab statsLab = StatsLab.getInstance(context);
         List<Bill> bills = billLab.getsBills(year, month);
         List<BillInfo> billInfoList = new ArrayList<>();
         // 上一个账单的年月日
         DateTime date = null;
         for (int i = 0; i < bills.size(); i++) {
             Bill bill = bills.get(i);
+            Type type = typeLab.getType(bill.getTypeId());
             DateTime dateTime = bill.getDate();
             int y = dateTime.getYear();
             int m = dateTime.getMonthOfYear();
@@ -99,11 +106,11 @@ public class BillInfo implements MultiItemEntity {
             // 如果当前帐单与上一张单年月日不同，则添加账单
             if (date == null || !date.equals(currentDate)) {
                 date = currentDate;
-                BigDecimal income = billLab.getStats(date, date.plusDays(1)).getIncome();
-                BigDecimal expense = billLab.getStats(date, date.plusDays(1)).getExpense();
+                BigDecimal income = statsLab.getStats(date, date.plusDays(1)).getIncome();
+                BigDecimal expense = statsLab.getStats(date, date.plusDays(1)).getExpense();
                 billInfoList.add(new BillInfo(new DateHeaderDivider(date, income, expense)));
             }
-            billInfoList.add(new BillInfo(bill));
+            billInfoList.add(new BillInfo(bill, type));
 
         }
         return billInfoList;

@@ -1,13 +1,11 @@
 package io.github.skywalkerdarren.simpleaccounting.model;
 
-import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -37,7 +35,7 @@ public class Bill implements Serializable {
     /**
      * 账单类型
      */
-    private String mType;
+    private UUID mTypeId;
 
     /**
      * 账单收支
@@ -48,12 +46,6 @@ public class Bill implements Serializable {
      * 账单备注
      */
     private String mRemark;
-
-    /**
-     * 是否是支出类型
-     */
-    private boolean isExpense = true;
-
 
     /**
      * 通过id新建账单
@@ -88,8 +80,9 @@ public class Bill implements Serializable {
     /**
      * @param date 账单日期
      */
-    public void setDate(DateTime date) {
+    public Bill setDate(DateTime date) {
         mDate = date;
+        return this;
     }
 
     /**
@@ -102,66 +95,21 @@ public class Bill implements Serializable {
     /**
      * @param name 账单标题
      */
-    public void setName(String name) {
+    public Bill setName(String name) {
         mName = name;
+        return this;
+    }
+
+    public Bill setTypeId(UUID typeId) {
+        mTypeId = typeId;
+        return this;
     }
 
     /**
      * @return 账单类型名
      */
-    public String getTypeName() {
-        return mType;
-    }
-
-    /**
-     * @return 账单对应资源id
-     */
-    public @DrawableRes
-    int getTypeResId() {
-        if (getTypeName() == null) {
-            return 0;
-        }
-        List<BaseType> types = isExpense() ? ExpenseType.getTypeList() : IncomeType.getTypeList();
-        for (BaseType t : types) {
-            if (t.getName().equals(getTypeName())) {
-                return t.getTypeId();
-            }
-        }
-        return 0;
-    }
-
-    /**
-     * @param type 账单类型
-     */
-    public void setType(String type) {
-        mType = type;
-    }
-
-    /**
-     * 是否为支出
-     *
-     * @param type 类型
-     */
-    public void setExpense(BaseType type) {
-        isExpense = type.getExpense();
-    }
-
-    /**
-     * 是否为支出
-     *
-     * @param isExpense true为支出类型
-     */
-    public void setExpense(boolean isExpense) {
-        this.isExpense = isExpense;
-    }
-
-    /**
-     * 是否为支出
-     *
-     * @return true为支出类型
-     */
-    public boolean isExpense() {
-        return isExpense;
+    public UUID getTypeId() {
+        return mTypeId;
     }
 
     /**
@@ -174,8 +122,9 @@ public class Bill implements Serializable {
     /**
      * @param balance 账单数额
      */
-    public void setBalance(BigDecimal balance) {
+    public Bill setBalance(BigDecimal balance) {
         mBalance = balance;
+        return this;
     }
 
     /**
@@ -189,8 +138,9 @@ public class Bill implements Serializable {
     /**
      * @param remark 账单备注
      */
-    public void setRemark(String remark) {
+    public Bill setRemark(String remark) {
         mRemark = remark;
+        return this;
     }
 
 }

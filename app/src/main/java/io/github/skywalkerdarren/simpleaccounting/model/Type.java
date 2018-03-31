@@ -6,6 +6,8 @@ import android.support.annotation.DrawableRes;
 import java.util.UUID;
 
 /**
+ * 链式接口实现Type
+ *
  * @author darren
  * @date 2018/3/31
  */
@@ -36,22 +38,25 @@ public class Type {
     /**
      * 设定类型名称
      */
-    public void setName(String name) {
+    public Type setName(String name) {
         mName = name;
+        return this;
     }
 
     /**
      * 设定类型图标资源
      */
-    public void setResId(int resId) {
+    public Type setResId(int resId) {
         mResId = resId;
+        return this;
     }
 
     /**
      * 设定颜色资源
      */
-    public void setColorId(int colorId) {
+    public Type setColorId(int colorId) {
         mColorId = colorId;
+        return this;
     }
 
     /**
@@ -59,8 +64,9 @@ public class Type {
      *
      * @param expense true为支出
      */
-    public void setExpense(boolean expense) {
+    public Type setExpense(boolean expense) {
         mIsExpense = expense;
+        return this;
     }
 
     /**

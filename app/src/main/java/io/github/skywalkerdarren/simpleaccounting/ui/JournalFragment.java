@@ -38,7 +38,7 @@ import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.StatsAdapter;
-import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
+import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,7 +46,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
  * create an instance of this fragment.
  */
 public class JournalFragment extends BaseFragment implements View.OnClickListener {
-    private BillLab mBillLab;
+    private StatsLab mStatsLab;
 
     private LineChart mLineChart;
     private TextView mDateTextView;
@@ -67,7 +67,7 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBillLab = BillLab.getInstance(getActivity());
+        mStatsLab = StatsLab.getInstance(getActivity());
     }
 
     @Override
@@ -116,7 +116,7 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
      * 更新数据
      */
     @SuppressLint("SetTextI18n")
-    private void updateLineDataSets(List<BillLab.Stats> statsList, boolean showIncome, boolean showExpense, boolean showSum) {
+    private void updateLineDataSets(List<StatsLab.Stats> statsList, boolean showIncome, boolean showExpense, boolean showSum) {
         BigDecimal sumIncome = BigDecimal.ZERO;
         BigDecimal sumExpense = BigDecimal.ZERO;
         BigDecimal sumBalance = BigDecimal.ZERO;
@@ -125,7 +125,7 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
         List<Entry> expense = new ArrayList<>();
         List<Entry> sum = new ArrayList<>();
         for (int i = 0; i < statsList.size(); i++) {
-            BillLab.Stats stats = statsList.get(i);
+            StatsLab.Stats stats = statsList.get(i);
             expense.add(new Entry(i, stats.getExpense().floatValue()));
             income.add(new Entry(i, stats.getIncome().floatValue()));
             sum.add(new Entry(i, stats.getSum().floatValue()));
@@ -159,7 +159,7 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
      */
     @Override
     public void updateUI() {
-        List<BillLab.Stats> statsList = mBillLab.getAnnualStats(mYear);
+        List<StatsLab.Stats> statsList = mStatsLab.getAnnualStats(mYear);
         if (mStatsAdapter == null) {
             mStatsAdapter = new StatsAdapter(statsList);
         } else {
@@ -190,7 +190,7 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
                 break;
         }
         int year = 2018;
-        List<BillLab.Stats> statsList = mBillLab.getAnnualStats(year);
+        List<StatsLab.Stats> statsList = mStatsLab.getAnnualStats(year);
         updateLineDataSets(statsList, mShowIncome, mShowExpense, mShowBalance);
     }
 

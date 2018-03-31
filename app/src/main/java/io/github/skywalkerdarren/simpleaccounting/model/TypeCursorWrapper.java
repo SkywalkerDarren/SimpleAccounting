@@ -5,14 +5,15 @@ import android.database.CursorWrapper;
 
 import java.util.UUID;
 
-import io.github.skywalkerdarren.simpleaccounting.model.TypeDbSchema.TypeTable.Cols;
+import io.github.skywalkerdarren.simpleaccounting.model.DbSchema.TypeTable.Cols;
+
 
 /**
  * @author darren
  * @date 2018/3/28
  */
 
-public class TypeCursorWrapper extends CursorWrapper {
+class TypeCursorWrapper extends CursorWrapper {
     public TypeCursorWrapper(Cursor cursor) {
         super(cursor);
     }

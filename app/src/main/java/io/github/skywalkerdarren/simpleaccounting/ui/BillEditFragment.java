@@ -41,11 +41,10 @@ import java.util.List;
 import co.ceryle.segmentedbutton.SegmentedButtonGroup;
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.TypeAdapter;
-import io.github.skywalkerdarren.simpleaccounting.model.BaseType;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
-import io.github.skywalkerdarren.simpleaccounting.model.ExpenseType;
-import io.github.skywalkerdarren.simpleaccounting.model.IncomeType;
+import io.github.skywalkerdarren.simpleaccounting.model.Type;
+import io.github.skywalkerdarren.simpleaccounting.model.TypeLab;
 
 /**
  * 账单编辑或创建的fragment
@@ -59,6 +58,7 @@ public class BillEditFragment extends BaseFragment {
     private static final String ARG_CX = "cx";
     private static final String ARG_CY = "cy";
     private Bill mBill;
+    private Type mType;
     private ImageView mTypeImageView;
     private ImageView mDateImageView;
     private TextView mTitleTextView;
@@ -104,7 +104,7 @@ public class BillEditFragment extends BaseFragment {
         actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
 
         // 配置适配器
-        TypeAdapter adapter = new TypeAdapter(ExpenseType.getTypeList());
+        TypeAdapter adapter = new TypeAdapter(TypeLab.getInstance(getContext()).getTypes(true));
         adapter.openLoadAnimation(view14 -> new Animator[]{
                         ObjectAnimator.ofFloat(view14, "scaleY", 1, 1.1f, 1),
                         ObjectAnimator.ofFloat(view14, "scaleX", 1, 1.1f, 1),
@@ -118,29 +118,25 @@ public class BillEditFragment extends BaseFragment {
 
         // 配置选择按钮
         mTypeSbg.setOnClickedButtonListener(position -> {
-            List<BaseType> types;
+            List<Type> types;
             switch (position) {
                 case 0:
-                    types = IncomeType.getTypeList();
                     mIsExpense = false;
-                    adapter.setNewData(types);
-                    mTitleTextView.setText(types.get(0).getName());
-                    mTypeImageView.setImageResource(types.get(0).getTypeId());
                     mBalanceEditText.setTextColor(getResources().getColor(R.color.greenyellow));
-                    typeImageAnimator();
                     break;
                 case 1:
-                    types = ExpenseType.getTypeList();
                     mIsExpense = true;
-                    mTitleTextView.setText(types.get(0).getName());
-                    mTypeImageView.setImageResource(types.get(0).getTypeId());
-                    adapter.setNewData(ExpenseType.getTypeList());
                     mBalanceEditText.setTextColor(getResources().getColor(R.color.orangered));
-                    typeImageAnimator();
                     break;
                 default:
                     break;
             }
+            types = TypeLab.getInstance(getContext()).getTypes(mIsExpense);
+            adapter.setNewData(types);
+            mType = types.get(0);
+            mTitleTextView.setText(mType.getName());
+            mTypeImageView.setImageResource(mType.getTypeId());
+            typeImageAnimator();
             adapter.notifyDataSetChanged();
         });
 
@@ -149,10 +145,12 @@ public class BillEditFragment extends BaseFragment {
             mDateTime = DateTime.now();
             mTitleTextView.setText(adapter.getData().get(0).getName());
             mTypeImageView.setImageResource(adapter.getData().get(0).getTypeId());
+            mType = adapter.getItem(0);
         } else {
+            mType = TypeLab.getInstance(getContext()).getType(mBill.getTypeId());
             mDateTime = mBill.getDate();
             mTitleTextView.setText(mBill.getName());
-            mTypeImageView.setImageResource(mBill.getTypeResId());
+            mTypeImageView.setImageResource(mType.getTypeId());
             mBalanceEditText.setText(mBill.getBalance().toString());
         }
 
@@ -275,13 +273,7 @@ public class BillEditFragment extends BaseFragment {
         mBill.setName(mTitleTextView.getText().toString());
         mBill.setDate(mDateTime);
         mBill.setRemark(mRemarkEditText.getText().toString());
-        mBill.setType(mTitleTextView.getText().toString());
-        List<BaseType> types = mIsExpense ? ExpenseType.getTypeList() : IncomeType.getTypeList();
-        for (BaseType type : types) {
-            if (type.getName().equals(mBill.getTypeName())) {
-                mBill.setExpense(type);
-            }
-        }
+        mBill.setTypeId(mType.getId());
 
         BillLab lab = BillLab.getInstance(getActivity());
         if (lab.getBill(mBill.getId()) == null) {
@@ -297,9 +289,9 @@ public class BillEditFragment extends BaseFragment {
      * 选择类型
      */
     public void clickTypeItem(BaseQuickAdapter adapter1, int position) {
-        BaseType type = (BaseType) adapter1.getData().get(position);
-        mTitleTextView.setText(type.getName());
-        mTypeImageView.setImageResource(type.getTypeId());
+        mType = (Type) adapter1.getData().get(position);
+        mTitleTextView.setText(mType.getName());
+        mTypeImageView.setImageResource(mType.getTypeId());
         typeImageAnimator();
     }
 

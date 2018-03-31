@@ -29,6 +29,8 @@ import android.widget.TextView;
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
+import io.github.skywalkerdarren.simpleaccounting.model.Type;
+import io.github.skywalkerdarren.simpleaccounting.model.TypeLab;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -164,9 +166,10 @@ public class BillDetailFragment extends BaseFragment {
     @Override
     protected void updateUI() {
         mBill = BillLab.getInstance(getActivity()).getBill(mBill.getId());
-        mTypeImageView.setImageResource(mBill.getTypeResId());
+        Type type = TypeLab.getInstance(getActivity()).getType(mBill.getTypeId());
+        mTypeImageView.setImageResource(type.getTypeId());
         mBalanceTextView.setText(mBill.getBalance().toString());
-        mBalanceTextView.setTextColor(mBill.isExpense() ?
+        mBalanceTextView.setTextColor(type.getExpense() ?
                 Color.rgb(0xFF, 0x45, 0x00) :
                 Color.rgb(0xAD, 0xFF, 0x2F));
         mRemarkTextView.setText(mBill.getRemark());

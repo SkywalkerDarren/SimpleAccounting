@@ -13,7 +13,7 @@ import java.util.HashMap;
  * @author darren
  * @date 2018/3/10
  */
-public class Operators {
+class Operators {
     private final static MathContext MC = new MathContext(64, RoundingMode.HALF_UP);
 
     /**

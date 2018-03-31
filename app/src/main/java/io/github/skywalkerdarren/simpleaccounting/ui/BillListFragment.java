@@ -33,6 +33,7 @@ import io.github.skywalkerdarren.simpleaccounting.adapter.BillAdapter;
 import io.github.skywalkerdarren.simpleaccounting.adapter.BillInfo;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
+import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
 
 import static io.github.skywalkerdarren.simpleaccounting.adapter.BillAdapter.HEADER;
 
@@ -48,7 +49,7 @@ public class BillListFragment extends BaseFragment {
     private static final String SHARED_BUDGET = "budget";
     private RecyclerView mBillListRecyclerView;
     private BillAdapter mBillAdapter;
-    private BillLab mBillLab;
+    private StatsLab mStatsLab;
     private DateTime mDate;
 
     private TextView mIncomeTextView;
@@ -68,7 +69,7 @@ public class BillListFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        mBillLab = BillLab.getInstance(getActivity());
+        mStatsLab = StatsLab.getInstance(getActivity());
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -119,8 +120,8 @@ public class BillListFragment extends BaseFragment {
     public void updateUI() {
 
         DateTime month = new DateTime(mDate.getYear(), mDate.getMonthOfYear(), 1, 0, 0);
-        mIncomeTextView.setText(mBillLab.getStats(month, month.plusMonths(1)).getIncome().toString());
-        mExpenseTextView.setText(mBillLab.getStats(month, month.plusMonths(1)).getExpense().toString());
+        mIncomeTextView.setText(mStatsLab.getStats(month, month.plusMonths(1)).getIncome().toString());
+        mExpenseTextView.setText(mStatsLab.getStats(month, month.plusMonths(1)).getExpense().toString());
 
         mBudgeTextView.setText(mSharedPref.getString(SHARED_BUDGET, "0"));
         mMonthIncomeTextView.setText(mDate.getMonthOfYear() + getString(R.string.month_income));
@@ -212,7 +213,8 @@ public class BillListFragment extends BaseFragment {
         mY = mBillAdapter.getY();
         // TODO 颜色
         Intent intent = BillDetailPagerActivity
-                .newIntent(getActivity(), mBillLab.getBill(billId), mX, mY, R.color.orangea200);
+                .newIntent(getActivity(), BillLab.getInstance(getActivity()).getBill(billId),
+                        mX, mY, R.color.orangea200);
 
         intent.putExtra(BillDetailPagerActivity.EXTRA_START_COLOR, R.color.orangea200);
         ActivityOptionsCompat options = getElementAnimator(view);
