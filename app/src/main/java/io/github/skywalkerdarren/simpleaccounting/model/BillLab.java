@@ -13,7 +13,6 @@ import org.joda.time.DateTime;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 import static io.github.skywalkerdarren.simpleaccounting.model.BillDbSchema.BillTable;
@@ -32,9 +31,6 @@ public class BillLab {
     private static BillLab sBillLab;
     private Context mContext;
     private SQLiteDatabase mDatabase;
-    public static final String EXPENSE = "expense";
-    public static final String INCOME = "income";
-    public static final String SUM = "sum";
 
     /**
      * 单例
@@ -60,40 +56,6 @@ public class BillLab {
         // 数据库方式
         mContext = context.getApplicationContext();
         mDatabase = new BillBaseHelper(context).getWritableDatabase();
-    }
-
-    /**
-     * 随机创建一个账单
-     *
-     * @param i 编号
-     * @return 账单
-     */
-    @NonNull
-    @Deprecated
-    public static Bill createRandomBill(int i) {
-        Bill bill = new Bill();
-        if (new Random().nextInt(2) > 0) {
-            bill.setRemark("这是备注：#" + i);
-        } else {
-            bill.setRemark("");
-        }
-        bill.setBalance(new BigDecimal(new Random().nextDouble() * 1000).setScale(2, BigDecimal.ROUND_HALF_UP));
-        bill.setDate(DateTime.now());
-
-        // 1/5的几率为收入类型
-        if (new Random().nextInt(5) < 1) {
-            int position = new Random().nextInt(IncomeType.getValues().length);
-            String type = IncomeType.getValues()[position];
-            bill.setType(type);
-            bill.setName("这是" + type + "：#" + i);
-        } else {
-            int position = new Random().nextInt(ExpenseType.getValues().length);
-            String type = ExpenseType.getValues()[position];
-
-            bill.setType(type);
-            bill.setName("这是" + type + "：#" + i);
-        }
-        return bill;
     }
 
     /**

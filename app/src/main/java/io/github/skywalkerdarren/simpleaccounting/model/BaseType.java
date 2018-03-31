@@ -4,6 +4,7 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 
 import java.util.List;
+import java.util.UUID;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 
@@ -22,11 +23,13 @@ public abstract class BaseType {
     private int mResId;
     @ColorRes
     private int mColorId;
+    private UUID mId;
 
     /**
      * 必要的空构造方法
      */
     protected BaseType() {
+        mId = UUID.randomUUID();
     }
 
     /**
@@ -47,6 +50,22 @@ public abstract class BaseType {
      * @param colorId 对应背景颜色id
      */
     public BaseType(String name, @DrawableRes int resId, @ColorRes int colorId) {
+        this();
+        mName = name;
+        mResId = resId;
+        mColorId = colorId;
+    }
+
+    /**
+     * 通过名称，资源id，构造新的类型
+     *
+     * @param id      唯一标识
+     * @param name    类型名称
+     * @param resId   对应资源id
+     * @param colorId 对应背景颜色id
+     */
+    public BaseType(UUID id, String name, @DrawableRes int resId, @ColorRes int colorId) {
+        mId = id;
         mName = name;
         mResId = resId;
         mColorId = colorId;
@@ -105,5 +124,9 @@ public abstract class BaseType {
      */
     public int getColorId() {
         return mColorId;
+    }
+
+    public UUID getId() {
+        return mId;
     }
 }
