@@ -1,8 +1,6 @@
 package io.github.skywalkerdarren.simpleaccounting.model;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.EmptyStackException;
 import java.util.HashMap;
 
@@ -14,7 +12,6 @@ import java.util.HashMap;
  * @date 2018/3/10
  */
 class Operators {
-    private final static MathContext MC = new MathContext(64, RoundingMode.HALF_UP);
 
     /**
      * 存放运算符的哈希表，通过运算符字符串获取Operator运算符

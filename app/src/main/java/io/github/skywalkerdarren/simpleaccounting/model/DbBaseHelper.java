@@ -30,7 +30,7 @@ class DbBaseHelper extends SQLiteOpenHelper {
      *
      * @param context 应用上下文
      */
-    public DbBaseHelper(Context context) {
+    DbBaseHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION);
     }
 

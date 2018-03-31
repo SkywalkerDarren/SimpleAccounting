@@ -16,7 +16,7 @@ import java.util.UUID;
  */
 
 class BillCursorWrapper extends CursorWrapper {
-    public BillCursorWrapper(Cursor cursor) {
+    BillCursorWrapper(Cursor cursor) {
         super(cursor);
     }
 
@@ -25,7 +25,7 @@ class BillCursorWrapper extends CursorWrapper {
      *
      * @return 对应账单
      */
-    public Bill getBill() {
+    Bill getBill() {
         String uuid = getString(getColumnIndex(DbSchema.BillTable.Cols.UUID));
         String name = getString(getColumnIndex(DbSchema.BillTable.Cols.NAME));
         String balance = getString(getColumnIndex(DbSchema.BillTable.Cols.BALANCE));

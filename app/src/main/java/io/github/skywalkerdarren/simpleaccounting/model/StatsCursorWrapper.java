@@ -16,11 +16,11 @@ import io.github.skywalkerdarren.simpleaccounting.model.DbSchema.TypeTable;
  */
 
 class StatsCursorWrapper extends CursorWrapper {
-    public StatsCursorWrapper(Cursor cursor) {
+    StatsCursorWrapper(Cursor cursor) {
         super(cursor);
     }
 
-    public Type getType() {
+    Type getType() {
         return new Type(UUID.fromString(getString(getColumnIndex(TypeTable.Cols.UUID))))
                 .setName(getString(getColumnIndex(TypeTable.Cols.NAME)))
                 .setResId(getInt(getColumnIndex(TypeTable.Cols.RES_ID)))
@@ -28,7 +28,7 @@ class StatsCursorWrapper extends CursorWrapper {
                 .setExpense(getInt(getColumnIndex(TypeTable.Cols.IS_EXPENSE)) == 1);
     }
 
-    public Bill getBill() {
+    Bill getBill() {
         return new Bill(UUID.fromString(getString(getColumnIndex(DbSchema.BillTable.Cols.UUID))))
                 .setName(getString(getColumnIndex(DbSchema.BillTable.Cols.NAME)))
                 .setBalance(new BigDecimal(getString(getColumnIndex(DbSchema.BillTable.Cols.BALANCE))))

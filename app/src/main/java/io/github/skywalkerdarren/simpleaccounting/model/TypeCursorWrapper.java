@@ -14,11 +14,11 @@ import io.github.skywalkerdarren.simpleaccounting.model.DbSchema.TypeTable.Cols;
  */
 
 class TypeCursorWrapper extends CursorWrapper {
-    public TypeCursorWrapper(Cursor cursor) {
+    TypeCursorWrapper(Cursor cursor) {
         super(cursor);
     }
 
-    public Type getType() {
+    Type getType() {
         UUID id = UUID.fromString(getString(getColumnIndex(Cols.UUID)));
         Type type = new Type(id);
         type.setName(getString(getColumnIndex(Cols.NAME)));
