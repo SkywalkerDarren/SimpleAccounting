@@ -23,6 +23,16 @@ public class Bill implements Serializable {
     private UUID mId;
 
     /**
+     * 账单类型ID
+     */
+    private UUID mTypeId;
+
+    /**
+     * 账单账户类型ID
+     */
+    private UUID mAccountId;
+
+    /**
      * 账单日期
      */
     private DateTime mDate;
@@ -31,11 +41,6 @@ public class Bill implements Serializable {
      * 账单名称
      */
     private String mName;
-
-    /**
-     * 账单类型
-     */
-    private UUID mTypeId;
 
     /**
      * 账单收支
@@ -107,6 +112,24 @@ public class Bill implements Serializable {
         return mTypeId;
     }
 
+    /**
+     * @return 账户ID
+     */
+    public UUID getAccountId() {
+        return mAccountId;
+    }
+
+    /**
+     * @param accountId 账户ID
+     */
+    public Bill setAccountId(UUID accountId) {
+        mAccountId = accountId;
+        return this;
+    }
+
+    /**
+     * @param typeId 类型ID
+     */
     public Bill setTypeId(UUID typeId) {
         mTypeId = typeId;
         return this;

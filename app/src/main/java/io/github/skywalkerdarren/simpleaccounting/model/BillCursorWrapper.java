@@ -8,6 +8,8 @@ import org.joda.time.DateTime;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import io.github.skywalkerdarren.simpleaccounting.model.DbSchema.BillTable.Cols;
+
 /**
  * 账单游标封装
  *
@@ -26,11 +28,12 @@ class BillCursorWrapper extends CursorWrapper {
      * @return 对应账单
      */
     Bill getBill() {
-        return new Bill(UUID.fromString(getString(getColumnIndex(DbSchema.BillTable.Cols.UUID))))
-                .setName(getString(getColumnIndex(DbSchema.BillTable.Cols.NAME)))
-                .setBalance(new BigDecimal(getString(getColumnIndex(DbSchema.BillTable.Cols.BALANCE))))
-                .setDate(new DateTime(getLong(getColumnIndex(DbSchema.BillTable.Cols.DATE))))
-                .setRemark(getString(getColumnIndex(DbSchema.BillTable.Cols.REMARK)))
-                .setTypeId(UUID.fromString(getString(getColumnIndex(DbSchema.BillTable.Cols.TYPE_ID))));
+        return new Bill(UUID.fromString(getString(getColumnIndex(Cols.UUID))))
+                .setName(getString(getColumnIndex(Cols.NAME)))
+                .setBalance(new BigDecimal(getString(getColumnIndex(Cols.BALANCE))))
+                .setDate(new DateTime(getLong(getColumnIndex(Cols.DATE))))
+                .setRemark(getString(getColumnIndex(Cols.REMARK)))
+                .setAccountId(UUID.fromString(getString(getColumnIndex(Cols.ACCOUNT_ID))))
+                .setTypeId(UUID.fromString(getString(getColumnIndex(Cols.TYPE_ID))));
     }
 }

@@ -9,7 +9,11 @@ import android.support.v7.app.AlertDialog;
 
 import java.util.UUID;
 
+import io.github.skywalkerdarren.simpleaccounting.model.Account;
+import io.github.skywalkerdarren.simpleaccounting.model.AccountLab;
+import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
+import io.github.skywalkerdarren.simpleaccounting.model.TypeLab;
 
 /**
  * 删除帐单对话框
@@ -42,13 +46,27 @@ public class DeleteBillAlertDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        BillLab lab = BillLab.getInstance(getContext());
         mBillId = (UUID) getArguments().getSerializable(ARG_BILL_ID);
+        Bill bill = BillLab.getInstance(getContext()).getBill(mBillId);
         return new AlertDialog.Builder(getActivity())
                 .setTitle("确认删除")
                 .setMessage("确定永久删除此账单？")
-                .setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> sendResult(Activity.RESULT_CANCELED))
+                .setNegativeButton(android.R.string.cancel, (dialogInterface, i) ->
+                        sendResult(Activity.RESULT_CANCELED))
                 .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
-                    BillLab.getInstance(getContext()).delBill(mBillId);
+                    // 删除帐单
+                    lab.delBill(mBillId);
+                    // 从账户中增减数额
+                    AccountLab accountLab = AccountLab.getInstance(getContext());
+                    Account account = accountLab.getAccount(bill.getAccountId());
+                    if (TypeLab.getInstance(getContext()).getType(bill.getTypeId()).getExpense()) {
+                        account.plusBalance(bill.getBalance());
+                    } else {
+                        account.minusBalance(bill.getBalance());
+                    }
+                    // 更新账户
+                    accountLab.updateAccount(account);
                     sendResult(Activity.RESULT_OK);
                 })
                 .create();

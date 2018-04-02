@@ -41,6 +41,8 @@ import java.util.List;
 import co.ceryle.segmentedbutton.SegmentedButtonGroup;
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.TypeAdapter;
+import io.github.skywalkerdarren.simpleaccounting.model.Account;
+import io.github.skywalkerdarren.simpleaccounting.model.AccountLab;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
 import io.github.skywalkerdarren.simpleaccounting.model.Type;
@@ -59,6 +61,8 @@ public class BillEditFragment extends BaseFragment {
     private static final String ARG_CY = "cy";
     private Bill mBill;
     private Type mType;
+    // TODO: 2018/4/2 使账单可编辑
+    private Account mAccount;
     private ImageView mTypeImageView;
     private ImageView mDateImageView;
     private TextView mTitleTextView;
@@ -104,7 +108,7 @@ public class BillEditFragment extends BaseFragment {
         actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
 
         // 配置适配器
-        TypeAdapter adapter = new TypeAdapter(TypeLab.getInstance(getContext()).getTypes(true));
+        TypeAdapter adapter = new TypeAdapter(null);
         adapter.openLoadAnimation(view14 -> new Animator[]{
                         ObjectAnimator.ofFloat(view14, "scaleY", 1, 1.1f, 1),
                         ObjectAnimator.ofFloat(view14, "scaleX", 1, 1.1f, 1),
@@ -114,7 +118,6 @@ public class BillEditFragment extends BaseFragment {
         adapter.setOnItemClickListener((adapter1, view12, position) -> clickTypeItem(adapter1, position));
         adapter.setOnItemChildClickListener((adapter12, view17, position) -> clickTypeItem(adapter12, position));
         mTypeRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
-        mTypeRecyclerView.setAdapter(adapter);
 
         // 配置选择按钮
         mTypeSbg.setOnClickedButtonListener(position -> {
@@ -142,12 +145,27 @@ public class BillEditFragment extends BaseFragment {
 
         // 配置账单信息
         if (mBill.getDate() == null) {
+            // 创建账单
             mDateTime = DateTime.now();
+            adapter.setNewData(TypeLab.getInstance(getContext()).getTypes(true));
             mTitleTextView.setText(adapter.getData().get(0).getName());
             mTypeImageView.setImageResource(adapter.getData().get(0).getTypeId());
             mType = adapter.getItem(0);
+            mAccount = AccountLab.getInstance(getContext()).getAccounts().get(0);
         } else {
+            // 编辑账单
             mType = TypeLab.getInstance(getContext()).getType(mBill.getTypeId());
+            mAccount = AccountLab.getInstance(getContext()).getAccount(mBill.getAccountId());
+            // 初始化账户到没当前账单时
+            if (mType.getExpense()) {
+                adapter.setNewData(TypeLab.getInstance(getContext()).getTypes(true));
+                mAccount.plusBalance(mBill.getBalance());
+            } else {
+                mTypeSbg.setPosition(0);
+                adapter.setNewData(TypeLab.getInstance(getContext()).getTypes(false));
+                mAccount.minusBalance(mBill.getBalance());
+            }
+            mTypeRecyclerView.setAdapter(adapter);
             mDateTime = mBill.getDate();
             mTitleTextView.setText(mBill.getName());
             mTypeImageView.setImageResource(mType.getTypeId());
@@ -180,7 +198,14 @@ public class BillEditFragment extends BaseFragment {
             datePicker.show(getFragmentManager(), "datePicker");
         });
 
-//         启动动画
+        viewEnterAnimation(view);
+        return view;
+    }
+
+    /**
+     * 启动动画
+     */
+    private void viewEnterAnimation(View view) {
         view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop,
@@ -209,7 +234,6 @@ public class BillEditFragment extends BaseFragment {
                 set.start();
             }
         });
-        return view;
     }
 
     /**
@@ -266,21 +290,34 @@ public class BillEditFragment extends BaseFragment {
         try {
             BigDecimal r = new BigDecimal(mBalanceEditText.getText().toString());
             mBill.setBalance(r);
+            // 设定账户
+            if (mType.getExpense()) {
+                mAccount.minusBalance(r);
+            } else {
+                mAccount.plusBalance(r);
+            }
         } catch (Exception e) {
             Toast.makeText(getContext(), "表达式错误", Toast.LENGTH_SHORT);
             return false;
         }
+
+        // 设定账单
         mBill.setName(mTitleTextView.getText().toString());
         mBill.setDate(mDateTime);
         mBill.setRemark(mRemarkEditText.getText().toString());
         mBill.setTypeId(mType.getId());
+        mBill.setAccountId(mAccount.getId());
 
-        BillLab lab = BillLab.getInstance(getActivity());
-        if (lab.getBill(mBill.getId()) == null) {
-            lab.addBill(mBill);
+        // 刷新账单数据库
+        BillLab billLab = BillLab.getInstance(getContext());
+        if (billLab.getBill(mBill.getId()) == null) {
+            billLab.addBill(mBill);
         } else {
-            lab.updateBill(mBill);
+            billLab.updateBill(mBill);
         }
+        // 刷新账户数据库
+        AccountLab accountLab = AccountLab.getInstance(getContext());
+        accountLab.updateAccount(mAccount);
         return true;
     }
 

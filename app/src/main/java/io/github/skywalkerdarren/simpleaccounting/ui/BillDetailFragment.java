@@ -27,6 +27,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
+import io.github.skywalkerdarren.simpleaccounting.model.Account;
+import io.github.skywalkerdarren.simpleaccounting.model.AccountLab;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
 import io.github.skywalkerdarren.simpleaccounting.model.Type;
@@ -53,6 +55,7 @@ public class BillDetailFragment extends BaseFragment {
     private TextView mDateTextView;
     private TextView mBalanceTextView;
     private TextView mRemarkTextView;
+    private TextView mAccountTextView;
     private FloatingActionButton mEditFab;
     private ActionBar mActionBar;
     private static final int REQUEST_DESTROY = 0;
@@ -77,6 +80,7 @@ public class BillDetailFragment extends BaseFragment {
         mTitleTextView = view.findViewById(R.id.title_text_view);
         mRemarkTextView = view.findViewById(R.id.bill_remark_text_view);
         mEditFab = view.findViewById(R.id.bill_edit_fab);
+        mAccountTextView = view.findViewById(R.id.bill_account_text_view);
         mActionBar = initToolbar(R.id.toolbar, view);
 
         mActionBar.setTitle(R.string.detail_bill);
@@ -167,11 +171,13 @@ public class BillDetailFragment extends BaseFragment {
     protected void updateUI() {
         mBill = BillLab.getInstance(getActivity()).getBill(mBill.getId());
         Type type = TypeLab.getInstance(getActivity()).getType(mBill.getTypeId());
+        Account account = AccountLab.getInstance(getActivity()).getAccount(mBill.getAccountId());
         mTypeImageView.setImageResource(type.getTypeId());
         mBalanceTextView.setText(mBill.getBalance().toString());
         mBalanceTextView.setTextColor(type.getExpense() ?
                 Color.rgb(0xFF, 0x45, 0x00) :
                 Color.rgb(0xAD, 0xFF, 0x2F));
+        mAccountTextView.setText(account.getName());
         mRemarkTextView.setText(mBill.getRemark());
         mTitleTextView.setText(mBill.getName());
         mDateTextView.setText(mBill.getDate().toString("yyyy-MM-dd hh:mm"));

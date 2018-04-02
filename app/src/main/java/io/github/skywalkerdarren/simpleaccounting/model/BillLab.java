@@ -60,7 +60,7 @@ public class BillLab {
      * @param bill 账单
      * @return 内容数据
      */
-    private static ContentValues getContentValues(Bill bill) {
+    private ContentValues getContentValues(Bill bill) {
         ContentValues values = new ContentValues();
         values.put(BillTable.Cols.UUID, bill.getId().toString());
         values.put(BillTable.Cols.BALANCE, bill.getBalance().toString());
@@ -68,6 +68,7 @@ public class BillLab {
         values.put(BillTable.Cols.NAME, bill.getName());
         values.put(BillTable.Cols.REMARK, bill.getRemark());
         values.put(BillTable.Cols.TYPE_ID, bill.getTypeId().toString());
+        values.put(BillTable.Cols.ACCOUNT_ID, bill.getAccountId().toString());
         return values;
     }
 

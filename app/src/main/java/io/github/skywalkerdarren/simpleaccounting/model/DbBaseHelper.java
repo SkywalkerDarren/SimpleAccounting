@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import static io.github.skywalkerdarren.simpleaccounting.model.AccountLab.initAccountDb;
 import static io.github.skywalkerdarren.simpleaccounting.model.TypeLab.initTypeDb;
 
 /**
@@ -45,7 +46,8 @@ class DbBaseHelper extends SQLiteOpenHelper {
                         DbSchema.BillTable.Cols.BALANCE + ", " +
                         DbSchema.BillTable.Cols.DATE + " LONG , " +
                         DbSchema.BillTable.Cols.REMARK + ", " +
-                        DbSchema.BillTable.Cols.TYPE_ID +
+                        DbSchema.BillTable.Cols.TYPE_ID + ", " +
+                        DbSchema.BillTable.Cols.ACCOUNT_ID +
                         ")"
         );
 
@@ -61,10 +63,26 @@ class DbBaseHelper extends SQLiteOpenHelper {
                         ")"
         );
         initTypeDb(sqLiteDatabase);
+
+        // 创建账户表
+        sqLiteDatabase.execSQL(
+                "create table " + DbSchema.AccountTable.NAME + "(" +
+                        " _id integer primary key autoincrement, " +
+                        DbSchema.AccountTable.Cols.UUID + ", " +
+                        DbSchema.AccountTable.Cols.NAME + ", " +
+                        DbSchema.AccountTable.Cols.BALANCE + " , " +
+                        DbSchema.AccountTable.Cols.BALANCE_HINT + " , " +
+                        DbSchema.AccountTable.Cols.IMAGE_ID + ", " +
+                        DbSchema.AccountTable.Cols.COLOR_ID +
+                        ")"
+        );
+        initAccountDb(sqLiteDatabase);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
     }
+
+
 }
