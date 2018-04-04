@@ -161,7 +161,7 @@ public class Bill implements Serializable {
     /**
      * @param remark 账单备注
      */
-    public Bill setRemark(String remark) {
+    public Bill setRemark(@Nullable String remark) {
         mRemark = remark;
         return this;
     }

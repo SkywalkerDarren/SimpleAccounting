@@ -9,6 +9,7 @@ import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.transition.Fade;
@@ -28,25 +29,23 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import org.joda.time.DateTime;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import co.ceryle.segmentedbutton.SegmentedButtonGroup;
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.TypeAdapter;
+import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillEditBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.AccountLab;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
-import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
 import io.github.skywalkerdarren.simpleaccounting.model.Type;
 import io.github.skywalkerdarren.simpleaccounting.model.TypeLab;
+import io.github.skywalkerdarren.simpleaccounting.view_model.BillEditViewModel;
 
 /**
  * 账单编辑或创建的fragment
@@ -63,18 +62,18 @@ public class BillEditFragment extends BaseFragment {
     private Type mType;
     // TODO: 2018/4/2 使账单可编辑
     private Account mAccount;
+
+    private FragmentBillEditBinding mBinding;
+    private BillEditViewModel mViewModel;
+
     private CardView mAccountTypeCardView;
-    private ImageView mTypeImageView;
-    private ImageView mDateImageView;
-    private TextView mTitleTextView;
     private EditText mBalanceEditText;
     private EditText mRemarkEditText;
     private RecyclerView mTypeRecyclerView;
-    private DateTime mDateTime;
     private SegmentedButtonGroup mTypeSbg;
-    private boolean mIsExpense = true;
     private NumPad mNumPad;
-    private ImageView mAccountTypeImageView;
+    private ImageView mDateImageView;
+    private ImageView mTypeImageView;
 
 
     @Override
@@ -93,20 +92,21 @@ public class BillEditFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_bill_edit, container, false);
-        mTitleTextView = view.findViewById(R.id.title_text_view);
-        mTypeImageView = view.findViewById(R.id.type_image_view);
-        mDateImageView = view.findViewById(R.id.date_image_view);
-        mRemarkEditText = view.findViewById(R.id.remark_edit_text);
-        mBalanceEditText = view.findViewById(R.id.balance_edit_text);
-        mTypeRecyclerView = view.findViewById(R.id.type_list_recycler_view);
-        mNumPad = view.findViewById(R.id.num_key_view);
-        mTypeSbg = view.findViewById(R.id.type_sbg);
-        mAccountTypeCardView = view.findViewById(R.id.account_type_card_view);
-        mAccountTypeImageView = view.findViewById(R.id.account_type_image_view);
+        mBinding = DataBindingUtil
+                .inflate(inflater, R.layout.fragment_bill_edit, container, false);
+        mDateImageView = mBinding.dateImageView;
+        mRemarkEditText = mBinding.remarkEditText;
+        mBalanceEditText = mBinding.balanceEditText;
+        mTypeRecyclerView = mBinding.typeListRecyclerView;
+        mNumPad = mBinding.numKeyView;
+        mTypeSbg = mBinding.typeSbg;
+        mAccountTypeCardView = mBinding.accountTypeCardView;
+        mTypeImageView = mBinding.typeImageView;
+
+        mViewModel = new BillEditViewModel(mBill, getContext());
 
         // 自定义导航栏
-        ActionBar actionBar = initToolbar(R.id.toolbar, view);
+        ActionBar actionBar = initToolbar(R.id.toolbar, mBinding.getRoot());
         actionBar.setTitle("");
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
@@ -126,24 +126,10 @@ public class BillEditFragment extends BaseFragment {
 
         // 配置选择按钮
         mTypeSbg.setOnClickedButtonListener(position -> {
-            List<Type> types;
-            switch (position) {
-                case 0:
-                    mIsExpense = false;
-                    mBalanceEditText.setTextColor(getResources().getColor(R.color.greenyellow));
-                    break;
-                case 1:
-                    mIsExpense = true;
-                    mBalanceEditText.setTextColor(getResources().getColor(R.color.orangered));
-                    break;
-                default:
-                    break;
-            }
-            types = TypeLab.getInstance(getContext()).getTypes(mIsExpense);
+            List<Type> types = TypeLab
+                    .getInstance(getContext()).getTypes(position == 1);
             adapter.setNewData(types);
             mType = types.get(0);
-            mTitleTextView.setText(mType.getName());
-            mTypeImageView.setImageResource(mType.getTypeId());
             typeImageAnimator();
             adapter.notifyDataSetChanged();
         });
@@ -152,8 +138,8 @@ public class BillEditFragment extends BaseFragment {
         configBill(adapter);
         mTypeRecyclerView.setAdapter(adapter);
 
-        if (!TextUtils.isEmpty(mBill.getRemark())) {
-            mRemarkEditText.setText(mBill.getRemark());
+        if (!TextUtils.isEmpty(mViewModel.getRemark())) {
+            mRemarkEditText.setText(mViewModel.getRemark());
         }
 
         mNumPad.setStrReceiver(mBalanceEditText);
@@ -173,7 +159,7 @@ public class BillEditFragment extends BaseFragment {
         mRemarkEditText.setOnClickListener((view1) -> mNumPad.hideKeyboard());
 
         mDateImageView.setOnClickListener(view13 -> {
-            DatePickerFragment datePicker = DatePickerFragment.newInstance(mDateTime);
+            DatePickerFragment datePicker = DatePickerFragment.newInstance(mViewModel.getDate());
             datePicker.setTargetFragment(this, REQUEST_DATE);
             datePicker.show(getFragmentManager(), "datePicker");
         });
@@ -183,20 +169,19 @@ public class BillEditFragment extends BaseFragment {
 
         });
 
-        viewEnterAnimation(view);
-        return view;
+        mBinding.setEdit(mViewModel);
+        viewEnterAnimation(mBinding.getRoot());
+        return mBinding.getRoot();
     }
 
     /**
      * 配置初始账单，将账单信息绑定到视图
      */
     private void configBill(TypeAdapter adapter) {
-        if (mBill.getDate() == null) {
-            // 创建账单
-            mDateTime = DateTime.now();
+        if (mViewModel.getDate() == null) {
+            // 创建账单(日期不存在则一定是刚创建的)
+            mViewModel.setDate(DateTime.now());
             adapter.setNewData(TypeLab.getInstance(getContext()).getTypes(true));
-            mTitleTextView.setText(adapter.getData().get(0).getName());
-            mTypeImageView.setImageResource(adapter.getData().get(0).getTypeId());
             mType = adapter.getItem(0);
             mAccount = AccountLab.getInstance(getContext()).getAccounts().get(0);
         } else {
@@ -212,13 +197,10 @@ public class BillEditFragment extends BaseFragment {
                 adapter.setNewData(TypeLab.getInstance(getContext()).getTypes(false));
                 mAccount.minusBalance(mBill.getBalance());
             }
-            mDateTime = mBill.getDate();
-            mTitleTextView.setText(mBill.getName());
-            mTypeImageView.setImageResource(mType.getTypeId());
-            mBalanceEditText.setText(mBill.getBalance().toString());
+            mBalanceEditText.setText(mViewModel.getBalance());
         }
-        mAccountTypeCardView.setCardBackgroundColor(mAccount.getColor());
-        mAccountTypeImageView.setImageResource(mAccount.getImageId());
+        mViewModel.setType(mType);
+        mViewModel.setAccount(mAccount);
     }
 
     /**
@@ -282,7 +264,8 @@ public class BillEditFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_save_item:
-                if (!saveBill()) {
+                if (!mViewModel.saveBill(mBalanceEditText.getText().toString(),
+                        mRemarkEditText.getText().toString())) {
                     // 保存失败直接返回
                     return true;
                 }
@@ -298,53 +281,11 @@ public class BillEditFragment extends BaseFragment {
     }
 
     /**
-     * 保存账单
-     */
-    private boolean saveBill() {
-        if (TextUtils.isEmpty(mBalanceEditText.getText())) {
-            return false;
-        }
-        try {
-            BigDecimal r = new BigDecimal(mBalanceEditText.getText().toString());
-            mBill.setBalance(r);
-            // 设定账户
-            if (mType.getExpense()) {
-                mAccount.minusBalance(r);
-            } else {
-                mAccount.plusBalance(r);
-            }
-        } catch (Exception e) {
-            Toast.makeText(getContext(), "表达式错误", Toast.LENGTH_SHORT);
-            return false;
-        }
-
-        // 设定账单
-        mBill.setName(mTitleTextView.getText().toString());
-        mBill.setDate(mDateTime);
-        mBill.setRemark(mRemarkEditText.getText().toString());
-        mBill.setTypeId(mType.getId());
-        mBill.setAccountId(mAccount.getId());
-
-        // 刷新账单数据库
-        BillLab billLab = BillLab.getInstance(getContext());
-        if (billLab.getBill(mBill.getId()) == null) {
-            billLab.addBill(mBill);
-        } else {
-            billLab.updateBill(mBill);
-        }
-        // 刷新账户数据库
-        AccountLab accountLab = AccountLab.getInstance(getContext());
-        accountLab.updateAccount(mAccount);
-        return true;
-    }
-
-
-    /**
      * 选择类型
      */
     public void clickTypeItem(BaseQuickAdapter adapter1, int position) {
         mType = (Type) adapter1.getData().get(position);
-        mTitleTextView.setText(mType.getName());
+        mViewModel.setType(mType);
         typeImageAnimator();
     }
 
@@ -395,7 +336,8 @@ public class BillEditFragment extends BaseFragment {
         }
         switch (requestCode) {
             case REQUEST_DATE:
-                mDateTime = (DateTime) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+                mViewModel.setDate((DateTime) data
+                        .getSerializableExtra(DatePickerFragment.EXTRA_DATE));
                 break;
             default:
                 break;

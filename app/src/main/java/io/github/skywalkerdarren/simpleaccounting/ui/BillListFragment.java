@@ -212,11 +212,11 @@ public class BillListFragment extends BaseFragment {
         mX = mBillAdapter.getX();
         mY = mBillAdapter.getY();
         // TODO 颜色
-        Intent intent = BillDetailPagerActivity
+        Intent intent = BillDetailActivity
                 .newIntent(getActivity(), BillLab.getInstance(getActivity()).getBill(billId),
                         mX, mY, R.color.orangea200);
 
-        intent.putExtra(BillDetailPagerActivity.EXTRA_START_COLOR, R.color.orangea200);
+        intent.putExtra(BillDetailActivity.EXTRA_START_COLOR, R.color.orangea200);
         ActivityOptionsCompat options = getElementAnimator(view);
         startActivity(intent, options.toBundle());
     }

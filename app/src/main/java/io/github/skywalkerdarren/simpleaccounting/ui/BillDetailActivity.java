@@ -15,7 +15,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.Bill;
  * @author darren
  * @date 2018/2/21
  */
-public class BillDetailPagerActivity extends BaseFragmentActivity {
+public class BillDetailActivity extends BaseFragmentActivity {
     private static final String EXTRA_BILL = "bill";
     public static final String EXTRA_CENTER_X = "io.github.skywalkerdarren.simpleaccounting.centerX";
     public static final String EXTRA_CENTER_Y = "io.github.skywalkerdarren.simpleaccounting.centerY";
@@ -30,7 +30,7 @@ public class BillDetailPagerActivity extends BaseFragmentActivity {
      * @return 意图
      */
     public static Intent newIntent(Context context, Bill bill, int x, int y, @ColorRes int color) {
-        Intent intent = new Intent(context, BillDetailPagerActivity.class);
+        Intent intent = new Intent(context, BillDetailActivity.class);
         intent.putExtra(EXTRA_BILL, bill);
         intent.putExtra(EXTRA_START_COLOR, color);
         intent.putExtra(EXTRA_CENTER_X, x);
