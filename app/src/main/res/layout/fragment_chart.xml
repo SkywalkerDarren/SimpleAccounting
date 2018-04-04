@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="io.github.skywalkerdarren.simpleaccounting.ui.PieChartFragment">
+    tools:activity="io.github.skywalkerdarren.simpleaccounting.ui.PieChartFragment">
 
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/pie_chart"

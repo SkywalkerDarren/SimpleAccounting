@@ -7,11 +7,9 @@ import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
@@ -23,16 +21,12 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
-import io.github.skywalkerdarren.simpleaccounting.model.Account;
-import io.github.skywalkerdarren.simpleaccounting.model.AccountLab;
+import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillDetailBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
-import io.github.skywalkerdarren.simpleaccounting.model.Type;
-import io.github.skywalkerdarren.simpleaccounting.model.TypeLab;
+import io.github.skywalkerdarren.simpleaccounting.view_model.BillDetailViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,14 +44,8 @@ public class BillDetailFragment extends BaseFragment {
     private static final String ARG_START_COLOR = "startColor";
 
     private Bill mBill;
-    private ImageView mTypeImageView;
-    private TextView mTitleTextView;
-    private TextView mDateTextView;
-    private TextView mBalanceTextView;
-    private TextView mRemarkTextView;
-    private TextView mAccountTextView;
-    private FloatingActionButton mEditFab;
     private ActionBar mActionBar;
+    private FragmentBillDetailBinding mBinding;
     private static final int REQUEST_DESTROY = 0;
 
     @Override
@@ -73,37 +61,28 @@ public class BillDetailFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_bill_detail, container, false);
-        mTypeImageView = view.findViewById(R.id.type_image_view);
-        mBalanceTextView = view.findViewById(R.id.balance_edit_text);
-        mDateTextView = view.findViewById(R.id.bill_date_text_view);
-        mTitleTextView = view.findViewById(R.id.title_text_view);
-        mRemarkTextView = view.findViewById(R.id.bill_remark_text_view);
-        mEditFab = view.findViewById(R.id.bill_edit_fab);
-        mAccountTextView = view.findViewById(R.id.bill_account_text_view);
-        mActionBar = initToolbar(R.id.toolbar, view);
+        mBinding = DataBindingUtil
+                .inflate(inflater, R.layout.fragment_bill_detail, container, false);
+        mActionBar = initToolbar(R.id.toolbar, mBinding.toolbar);
 
         mActionBar.setTitle(R.string.detail_bill);
         mActionBar.setDisplayHomeAsUpEnabled(true);
 
         updateUI();
 
-        // 编辑按钮点击事件
-        mEditFab.setOnClickListener(view1 -> {
-            int[] location = new int[2];
-            view1.getLocationInWindow(location);
-            int x = (int) view1.getX() + view1.getWidth() / 2;
-            int y = (int) view1.getY() + view1.getHeight() / 2;
-            Intent intent = BillEditActivity.newIntent(getActivity(), mBill, x, y);
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity());
-            startActivity(intent, options.toBundle());
-        });
-
         // 启动动画
+        enterViewAnimator(mBinding.getRoot());
+        return mBinding.getRoot();
+    }
+
+    /**
+     * 启动动画
+     */
+    private void enterViewAnimator(View view) {
         view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop,
-                                       int oldRight, int oldBottom) {
+            public void onLayoutChange(View v, int left, int top, int right, int bottom,
+                                       int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 v.removeOnLayoutChangeListener(this);
                 int cx = getArguments().getInt(ARG_CX);
                 int cy = getArguments().getInt(ARG_CY);
@@ -112,13 +91,18 @@ public class BillDetailFragment extends BaseFragment {
                 // get the hypothenuse so the radius is from one corner to the other
                 int radius = (int) Math.hypot(right, bottom);
 
-                Animator reveal = ViewAnimationUtils.createCircularReveal(v, cx, cy - 45, 0, radius);
+                // 圆形动画
+                Animator reveal = ViewAnimationUtils
+                        .createCircularReveal(v, cx, cy - 45, 0, radius);
                 reveal.setInterpolator(new DecelerateInterpolator());
+                // 颜色渐变动画
                 ObjectAnimator colorChange = new ObjectAnimator();
                 colorChange.setIntValues(getResources().getColor(startColor),
                         getResources().getColor(R.color.transparent));
                 colorChange.setEvaluator(new ArgbEvaluator());
-                colorChange.addUpdateListener(valueAnimator -> view.setBackgroundColor((Integer) valueAnimator.getAnimatedValue()));
+                colorChange.addUpdateListener(valueAnimator -> view
+                        .setBackgroundColor((Integer) valueAnimator.getAnimatedValue()));
+                // 动画集合
                 AnimatorSet set = new AnimatorSet();
                 set.playTogether(reveal, colorChange);
                 set.setDuration(350);
@@ -126,7 +110,6 @@ public class BillDetailFragment extends BaseFragment {
                 set.start();
             }
         });
-        return view;
     }
 
     /**
@@ -170,17 +153,7 @@ public class BillDetailFragment extends BaseFragment {
     @Override
     protected void updateUI() {
         mBill = BillLab.getInstance(getActivity()).getBill(mBill.getId());
-        Type type = TypeLab.getInstance(getActivity()).getType(mBill.getTypeId());
-        Account account = AccountLab.getInstance(getActivity()).getAccount(mBill.getAccountId());
-        mTypeImageView.setImageResource(type.getTypeId());
-        mBalanceTextView.setText(mBill.getBalance().toString());
-        mBalanceTextView.setTextColor(type.getExpense() ?
-                Color.rgb(0xFF, 0x45, 0x00) :
-                Color.rgb(0xAD, 0xFF, 0x2F));
-        mAccountTextView.setText(account.getName());
-        mRemarkTextView.setText(mBill.getRemark());
-        mTitleTextView.setText(mBill.getName());
-        mDateTextView.setText(mBill.getDate().toString("yyyy-MM-dd hh:mm"));
+        mBinding.setDetail(new BillDetailViewModel(mBill, getActivity()));
     }
 
     @Override
