@@ -20,7 +20,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.Type;
 
 public class TypeAdapter extends BaseQuickAdapter<Type, BaseViewHolder> {
     public TypeAdapter(@Nullable List<Type> data) {
-        super(R.layout.type_item, data);
+        super(R.layout.item_type, data);
     }
 
     @Override

@@ -17,7 +17,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.Account;
 
 public class AccountAdapter extends BaseQuickAdapter<Account, BaseViewHolder> {
     public AccountAdapter(List<Account> data) {
-        super(R.layout.account_item, data);
+        super(R.layout.item_account, data);
     }
 
     @Override

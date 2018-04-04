@@ -25,7 +25,7 @@ public class StatsAdapter extends BaseQuickAdapter<StatsLab.Stats, BaseViewHolde
      * @param data 统计类列表
      */
     public StatsAdapter(@NonNull List<StatsLab.Stats> data) {
-        super(R.layout.stats_item, data);
+        super(R.layout.item_stats, data);
     }
 
     @Override

@@ -47,9 +47,9 @@ public class BillAdapter extends BaseMultiItemQuickAdapter<BillInfo, BaseViewHol
      */
     public BillAdapter(List<BillInfo> bills) {
         super(bills);
-        addItemType(WITH_REMARK, R.layout.list_bill_item);
-        addItemType(WITHOUT_REMARK, R.layout.list_bill_item_without_remark);
-        addItemType(HEADER, R.layout.list_bill_header);
+        addItemType(WITH_REMARK, R.layout.item_list_bill);
+        addItemType(WITHOUT_REMARK, R.layout.item_list_bill_without_remark);
+        addItemType(HEADER, R.layout.item_list_bill_header);
     }
 
     /**

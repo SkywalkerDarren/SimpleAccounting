@@ -1,6 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.ui;
 
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,8 +15,10 @@ import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.AccountAdapter;
+import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentAccountBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.AccountLab;
+import io.github.skywalkerdarren.simpleaccounting.view_model.AccountViewModel;
 
 
 /**
@@ -25,14 +28,11 @@ import io.github.skywalkerdarren.simpleaccounting.model.AccountLab;
  */
 public class AccountFragment extends BaseFragment {
     private AccountLab mAccountLab;
-    private TextView mNavTextView;
-    private TextView mLiavilityTextView;
-    private TextView mTotalAssetsTextView;
-    private TextView mAccountCountTextView;
     private RecyclerView mAccountRecyclerView;
     private TextView mLendTextView;
     private TextView mBorrowTextView;
     private AccountAdapter mAdapter;
+    FragmentAccountBinding mBinding;
 
     public AccountFragment() {
         // Required empty public constructor
@@ -61,16 +61,13 @@ public class AccountFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_account, container, false);
-        mNavTextView = view.findViewById(R.id.nav_text_view);
-        mLiavilityTextView = view.findViewById(R.id.liability_text_view);
-        mTotalAssetsTextView = view.findViewById(R.id.total_assets_text_view);
-        mAccountCountTextView = view.findViewById(R.id.account_count_text_view);
-        mAccountRecyclerView = view.findViewById(R.id.account_recycler_view);
-        mLendTextView = view.findViewById(R.id.lend_text_view);
-        mBorrowTextView = view.findViewById(R.id.borrow_text_view);
+        mBinding = DataBindingUtil
+                .inflate(inflater, R.layout.fragment_account, container, false);
+        mAccountRecyclerView = mBinding.accountRecyclerView;
+        mLendTextView = mBinding.lendTextView;
+        mBorrowTextView = mBinding.borrowTextView;
         mAccountRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        return view;
+        return mBinding.getRoot();
     }
 
     @Override
@@ -84,11 +81,8 @@ public class AccountFragment extends BaseFragment {
         }
         mAccountRecyclerView.setAdapter(mAdapter);
 
+        mBinding.setAccount(new AccountViewModel(getContext()));
         // TODO: 2018/3/24 演示数据
-        mNavTextView.setText("0");
-        mLiavilityTextView.setText("0");
-        mTotalAssetsTextView.setText("0");
-        mAccountCountTextView.setText(accounts.size() + "");
         mBorrowTextView.setText("0");
         mLendTextView.setText("0");
     }

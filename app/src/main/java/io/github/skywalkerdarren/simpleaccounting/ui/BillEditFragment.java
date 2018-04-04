@@ -2,6 +2,7 @@ package io.github.skywalkerdarren.simpleaccounting.ui;
 
 
 import android.animation.Animator;
+import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
@@ -13,6 +14,7 @@ import android.os.Handler;
 import android.support.transition.Fade;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -24,8 +26,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -63,6 +63,7 @@ public class BillEditFragment extends BaseFragment {
     private Type mType;
     // TODO: 2018/4/2 使账单可编辑
     private Account mAccount;
+    private CardView mAccountTypeCardView;
     private ImageView mTypeImageView;
     private ImageView mDateImageView;
     private TextView mTitleTextView;
@@ -73,6 +74,7 @@ public class BillEditFragment extends BaseFragment {
     private SegmentedButtonGroup mTypeSbg;
     private boolean mIsExpense = true;
     private NumPad mNumPad;
+    private ImageView mAccountTypeImageView;
 
 
     @Override
@@ -100,6 +102,8 @@ public class BillEditFragment extends BaseFragment {
         mTypeRecyclerView = view.findViewById(R.id.type_list_recycler_view);
         mNumPad = view.findViewById(R.id.num_key_view);
         mTypeSbg = view.findViewById(R.id.type_sbg);
+        mAccountTypeCardView = view.findViewById(R.id.account_type_card_view);
+        mAccountTypeImageView = view.findViewById(R.id.account_type_image_view);
 
         // 自定义导航栏
         ActionBar actionBar = initToolbar(R.id.toolbar, view);
@@ -109,10 +113,11 @@ public class BillEditFragment extends BaseFragment {
 
         // 配置适配器
         TypeAdapter adapter = new TypeAdapter(null);
-        adapter.openLoadAnimation(view14 -> new Animator[]{
-                        ObjectAnimator.ofFloat(view14, "scaleY", 1, 1.1f, 1),
-                        ObjectAnimator.ofFloat(view14, "scaleX", 1, 1.1f, 1),
-                        ObjectAnimator.ofFloat(view14, "alpha", 0f, 1f)
+        adapter.openLoadAnimation(view14 -> {
+                    Animator animator = AnimatorInflater.loadAnimator(getActivity(),
+                            R.animator.type_item_appear);
+                    animator.setTarget(view14);
+                    return new Animator[]{animator};
                 }
         );
         adapter.setOnItemClickListener((adapter1, view12, position) -> clickTypeItem(adapter1, position));
@@ -144,33 +149,8 @@ public class BillEditFragment extends BaseFragment {
         });
 
         // 配置账单信息
-        if (mBill.getDate() == null) {
-            // 创建账单
-            mDateTime = DateTime.now();
-            adapter.setNewData(TypeLab.getInstance(getContext()).getTypes(true));
-            mTitleTextView.setText(adapter.getData().get(0).getName());
-            mTypeImageView.setImageResource(adapter.getData().get(0).getTypeId());
-            mType = adapter.getItem(0);
-            mAccount = AccountLab.getInstance(getContext()).getAccounts().get(0);
-        } else {
-            // 编辑账单
-            mType = TypeLab.getInstance(getContext()).getType(mBill.getTypeId());
-            mAccount = AccountLab.getInstance(getContext()).getAccount(mBill.getAccountId());
-            // 初始化账户到没当前账单时
-            if (mType.getExpense()) {
-                adapter.setNewData(TypeLab.getInstance(getContext()).getTypes(true));
-                mAccount.plusBalance(mBill.getBalance());
-            } else {
-                mTypeSbg.setPosition(0);
-                adapter.setNewData(TypeLab.getInstance(getContext()).getTypes(false));
-                mAccount.minusBalance(mBill.getBalance());
-            }
-            mTypeRecyclerView.setAdapter(adapter);
-            mDateTime = mBill.getDate();
-            mTitleTextView.setText(mBill.getName());
-            mTypeImageView.setImageResource(mType.getTypeId());
-            mBalanceEditText.setText(mBill.getBalance().toString());
-        }
+        configBill(adapter);
+        mTypeRecyclerView.setAdapter(adapter);
 
         if (!TextUtils.isEmpty(mBill.getRemark())) {
             mRemarkEditText.setText(mBill.getRemark());
@@ -198,8 +178,47 @@ public class BillEditFragment extends BaseFragment {
             datePicker.show(getFragmentManager(), "datePicker");
         });
 
+        // TODO: 2018/4/2 监听账户点击
+        mAccountTypeCardView.setOnClickListener(view18 -> {
+
+        });
+
         viewEnterAnimation(view);
         return view;
+    }
+
+    /**
+     * 配置初始账单，将账单信息绑定到视图
+     */
+    private void configBill(TypeAdapter adapter) {
+        if (mBill.getDate() == null) {
+            // 创建账单
+            mDateTime = DateTime.now();
+            adapter.setNewData(TypeLab.getInstance(getContext()).getTypes(true));
+            mTitleTextView.setText(adapter.getData().get(0).getName());
+            mTypeImageView.setImageResource(adapter.getData().get(0).getTypeId());
+            mType = adapter.getItem(0);
+            mAccount = AccountLab.getInstance(getContext()).getAccounts().get(0);
+        } else {
+            // 编辑账单
+            mType = TypeLab.getInstance(getContext()).getType(mBill.getTypeId());
+            mAccount = AccountLab.getInstance(getContext()).getAccount(mBill.getAccountId());
+            // 初始化账户到没当前账单时
+            if (mType.getExpense()) {
+                adapter.setNewData(TypeLab.getInstance(getContext()).getTypes(true));
+                mAccount.plusBalance(mBill.getBalance());
+            } else {
+                mTypeSbg.setPosition(0);
+                adapter.setNewData(TypeLab.getInstance(getContext()).getTypes(false));
+                mAccount.minusBalance(mBill.getBalance());
+            }
+            mDateTime = mBill.getDate();
+            mTitleTextView.setText(mBill.getName());
+            mTypeImageView.setImageResource(mType.getTypeId());
+            mBalanceEditText.setText(mBill.getBalance().toString());
+        }
+        mAccountTypeCardView.setCardBackgroundColor(mAccount.getColor());
+        mAccountTypeImageView.setImageResource(mAccount.getImageId());
     }
 
     /**
@@ -263,9 +282,7 @@ public class BillEditFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_save_item:
-                if (saveBill()) {
-                    Toast.makeText(getActivity(), "点击保存并退出", Toast.LENGTH_SHORT).show();
-                } else {
+                if (!saveBill()) {
                     // 保存失败直接返回
                     return true;
                 }
@@ -328,7 +345,6 @@ public class BillEditFragment extends BaseFragment {
     public void clickTypeItem(BaseQuickAdapter adapter1, int position) {
         mType = (Type) adapter1.getData().get(position);
         mTitleTextView.setText(mType.getName());
-        mTypeImageView.setImageResource(mType.getTypeId());
         typeImageAnimator();
     }
 
@@ -336,22 +352,39 @@ public class BillEditFragment extends BaseFragment {
      * 类型图片动画
      */
     private void typeImageAnimator() {
-        ObjectAnimator animatorX1 = ObjectAnimator.ofFloat(mTypeImageView, "scaleX", 0.5f, 0f);
-        ObjectAnimator animatorY1 = ObjectAnimator.ofFloat(mTypeImageView, "scaleY", 0.5f, 0f);
-        AnimatorSet set1 = new AnimatorSet();
-        set1.setDuration(100);
-        set1.setInterpolator(new AccelerateInterpolator());
-        set1.playTogether(animatorX1, animatorY1);
+        // 缩小消失动画
+        Animator disappear = AnimatorInflater.loadAnimator(getActivity(), R.animator.type_disappear);
+        disappear.setTarget(mTypeImageView);
 
-        ObjectAnimator animatorX2 = ObjectAnimator.ofFloat(mTypeImageView, "scaleX", 0f, 1f);
-        ObjectAnimator animatorY2 = ObjectAnimator.ofFloat(mTypeImageView, "scaleY", 0f, 1f);
-        AnimatorSet set2 = new AnimatorSet();
-        set2.setDuration(200);
-        set2.setInterpolator(new DecelerateInterpolator());
-        set2.playTogether(animatorX2, animatorY2);
+        disappear.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                // 更换图标
+                mTypeImageView.setImageResource(mType.getTypeId());
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+
+        // 放大显示动画
+        Animator appear = AnimatorInflater.loadAnimator(getActivity(), R.animator.type_appear);
+        appear.setTarget(mTypeImageView);
 
         AnimatorSet set = new AnimatorSet();
-        set.playSequentially(set1, set2);
+        set.playSequentially(disappear, appear);
         set.start();
     }
 

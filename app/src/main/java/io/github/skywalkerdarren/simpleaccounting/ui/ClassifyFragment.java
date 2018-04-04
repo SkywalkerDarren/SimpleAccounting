@@ -164,7 +164,6 @@ public class ClassifyFragment extends BaseFragment implements View.OnClickListen
             @Override
             public int getCount() {
                 return 2;
-//                return 1;
             }
         });
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

@@ -50,9 +50,10 @@ public class DesktopWidget extends AppWidgetProvider {
                 .getAnnualStats(DateTime.now().getYear())
                 .get(DateTime.now().getMonthOfYear() - 1);
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_bill);
-        views.setOnClickPendingIntent(R.id.add_bill_button, pendingIntent);
+        views.setOnClickPendingIntent(R.id.add_bill_text_view, pendingIntent);
         views.setTextViewText(R.id.income_text_view, stats.getIncome().toString());
         views.setTextViewText(R.id.expense_text_view, stats.getExpense().toString());
+        views.setTextViewText(R.id.total_text_view, stats.getSum().toString());
         mComponentName = new ComponentName(context, DesktopWidget.class);
         appWidgetManager.updateAppWidget(mComponentName, views);
     }

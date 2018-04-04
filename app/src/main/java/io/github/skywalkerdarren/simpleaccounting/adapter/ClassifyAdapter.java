@@ -19,14 +19,25 @@ import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
  */
 
 public class ClassifyAdapter extends BaseQuickAdapter<StatsLab.TypeStats, BaseViewHolder> {
-    private BigDecimal mSum;
+    private BigDecimal mSum = BigDecimal.ZERO;
 
     public ClassifyAdapter(@Nullable List<StatsLab.TypeStats> data) {
-        super(R.layout.classify_item, data);
+        super(R.layout.item_classify, data);
         if (data == null) {
             return;
         }
+        for (StatsLab.TypeStats stats : data) {
+            mSum = mSum.add(stats.getSum());
+        }
+    }
+
+    @Override
+    public void setNewData(List<StatsLab.TypeStats> data) {
+        super.setNewData(data);
         mSum = BigDecimal.ZERO;
+        if (data == null) {
+            return;
+        }
         for (StatsLab.TypeStats stats : data) {
             mSum = mSum.add(stats.getSum());
         }
