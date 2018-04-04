@@ -15,9 +15,7 @@ import android.os.Handler;
 import android.support.transition.Fade;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.transition.Explode;
 import android.view.LayoutInflater;
@@ -34,6 +32,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import org.joda.time.DateTime;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import co.ceryle.segmentedbutton.SegmentedButtonGroup;
@@ -59,20 +58,13 @@ public class BillEditFragment extends BaseFragment {
     private static final String ARG_CX = "cx";
     private static final String ARG_CY = "cy";
     private Bill mBill;
-    private Type mType;
-    // TODO: 2018/4/2 使账单可编辑
-    private Account mAccount;
 
-    private FragmentBillEditBinding mBinding;
     private BillEditViewModel mViewModel;
 
-    private CardView mAccountTypeCardView;
     private EditText mBalanceEditText;
     private EditText mRemarkEditText;
-    private RecyclerView mTypeRecyclerView;
     private SegmentedButtonGroup mTypeSbg;
     private NumPad mNumPad;
-    private ImageView mDateImageView;
     private ImageView mTypeImageView;
 
 
@@ -92,21 +84,18 @@ public class BillEditFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mBinding = DataBindingUtil
+        FragmentBillEditBinding binding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_bill_edit, container, false);
-        mDateImageView = mBinding.dateImageView;
-        mRemarkEditText = mBinding.remarkEditText;
-        mBalanceEditText = mBinding.balanceEditText;
-        mTypeRecyclerView = mBinding.typeListRecyclerView;
-        mNumPad = mBinding.numKeyView;
-        mTypeSbg = mBinding.typeSbg;
-        mAccountTypeCardView = mBinding.accountTypeCardView;
-        mTypeImageView = mBinding.typeImageView;
+        mRemarkEditText = binding.remarkEditText;
+        mBalanceEditText = binding.balanceEditText;
+        mNumPad = binding.numKeyView;
+        mTypeSbg = binding.typeSbg;
+        mTypeImageView = binding.typeImageView;
 
         mViewModel = new BillEditViewModel(mBill, getContext());
 
         // 自定义导航栏
-        ActionBar actionBar = initToolbar(R.id.toolbar, mBinding.getRoot());
+        ActionBar actionBar = initToolbar(R.id.toolbar, binding.getRoot());
         actionBar.setTitle("");
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
@@ -122,21 +111,21 @@ public class BillEditFragment extends BaseFragment {
         );
         adapter.setOnItemClickListener((adapter1, view12, position) -> clickTypeItem(adapter1, position));
         adapter.setOnItemChildClickListener((adapter12, view17, position) -> clickTypeItem(adapter12, position));
-        mTypeRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
+        binding.typeListRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
 
         // 配置选择按钮
         mTypeSbg.setOnClickedButtonListener(position -> {
             List<Type> types = TypeLab
                     .getInstance(getContext()).getTypes(position == 1);
             adapter.setNewData(types);
-            mType = types.get(0);
+            mViewModel.setType(types.get(0));
             typeImageAnimator();
             adapter.notifyDataSetChanged();
         });
 
         // 配置账单信息
         configBill(adapter);
-        mTypeRecyclerView.setAdapter(adapter);
+        binding.typeListRecyclerView.setAdapter(adapter);
 
         if (!TextUtils.isEmpty(mViewModel.getRemark())) {
             mRemarkEditText.setText(mViewModel.getRemark());
@@ -158,49 +147,49 @@ public class BillEditFragment extends BaseFragment {
 
         mRemarkEditText.setOnClickListener((view1) -> mNumPad.hideKeyboard());
 
-        mDateImageView.setOnClickListener(view13 -> {
+        binding.dateImageView.setOnClickListener(view13 -> {
             DatePickerFragment datePicker = DatePickerFragment.newInstance(mViewModel.getDate());
             datePicker.setTargetFragment(this, REQUEST_DATE);
             datePicker.show(getFragmentManager(), "datePicker");
         });
 
         // TODO: 2018/4/2 监听账户点击
-        mAccountTypeCardView.setOnClickListener(view18 -> {
+        binding.accountTypeCardView.setOnClickListener(view18 -> {
 
         });
 
-        mBinding.setEdit(mViewModel);
-        viewEnterAnimation(mBinding.getRoot());
-        return mBinding.getRoot();
+        binding.setEdit(mViewModel);
+        viewEnterAnimation(binding.getRoot());
+        return binding.getRoot();
     }
 
     /**
      * 配置初始账单，将账单信息绑定到视图
      */
     private void configBill(TypeAdapter adapter) {
+        Account account;
         if (mViewModel.getDate() == null) {
             // 创建账单(日期不存在则一定是刚创建的)
             mViewModel.setDate(DateTime.now());
             adapter.setNewData(TypeLab.getInstance(getContext()).getTypes(true));
-            mType = adapter.getItem(0);
-            mAccount = AccountLab.getInstance(getContext()).getAccounts().get(0);
+            mViewModel.setType(adapter.getItem(0));
+            account = AccountLab.getInstance(getContext()).getAccounts().get(0);
         } else {
             // 编辑账单
-            mType = TypeLab.getInstance(getContext()).getType(mBill.getTypeId());
-            mAccount = AccountLab.getInstance(getContext()).getAccount(mBill.getAccountId());
+            mViewModel.setType(TypeLab.getInstance(getContext()).getType(mViewModel.getTypeId()));
+            account = AccountLab.getInstance(getContext()).getAccount(mViewModel.getAccountId());
             // 初始化账户到没当前账单时
-            if (mType.getExpense()) {
+            if (mViewModel.getExpense()) {
                 adapter.setNewData(TypeLab.getInstance(getContext()).getTypes(true));
-                mAccount.plusBalance(mBill.getBalance());
+                account.plusBalance(new BigDecimal(mViewModel.getBalance()));
             } else {
                 mTypeSbg.setPosition(0);
                 adapter.setNewData(TypeLab.getInstance(getContext()).getTypes(false));
-                mAccount.minusBalance(mBill.getBalance());
+                account.minusBalance(new BigDecimal(mViewModel.getBalance()));
             }
             mBalanceEditText.setText(mViewModel.getBalance());
         }
-        mViewModel.setType(mType);
-        mViewModel.setAccount(mAccount);
+        mViewModel.setAccount(account);
     }
 
     /**
@@ -284,8 +273,7 @@ public class BillEditFragment extends BaseFragment {
      * 选择类型
      */
     public void clickTypeItem(BaseQuickAdapter adapter1, int position) {
-        mType = (Type) adapter1.getData().get(position);
-        mViewModel.setType(mType);
+        mViewModel.setType((Type) adapter1.getData().get(position));
         typeImageAnimator();
     }
 
@@ -293,40 +281,10 @@ public class BillEditFragment extends BaseFragment {
      * 类型图片动画
      */
     private void typeImageAnimator() {
-        // 缩小消失动画
-        Animator disappear = AnimatorInflater.loadAnimator(getActivity(), R.animator.type_disappear);
-        disappear.setTarget(mTypeImageView);
-
-        disappear.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                // 更换图标
-                mTypeImageView.setImageResource(mType.getTypeId());
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-
-            }
-        });
-
         // 放大显示动画
         Animator appear = AnimatorInflater.loadAnimator(getActivity(), R.animator.type_appear);
         appear.setTarget(mTypeImageView);
-
-        AnimatorSet set = new AnimatorSet();
-        set.playSequentially(disappear, appear);
-        set.start();
+        appear.start();
     }
 
     @Override

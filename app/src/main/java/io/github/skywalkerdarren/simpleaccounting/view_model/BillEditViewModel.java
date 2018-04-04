@@ -12,6 +12,7 @@ import android.widget.Toast;
 import org.joda.time.DateTime;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import io.github.skywalkerdarren.simpleaccounting.model.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.AccountLab;
@@ -65,6 +66,14 @@ public class BillEditViewModel extends BaseObservable {
         return mType.getTypeId();
     }
 
+    public UUID getTypeId() {
+        return mType.getId();
+    }
+
+    public UUID getAccountId() {
+        return mAccount.getId();
+    }
+
     @Bindable
     public int getAccountImg() {
         return mAccount.getImageId();
@@ -110,7 +119,7 @@ public class BillEditViewModel extends BaseObservable {
                 mAccount.plusBalance(r);
             }
         } catch (Exception e) {
-            Toast.makeText(mContext, "表达式错误", Toast.LENGTH_SHORT);
+            Toast.makeText(mContext, "表达式错误", Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -132,5 +141,9 @@ public class BillEditViewModel extends BaseObservable {
         AccountLab accountLab = AccountLab.getInstance(mContext);
         accountLab.updateAccount(mAccount);
         return true;
+    }
+
+    public boolean getExpense() {
+        return mType.getExpense();
     }
 }
