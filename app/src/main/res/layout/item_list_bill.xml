@@ -1,114 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/bill_item"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingEnd="8dp"
-    android:paddingStart="8dp">
+    tools:ignore="ContentDescription">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/content_card_view"
+    <data>
+
+        <variable
+            name="bill"
+            type="io.github.skywalkerdarren.simpleaccounting.view_model.BillInfoViewModel" />
+    </data>
+
+    <FrameLayout
+        android:id="@+id/bill_item"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?attr/selectableItemBackground"
-        android:longClickable="true"
-        app:cardCornerRadius="5dp"
-        app:cardElevation="0dp"
-        app:cardUseCompatPadding="true">
+        android:layout_height="wrap_content"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp">
 
-        <android.support.constraint.ConstraintLayout
+        <android.support.v7.widget.CardView
+            android:id="@+id/content_card_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:gravity="center_vertical">
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:longClickable="true"
+            android:onClick="@{() -> bill.click()}"
+            app:location="@{false}"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="0dp"
+            app:cardUseCompatPadding="true">
 
-            <FrameLayout
-                android:id="@+id/image_card_view"
-                android:layout_width="48dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="4dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="4dp"
-                android:longClickable="true"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <ImageView
-                    android:id="@+id/type_image_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:transitionName="type_image_view"
-                    app:srcCompat="@drawable/type_image_diet" />
-            </FrameLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/image_card_view"
-                app:layout_constraintTop_toTopOf="parent">
+                android:background="@android:color/white"
+                android:gravity="center_vertical">
 
-                <android.support.constraint.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                <FrameLayout
+                    android:id="@+id/image_card_view"
+                    android:layout_width="48dp"
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="4dp"
+                    android:longClickable="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                    <TextView
-                        android:id="@+id/title_text_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_weight="1"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:transitionName="title_text_view"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="标题" />
+                    <ImageView
+                        android:id="@+id/type_image_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:transitionName="type_image_view"
+                        app:src="@{bill.typeRes}"
+                        app:srcCompat="@drawable/type_image_diet" />
+                </FrameLayout>
 
-                    <TextView
-                        android:id="@+id/balance_edit_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:layout_marginRight="16dp"
-                        android:layout_marginTop="16dp"
-                        android:fontFamily="@font/droid_sans"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:transitionName="balance_text_view"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="9999" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/image_card_view"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                    <TextView
-                        android:id="@+id/remark_text_view"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginTop="4dp"
-                        android:layout_weight="1"
-                        android:singleLine="true"
-                        android:textAlignment="viewStart"
-                        android:textSize="12sp"
-                        app:layout_constraintEnd_toStartOf="@+id/balance_edit_text"
-                        app:layout_constraintStart_toStartOf="@+id/title_text_view"
-                        app:layout_constraintTop_toBottomOf="@+id/title_text_view"
-                        tools:text="备注" />
-                </android.support.constraint.ConstraintLayout>
+                    <android.support.constraint.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
-            </LinearLayout>
+                        <TextView
+                            android:id="@+id/title_text_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_weight="1"
+                            android:text="@{bill.title}"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:transitionName="title_text_view"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="标题" />
 
-        </android.support.constraint.ConstraintLayout>
-    </android.support.v7.widget.CardView>
-</FrameLayout>
+                        <TextView
+                            android:id="@+id/balance_edit_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginTop="16dp"
+                            android:fontFamily="@font/droid_sans"
+                            android:text="@{bill.balance}"
+                            android:textColor="@{bill.balanceColor}"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:transitionName="balance_text_view"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="9999" />
+
+                        <TextView
+                            android:id="@+id/remark_text_view"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginTop="4dp"
+                            android:layout_weight="1"
+                            android:singleLine="true"
+                            android:text="@{bill.remark}"
+                            android:textAlignment="viewStart"
+                            android:textSize="12sp"
+                            app:layout_constraintEnd_toStartOf="@+id/balance_edit_text"
+                            app:layout_constraintStart_toStartOf="@+id/title_text_view"
+                            app:layout_constraintTop_toBottomOf="@+id/title_text_view"
+                            tools:text="备注" />
+                    </android.support.constraint.ConstraintLayout>
+
+                </LinearLayout>
+
+            </android.support.constraint.ConstraintLayout>
+        </android.support.v7.widget.CardView>
+    </FrameLayout>
+</layout>

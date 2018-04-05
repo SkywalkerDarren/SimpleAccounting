@@ -40,7 +40,6 @@ public class BillInfo implements MultiItemEntity {
     private String mRemark;
     private String mBalance;
     private boolean mIsExpense;
-    private String mBillTypeName;
     @DrawableRes
     private int mBillTypeResId;
 
@@ -62,7 +61,6 @@ public class BillInfo implements MultiItemEntity {
         mRemark = bill.getRemark();
         mBalance = bill.getBalance().toString();
         mIsExpense = type.getExpense();
-        mBillTypeName = type.getName();
         mBillTypeResId = type.getTypeId();
         mDateTime = bill.getDate();
     }
@@ -135,13 +133,6 @@ public class BillInfo implements MultiItemEntity {
     @DrawableRes
     public int getBillTypeResId() {
         return mBillTypeResId;
-    }
-
-    /**
-     * @return 获得账单类型名
-     */
-    public String getBillTypeName() {
-        return mBillTypeName;
     }
 
     /**

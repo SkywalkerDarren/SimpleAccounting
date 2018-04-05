@@ -51,7 +51,7 @@ public class BillEditViewModel extends BaseObservable {
         view.setImageResource(res);
     }
 
-    @BindingAdapter("app:cardBackgroundColor")
+    @BindingAdapter("cardBackgroundColor")
     public static void setColor(CardView view, int res) {
         view.setCardBackgroundColor(res);
     }

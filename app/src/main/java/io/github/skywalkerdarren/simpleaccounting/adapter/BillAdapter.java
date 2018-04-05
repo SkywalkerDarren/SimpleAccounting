@@ -1,16 +1,15 @@
 package io.github.skywalkerdarren.simpleaccounting.adapter;
 
-import android.annotation.SuppressLint;
-import android.graphics.Color;
-import android.view.MotionEvent;
-import android.view.View;
-
-import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
+import android.app.Activity;
+import android.databinding.ViewDataBinding;
 
 import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
+import io.github.skywalkerdarren.simpleaccounting.databinding.ItemListBillBinding;
+import io.github.skywalkerdarren.simpleaccounting.databinding.ItemListBillHeaderBinding;
+import io.github.skywalkerdarren.simpleaccounting.databinding.ItemListBillWithoutRemarkBinding;
+import io.github.skywalkerdarren.simpleaccounting.view_model.BillInfoViewModel;
 
 /**
  * 账单适配器
@@ -20,7 +19,7 @@ import io.github.skywalkerdarren.simpleaccounting.R;
  * @date 2018/2/12
  */
 
-public class BillAdapter extends BaseMultiItemQuickAdapter<BillInfo, BaseViewHolder> implements View.OnTouchListener {
+public class BillAdapter extends BaseMultiItemDataBindingAdapter<BillInfo, ViewDataBinding> {
 
     /**
      * 不带备注的账单
@@ -37,16 +36,16 @@ public class BillAdapter extends BaseMultiItemQuickAdapter<BillInfo, BaseViewHol
      */
     public static final int HEADER = 2;
 
-    private int mX;
-    private int mY;
+    private Activity mActivity;
 
     /**
      * 将帐单列表适配到适配器中
      *
      * @param bills 含分隔符的账单信息列表
      */
-    public BillAdapter(List<BillInfo> bills) {
+    public BillAdapter(List<BillInfo> bills, Activity activity) {
         super(bills);
+        mActivity = activity;
         addItemType(WITH_REMARK, R.layout.item_list_bill);
         addItemType(WITHOUT_REMARK, R.layout.item_list_bill_without_remark);
         addItemType(HEADER, R.layout.item_list_bill_header);
@@ -62,60 +61,16 @@ public class BillAdapter extends BaseMultiItemQuickAdapter<BillInfo, BaseViewHol
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, BillInfo item) {
-        switch (item.getItemType()) {
-            case WITH_REMARK:
-                helper.setText(R.id.remark_text_view, item.getRemark());
-            case WITHOUT_REMARK:
-                helper.setTextColor(R.id.balance_edit_text, item.isExpense() ?
-                        Color.rgb(0xff, 0x70, 0x43) :
-                        Color.rgb(0x7C, 0xB3, 0x42));
-                helper.setImageResource(R.id.type_image_view, item.getBillTypeResId());
-                helper.setText(R.id.title_text_view, item.getTitle());
-                helper.setText(R.id.balance_edit_text, item.getBalance());
-                helper.addOnClickListener(R.id.content_card_view);
-                helper.addOnClickListener(R.id.image_card_view);
-                helper.addOnLongClickListener(R.id.content_card_view);
-                helper.addOnLongClickListener(R.id.image_card_view);
-                helper.setAlpha(R.id.bill_item, 0);
-                helper.setOnTouchListener(R.id.content_card_view, this);
-                helper.setOnTouchListener(R.id.image_card_view, this);
-                break;
-            case HEADER:
-                helper.setText(R.id.bills_date_text_view, item.getDateTime().toString("yyyy-MM-dd"));
-                helper.setText(R.id.bill_expense_text_view, item.getExpense());
-                helper.setText(R.id.bill_income_text_view, item.getIncome());
-                break;
-            default:
-                break;
+    protected void convert(ViewDataBinding binding, BillInfo item) {
+        BillInfoViewModel viewModel = new BillInfoViewModel(item, mActivity);
+        if (binding instanceof ItemListBillBinding) {
+            ((ItemListBillBinding) binding).setBill(viewModel);
+            viewModel.setImagePair(((ItemListBillBinding) binding).typeImageView);
+        } else if (binding instanceof ItemListBillWithoutRemarkBinding) {
+            ((ItemListBillWithoutRemarkBinding) binding).setBill(viewModel);
+            viewModel.setImagePair(((ItemListBillWithoutRemarkBinding) binding).typeImageView);
+        } else if (binding instanceof ItemListBillHeaderBinding) {
+            ((ItemListBillHeaderBinding) binding).setHeader(viewModel);
         }
     }
-
-    @SuppressLint("ClickableViewAccessibility")
-    @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
-        mX = (int) motionEvent.getRawX();
-        mY = (int) motionEvent.getRawY();
-        return false;
-    }
-
-    /**
-     * 获得在屏幕中的x坐标
-     *
-     * @return x坐标
-     */
-    public int getX() {
-        return mX;
-    }
-
-    /**
-     * 获得在屏幕中的y坐标
-     *
-     * @return y坐标
-     */
-    public int getY() {
-        return mY;
-    }
-
-
 }
