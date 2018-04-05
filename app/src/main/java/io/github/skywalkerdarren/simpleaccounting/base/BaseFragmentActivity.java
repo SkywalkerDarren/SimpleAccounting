@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.ui;
+package io.github.skywalkerdarren.simpleaccounting.base;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
+import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 
 /**
  * A simple {@link Fragment} subclass.

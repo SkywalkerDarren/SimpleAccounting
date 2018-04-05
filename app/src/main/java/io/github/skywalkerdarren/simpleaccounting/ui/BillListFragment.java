@@ -24,6 +24,7 @@ import java.util.List;
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.BillAdapter;
 import io.github.skywalkerdarren.simpleaccounting.adapter.BillInfo;
+import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.EmptyLayoutBinding;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillListBinding;
 import io.github.skywalkerdarren.simpleaccounting.view_model.BillListViewModel;

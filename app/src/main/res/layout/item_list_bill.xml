@@ -8,7 +8,7 @@
 
         <variable
             name="bill"
-            type="io.github.skywalkerdarren.simpleaccounting.view_model.BillInfoViewModel" />
+            type="io.github.skywalkerdarren.simpleaccounting.view_model.BillItemViewModel" />
     </data>
 
     <FrameLayout

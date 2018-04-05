@@ -22,7 +22,7 @@ import io.github.skywalkerdarren.simpleaccounting.ui.BillDetailActivity;
  * @date 2018/4/5
  */
 
-public class BillInfoViewModel extends BaseObservable {
+public class BillItemViewModel extends BaseObservable {
 
     private static int mX;
     private static int mY;
@@ -30,7 +30,7 @@ public class BillInfoViewModel extends BaseObservable {
     private Activity mActivity;
     private ImageView mImage;
 
-    public BillInfoViewModel(BillInfo billinfo, Activity activity) {
+    public BillItemViewModel(BillInfo billinfo, Activity activity) {
         mActivity = activity;
         mBillInfo = billinfo;
     }

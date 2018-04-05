@@ -5,7 +5,7 @@
 
         <variable
             name="header"
-            type="io.github.skywalkerdarren.simpleaccounting.view_model.BillInfoViewModel" />
+            type="io.github.skywalkerdarren.simpleaccounting.view_model.BillItemViewModel" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

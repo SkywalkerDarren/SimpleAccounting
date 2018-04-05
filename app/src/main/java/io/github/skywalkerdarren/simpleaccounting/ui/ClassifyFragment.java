@@ -25,6 +25,7 @@ import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.ClassifyAdapter;
+import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
 
 import static io.github.skywalkerdarren.simpleaccounting.ui.PeriodDialogFragment.EXTRA_END_DATE;

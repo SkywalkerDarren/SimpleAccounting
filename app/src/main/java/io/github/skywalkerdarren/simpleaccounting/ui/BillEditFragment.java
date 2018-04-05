@@ -38,6 +38,7 @@ import java.util.List;
 import co.ceryle.segmentedbutton.SegmentedButtonGroup;
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.TypeAdapter;
+import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillEditBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.AccountLab;

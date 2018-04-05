@@ -6,10 +6,11 @@ import android.databinding.ViewDataBinding;
 import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
+import io.github.skywalkerdarren.simpleaccounting.base.BaseMultiItemDataBindingAdapter;
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemListBillBinding;
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemListBillHeaderBinding;
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemListBillWithoutRemarkBinding;
-import io.github.skywalkerdarren.simpleaccounting.view_model.BillInfoViewModel;
+import io.github.skywalkerdarren.simpleaccounting.view_model.BillItemViewModel;
 
 /**
  * 账单适配器
@@ -62,7 +63,7 @@ public class BillAdapter extends BaseMultiItemDataBindingAdapter<BillInfo, ViewD
 
     @Override
     protected void convert(ViewDataBinding binding, BillInfo item) {
-        BillInfoViewModel viewModel = new BillInfoViewModel(item, mActivity);
+        BillItemViewModel viewModel = new BillItemViewModel(item, mActivity);
         if (binding instanceof ItemListBillBinding) {
             ((ItemListBillBinding) binding).setBill(viewModel);
             viewModel.setImagePair(((ItemListBillBinding) binding).typeImageView);

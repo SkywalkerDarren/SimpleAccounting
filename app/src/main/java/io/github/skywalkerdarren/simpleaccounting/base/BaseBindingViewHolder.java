@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.adapter;
+package io.github.skywalkerdarren.simpleaccounting.base;
 
 import android.databinding.ViewDataBinding;
 import android.view.View;

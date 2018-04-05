@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
+import io.github.skywalkerdarren.simpleaccounting.base.BaseFragmentActivity;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 
 /**

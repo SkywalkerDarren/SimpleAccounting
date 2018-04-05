@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.adapter;
+package io.github.skywalkerdarren.simpleaccounting.base;
 
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
@@ -19,14 +19,6 @@ public abstract class BaseDataBindingAdapter<T, Binding extends ViewDataBinding>
         extends BaseQuickAdapter<T, BaseBindingViewHolder<Binding>> {
     public BaseDataBindingAdapter(int layoutResId, @Nullable List<T> data) {
         super(layoutResId, data);
-    }
-
-    public BaseDataBindingAdapter(@Nullable List<T> data) {
-        super(data);
-    }
-
-    public BaseDataBindingAdapter(int layoutResId) {
-        super(layoutResId);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.adapter;
+package io.github.skywalkerdarren.simpleaccounting.base;
 
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
@@ -17,7 +17,7 @@ import java.util.List;
 
 public abstract class BaseMultiItemDataBindingAdapter<T extends MultiItemEntity, Binding extends ViewDataBinding>
         extends BaseMultiItemQuickAdapter<T, BaseBindingViewHolder<Binding>> {
-    BaseMultiItemDataBindingAdapter(List<T> data) {
+    public BaseMultiItemDataBindingAdapter(List<T> data) {
         super(data);
     }
 
