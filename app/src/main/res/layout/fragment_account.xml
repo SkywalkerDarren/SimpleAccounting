@@ -80,9 +80,9 @@
                 android:id="@+id/liability_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@{account.liavility}"
                 app:layout_constraintStart_toEndOf="@+id/textView4"
                 app:layout_constraintTop_toTopOf="@+id/textView4"
-                android:text="@{account.liavility}"
                 tools:text="103" />
 
             <TextView
@@ -98,9 +98,9 @@
                 android:id="@+id/total_assets_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@{account.totalAssets}"
                 app:layout_constraintStart_toEndOf="@+id/textView6"
                 app:layout_constraintTop_toTopOf="@+id/textView6"
-                android:text="@{account.totalAssets}"
                 tools:text="233" />
         </android.support.constraint.ConstraintLayout>
 

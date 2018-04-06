@@ -55,9 +55,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
+                android:text="@{account.name}"
                 app:layout_constraintStart_toEndOf="@+id/account_type_card_view"
                 app:layout_constraintTop_toTopOf="@+id/account_type_card_view"
-                android:text="@{account.name}"
                 tools:text="现金" />
 
             <TextView
@@ -66,12 +66,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:fontFamily="@font/droid_sans"
+                android:text="@{account.balance}"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:text="@{account.balance}"
                 tools:text="0" />
 
             <TextView
@@ -79,10 +79,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:text="@{account.balanceHint}"
                 android:textSize="12sp"
                 app:layout_constraintStart_toEndOf="@+id/account_type_card_view"
                 app:layout_constraintTop_toBottomOf="@+id/name_text_view"
-                android:text="@{account.balanceHint}"
                 tools:text="现金余额" />
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>

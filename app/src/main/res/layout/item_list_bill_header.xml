@@ -44,8 +44,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:textColor="@android:color/holo_red_light"
             android:text="@{header.expense}"
+            android:textColor="@android:color/holo_red_light"
             tools:text="1000" />
 
         <TextView
@@ -59,9 +59,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
+            android:text="@{header.income}"
             android:textAlignment="center"
             android:textColor="@android:color/holo_green_light"
-            android:text="@{header.income}"
             tools:text="10000" />
     </LinearLayout>
 </layout>

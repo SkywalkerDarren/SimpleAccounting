@@ -27,10 +27,10 @@
             android:foreground="?attr/selectableItemBackground"
             android:longClickable="true"
             android:onClick="@{() -> bill.click()}"
-            app:location="@{false}"
             app:cardCornerRadius="5dp"
             app:cardElevation="0dp"
-            app:cardUseCompatPadding="true">
+            app:cardUseCompatPadding="true"
+            app:location="@{false}">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"

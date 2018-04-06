@@ -5,8 +5,8 @@
     android:layout_height="wrap_content"
     android:background="@drawable/widget_bg"
     android:gravity="center"
-    android:padding="4dp"
     android:orientation="vertical"
+    android:padding="4dp"
     tools:ignore="ContentDescription">
 
     <LinearLayout
@@ -82,7 +82,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/expense"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                tools:ignore="SmallSp" />
         </LinearLayout>
 
         <ImageView
@@ -113,7 +114,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/total_balance"
                 android:textAlignment="center"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                tools:ignore="SmallSp" />
 
         </LinearLayout>
 
@@ -144,7 +146,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/income"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                tools:ignore="SmallSp" />
         </LinearLayout>
 
     </LinearLayout>

@@ -1,19 +1,16 @@
 package io.github.skywalkerdarren.simpleaccounting.ui;
 
 
-import android.annotation.SuppressLint;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -29,9 +26,6 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.MPPointF;
 
-import org.joda.time.DateTime;
-
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +33,9 @@ import java.util.List;
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.StatsAdapter;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
+import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentJournalBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
+import io.github.skywalkerdarren.simpleaccounting.view_model.JournalViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,57 +43,38 @@ import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
  * create an instance of this fragment.
  */
 public class JournalFragment extends BaseFragment implements View.OnClickListener {
-    private StatsLab mStatsLab;
 
     private LineChart mLineChart;
-    private TextView mDateTextView;
-    private TextView mIncomeStatsTextView;
-    private TextView mExpenseStatsTextView;
-    private TextView mBalanceStatsTextView;
-    private CardView mIncomeStatsCardView;
-    private CardView mExpenseStatsCardView;
-    private CardView mBalanceStatsCardView;
-    private RecyclerView mStatsRecyclerView;
     private StatsAdapter mStatsAdapter;
-    private int mYear = DateTime.now().getYear();
-
-    private boolean mShowIncome = true;
-    private boolean mShowExpense = true;
-    private boolean mShowBalance = true;
+    private JournalViewModel mViewModel;
+    private boolean mShowIncome;
+    private boolean mShowExpense;
+    private boolean mShowBalance;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mStatsLab = StatsLab.getInstance(getActivity());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_journal, container, false);
-        mLineChart = view.findViewById(R.id.stats_line_chart);
-        mIncomeStatsCardView = view.findViewById(R.id.income_card_view);
-        mIncomeStatsTextView = view.findViewById(R.id.income_text_view);
-        mExpenseStatsCardView = view.findViewById(R.id.expense_card_view);
-        mExpenseStatsTextView = view.findViewById(R.id.expense_text_view);
-        mBalanceStatsCardView = view.findViewById(R.id.balance_card_view);
-        mBalanceStatsTextView = view.findViewById(R.id.balance_text_view);
-        mStatsRecyclerView = view.findViewById(R.id.stats_recycler_view);
-        mDateTextView = view.findViewById(R.id.date_text_view);
+        FragmentJournalBinding binding = DataBindingUtil
+                .inflate(inflater, R.layout.fragment_journal, container, false);
+        mViewModel = new JournalViewModel(getContext());
+        binding.setJournal(mViewModel);
+        mLineChart = binding.statsLineChart;
 
-        mDateTextView.setText(mYear + "");
-        mDateTextView.setOnClickListener(view1 -> {
-            Toast.makeText(getActivity(), "点击年", Toast.LENGTH_SHORT).show();
-        });
-        mStatsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mExpenseStatsCardView.setOnClickListener(this);
-        mIncomeStatsCardView.setOnClickListener(this);
-        mBalanceStatsCardView.setOnClickListener(this);
+        binding.statsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        binding.expenseCardView.setOnClickListener(this);
+        binding.incomeCardView.setOnClickListener(this);
+        binding.balanceCardView.setOnClickListener(this);
+        mStatsAdapter = new StatsAdapter(mViewModel.getStats());
+        binding.statsRecyclerView.setAdapter(mStatsAdapter);
         // TODO 动态年份
         configChartStyle();
-        updateUI();
-        return view;
+        return binding.getRoot();
     }
 
     /**
@@ -116,12 +93,7 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
     /**
      * 更新数据
      */
-    @SuppressLint("SetTextI18n")
     private void updateLineDataSets(List<StatsLab.Stats> statsList, boolean showIncome, boolean showExpense, boolean showSum) {
-        BigDecimal sumIncome = BigDecimal.ZERO;
-        BigDecimal sumExpense = BigDecimal.ZERO;
-        BigDecimal sumBalance = BigDecimal.ZERO;
-        List<ILineDataSet> lineDataSets = new ArrayList<>(3);
         List<Entry> income = new ArrayList<>();
         List<Entry> expense = new ArrayList<>();
         List<Entry> sum = new ArrayList<>();
@@ -130,13 +102,7 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
             expense.add(new Entry(i, stats.getExpense().floatValue()));
             income.add(new Entry(i, stats.getIncome().floatValue()));
             sum.add(new Entry(i, stats.getSum().floatValue()));
-            sumExpense = sumExpense.add(stats.getExpense());
-            sumIncome = sumIncome.add(stats.getIncome());
-            sumBalance = sumBalance.add(stats.getSum());
         }
-        mBalanceStatsTextView.setText(sumBalance.toString());
-        mExpenseStatsTextView.setText(sumExpense.toString());
-        mIncomeStatsTextView.setText(sumIncome.toString());
         final LineDataSet incomeSet = new LineDataSet(income, "");
         final LineDataSet balanceSet = new LineDataSet(sum, "");
         final LineDataSet expenseSet = new LineDataSet(expense, "");
@@ -146,6 +112,7 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
         incomeSet.setVisible(showIncome);
         balanceSet.setVisible(showSum);
         expenseSet.setVisible(showExpense);
+        List<ILineDataSet> lineDataSets = new ArrayList<>(3);
         lineDataSets.add(incomeSet);
         lineDataSets.add(balanceSet);
         lineDataSets.add(expenseSet);
@@ -160,16 +127,9 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
      */
     @Override
     public void updateUI() {
-        List<StatsLab.Stats> statsList = mStatsLab.getAnnualStats(mYear);
-        if (mStatsAdapter == null) {
-            mStatsAdapter = new StatsAdapter(statsList);
-        } else {
-            mStatsAdapter.setNewData(statsList);
-            mStatsAdapter.notifyDataSetChanged();
-        }
-        if (mStatsRecyclerView.getAdapter() == null) {
-            mStatsRecyclerView.setAdapter(mStatsAdapter);
-        }
+        List<StatsLab.Stats> statsList = mViewModel.getStats();
+        mStatsAdapter.setNewData(statsList);
+        mStatsAdapter.notifyDataSetChanged();
         updateLineDataSets(statsList, true, true, true);
     }
 
@@ -190,9 +150,7 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
             default:
                 break;
         }
-        int year = 2018;
-        List<StatsLab.Stats> statsList = mStatsLab.getAnnualStats(year);
-        updateLineDataSets(statsList, mShowIncome, mShowExpense, mShowBalance);
+        updateLineDataSets(mViewModel.getStats(), mShowIncome, mShowExpense, mShowBalance);
     }
 
     /**

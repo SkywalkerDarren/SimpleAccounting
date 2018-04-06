@@ -1,5 +1,6 @@
 package io.github.skywalkerdarren.simpleaccounting.ui;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
+import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentDiscoveryBinding;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,9 +26,10 @@ public class DiscoveryFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_discovery, container, false);
+        FragmentDiscoveryBinding binding = DataBindingUtil
+                .inflate(inflater, R.layout.fragment_discovery, container, false);
 
-        return view;
+        return binding.getRoot();
     }
 
     /**
@@ -37,10 +40,11 @@ public class DiscoveryFragment extends BaseFragment {
      */
     // TODO: Rename and change types and number of parameters
     public static DiscoveryFragment newInstance() {
+        Bundle args = new Bundle();
         DiscoveryFragment fragment = new DiscoveryFragment();
+        fragment.setArguments(args);
         return fragment;
     }
-
 
     @Override
     protected void updateUI() {

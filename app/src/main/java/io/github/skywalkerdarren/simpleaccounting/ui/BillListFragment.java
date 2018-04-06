@@ -129,8 +129,7 @@ public class BillListFragment extends BaseFragment {
      * @return 空视图
      */
     private View emptyView() {
-        EmptyLayoutBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()),
-                R.layout.empty_layout, null, false);
+        EmptyLayoutBinding binding = EmptyLayoutBinding.inflate(LayoutInflater.from(getContext()));
         binding.setEmpty(new EmptyListViewModel(getContext()));
         binding.getRoot().setOnClickListener(view -> updateUI());
         return binding.getRoot();

@@ -56,20 +56,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="casual"
+                    android:text="@{billList.income}"
                     android:textAlignment="center"
                     android:textColor="@color/white"
                     android:textSize="24sp"
                     android:textStyle="bold"
-                    android:text="@{billList.income}"
                     tools:text="233" />
 
                 <TextView
                     android:id="@+id/month_income_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="@{billList.month + @string/month_income}"
                     android:textAlignment="center"
                     android:textColor="@color/white"
-                    android:text="@{billList.month + @string/month_income}"
                     tools:text="1月收入" />
             </LinearLayout>
 
@@ -88,20 +88,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="casual"
+                    android:text="@{billList.budget}"
                     android:textAlignment="center"
                     android:textColor="@color/white"
                     android:textSize="30sp"
                     android:textStyle="bold"
-                    android:text="@{billList.budget}"
                     tools:text="233" />
 
                 <TextView
                     android:id="@+id/set_budge_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="@{billList.budgetText}"
                     android:textAlignment="center"
                     android:textColor="@color/white"
-                    android:text="@{billList.budgetText}"
                     tools:text="设置预算" />
             </LinearLayout>
 
@@ -121,20 +121,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="casual"
+                    android:text="@{billList.expense}"
                     android:textAlignment="center"
                     android:textColor="@color/white"
                     android:textSize="24sp"
                     android:textStyle="bold"
-                    android:text="@{billList.expense}"
                     tools:text="2339999" />
 
                 <TextView
                     android:id="@+id/month_expense_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="@{billList.month + @string/month_expense}"
                     android:textAlignment="center"
                     android:textColor="@color/white"
-                    android:text="@{billList.month + @string/month_expense}"
                     tools:text="1月支出" />
             </LinearLayout>
 

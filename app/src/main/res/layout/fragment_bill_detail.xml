@@ -94,10 +94,10 @@
                         android:layout_weight="1"
                         android:ellipsize="end"
                         android:singleLine="false"
+                        android:text="@{detail.remark}"
                         android:textAlignment="viewEnd"
                         android:textColor="@android:color/black"
                         android:textSize="18sp"
-                        android:text="@{detail.remark}"
                         tools:text="123" />
 
                 </LinearLayout>
@@ -169,8 +169,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
-                            android:textColor="@android:color/black"
                             android:text="@{detail.accountName}"
+                            android:textColor="@android:color/black"
                             tools:text="Acc" />
                     </FrameLayout>
 
@@ -214,8 +214,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
-                            android:textColor="@android:color/black"
                             android:text="@{detail.recorder}"
+                            android:textColor="@android:color/black"
                             tools:text="233" />
                     </FrameLayout>
                 </LinearLayout>
@@ -257,8 +257,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
-                            android:textColor="@android:color/black"
                             android:text="@{detail.time}"
+                            android:textColor="@android:color/black"
                             tools:text="@sample/tools:date/ddmmyy" />
                     </FrameLayout>
                 </LinearLayout>
@@ -292,14 +292,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
+                    android:text="@{detail.balance}"
+                    android:textColor="@{detail.balanceColor}"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     android:transitionName="balance_text_view"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:text="@{detail.balance}"
-                    android:textColor="@{detail.balanceColor}"
                     tools:text="156" />
 
                 <TextView
@@ -307,6 +307,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:text="@{detail.typeName}"
                     android:textColor="@android:color/black"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -314,7 +315,6 @@
                     app:layout_constraintBottom_toBottomOf="@+id/type_image_view"
                     app:layout_constraintStart_toEndOf="@+id/type_image_view"
                     app:layout_constraintTop_toTopOf="@+id/type_image_view"
-                    android:text="@{detail.typeName}"
                     tools:text="吃喝" />
 
                 <ImageView
@@ -325,11 +325,11 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:contentDescription="@string/current_type"
+                    android:src="@{detail.typeImage}"
                     android:transitionName="type_image_view"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:src="@{detail.typeImage}" />
+                    app:layout_constraintTop_toTopOf="parent" />
             </android.support.constraint.ConstraintLayout>
         </android.support.v7.widget.CardView>
 
@@ -341,12 +341,12 @@
             android:layout_marginEnd="16dp"
             android:clickable="true"
             android:focusable="true"
+            android:onClick="@{(view) -> detail.onEditFabClick(view)}"
             app:elevation="4dp"
             app:fabSize="normal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:srcCompat="@drawable/ic_edit"
-            android:onClick="@{(view) -> detail.onEditFabClick(view)}" />
+            app:srcCompat="@drawable/ic_edit" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

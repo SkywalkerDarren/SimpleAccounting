@@ -2,13 +2,13 @@ package io.github.skywalkerdarren.simpleaccounting.adapter;
 
 import android.support.annotation.NonNull;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
-
 import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
+import io.github.skywalkerdarren.simpleaccounting.base.BaseDataBindingAdapter;
+import io.github.skywalkerdarren.simpleaccounting.databinding.ItemStatsBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
+import io.github.skywalkerdarren.simpleaccounting.view_model.StatsItemViewModel;
 
 /**
  * 统计列表转换到recycler view的适配器
@@ -17,7 +17,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
  * @date 2018/3/14
  */
 
-public class StatsAdapter extends BaseQuickAdapter<StatsLab.Stats, BaseViewHolder> {
+public class StatsAdapter extends BaseDataBindingAdapter<StatsLab.Stats, ItemStatsBinding> {
 
     /**
      * 统计适配器
@@ -29,10 +29,7 @@ public class StatsAdapter extends BaseQuickAdapter<StatsLab.Stats, BaseViewHolde
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, StatsLab.Stats item) {
-        helper.setText(R.id.income_text_view, item.getIncome().toString());
-        helper.setText(R.id.expense_text_view, item.getExpense().toString());
-        helper.setText(R.id.balance_text_view, item.getSum().toString());
-        helper.setText(R.id.month_text_view, helper.getAdapterPosition() + 1 + "");
+    protected void convert(ItemStatsBinding binding, StatsLab.Stats item) {
+        binding.setStats(new StatsItemViewModel(item, getParentPosition(item) + 1));
     }
 }

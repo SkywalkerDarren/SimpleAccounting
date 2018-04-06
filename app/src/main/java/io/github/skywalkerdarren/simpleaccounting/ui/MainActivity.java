@@ -6,11 +6,11 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -22,6 +22,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
+import io.github.skywalkerdarren.simpleaccounting.databinding.ActivityBillBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 
 /**
@@ -32,7 +33,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.Bill;
  */
 public class MainActivity extends AppCompatActivity {
 
-    private ViewPager sViewPager;
+    private ViewPager mViewPager;
 
     private FloatingActionButton mAddBillButton;
 
@@ -42,13 +43,13 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_stats:
-                    sViewPager.setCurrentItem(0);
+                    mViewPager.setCurrentItem(0);
                     return true;
                 case R.id.navigation_bill:
-                    sViewPager.setCurrentItem(1);
+                    mViewPager.setCurrentItem(1);
                     return true;
                 case R.id.navigation_discovery:
-                    sViewPager.setCurrentItem(2);
+                    mViewPager.setCurrentItem(2);
                     return true;
                 default:
                     break;
@@ -58,18 +59,18 @@ public class MainActivity extends AppCompatActivity {
     };
 
     public static Intent newIntent(Context context) {
-        Intent intent = new Intent(context, MainActivity.class);
-        return intent;
+        return new Intent(context, MainActivity.class);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bill);
-
-        final BottomNavigationView navigation = findViewById(R.id.navigation);
-        sViewPager = findViewById(R.id.content_view_pager);
-        mAddBillButton = findViewById(R.id.add_bill_fab);
+        ActivityBillBinding binding = DataBindingUtil
+                .setContentView(this, R.layout.activity_bill);
+        final BottomNavigationView navigation = binding.navigation;
+        mViewPager = binding.contentViewPager;
+        mAddBillButton = binding.addBillFab;
 
         // 点击增加按钮事件
         mAddBillButton.setOnClickListener(view -> {
@@ -77,12 +78,10 @@ public class MainActivity extends AppCompatActivity {
             int x = (int) view.getX() + view.getWidth() / 2;
             int y = (int) view.getY() + view.getHeight() / 2;
             Intent intent = BillEditActivity.newIntent(this, bill, x, y);
-            ActivityOptionsCompat options = ActivityOptionsCompat
-                    .makeSceneTransitionAnimation(this);
-            startActivity(intent, options.toBundle());
+            startActivity(intent);
         });
         FragmentManager fragmentManager = getSupportFragmentManager();
-        sViewPager.setAdapter(new FragmentPagerAdapter(fragmentManager) {
+        mViewPager.setAdapter(new FragmentPagerAdapter(fragmentManager) {
             /**
              * 导航栏一共3个页面 固定
              * @return 3
@@ -106,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        sViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -137,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        sViewPager.setCurrentItem(1);
+        mViewPager.setCurrentItem(1);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 

@@ -20,11 +20,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableTop="@drawable/ic_message"
+            android:onClick="@{() -> empty.onClick()}"
             android:text="@string/start_accounting"
             android:textAlignment="center"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:onClick="@{() -> empty.onClick()}"
             app:onTouch="@{false}" />
     </LinearLayout>
 </layout>

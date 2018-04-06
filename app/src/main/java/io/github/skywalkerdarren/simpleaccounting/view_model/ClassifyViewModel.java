@@ -23,10 +23,10 @@ public class ClassifyViewModel extends BaseObservable {
     private boolean mIsExpense;
     private Context mContext;
 
-    public ClassifyViewModel(DateTime now, Context context) {
+    public ClassifyViewModel(DateTime dateTime, Context context) {
         mContext = context;
-        mEnd = now;
-        mStart = now.minusMonths(1);
+        mStart = new DateTime(dateTime.getYear(), dateTime.getMonthOfYear(), 1, 0, 0);
+        mEnd = mStart.plusMonths(1);
         mIsExpense = true;
         mPeriod = new Period(mStart, mEnd);
     }
