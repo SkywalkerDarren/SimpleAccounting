@@ -149,10 +149,9 @@ public class NumPad extends LinearLayout {
      * @return 合法表达式
      */
     private String processExp() {
-        String exp = mEditText.getText().toString()
+        return mEditText.getText().toString()
                 .replaceAll("×", "*")
                 .replaceAll("÷", "/");
-        return exp;
     }
 
     /**
@@ -171,7 +170,9 @@ public class NumPad extends LinearLayout {
     public void hideSysKeyboard() {
         InputMethodManager imm = (InputMethodManager) mContext
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(this.getWindowToken(), 0);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(this.getWindowToken(), 0);
+        }
     }
 
     /**
@@ -194,7 +195,7 @@ public class NumPad extends LinearLayout {
     /**
      * 设置响应该自定义键盘的edit text
      *
-     * @param balanceEditText
+     * @param balanceEditText 要监听的editText
      */
     public void setStrReceiver(EditText balanceEditText) {
         mEditText = balanceEditText;
