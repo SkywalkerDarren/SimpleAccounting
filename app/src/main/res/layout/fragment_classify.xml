@@ -1,57 +1,66 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:activity="io.github.skywalkerdarren.simpleaccounting.ui.ClassifyFragment"
-    tools:ignore="ContentDescription">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="classify"
+            type="io.github.skywalkerdarren.simpleaccounting.view_model.ClassifyViewModel" />
+    </data>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="8dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:activity="io.github.skywalkerdarren.simpleaccounting.ui.ClassifyFragment"
+        tools:ignore="ContentDescription">
 
-        <ImageView
-            android:id="@+id/back_image_view"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/back" />
-
-        <TextView
-            android:id="@+id/date_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="01月01日 - 02月01日" />
-
-        <ImageView
-            android:id="@+id/custom_image_view"
-            android:layout_width="20dp"
-            android:layout_height="16dp"
-            android:src="@drawable/custom" />
-
-        <ImageView
-            android:id="@+id/more_image_view"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/more" />
-    </LinearLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/classify_view_pager"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="250dp" />
-    </FrameLayout>
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="8dp">
 
+            <ImageView
+                android:id="@+id/back_image_view"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/back" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/classify_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+            <TextView
+                android:id="@+id/date_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{classify.date}"
+                tools:text="01月01日 - 02月01日" />
 
-</LinearLayout>
+            <ImageView
+                android:id="@+id/custom_image_view"
+                android:layout_width="20dp"
+                android:layout_height="16dp"
+                android:src="@drawable/custom" />
+
+            <ImageView
+                android:id="@+id/more_image_view"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/more" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/classify_view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="250dp" />
+        </FrameLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/classify_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+</layout>

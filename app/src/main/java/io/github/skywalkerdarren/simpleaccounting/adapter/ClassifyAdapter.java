@@ -2,14 +2,14 @@ package io.github.skywalkerdarren.simpleaccounting.adapter;
 
 import android.support.annotation.Nullable;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
-
 import java.math.BigDecimal;
 import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
+import io.github.skywalkerdarren.simpleaccounting.base.BaseDataBindingAdapter;
+import io.github.skywalkerdarren.simpleaccounting.databinding.ItemClassifyBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
+import io.github.skywalkerdarren.simpleaccounting.view_model.ClassifyItemViewModel;
 
 /**
  * 分类页面的统计数据适配器
@@ -18,7 +18,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
  * @date 2018/3/25
  */
 
-public class ClassifyAdapter extends BaseQuickAdapter<StatsLab.TypeStats, BaseViewHolder> {
+public class ClassifyAdapter extends BaseDataBindingAdapter<StatsLab.TypeStats, ItemClassifyBinding> {
     private BigDecimal mSum = BigDecimal.ZERO;
 
     public ClassifyAdapter(@Nullable List<StatsLab.TypeStats> data) {
@@ -44,13 +44,7 @@ public class ClassifyAdapter extends BaseQuickAdapter<StatsLab.TypeStats, BaseVi
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, StatsLab.TypeStats item) {
-        helper.setText(R.id.type_text_view, item.getType().getName());
-        helper.setImageResource(R.id.type_image_view, item.getType().getTypeId());
-        helper.setText(R.id.balance_text_view, item.getSum().toString());
-        BigDecimal decimal = item.getSum()
-                .multiply(BigDecimal.valueOf(100))
-                .divide(mSum, 2, BigDecimal.ROUND_HALF_UP);
-        helper.setText(R.id.present_text_view, decimal.toPlainString() + "%");
+    protected void convert(ItemClassifyBinding binding, StatsLab.TypeStats item) {
+        binding.setClassify(new ClassifyItemViewModel(item, mSum));
     }
 }

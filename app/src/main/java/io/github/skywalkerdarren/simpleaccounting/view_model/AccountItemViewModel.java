@@ -20,12 +20,12 @@ public class AccountItemViewModel extends BaseObservable {
     }
 
     @BindingAdapter("src")
-    public void setImg(ImageView view, int res) {
+    public static void setImg(ImageView view, int res) {
         view.setImageResource(res);
     }
 
     @BindingAdapter("cardBackgroundColor")
-    public void setColor(CardView view, int color) {
+    public static void setColor(CardView view, int color) {
         view.setCardBackgroundColor(color);
     }
 
