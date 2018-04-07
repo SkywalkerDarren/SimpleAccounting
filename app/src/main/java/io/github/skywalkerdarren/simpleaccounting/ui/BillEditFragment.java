@@ -6,7 +6,6 @@ import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -27,8 +26,6 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-
-import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import org.joda.time.DateTime;
 
@@ -80,7 +77,7 @@ public class BillEditFragment extends BaseFragment {
         setHasOptionsMenu(true);
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -92,7 +89,6 @@ public class BillEditFragment extends BaseFragment {
         mNumPad = binding.numKeyView;
         mTypeSbg = binding.typeSbg;
         mTypeImageView = binding.typeImageView;
-
         mViewModel = new BillEditViewModel(mBill, getContext());
 
         // 自定义导航栏
@@ -102,7 +98,7 @@ public class BillEditFragment extends BaseFragment {
         actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
 
         // 配置适配器
-        TypeAdapter adapter = new TypeAdapter(null);
+        TypeAdapter adapter = new TypeAdapter(null, binding, getContext());
         adapter.openLoadAnimation(view14 -> {
                     Animator animator = AnimatorInflater.loadAnimator(getActivity(),
                             R.animator.type_item_appear);
@@ -110,8 +106,6 @@ public class BillEditFragment extends BaseFragment {
                     return new Animator[]{animator};
                 }
         );
-        adapter.setOnItemClickListener((adapter1, view12, position) -> clickTypeItem(adapter1, position));
-        adapter.setOnItemChildClickListener((adapter12, view17, position) -> clickTypeItem(adapter12, position));
         binding.typeListRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
 
         // 配置选择按钮
@@ -268,14 +262,6 @@ public class BillEditFragment extends BaseFragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    /**
-     * 选择类型
-     */
-    public void clickTypeItem(BaseQuickAdapter adapter1, int position) {
-        mViewModel.setType((Type) adapter1.getData().get(position));
-        typeImageAnimator();
     }
 
     /**

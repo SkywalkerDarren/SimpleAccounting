@@ -12,6 +12,8 @@ import java.util.List;
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
 
 /**
+ * 分类页vm
+ *
  * @author darren
  * @date 2018/4/6
  */
@@ -31,11 +33,12 @@ public class ClassifyViewModel extends BaseObservable {
         mPeriod = new Period(mStart, mEnd);
     }
 
-    public void setExpense(boolean expense) {
-        mIsExpense = expense;
-        notifyChange();
-    }
-
+    /**
+     * 设置日期
+     *
+     * @param start 起始日期
+     * @param end   结束日期
+     */
     public void setDate(DateTime start, DateTime end) {
         mEnd = end;
         mStart = start;
@@ -43,35 +46,66 @@ public class ClassifyViewModel extends BaseObservable {
         notifyChange();
     }
 
+    /**
+     * @return 时间区间
+     */
     @Bindable
     public String getDate() {
         return mStart.toString("yyyy年MM月dd日") + " - " + mEnd.toString("yyyy年MM月dd日");
     }
 
+    /**
+     * @return 起始日期
+     */
     public DateTime getStart() {
         return mStart;
     }
 
+    /**
+     * @return 结束日期
+     */
     public DateTime getEnd() {
         return mEnd;
     }
 
+    /**
+     * 后退日期
+     */
     public void back() {
         mEnd = mEnd.minus(mPeriod);
         mStart = mStart.minus(mPeriod);
         notifyChange();
     }
 
+    /**
+     * 前进日期
+     */
     public void more() {
         mEnd = mEnd.plus(mPeriod);
         mStart = mStart.plus(mPeriod);
         notifyChange();
     }
 
+    /**
+     * @return true为支出
+     */
     public boolean isExpense() {
         return mIsExpense;
     }
 
+    /**
+     * 设置是否收支
+     *
+     * @param expense true为支出
+     */
+    public void setExpense(boolean expense) {
+        mIsExpense = expense;
+        notifyChange();
+    }
+
+    /**
+     * @return 统计列表
+     */
     @Bindable
     public List<StatsLab.TypeStats> getStatsList() {
         return StatsLab.getInstance(mContext).getTypeStats(mStart, mEnd, mIsExpense);

@@ -1,15 +1,17 @@
 package io.github.skywalkerdarren.simpleaccounting.adapter;
 
 import android.animation.Animator;
+import android.content.Context;
 import android.support.annotation.Nullable;
-
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
 
 import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
+import io.github.skywalkerdarren.simpleaccounting.base.BaseDataBindingAdapter;
+import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillEditBinding;
+import io.github.skywalkerdarren.simpleaccounting.databinding.ItemTypeBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.Type;
+import io.github.skywalkerdarren.simpleaccounting.view_model.TypeItemViewModel;
 
 /**
  * 类型适配器
@@ -18,17 +20,19 @@ import io.github.skywalkerdarren.simpleaccounting.model.Type;
  * @date 2018/3/8
  */
 
-public class TypeAdapter extends BaseQuickAdapter<Type, BaseViewHolder> {
-    public TypeAdapter(@Nullable List<Type> data) {
+public class TypeAdapter extends BaseDataBindingAdapter<Type, ItemTypeBinding> {
+    private FragmentBillEditBinding mBinding;
+    private Context mContext;
+
+    public TypeAdapter(@Nullable List<Type> data, FragmentBillEditBinding binding, Context context) {
         super(R.layout.item_type, data);
+        mBinding = binding;
+        mContext = context;
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, Type item) {
-        helper.setText(R.id.type_text_view, item.getName());
-        helper.setImageResource(R.id.type_image_view, item.getTypeId());
-        helper.addOnClickListener(R.id.circle);
-        helper.setAlpha(R.id.type_item, 0);
+    protected void convert(ItemTypeBinding binding, Type item) {
+        binding.setType(new TypeItemViewModel(item, mBinding, mContext));
     }
 
     @Override

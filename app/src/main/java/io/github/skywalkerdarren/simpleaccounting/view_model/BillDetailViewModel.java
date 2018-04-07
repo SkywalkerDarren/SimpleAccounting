@@ -19,6 +19,8 @@ import io.github.skywalkerdarren.simpleaccounting.model.TypeLab;
 import io.github.skywalkerdarren.simpleaccounting.ui.BillEditActivity;
 
 /**
+ * 账单详单vm
+ *
  * @author darren
  * @date 2018/4/4
  */
@@ -36,52 +38,86 @@ public class BillDetailViewModel extends BaseObservable {
         mType = TypeLab.getInstance(mActivity).getType(mBill.getTypeId());
     }
 
+    /**
+     * 通过id设置图片
+     */
     @BindingAdapter("android:src")
     public static void setTypeImage(ImageView view, int res) {
         view.setImageResource(res);
     }
 
+    /**
+     * 通过色值设置颜色
+     */
     @BindingAdapter("android:textColor")
     public static void setBalanceColor(TextView tv, int color) {
         tv.setTextColor(color);
     }
 
+    /**
+     * @return 类型图id
+     */
     @DrawableRes
     public int getTypeImage() {
         return mType.getTypeId();
     }
 
+    /**
+     * @return 类型名
+     */
     public String getTypeName() {
         return mType.getName();
     }
 
+    /**
+     * @return 账单收支
+     */
     public String getBalance() {
         return mBill.getBalance().toString();
     }
 
+    /**
+     * @return 收支颜色
+     */
     public int getBalanceColor() {
         return mActivity.getResources().getColor(mType.getExpense() ?
                 R.color.deeporange800 :
                 R.color.lightgreen700);
     }
 
+    /**
+     * @return 帐户名
+     */
     public String getAccountName() {
         return mAccount.getName();
     }
 
+    /**
+     * @return 账单记录者
+     */
     public String getRecorder() {
         // TODO: 2018/4/4 记录人空缺
         return "暂无";
     }
 
+    /**
+     * @return 账单日期
+     */
     public String getTime() {
         return mBill.getDate().toString("yyyy-MM-dd hh:mm");
     }
 
+    /**
+     * @return 账单备注
+     */
     public String getRemark() {
         return mBill.getRemark();
     }
 
+    /**
+     * 编辑账单点击事件
+     */
+    @SuppressWarnings("unchecked")
     public void onEditFabClick(View view) {
         int[] location = new int[2];
         view.getLocationInWindow(location);

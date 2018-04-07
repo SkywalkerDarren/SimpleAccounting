@@ -13,6 +13,8 @@ import java.util.List;
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
 
 /**
+ * 流水vm
+ *
  * @author darren
  * @date 2018/4/6
  */
@@ -32,6 +34,7 @@ public class JournalViewModel extends BaseObservable {
         mIncome = BigDecimal.ZERO;
         mExpense = BigDecimal.ZERO;
         mSum = BigDecimal.ZERO;
+        // 初始化求和
         for (int i = 0; i < mStats.size(); i++) {
             StatsLab.Stats stats = mStats.get(i);
             mExpense = mExpense.add(stats.getExpense());
@@ -40,35 +43,56 @@ public class JournalViewModel extends BaseObservable {
         }
     }
 
+    /**
+     * @return 统计列表
+     */
     public List<StatsLab.Stats> getStats() {
         return mStats;
     }
 
-    public void setDate(int year) {
-        mYear = year;
-        notifyChange();
-    }
-
+    /**
+     * @return 收入
+     */
     @Bindable
     public String getIncome() {
         return mIncome.toString();
     }
 
+    /**
+     * @return 支出
+     */
     @Bindable
     public String getExpense() {
         return mExpense.toString();
     }
 
+    /**
+     * @return 盈余
+     */
     @Bindable
     public String getSum() {
         return mSum.toString();
     }
 
+    /**
+     * @return 年份
+     */
     @Bindable
     public String getDate() {
         return mYear + "";
     }
 
+    /**
+     * @param year 设置年份
+     */
+    public void setDate(int year) {
+        mYear = year;
+        notifyChange();
+    }
+
+    /**
+     * 改变日期
+     */
     public void changeDate() {
         // TODO: 2018/4/6 改变日期
         Toast.makeText(mContext, "点击", Toast.LENGTH_SHORT).show();

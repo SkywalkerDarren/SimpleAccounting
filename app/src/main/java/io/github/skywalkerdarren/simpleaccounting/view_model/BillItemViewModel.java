@@ -18,6 +18,8 @@ import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
 import io.github.skywalkerdarren.simpleaccounting.ui.BillDetailActivity;
 
 /**
+ * 账单列表物品vm
+ *
  * @author darren
  * @date 2018/4/5
  */
@@ -35,65 +37,25 @@ public class BillItemViewModel extends BaseObservable {
         mBillInfo = billinfo;
     }
 
+    /**
+     * 设置图片
+     */
     @BindingAdapter("src")
     public static void setTypeImg(ImageView view, int res) {
         view.setImageResource(res);
-
     }
 
-    public void setImagePair(ImageView view) {
-        mImage = view;
-    }
-
+    /**
+     * 设置账单收支颜色
+     */
     @BindingAdapter("android:textColor")
     public static void setBalanceColor(TextView view, int color) {
         view.setTextColor(color);
     }
 
-    public int getTypeRes() {
-        return mBillInfo.getBillTypeResId();
-    }
-
-    public String getTitle() {
-        return mBillInfo.getTitle();
-    }
-
-    public String getBalance() {
-        return mBillInfo.getBalance();
-    }
-
-    public String getRemark() {
-        return mBillInfo.getRemark();
-    }
-
-    public int getBalanceColor() {
-        return mBillInfo.isExpense() ?
-                Color.rgb(0xff, 0x70, 0x43) :
-                Color.rgb(0x7C, 0xB3, 0x42);
-    }
-
-    public String getDate() {
-        return mBillInfo.getDateTime().toString("yyyy-MM-dd");
-    }
-
-    public String getIncome() {
-        return mBillInfo.getIncome();
-    }
-
-    public String getExpense() {
-        return mBillInfo.getExpense();
-    }
-
-    public void click() {
-        Intent intent = BillDetailActivity.newIntent(mActivity,
-                BillLab.getInstance(mActivity).getBill(mBillInfo.getUUID()),
-                mX, mY, R.color.orangea200);
-        intent.putExtra(BillDetailActivity.EXTRA_START_COLOR, R.color.orangea200);
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                mActivity, mImage, "type_image_view");
-        mActivity.startActivity(intent, options.toBundle());
-    }
-
+    /**
+     * 设置点击位置
+     */
     @SuppressLint("ClickableViewAccessibility")
     @BindingAdapter("location")
     public static void setLocation(View view, boolean b) {
@@ -108,5 +70,83 @@ public class BillItemViewModel extends BaseObservable {
             }
             return b;
         });
+    }
+
+    /**
+     * 设置共享图片
+     */
+    public void setImagePair(ImageView view) {
+        mImage = view;
+    }
+
+    /**
+     * @return 账单类型图id
+     */
+    public int getTypeRes() {
+        return mBillInfo.getBillTypeResId();
+    }
+
+    /**
+     * @return 账单标题
+     */
+    public String getTitle() {
+        return mBillInfo.getTitle();
+    }
+
+    /**
+     * @return 账单盈余
+     */
+    public String getBalance() {
+        return mBillInfo.getBalance();
+    }
+
+    /**
+     * @return 账单备注
+     */
+    public String getRemark() {
+        return mBillInfo.getRemark();
+    }
+
+    /**
+     * @return 收支颜色
+     */
+    public int getBalanceColor() {
+        return mBillInfo.isExpense() ?
+                Color.rgb(0xff, 0x70, 0x43) :
+                Color.rgb(0x7C, 0xB3, 0x42);
+    }
+
+    /**
+     * @return 账单日期
+     */
+    public String getDate() {
+        return mBillInfo.getDateTime().toString("yyyy-MM-dd");
+    }
+
+    /**
+     * @return 账单收入
+     */
+    public String getIncome() {
+        return mBillInfo.getIncome();
+    }
+
+    /**
+     * @return 账单支出
+     */
+    public String getExpense() {
+        return mBillInfo.getExpense();
+    }
+
+    /**
+     * 点击跳转
+     */
+    public void click() {
+        Intent intent = BillDetailActivity.newIntent(mActivity,
+                BillLab.getInstance(mActivity).getBill(mBillInfo.getUUID()),
+                mX, mY, R.color.orangea200);
+        intent.putExtra(BillDetailActivity.EXTRA_START_COLOR, R.color.orangea200);
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                mActivity, mImage, "type_image_view");
+        mActivity.startActivity(intent, options.toBundle());
     }
 }

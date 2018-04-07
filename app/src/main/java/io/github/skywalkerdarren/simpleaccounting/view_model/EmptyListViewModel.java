@@ -12,26 +12,24 @@ import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.ui.BillEditActivity;
 
 /**
+ * 空列表vm
+ *
  * @author darren
  * @date 2018/4/5
  */
 
 public class EmptyListViewModel extends BaseObservable {
-    private Context mContext;
     private static int mX;
     private static int mY;
+    private Context mContext;
 
     public EmptyListViewModel(Context context) {
         mContext = context;
     }
 
-    public void onClick() {
-        Bill bill = new Bill();
-        Intent intent = BillEditActivity.newIntent(mContext, bill,
-                mX, mY);
-        mContext.startActivity(intent);
-    }
-
+    /**
+     * 获取位置
+     */
     @SuppressLint("ClickableViewAccessibility")
     @BindingAdapter("onTouch")
     public static void setTouchListener(View view, boolean b) {
@@ -46,5 +44,15 @@ public class EmptyListViewModel extends BaseObservable {
             }
             return b;
         });
+    }
+
+    /**
+     * 点击跳转新建账单
+     */
+    public void onClick() {
+        Bill bill = new Bill();
+        Intent intent = BillEditActivity.newIntent(mContext, bill,
+                mX, mY);
+        mContext.startActivity(intent);
     }
 }

@@ -1,5 +1,6 @@
 package io.github.skywalkerdarren.simpleaccounting.ui;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 
 import co.ceryle.segmentedbutton.SegmentedButtonGroup;
 import io.github.skywalkerdarren.simpleaccounting.R;
+import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentStatsBinding;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,9 +27,6 @@ public class StatsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState == null) {
-        } else {
-        }
         setEnterTransition(new Fade());
         setExitTransition(new Fade());
         setHasOptionsMenu(true);
@@ -36,9 +35,10 @@ public class StatsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_stats, container, false);
-        mStatsSbg = view.findViewById(R.id.stats_sbg);
-        mViewPager = view.findViewById(R.id.fragment_container);
+        FragmentStatsBinding binding = DataBindingUtil.inflate(inflater,
+                R.layout.fragment_stats, container, false);
+        mStatsSbg = binding.statsSbg;
+        mViewPager = binding.fragmentContainer;
 
         mViewPager.setAdapter(new FragmentStatePagerAdapter(getChildFragmentManager()) {
             @Override
@@ -76,15 +76,8 @@ public class StatsFragment extends Fragment {
         });
         mViewPager.setCurrentItem(1);
 
-        mStatsSbg.setOnClickedButtonListener(position -> {
-            mViewPager.setCurrentItem(position);
-        });
-        return view;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
+        mStatsSbg.setOnClickedButtonListener(position -> mViewPager.setCurrentItem(position));
+        return binding.getRoot();
     }
 
     /**
@@ -94,7 +87,9 @@ public class StatsFragment extends Fragment {
      * @return A new instance of fragment StatsFragment.
      */
     public static StatsFragment newInstance() {
+        Bundle args = new Bundle();
         StatsFragment fragment = new StatsFragment();
+        fragment.setArguments(args);
         return fragment;
     }
 

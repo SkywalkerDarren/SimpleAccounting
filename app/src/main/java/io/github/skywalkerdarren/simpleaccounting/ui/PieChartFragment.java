@@ -1,6 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.ui;
 
 import android.annotation.SuppressLint;
+import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,6 +29,7 @@ import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
+import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentChartBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
 
 /**
@@ -80,10 +82,11 @@ public class PieChartFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_chart, container, false);
-        mPieChart = view.findViewById(R.id.pie_chart);
+        FragmentChartBinding binding = DataBindingUtil.inflate(inflater,
+                R.layout.fragment_chart, container, false);
+        mPieChart = binding.pieChart;
         configChartStyle();
-        return view;
+        return binding.getRoot();
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -105,7 +108,6 @@ public class PieChartFragment extends BaseFragment {
         mPieChart.animateY(1000, Easing.EasingOption.EaseInOutExpo);
         // TODO: 2018/3/28 暂无法解决view pager与图表滑动的冲突
         //        mPieChart.setTouchEnabled(false);
-
 
         Legend legend = mPieChart.getLegend();
         legend.setEnabled(false);

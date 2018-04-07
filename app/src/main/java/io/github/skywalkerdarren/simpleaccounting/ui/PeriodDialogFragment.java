@@ -4,16 +4,17 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.DatePicker;
 
 import org.joda.time.DateTime;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
+import io.github.skywalkerdarren.simpleaccounting.databinding.PeriodDialogFragmentBinding;
 
 /**
  * @author darren
@@ -26,8 +27,6 @@ public class PeriodDialogFragment extends DialogFragment {
     private static final String ARG_END = "end";
     public static final String EXTRA_END_DATE = "io.github.skywalkerdarren.simpleaccounting.ui.PeriodDialogFragment.EXTRA_END_DATE";
     public static final String EXTRA_START_DATE = "io.github.skywalkerdarren.simpleaccounting.ui.PeriodDialogFragment.EXTRA_START_DATE";
-    private DateTime mStartDateTime;
-    private DateTime mEndDateTime;
     private DatePicker mStartDatePicker;
     private DatePicker mEndDatePicker;
 
@@ -63,24 +62,28 @@ public class PeriodDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        mStartDateTime = (DateTime) getArguments().getSerializable(ARG_START);
-        mEndDateTime = (DateTime) getArguments().getSerializable(ARG_END);
+        DateTime startDateTime = (DateTime) getArguments().getSerializable(ARG_START);
+        DateTime endDateTime = (DateTime) getArguments().getSerializable(ARG_END);
+        DateTime now = DateTime.now();
 
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.period_dialog_fragment, null);
-        mStartDatePicker = view.findViewById(R.id.start_date_picker);
-        mEndDatePicker = view.findViewById(R.id.end_date_picker);
-        mStartDatePicker.init(mStartDateTime.getYear(),
-                mStartDateTime.getMonthOfYear() - 1,
-                mStartDateTime.getDayOfMonth(),
+        PeriodDialogFragmentBinding binding = DataBindingUtil.inflate(
+                LayoutInflater.from(getContext()),
+                R.layout.period_dialog_fragment, null, false);
+        mStartDatePicker = binding.startDatePicker;
+        mEndDatePicker = binding.endDatePicker;
+
+        mStartDatePicker.init(startDateTime != null ? startDateTime.getYear() : now.getYear(),
+                startDateTime != null ? startDateTime.getMonthOfYear() - 1 : now.getMonthOfYear(),
+                startDateTime != null ? startDateTime.getDayOfMonth() : now.getDayOfMonth(),
                 null);
-        mEndDatePicker.init(mEndDateTime.getYear(),
-                mEndDateTime.getMonthOfYear() - 1,
-                mEndDateTime.getDayOfMonth(),
+        mEndDatePicker.init(endDateTime != null ? endDateTime.getYear() : now.getYear(),
+                endDateTime != null ? endDateTime.getMonthOfYear() - 1 : now.getMonthOfYear(),
+                endDateTime != null ? endDateTime.getDayOfMonth() : now.getDayOfMonth(),
                 null);
 
         return new AlertDialog.Builder(getContext())
-                .setView(view)
-                .setTitle("选择日期")
+                .setView(binding.getRoot())
+                .setTitle(getString(R.string.set_date))
                 .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
                     DateTime start = new DateTime(mStartDatePicker.getYear(),
                             mStartDatePicker.getMonth() + 1,

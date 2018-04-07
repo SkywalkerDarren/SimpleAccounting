@@ -36,68 +36,110 @@ public class BillEditViewModel extends BaseObservable {
         mContext = context;
     }
 
-    public void setAccount(Account account) {
-        mAccount = account;
-        notifyChange();
-    }
-
-    public void setType(Type type) {
-        mType = type;
-        notifyChange();
-    }
-
+    /**
+     * 通过id设置图片
+     */
     @BindingAdapter("android:src")
     public static void setImg(ImageView view, int res) {
         view.setImageResource(res);
     }
 
+    /**
+     * 通过色值设置颜色
+     */
     @BindingAdapter("cardBackgroundColor")
     public static void setColor(CardView view, int res) {
         view.setCardBackgroundColor(res);
     }
 
+    /**
+     * @param account 设置的账户
+     */
+    public void setAccount(Account account) {
+        mAccount = account;
+        notifyChange();
+    }
+
+    /**
+     * @param type 设置类型
+     */
+    public void setType(Type type) {
+        mType = type;
+        notifyChange();
+    }
+
+    /**
+     * @return 类型名
+     */
     @Bindable
     public String getTypeName() {
         return mType.getName();
     }
 
+    /**
+     * @return 类型图id
+     */
     @Bindable
     public int getTypeImg() {
         return mType.getTypeId();
     }
 
+    /**
+     * @return 类型id
+     */
     public UUID getTypeId() {
         return mType.getId();
     }
 
+    /**
+     * @return 账户id
+     */
     public UUID getAccountId() {
         return mAccount.getId();
     }
 
+    /**
+     * @return 账户图id
+     */
     @Bindable
     public int getAccountImg() {
         return mAccount.getImageId();
     }
 
+    /**
+     * @return 账户背景色值
+     */
     @Bindable
     public int getAccountColor() {
         return mAccount.getColor();
     }
 
+    /**
+     * @return 账单收支
+     */
     @Bindable
     public String getBalance() {
         return mBill.getBalance().toString();
     }
 
+    /**
+     * @return 账单日期
+     */
     @Bindable
     public DateTime getDate() {
         return mBill.getDate();
     }
 
+    /**
+     * @param date 设置账单日期
+     */
     public void setDate(DateTime date) {
         mBill.setDate(date);
     }
 
+    /**
+     * @return 账单备注
+     */
     public String getRemark() {
         return mBill.getRemark();
     }
@@ -143,6 +185,9 @@ public class BillEditViewModel extends BaseObservable {
         return true;
     }
 
+    /**
+     * @return true为支出类型
+     */
     public boolean getExpense() {
         return mType.getExpense();
     }
