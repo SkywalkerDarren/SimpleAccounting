@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <mStats
+    <item
         android:state_enabled="true"
         android:state_pressed="true">
         <objectAnimator
@@ -8,12 +8,12 @@
             android:propertyName="translationZ"
             android:valueTo="4dp"
             android:valueType="floatType" />
-    </mStats>
-    <mStats>
+    </item>
+    <item>
         <objectAnimator
             android:duration="@android:integer/config_shortAnimTime"
             android:propertyName="translationZ"
             android:valueTo="0dp"
             android:valueType="floatType" />
-    </mStats>
+    </item>
 </selector>

@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <mStats
+    <item
         android:id="@+id/del"
         android:icon="@drawable/ic_del_menu"
         android:title="@string/del_bill"
