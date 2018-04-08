@@ -50,8 +50,11 @@ public class StatsLab {
         }
     }
 
-    private StatsCursorWrapper queryStats(String[] cols, String where, String[] args,
-                                          String group, String order) {
+    /**
+     * bill type联表查询
+     */
+    private StatsCursorWrapper queryBillTypeStats(String[] cols, String where, String[] args,
+                                                  String group, String order) {
         return new StatsCursorWrapper(mDatabase
                 .query(DbSchema.BillTable.NAME + ", " + DbSchema.TypeTable.NAME,
                         cols,
@@ -62,6 +65,22 @@ public class StatsLab {
                         null,
                         order));
     }
+
+//    /**
+//     * bill account联表查询
+//     */
+//    private StatsCursorWrapper queryBillAccountStats(String[] cols, String where, String[] args,
+//                                                  String group, String order) {
+//        return new StatsCursorWrapper(mDatabase
+//                .query(DbSchema.BillTable.NAME + ", " + DbSchema.AccountTable .NAME,
+//                        cols,
+//                        where + " and " +
+//                                DbSchema.BillTable.Cols.TYPE_ID + " == " + DbSchema.AccountTable.Cols.UUID,
+//                        args,
+//                        group,
+//                        null,
+//                        order));
+//    }
 
     /**
      * 年度统计
@@ -132,6 +151,32 @@ public class StatsLab {
         return typeStats;
     }
 
+//    /**
+//     * 一段时间内的一个账户的收支统计
+//     */
+//    private StatsCursorWrapper getAccountCursor(UUID accountId, DateTime start, DateTime end) {
+//        return queryBillAccountStats(
+//                "sum(" + DbSchema.BillTable.Cols.
+//        );
+//    }
+
+//    /**
+//     * 获取一年内一个账户的收支统计信息
+//     *
+//     * @param accountId 账户id
+//     * @return 统计信息
+//     */
+//    public List<AccountStats> getAccountStats(UUID accountId, int year) {
+//        Account account = BillLab.getInstance(mContext).getsBills()
+//        sStatsLab.getStats()
+//        List<AccountStats> stats = new ArrayList<>();
+//        final int month = 12;
+//        for (int m = 0; m < month; m++) {
+//
+//        }
+//        return
+//    }
+
     /**
      * 一段时间的账单结算统计
      *
@@ -172,7 +217,7 @@ public class StatsLab {
      */
     @NonNull
     private StatsCursorWrapper getBillsInfoCursor(DateTime start, DateTime end, String s) {
-        return queryStats(
+        return queryBillTypeStats(
                 new String[]{"sum(" + DbSchema.BillTable.Cols.BALANCE + ")"},
                 DbSchema.BillTable.Cols.DATE + " BETWEEN ? AND ? and " +
                         DbSchema.TypeTable.Cols.IS_EXPENSE + " == ?",
@@ -192,7 +237,7 @@ public class StatsLab {
      */
     @NonNull
     private StatsCursorWrapper getTypesInfoCursor(DateTime start, DateTime end, String s) {
-        return queryStats(
+        return queryBillTypeStats(
                 new String[]{DbSchema.TypeTable.Cols.NAME, "sum(" + DbSchema.BillTable.Cols.BALANCE + ")"},
                 DbSchema.BillTable.Cols.DATE + " BETWEEN ? AND ? and " +
                         DbSchema.TypeTable.Cols.IS_EXPENSE + " == ?",
@@ -248,6 +293,12 @@ public class StatsLab {
 
         public BigDecimal getSum() {
             return sum;
+        }
+    }
+
+    public class AccountStats extends Stats {
+        AccountStats(BigDecimal income, BigDecimal expense) {
+            super(income, expense);
         }
     }
 }

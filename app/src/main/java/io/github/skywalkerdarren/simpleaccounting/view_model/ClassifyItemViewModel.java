@@ -1,8 +1,6 @@
 package io.github.skywalkerdarren.simpleaccounting.view_model;
 
 import android.databinding.BaseObservable;
-import android.databinding.BindingAdapter;
-import android.widget.ImageView;
 
 import java.math.BigDecimal;
 
@@ -22,14 +20,6 @@ public class ClassifyItemViewModel extends BaseObservable {
     public ClassifyItemViewModel(StatsLab.TypeStats stats, BigDecimal sum) {
         mStats = stats;
         mSum = sum;
-    }
-
-    /**
-     * 设置图片
-     */
-    @BindingAdapter("src")
-    public static void setImg(ImageView view, int res) {
-        view.setImageResource(res);
     }
 
     /**

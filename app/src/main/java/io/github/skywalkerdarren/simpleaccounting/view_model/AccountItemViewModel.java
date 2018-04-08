@@ -1,9 +1,6 @@
 package io.github.skywalkerdarren.simpleaccounting.view_model;
 
 import android.databinding.BaseObservable;
-import android.databinding.BindingAdapter;
-import android.support.v7.widget.CardView;
-import android.widget.ImageView;
 
 import io.github.skywalkerdarren.simpleaccounting.model.Account;
 
@@ -19,24 +16,6 @@ public class AccountItemViewModel extends BaseObservable {
 
     public AccountItemViewModel(Account account) {
         mAccount = account;
-    }
-
-    /**
-     * @param view 账户图片
-     * @param res  资源id
-     */
-    @BindingAdapter("src")
-    public static void setImg(ImageView view, int res) {
-        view.setImageResource(res);
-    }
-
-    /**
-     * @param view  账户图片背景色
-     * @param color 颜色值
-     */
-    @BindingAdapter("cardBackgroundColor")
-    public static void setColor(CardView view, int color) {
-        view.setCardBackgroundColor(color);
     }
 
     /**

@@ -4,8 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.content.Context;
 import android.databinding.BaseObservable;
-import android.databinding.BindingAdapter;
-import android.widget.ImageView;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillEditBinding;
@@ -27,14 +25,6 @@ public class TypeItemViewModel extends BaseObservable {
         mType = type;
         mBinding = binding;
         mContext = context;
-    }
-
-    /**
-     * 通过id设置图片
-     */
-    @BindingAdapter("src")
-    public static void setImg(ImageView view, int res) {
-        view.setImageResource(res);
     }
 
     /**

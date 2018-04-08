@@ -10,7 +10,6 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.BillInfo;
@@ -35,22 +34,6 @@ public class BillItemViewModel extends BaseObservable {
     public BillItemViewModel(BillInfo billinfo, Activity activity) {
         mActivity = activity;
         mBillInfo = billinfo;
-    }
-
-    /**
-     * 设置图片
-     */
-    @BindingAdapter("src")
-    public static void setTypeImg(ImageView view, int res) {
-        view.setImageResource(res);
-    }
-
-    /**
-     * 设置账单收支颜色
-     */
-    @BindingAdapter("android:textColor")
-    public static void setBalanceColor(TextView view, int color) {
-        view.setTextColor(color);
     }
 
     /**

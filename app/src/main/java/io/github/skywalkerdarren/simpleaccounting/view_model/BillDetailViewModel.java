@@ -3,12 +3,9 @@ package io.github.skywalkerdarren.simpleaccounting.view_model;
 import android.app.Activity;
 import android.content.Intent;
 import android.databinding.BaseObservable;
-import android.databinding.BindingAdapter;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.Account;
@@ -39,22 +36,6 @@ public class BillDetailViewModel extends BaseObservable {
     }
 
     /**
-     * 通过id设置图片
-     */
-    @BindingAdapter("android:src")
-    public static void setTypeImage(ImageView view, int res) {
-        view.setImageResource(res);
-    }
-
-    /**
-     * 通过色值设置颜色
-     */
-    @BindingAdapter("android:textColor")
-    public static void setBalanceColor(TextView tv, int color) {
-        tv.setTextColor(color);
-    }
-
-    /**
      * @return 类型图id
      */
     @DrawableRes
@@ -73,7 +54,7 @@ public class BillDetailViewModel extends BaseObservable {
      * @return 账单收支
      */
     public String getBalance() {
-        return mBill.getBalance().toString();
+        return mBill.getBalance().abs().toString();
     }
 
     /**

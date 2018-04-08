@@ -42,7 +42,7 @@
                 android:layout_margin="10dp"
                 android:contentDescription="@string/type_image"
                 android:onClick="@{() -> type.click()}"
-                app:src="@{type.res}"
+                android:src="@{type.res}"
                 app:srcCompat="@drawable/type_image_daily_necessities" />
 
         </android.support.v7.widget.CardView>

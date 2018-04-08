@@ -37,7 +37,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:src="@{classify.img}"
+                android:src="@{classify.img}"
                 app:srcCompat="@drawable/type_image_entertainment" />
 
             <TextView

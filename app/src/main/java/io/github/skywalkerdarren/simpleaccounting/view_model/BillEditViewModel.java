@@ -3,10 +3,7 @@ package io.github.skywalkerdarren.simpleaccounting.view_model;
 import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.databinding.BindingAdapter;
-import android.support.v7.widget.CardView;
 import android.text.TextUtils;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.joda.time.DateTime;
@@ -34,22 +31,6 @@ public class BillEditViewModel extends BaseObservable {
     public BillEditViewModel(Bill bill, Context context) {
         mBill = bill;
         mContext = context;
-    }
-
-    /**
-     * 通过id设置图片
-     */
-    @BindingAdapter("android:src")
-    public static void setImg(ImageView view, int res) {
-        view.setImageResource(res);
-    }
-
-    /**
-     * 通过色值设置颜色
-     */
-    @BindingAdapter("cardBackgroundColor")
-    public static void setColor(CardView view, int res) {
-        view.setCardBackgroundColor(res);
     }
 
     /**
@@ -153,13 +134,10 @@ public class BillEditViewModel extends BaseObservable {
         }
         try {
             BigDecimal r = new BigDecimal(balance);
+            r = mType.getExpense() ? r.negate() : r;
             mBill.setBalance(r);
             // 设定账户
-            if (mType.getExpense()) {
-                mAccount.minusBalance(r);
-            } else {
-                mAccount.plusBalance(r);
-            }
+            mAccount.plusBalance(r);
         } catch (Exception e) {
             Toast.makeText(mContext, "表达式错误", Toast.LENGTH_SHORT).show();
             return false;
