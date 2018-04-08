@@ -93,12 +93,12 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
     /**
      * 更新数据
      */
-    private void updateLineDataSets(List<StatsLab.Stats> statsList, boolean showIncome, boolean showExpense, boolean showSum) {
+    private void updateLineDataSets(List<StatsLab.BillStats> statsList, boolean showIncome, boolean showExpense, boolean showSum) {
         List<Entry> income = new ArrayList<>();
         List<Entry> expense = new ArrayList<>();
         List<Entry> sum = new ArrayList<>();
         for (int i = 0; i < statsList.size(); i++) {
-            StatsLab.Stats stats = statsList.get(i);
+            StatsLab.BillStats stats = statsList.get(i);
             expense.add(new Entry(i, stats.getExpense().floatValue()));
             income.add(new Entry(i, stats.getIncome().floatValue()));
             sum.add(new Entry(i, stats.getSum().floatValue()));
@@ -127,7 +127,7 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
      */
     @Override
     public void updateUI() {
-        List<StatsLab.Stats> statsList = mViewModel.getStats();
+        List<StatsLab.BillStats> statsList = mViewModel.getStats();
         mStatsAdapter.setNewData(statsList);
         mStatsAdapter.notifyDataSetChanged();
         updateLineDataSets(statsList, true, true, true);

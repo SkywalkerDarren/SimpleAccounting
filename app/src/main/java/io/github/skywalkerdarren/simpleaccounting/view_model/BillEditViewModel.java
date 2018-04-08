@@ -134,9 +134,9 @@ public class BillEditViewModel extends BaseObservable {
         }
         try {
             BigDecimal r = new BigDecimal(balance);
-            r = mType.getExpense() ? r.negate() : r;
             mBill.setBalance(r);
             // 设定账户
+            r = mType.getExpense() ? r.negate() : r;
             mAccount.plusBalance(r);
         } catch (Exception e) {
             Toast.makeText(mContext, "表达式错误", Toast.LENGTH_SHORT).show();

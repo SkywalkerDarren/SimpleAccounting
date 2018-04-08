@@ -54,7 +54,7 @@ public class BillDetailViewModel extends BaseObservable {
      * @return 账单收支
      */
     public String getBalance() {
-        return mBill.getBalance().abs().toString();
+        return mBill.getBalance().toString();
     }
 
     /**

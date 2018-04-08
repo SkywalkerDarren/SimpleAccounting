@@ -56,7 +56,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:transitionName="type_image_view"
-                        app:src="@{bill.typeRes}"
+                        android:src="@{bill.typeRes}"
                         app:srcCompat="@drawable/type_image_diet" />
                 </FrameLayout>
 

@@ -2,6 +2,7 @@ package io.github.skywalkerdarren.simpleaccounting.model;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
@@ -10,6 +11,7 @@ import org.joda.time.DateTime;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author darren
@@ -51,36 +53,25 @@ public class StatsLab {
     }
 
     /**
-     * bill type联表查询
+     * 三表联表查询
      */
-    private StatsCursorWrapper queryBillTypeStats(String[] cols, String where, String[] args,
-                                                  String group, String order) {
-        return new StatsCursorWrapper(mDatabase
-                .query(DbSchema.BillTable.NAME + ", " + DbSchema.TypeTable.NAME,
+    private CursorWrapper queryStats(String[] cols, String where, String[] args,
+                                     String group, String order) {
+        return new CursorWrapper(mDatabase
+                .query(DbSchema.BillTable.TABLE_NAME + " inner join " +
+                                DbSchema.TypeTable.TABLE_NAME + " inner join " +
+                                DbSchema.AccountTable.TABLE_NAME + " on " +
+                                DbSchema.BillTable.Cols.ACCOUNT_ID + " = " +
+                                DbSchema.AccountTable.Cols.UUID + " and " +
+                                DbSchema.BillTable.Cols.TYPE_ID + " = " +
+                                DbSchema.TypeTable.Cols.UUID,
                         cols,
-                        where + " and " +
-                                DbSchema.BillTable.Cols.TYPE_ID + " == " + DbSchema.TypeTable.Cols.UUID,
+                        where,
                         args,
                         group,
                         null,
                         order));
     }
-
-//    /**
-//     * bill account联表查询
-//     */
-//    private StatsCursorWrapper queryBillAccountStats(String[] cols, String where, String[] args,
-//                                                  String group, String order) {
-//        return new StatsCursorWrapper(mDatabase
-//                .query(DbSchema.BillTable.NAME + ", " + DbSchema.AccountTable .NAME,
-//                        cols,
-//                        where + " and " +
-//                                DbSchema.BillTable.Cols.TYPE_ID + " == " + DbSchema.AccountTable.Cols.UUID,
-//                        args,
-//                        group,
-//                        null,
-//                        order));
-//    }
 
     /**
      * 年度统计
@@ -88,8 +79,8 @@ public class StatsLab {
      * @param year 年份
      * @return 统计列表
      */
-    public List<Stats> getAnnualStats(int year) {
-        List<Stats> statsList = new ArrayList<>(12);
+    public List<BillStats> getAnnualStats(int year) {
+        List<BillStats> statsList = new ArrayList<>(12);
         final int month = 12;
         for (int i = 1; i <= month; i++) {
             DateTime start = new DateTime(year, i, 1, 0, 0);
@@ -107,8 +98,8 @@ public class StatsLab {
      * @param month 月份
      * @return 统计列表
      */
-    public List<Stats> getMonthStats(int year, int month) {
-        List<Stats> statsList = new ArrayList<>(12);
+    public List<BillStats> getMonthStats(int year, int month) {
+        List<BillStats> statsList = new ArrayList<>(12);
         DateTime dateTime = new DateTime(year, month, 1, 0, 0);
         int days = dateTime.plusMonths(1).minus(1L).getDayOfMonth();
         for (int i = 1; i <= days; i++) {
@@ -128,20 +119,17 @@ public class StatsLab {
      * @return 统计数据
      */
     public List<TypeStats> getTypeStats(DateTime start, DateTime end, boolean isExpense) {
-        List<Type> types = TypeLab.getInstance(mContext).getTypes(isExpense);
+        TypeLab lab = TypeLab.getInstance(mContext);
         List<TypeStats> typeStats = new ArrayList<>(10);
-        try (StatsCursorWrapper cursor = getTypesInfoCursor(start, end, isExpense ? "1" : "0")) {
+        try (CursorWrapper cursor = getTypesInfoCursor(start, end)) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
-                String name = cursor.getString(0);
-                int i = 0;
-                for (; i < types.size(); i++) {
-                    if (name.equals(types.get(i).getName())) {
-                        break;
-                    }
+                // 判断收支类型
+                if ((isExpense ? "1" : "0").equals(cursor.getString(1))) {
+                    UUID typeId = UUID.fromString(cursor.getString(0));
+                    BigDecimal sum = new BigDecimal(cursor.getString(2));
+                    typeStats.add(new TypeStats(lab.getType(typeId), sum));
                 }
-                typeStats.add(new TypeStats(types.get(i),
-                        new BigDecimal(cursor.getString(1))));
                 cursor.moveToNext();
             }
         }
@@ -151,31 +139,46 @@ public class StatsLab {
         return typeStats;
     }
 
-//    /**
-//     * 一段时间内的一个账户的收支统计
-//     */
-//    private StatsCursorWrapper getAccountCursor(UUID accountId, DateTime start, DateTime end) {
-//        return queryBillAccountStats(
-//                "sum(" + DbSchema.BillTable.Cols.
-//        );
-//    }
+    /**
+     * 获取一年内一个账户的收支统计信息
+     *
+     * @param accountId 账户id
+     * @return 统计信息
+     */
+    public List<AccountStats> getAccountStats(UUID accountId, int year) {
+        List<AccountStats> stats = new ArrayList<>();
+        final int month = 12;
+        DateTime dateTime = new DateTime(year, 1, 1, 0, 0, 0);
+        for (int m = 0; m < month; m++) {
+            dateTime = dateTime.plusMonths(1);
+            BigDecimal income = BigDecimal.ZERO;
+            BigDecimal expense = BigDecimal.ZERO;
+            try (CursorWrapper cursor = getAccountCursor(dateTime, dateTime.plusMonths(1), accountId)) {
+                cursor.moveToFirst();
+                while (!cursor.isAfterLast()) {
+                    if ("1".equals(cursor.getString(0))) {
+                        expense = new BigDecimal(cursor.getString(1));
+                    } else {
+                        income = new BigDecimal(cursor.getString(1));
+                    }
+                    cursor.moveToNext();
+                }
+            }
+            stats.add(new AccountStats(income, expense));
+        }
+        return stats;
+    }
 
-//    /**
-//     * 获取一年内一个账户的收支统计信息
-//     *
-//     * @param accountId 账户id
-//     * @return 统计信息
-//     */
-//    public List<AccountStats> getAccountStats(UUID accountId, int year) {
-//        Account account = BillLab.getInstance(mContext).getsBills()
-//        sStatsLab.getStats()
-//        List<AccountStats> stats = new ArrayList<>();
-//        final int month = 12;
-//        for (int m = 0; m < month; m++) {
-//
-//        }
-//        return
-//    }
+    private CursorWrapper getAccountCursor(DateTime start, DateTime end, UUID accountId) {
+        return new CursorWrapper(queryStats(
+                new String[]{DbSchema.TypeTable.Cols.IS_EXPENSE, "sum(" + DbSchema.BillTable.Cols.BALANCE + ")"},
+                DbSchema.BillTable.Cols.DATE + " between ? and ? and " +
+                        DbSchema.AccountTable.Cols.UUID + " = ?",
+                new String[]{start.getMillis() + "", end.getMillis() + "", accountId.toString()},
+                DbSchema.TypeTable.Cols.IS_EXPENSE,
+                null
+        ));
+    }
 
     /**
      * 一段时间的账单结算统计
@@ -184,45 +187,37 @@ public class StatsLab {
      * @param end   结束时间
      * @return 包括支出，收入，盈余的统计结果
      */
-    public Stats getStats(DateTime start, DateTime end) {
-        final String isExpense = "1";
-        final String isIncome = "0";
-        String income = getStats(start, end, isIncome);
-        String expense = getStats(start, end, isExpense);
-
-        return new Stats(new BigDecimal(income), new BigDecimal(expense));
-    }
-
-    @NonNull
-    private String getStats(DateTime start, DateTime end, String isExpense) {
-        String balance;
-        try (StatsCursorWrapper cursor = getBillsInfoCursor(start, end, isExpense)) {
+    public BillStats getStats(DateTime start, DateTime end) {
+        BigDecimal income = BigDecimal.ZERO;
+        BigDecimal expense = BigDecimal.ZERO;
+        try (CursorWrapper cursor = getBillsInfoCursor(start, end)) {
             cursor.moveToFirst();
-            String num = cursor.getString(0);
-            if (num == null) {
-                num = "0";
+            while (!cursor.isAfterLast()) {
+                if ("1".equals(cursor.getString(0))) {
+                    income = new BigDecimal(cursor.getString(1));
+                } else {
+                    expense = new BigDecimal(cursor.getString(1));
+                }
+                cursor.moveToNext();
             }
-            balance = num;
         }
-        return balance;
+        return new BillStats(income, expense);
     }
 
     /**
-     * 统计收入或支出总额的游标
+     * 统计收支总额的游标
      *
      * @param start 开始日期
      * @param end   结束日期
-     * @param s     "1"是支出类型 "0"是收入类型
      * @return 游标
      */
     @NonNull
-    private StatsCursorWrapper getBillsInfoCursor(DateTime start, DateTime end, String s) {
-        return queryBillTypeStats(
-                new String[]{"sum(" + DbSchema.BillTable.Cols.BALANCE + ")"},
-                DbSchema.BillTable.Cols.DATE + " BETWEEN ? AND ? and " +
-                        DbSchema.TypeTable.Cols.IS_EXPENSE + " == ?",
-                new String[]{String.valueOf(start.getMillis()), String.valueOf(end.getMillis()), s},
-                null,
+    private CursorWrapper getBillsInfoCursor(DateTime start, DateTime end) {
+        return queryStats(
+                new String[]{DbSchema.TypeTable.Cols.IS_EXPENSE, "sum(" + DbSchema.BillTable.Cols.BALANCE + ")"},
+                DbSchema.BillTable.Cols.DATE + " BETWEEN ? AND ?",
+                new String[]{String.valueOf(start.getMillis()), String.valueOf(end.getMillis())},
+                DbSchema.TypeTable.Cols.IS_EXPENSE,
                 DbSchema.BillTable.Cols.DATE + " DESC"
         );
     }
@@ -232,16 +227,15 @@ public class StatsLab {
      *
      * @param start 开始日期
      * @param end   结束日期
-     * @param s     "1"是支出类型 "0"是收入类型
      * @return 游标
      */
     @NonNull
-    private StatsCursorWrapper getTypesInfoCursor(DateTime start, DateTime end, String s) {
-        return queryBillTypeStats(
-                new String[]{DbSchema.TypeTable.Cols.NAME, "sum(" + DbSchema.BillTable.Cols.BALANCE + ")"},
-                DbSchema.BillTable.Cols.DATE + " BETWEEN ? AND ? and " +
-                        DbSchema.TypeTable.Cols.IS_EXPENSE + " == ?",
-                new String[]{String.valueOf(start.getMillis()), String.valueOf(end.getMillis()), s},
+    private CursorWrapper getTypesInfoCursor(DateTime start, DateTime end) {
+        return queryStats(
+                new String[]{DbSchema.TypeTable.Cols.UUID, DbSchema.TypeTable.Cols.IS_EXPENSE,
+                        "sum(" + DbSchema.BillTable.Cols.BALANCE + ")"},
+                DbSchema.BillTable.Cols.DATE + " BETWEEN ? AND ?",
+                new String[]{String.valueOf(start.getMillis()), String.valueOf(end.getMillis())},
                 DbSchema.TypeTable.Cols.NAME,
                 "sum(" + DbSchema.BillTable.Cols.BALANCE + ") DESC"
         );
@@ -250,29 +244,42 @@ public class StatsLab {
     /**
      * 类型统计类
      */
-    public class TypeStats {
+    public class TypeStats extends Stats {
         private Type mType;
-        private BigDecimal sum;
 
-        TypeStats(Type type, BigDecimal sum) {
+        TypeStats(Type type, BigDecimal balance) {
+            super(balance);
             mType = type;
-            this.sum = sum;
         }
 
         public Type getType() {
             return mType;
         }
 
-        public BigDecimal getSum() {
-            return sum;
+        @Deprecated
+        @Override
+        public BigDecimal getIncome() {
+            return getSum();
+        }
+
+        @Deprecated
+        @Override
+        public BigDecimal getExpense() {
+            return getSum();
         }
     }
 
     /**
-     * 统计结果类
+     * 账单统计结果类
      */
-    public class Stats {
+    public class BillStats extends Stats {
+        BillStats(BigDecimal income, BigDecimal expense) {
+            super(income, expense);
+        }
+    }
 
+
+    public abstract class Stats {
         private BigDecimal income;
         private BigDecimal expense;
         private BigDecimal sum;
@@ -281,6 +288,12 @@ public class StatsLab {
             this.income = income;
             this.expense = expense;
             sum = income.subtract(expense);
+        }
+
+        Stats(BigDecimal sum) {
+            income = BigDecimal.ZERO;
+            expense = BigDecimal.ZERO;
+            this.sum = sum;
         }
 
         public BigDecimal getIncome() {
@@ -296,6 +309,9 @@ public class StatsLab {
         }
     }
 
+    /**
+     * 账户账单统计
+     */
     public class AccountStats extends Stats {
         AccountStats(BigDecimal income, BigDecimal expense) {
             super(income, expense);

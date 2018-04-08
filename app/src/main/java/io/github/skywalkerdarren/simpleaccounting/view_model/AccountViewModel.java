@@ -17,7 +17,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
 
 public class AccountViewModel extends BaseObservable {
     private AccountLab mAccountLab;
-    private StatsLab.Stats mStats;
+    private StatsLab.BillStats mStats;
 
     /**
      * 初始化lab 和列表stats

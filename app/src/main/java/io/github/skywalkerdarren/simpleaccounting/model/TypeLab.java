@@ -104,13 +104,13 @@ public class TypeLab {
                 .setColorId(Color.rgb(0xcd, 0x53, 0x3b)));
 
         for (Type type : types) {
-            sqLiteDatabase.insert(DbSchema.TypeTable.NAME, null,
+            sqLiteDatabase.insert(DbSchema.TypeTable.TABLE_NAME, null,
                     getContentValues(type));
         }
     }
 
     private TypeCursorWrapper queryTypes(String where, String[] args) {
-        @SuppressLint("Recycle") Cursor cursor = mDatabase.query(DbSchema.TypeTable.NAME,
+        @SuppressLint("Recycle") Cursor cursor = mDatabase.query(DbSchema.TypeTable.TABLE_NAME,
                 null,
                 where,
                 args,

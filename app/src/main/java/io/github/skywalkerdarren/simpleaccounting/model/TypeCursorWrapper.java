@@ -20,12 +20,10 @@ class TypeCursorWrapper extends CursorWrapper {
 
     Type getType() {
         UUID id = UUID.fromString(getString(getColumnIndex(Cols.UUID)));
-        Type type = new Type(id);
-        type.setName(getString(getColumnIndex(Cols.NAME)));
-        type.setResId(getInt(getColumnIndex(Cols.RES_ID)));
-        type.setColorId(getInt(getColumnIndex(Cols.COLOR)));
-        type.setExpense(getInt(getColumnIndex(Cols.IS_EXPENSE)) == 1);
-
-        return type;
+        return new Type(id)
+                .setName(getString(getColumnIndex(Cols.NAME)))
+                .setResId(getInt(getColumnIndex(Cols.RES_ID)))
+                .setColorId(getInt(getColumnIndex(Cols.COLOR)))
+                .setExpense(getInt(getColumnIndex(Cols.IS_EXPENSE)) == 1);
     }
 }

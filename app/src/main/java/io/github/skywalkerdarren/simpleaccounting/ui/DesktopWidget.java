@@ -46,7 +46,7 @@ public class DesktopWidget extends AppWidgetProvider {
         Intent intent = BillEditActivity.newIntent(context, new Bill(), 0, 0);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, REQUEST_BILL,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        StatsLab.Stats stats = StatsLab.getInstance(context)
+        StatsLab.BillStats stats = StatsLab.getInstance(context)
                 .getAnnualStats(DateTime.now().getYear())
                 .get(DateTime.now().getMonthOfYear() - 1);
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_bill);

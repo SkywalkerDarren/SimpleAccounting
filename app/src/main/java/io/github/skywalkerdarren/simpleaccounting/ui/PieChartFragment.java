@@ -95,7 +95,7 @@ public class PieChartFragment extends BaseFragment {
         description.setEnabled(false);
         mPieChart.setDescription(description);
 
-        StatsLab.Stats stats = StatsLab.getInstance(getContext())
+        StatsLab.BillStats stats = StatsLab.getInstance(getContext())
                 .getStats(mStartDateTime, mEndDateTime);
         String s = mIsExpense ? stats.getExpense().toString() : stats.getIncome().toString();
         mPieChart.setCenterText(generateCenterText(s));

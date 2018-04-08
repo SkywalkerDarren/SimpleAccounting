@@ -25,7 +25,7 @@ public class JournalViewModel extends BaseObservable {
     private BigDecimal mExpense;
     private BigDecimal mSum;
     private int mYear;
-    private List<StatsLab.Stats> mStats;
+    private List<StatsLab.BillStats> mStats;
 
     public JournalViewModel(Context context) {
         mContext = context;
@@ -36,7 +36,7 @@ public class JournalViewModel extends BaseObservable {
         mSum = BigDecimal.ZERO;
         // 初始化求和
         for (int i = 0; i < mStats.size(); i++) {
-            StatsLab.Stats stats = mStats.get(i);
+            StatsLab.BillStats stats = mStats.get(i);
             mExpense = mExpense.add(stats.getExpense());
             mIncome = mIncome.add(stats.getIncome());
             mSum = mSum.add(stats.getSum());
@@ -46,7 +46,7 @@ public class JournalViewModel extends BaseObservable {
     /**
      * @return 统计列表
      */
-    public List<StatsLab.Stats> getStats() {
+    public List<StatsLab.BillStats> getStats() {
         return mStats;
     }
 

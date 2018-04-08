@@ -50,7 +50,7 @@ public class AccountLab {
     }
 
     private AccountCursorWrapper queryAccounts(String where, String[] args) {
-        @SuppressLint("Recycle") Cursor cursor = mDatabase.query(DbSchema.AccountTable.NAME,
+        @SuppressLint("Recycle") Cursor cursor = mDatabase.query(DbSchema.AccountTable.TABLE_NAME,
                 null,
                 where,
                 args,
@@ -101,19 +101,19 @@ public class AccountLab {
                 .setColorId(R.color.lightgreen500)
                 .setBalance(BigDecimal.ZERO));
         for (Account account : accounts) {
-            sqLiteDatabase.insert(DbSchema.AccountTable.NAME, null,
+            sqLiteDatabase.insert(DbSchema.AccountTable.TABLE_NAME, null,
                     getContentValues(account));
         }
     }
 
     public void updateAccount(Account account) {
         ContentValues values = getContentValues(account);
-        mDatabase.update(DbSchema.AccountTable.NAME, values, Cols.UUID + " = ?",
+        mDatabase.update(DbSchema.AccountTable.TABLE_NAME, values, Cols.UUID + " = ?",
                 new String[]{account.getId().toString()});
     }
 
     public void delAccount(UUID uuid) {
-        mDatabase.delete(DbSchema.AccountTable.NAME, Cols.UUID + " = ?",
+        mDatabase.delete(DbSchema.AccountTable.TABLE_NAME, Cols.UUID + " = ?",
                 new String[]{uuid.toString()});
     }
 }

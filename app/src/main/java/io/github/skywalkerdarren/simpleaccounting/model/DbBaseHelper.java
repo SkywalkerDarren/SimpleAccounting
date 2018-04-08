@@ -39,8 +39,9 @@ class DbBaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         // 创建账单表
         sqLiteDatabase.execSQL(
-                "create table " + DbSchema.BillTable.NAME + "(" +
-                        " _id integer primary key autoincrement, " +
+                "create table " + DbSchema.BillTable.TABLE_NAME + "( " +
+                        DbSchema.BillTable.TABLE_NAME +
+                        "_id integer primary key autoincrement, " +
                         DbSchema.BillTable.Cols.UUID + ", " +
                         DbSchema.BillTable.Cols.NAME + ", " +
                         DbSchema.BillTable.Cols.BALANCE + ", " +
@@ -53,8 +54,9 @@ class DbBaseHelper extends SQLiteOpenHelper {
 
         // 创建类型表
         sqLiteDatabase.execSQL(
-                "create table " + DbSchema.TypeTable.NAME + "(" +
-                        " _id integer primary key autoincrement, " +
+                "create table " + DbSchema.TypeTable.TABLE_NAME + "( " +
+                        DbSchema.TypeTable.TABLE_NAME +
+                        "_id integer primary key autoincrement, " +
                         DbSchema.TypeTable.Cols.UUID + ", " +
                         DbSchema.TypeTable.Cols.NAME + ", " +
                         DbSchema.TypeTable.Cols.IS_EXPENSE + " INT , " +
@@ -66,8 +68,9 @@ class DbBaseHelper extends SQLiteOpenHelper {
 
         // 创建账户表
         sqLiteDatabase.execSQL(
-                "create table " + DbSchema.AccountTable.NAME + "(" +
-                        " _id integer primary key autoincrement, " +
+                "create table " + DbSchema.AccountTable.TABLE_NAME + "( " +
+                        DbSchema.AccountTable.TABLE_NAME +
+                        "_id integer primary key autoincrement, " +
                         DbSchema.AccountTable.Cols.UUID + ", " +
                         DbSchema.AccountTable.Cols.NAME + ", " +
                         DbSchema.AccountTable.Cols.BALANCE + " , " +

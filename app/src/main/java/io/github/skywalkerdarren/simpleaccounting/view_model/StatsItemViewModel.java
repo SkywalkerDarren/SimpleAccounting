@@ -12,10 +12,10 @@ import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
  */
 
 public class StatsItemViewModel extends BaseObservable {
-    private StatsLab.Stats mStats;
+    private StatsLab.BillStats mStats;
     private int mMonth;
 
-    public StatsItemViewModel(StatsLab.Stats mStats, int month) {
+    public StatsItemViewModel(StatsLab.BillStats mStats, int month) {
         this.mStats = mStats;
         mMonth = month;
     }

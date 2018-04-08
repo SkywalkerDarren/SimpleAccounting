@@ -14,8 +14,8 @@ public class BillLabTest {
     @Test
     public void getMonthStats() throws Exception {
         Context appContext = InstrumentationRegistry.getTargetContext();
-        List<StatsLab.Stats> statsList = StatsLab.getInstance(appContext).getMonthStats(2018, 3);
-        for (StatsLab.Stats stats : statsList) {
+        List<StatsLab.BillStats> statsList = StatsLab.getInstance(appContext).getMonthStats(2018, 3);
+        for (StatsLab.BillStats stats : statsList) {
             System.out.println(stats.getSum().toString());
         }
     }

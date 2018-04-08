@@ -81,7 +81,7 @@ public class BillLab {
      */
     private BillCursorWrapper queryBills(String whereClause, String[] whereArgs) {
         @SuppressLint("Recycle") Cursor cursor = mDatabase.query(
-                BillTable.NAME,
+                BillTable.TABLE_NAME,
                 null,
                 whereClause,
                 whereArgs,
@@ -136,7 +136,7 @@ public class BillLab {
      */
     public void addBill(Bill bill) {
         ContentValues values = getContentValues(bill);
-        mDatabase.insert(BillTable.NAME, null, values);
+        mDatabase.insert(BillTable.TABLE_NAME, null, values);
     }
 
     /**
@@ -145,7 +145,7 @@ public class BillLab {
      * @param id 账单id
      */
     public void delBill(UUID id) {
-        mDatabase.delete(BillTable.NAME,
+        mDatabase.delete(BillTable.TABLE_NAME,
                 BillTable.Cols.UUID + " = ?",
                 new String[]{id.toString()});
     }
@@ -157,7 +157,7 @@ public class BillLab {
      */
     public void updateBill(Bill bill) {
         ContentValues values = getContentValues(bill);
-        mDatabase.update(BillTable.NAME, values, BillTable.Cols.UUID + " = ?",
+        mDatabase.update(BillTable.TABLE_NAME, values, BillTable.Cols.UUID + " = ?",
                 new String[]{bill.getId().toString()});
     }
 }
