@@ -1,7 +1,6 @@
 package io.github.skywalkerdarren.simpleaccounting.adapter;
 
 import android.animation.Animator;
-import android.content.Context;
 import android.support.annotation.Nullable;
 
 import java.util.List;
@@ -22,12 +21,10 @@ import io.github.skywalkerdarren.simpleaccounting.view_model.TypeItemViewModel;
 
 public class TypeAdapter extends BaseDataBindingAdapter<Type, ItemTypeBinding> {
     private FragmentBillEditBinding mBinding;
-    private Context mContext;
 
-    public TypeAdapter(@Nullable List<Type> data, FragmentBillEditBinding binding, Context context) {
+    public TypeAdapter(@Nullable List<Type> data, FragmentBillEditBinding binding) {
         super(R.layout.item_type, data);
         mBinding = binding;
-        mContext = context;
     }
 
     @Override

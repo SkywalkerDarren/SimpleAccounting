@@ -98,7 +98,7 @@ public class BillEditFragment extends BaseFragment {
         actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
 
         // 配置适配器
-        TypeAdapter adapter = new TypeAdapter(null, binding, getContext());
+        TypeAdapter adapter = new TypeAdapter(null, binding);
         adapter.openLoadAnimation(view14 -> {
                     Animator animator = AnimatorInflater.loadAnimator(getActivity(),
                             R.animator.type_item_appear);

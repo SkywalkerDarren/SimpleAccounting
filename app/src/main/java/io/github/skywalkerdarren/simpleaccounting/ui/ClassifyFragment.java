@@ -1,6 +1,9 @@
 package io.github.skywalkerdarren.simpleaccounting.ui;
 
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -12,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
@@ -41,6 +45,8 @@ public class ClassifyFragment extends BaseFragment {
     private static final int REQUEST_PERIOD = 0;
     private ViewPager mViewPager;
     private ClassifyAdapter mClassifyAdapter;
+    private ImageView mToIncomeImageView;
+    private ImageView mToExpenseImageView;
 
     ClassifyViewModel mViewModel;
 
@@ -59,6 +65,19 @@ public class ClassifyFragment extends BaseFragment {
         mViewModel.setExpense(true);
 
         mViewPager = binding.classifyViewPager;
+        mToIncomeImageView = binding.toIncomeImageView;
+        mToExpenseImageView = binding.toExpenseImageView;
+        mToIncomeImageView.setVisibility(View.VISIBLE);
+        mToExpenseImageView.setVisibility(View.VISIBLE);
+
+
+        mToIncomeImageView.setOnClickListener(view -> {
+            mViewPager.setCurrentItem(0);
+        });
+
+        mToExpenseImageView.setOnClickListener(view -> {
+            mViewPager.setCurrentItem(1);
+        });
 
         binding.backImageView.setOnClickListener(view -> {
             mViewModel.back();
@@ -76,6 +95,7 @@ public class ClassifyFragment extends BaseFragment {
         binding.classifyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mClassifyAdapter = new ClassifyAdapter(mViewModel.getStatsList());
+        mClassifyAdapter.setDuration(100);
         mClassifyAdapter.setEmptyView(emptyView());
         binding.classifyRecyclerView.setAdapter(mClassifyAdapter);
         binding.setClassify(mViewModel);
@@ -136,11 +156,9 @@ public class ClassifyFragment extends BaseFragment {
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
-                        mViewModel.setExpense(false);
                         setStatsData(false, mClassifyAdapter);
                         break;
                     case 1:
-                        mViewModel.setExpense(true);
                         setStatsData(true, mClassifyAdapter);
                         break;
                     default:
@@ -157,7 +175,23 @@ public class ClassifyFragment extends BaseFragment {
         mClassifyAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * @param toIncome true则转到收入页，当前为支出页
+     */
+    private void changeImageView(boolean toIncome) {
+        Animator disappear = AnimatorInflater.loadAnimator(getContext(), toIncome ? R.animator.to_left_disappear : R.animator.to_right_disappear);
+        Animator appear = AnimatorInflater.loadAnimator(getContext(), toIncome ? R.animator.to_left_appear : R.animator.to_right_appear);
+        disappear.setTarget(toIncome ? mToExpenseImageView : mToIncomeImageView);
+        appear.setTarget(toIncome ? mToIncomeImageView : mToExpenseImageView);
+
+        AnimatorSet set = new AnimatorSet();
+        set.playSequentially(disappear, appear);
+        set.start();
+    }
+
     private void setStatsData(boolean t, ClassifyAdapter adapter) {
+        changeImageView(t);
+        mViewModel.setExpense(t);
         List<StatsLab.TypeStats> list = mViewModel.getStatsList();
         adapter.setNewData(list);
         adapter.openLoadAnimation(t ?

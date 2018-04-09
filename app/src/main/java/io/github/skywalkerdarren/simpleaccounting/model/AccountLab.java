@@ -14,6 +14,8 @@ import java.util.UUID;
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.DbSchema.AccountTable.Cols;
 
+import static io.github.skywalkerdarren.simpleaccounting.model.DbSchema.AccountTable.TABLE_NAME;
+
 /**
  * @author darren
  * @date 2018/3/25
@@ -50,7 +52,7 @@ public class AccountLab {
     }
 
     private AccountCursorWrapper queryAccounts(String where, String[] args) {
-        @SuppressLint("Recycle") Cursor cursor = mDatabase.query(DbSchema.AccountTable.TABLE_NAME,
+        @SuppressLint("Recycle") Cursor cursor = mDatabase.query(TABLE_NAME,
                 null,
                 where,
                 args,
@@ -101,19 +103,65 @@ public class AccountLab {
                 .setColorId(R.color.lightgreen500)
                 .setBalance(BigDecimal.ZERO));
         for (Account account : accounts) {
-            sqLiteDatabase.insert(DbSchema.AccountTable.TABLE_NAME, null,
+            sqLiteDatabase.insert(TABLE_NAME, null,
                     getContentValues(account));
         }
     }
 
     public void updateAccount(Account account) {
         ContentValues values = getContentValues(account);
-        mDatabase.update(DbSchema.AccountTable.TABLE_NAME, values, Cols.UUID + " = ?",
+        mDatabase.update(TABLE_NAME, values, Cols.UUID + " = ?",
                 new String[]{account.getId().toString()});
     }
 
+    /**
+     * 删除账户及其账单
+     *
+     * @param uuid 账户id
+     */
     public void delAccount(UUID uuid) {
-        mDatabase.delete(DbSchema.AccountTable.TABLE_NAME, Cols.UUID + " = ?",
+        mDatabase.delete(TABLE_NAME,
+                Cols.UUID + " = ?",
                 new String[]{uuid.toString()});
+        mDatabase.delete(DbSchema.BillTable.TABLE_NAME,
+                DbSchema.BillTable.Cols.ACCOUNT_ID + " = ?",
+                new String[]{uuid.toString()});
+    }
+
+    /**
+     * 根据找到位置账户
+     *
+     * @param pos 位置
+     * @return 账户
+     */
+    private Account getAccount(int pos) {
+        pos++;
+        try (AccountCursorWrapper cursor = queryAccounts(TABLE_NAME + "_id = ?", new String[]{pos + ""})) {
+            cursor.moveToFirst();
+            if (!cursor.isAfterLast()) {
+                return cursor.getAccount();
+            }
+            return null;
+        }
+    }
+
+    /**
+     * 改变账户位置
+     *
+     * @param oldPos 老位置
+     * @param newPos 新位置
+     */
+    public void changePosition(int oldPos, int newPos) {
+        Account old = getAccount(oldPos);
+        Account fresh = getAccount(newPos);
+        // 送到位置0上
+        setAccountId(old, -1);
+        setAccountId(fresh, oldPos);
+        setAccountId(old, newPos);
+    }
+
+    private void setAccountId(Account old, int t) {
+        String s = t + 1 + "";
+        mDatabase.update(TABLE_NAME, getContentValues(old), TABLE_NAME + "_id = ?", new String[]{s});
     }
 }

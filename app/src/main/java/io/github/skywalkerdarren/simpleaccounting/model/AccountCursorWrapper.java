@@ -14,7 +14,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.DbSchema.AccountTable.Co
  */
 
 class AccountCursorWrapper extends CursorWrapper {
-    public AccountCursorWrapper(Cursor cursor) {
+    AccountCursorWrapper(Cursor cursor) {
         super(cursor);
     }
 

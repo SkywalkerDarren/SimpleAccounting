@@ -10,7 +10,7 @@ import io.github.skywalkerdarren.simpleaccounting.base.BaseMultiItemDataBindingA
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemListBillBinding;
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemListBillHeaderBinding;
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemListBillWithoutRemarkBinding;
-import io.github.skywalkerdarren.simpleaccounting.view_model.BillItemViewModel;
+import io.github.skywalkerdarren.simpleaccounting.view_model.BillInfoViewModel;
 
 /**
  * 账单适配器
@@ -63,7 +63,7 @@ public class BillAdapter extends BaseMultiItemDataBindingAdapter<BillInfo, ViewD
 
     @Override
     protected void convert(ViewDataBinding binding, BillInfo item) {
-        BillItemViewModel viewModel = new BillItemViewModel(item, mActivity);
+        BillInfoViewModel viewModel = new BillInfoViewModel(item, mActivity);
         if (binding instanceof ItemListBillBinding) {
             ((ItemListBillBinding) binding).setBill(viewModel);
             viewModel.setImagePair(((ItemListBillBinding) binding).typeImageView);

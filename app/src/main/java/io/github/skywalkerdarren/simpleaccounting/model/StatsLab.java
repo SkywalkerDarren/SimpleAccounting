@@ -1,6 +1,5 @@
 package io.github.skywalkerdarren.simpleaccounting.model;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
@@ -20,7 +19,6 @@ import java.util.UUID;
 
 public class StatsLab {
 
-    @SuppressLint("StaticFieldLeak")
     private static StatsLab sStatsLab;
     private Context mContext;
     private SQLiteDatabase mDatabase;
@@ -148,7 +146,8 @@ public class StatsLab {
     public List<AccountStats> getAccountStats(UUID accountId, int year) {
         List<AccountStats> stats = new ArrayList<>();
         final int month = 12;
-        DateTime dateTime = new DateTime(year, 1, 1, 0, 0, 0);
+        DateTime dateTime = new DateTime(year, 1, 1, 0,
+                0, 0);
         for (int m = 0; m < month; m++) {
             dateTime = dateTime.plusMonths(1);
             BigDecimal income = BigDecimal.ZERO;
@@ -171,7 +170,8 @@ public class StatsLab {
 
     private CursorWrapper getAccountCursor(DateTime start, DateTime end, UUID accountId) {
         return new CursorWrapper(queryStats(
-                new String[]{DbSchema.TypeTable.Cols.IS_EXPENSE, "sum(" + DbSchema.BillTable.Cols.BALANCE + ")"},
+                new String[]{DbSchema.TypeTable.Cols.IS_EXPENSE,
+                        "sum(" + DbSchema.BillTable.Cols.BALANCE + ")"},
                 DbSchema.BillTable.Cols.DATE + " between ? and ? and " +
                         DbSchema.AccountTable.Cols.UUID + " = ?",
                 new String[]{start.getMillis() + "", end.getMillis() + "", accountId.toString()},
@@ -193,7 +193,7 @@ public class StatsLab {
         try (CursorWrapper cursor = getBillsInfoCursor(start, end)) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
-                if ("1".equals(cursor.getString(0))) {
+                if ("0".equals(cursor.getString(0))) {
                     income = new BigDecimal(cursor.getString(1));
                 } else {
                     expense = new BigDecimal(cursor.getString(1));

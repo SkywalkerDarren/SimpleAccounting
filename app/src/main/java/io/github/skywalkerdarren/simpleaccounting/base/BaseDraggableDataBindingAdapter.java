@@ -6,18 +6,19 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseItemDraggableAdapter;
 
 import java.util.List;
 
 /**
  * @author darren
- * @date 2018/4/5
+ * @date 2018/4/9
  */
 
-public abstract class BaseDataBindingAdapter<T, Binding extends ViewDataBinding>
-        extends BaseQuickAdapter<T, BaseBindingViewHolder<Binding>> {
-    public BaseDataBindingAdapter(int layoutResId, @Nullable List<T> data) {
+public abstract class BaseDraggableDataBindingAdapter<T, Binding extends ViewDataBinding>
+        extends BaseItemDraggableAdapter<T, BaseBindingViewHolder<Binding>> {
+
+    public BaseDraggableDataBindingAdapter(int layoutResId, @Nullable List<T> data) {
         super(layoutResId, data);
     }
 
@@ -30,7 +31,6 @@ public abstract class BaseDataBindingAdapter<T, Binding extends ViewDataBinding>
     protected BaseBindingViewHolder<Binding> createBaseViewHolder(ViewGroup parent, int layoutResId) {
         Binding binding = DataBindingUtil.inflate(mLayoutInflater, layoutResId, parent, false);
         View view;
-
         if (binding == null) {
             view = getItemView(layoutResId, parent);
         } else {

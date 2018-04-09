@@ -46,6 +46,7 @@ public class PieChartFragment extends BaseFragment {
     private DateTime mEndDateTime;
     private PieChart mPieChart;
     private boolean mIsExpense;
+    private static final String TAG = "PieChartFragment";
 
     /**
      * Use this factory method to create a new instance of
@@ -91,6 +92,7 @@ public class PieChartFragment extends BaseFragment {
 
     @SuppressLint("ClickableViewAccessibility")
     private void configChartStyle() {
+        // 关闭描述
         Description description = new Description();
         description.setEnabled(false);
         mPieChart.setDescription(description);
@@ -109,6 +111,7 @@ public class PieChartFragment extends BaseFragment {
         // TODO: 2018/3/28 暂无法解决view pager与图表滑动的冲突
         //        mPieChart.setTouchEnabled(false);
 
+        // 关闭图注
         Legend legend = mPieChart.getLegend();
         legend.setEnabled(false);
     }

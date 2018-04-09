@@ -146,4 +146,18 @@ public class TypeLab {
         }
         return types;
     }
+
+    /**
+     * 删除类型，及其相关账单
+     *
+     * @param uuid 类型id
+     */
+    public void delType(UUID uuid) {
+        mDatabase.delete(DbSchema.TypeTable.TABLE_NAME,
+                Cols.UUID + " = ?",
+                new String[]{uuid.toString()});
+        mDatabase.delete(DbSchema.TypeTable.TABLE_NAME,
+                DbSchema.BillTable.Cols.TYPE_ID + " = ?",
+                new String[]{uuid.toString()});
+    }
 }

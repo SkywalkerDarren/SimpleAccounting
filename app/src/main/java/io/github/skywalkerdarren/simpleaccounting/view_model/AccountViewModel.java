@@ -40,7 +40,7 @@ public class AccountViewModel extends BaseObservable {
     /**
      * @return 负债
      */
-    public String getLiavility() {
+    public String getLiability() {
         return mStats.getExpense().toString();
     }
 
@@ -56,5 +56,9 @@ public class AccountViewModel extends BaseObservable {
      */
     public String getAccountSize() {
         return mAccountLab.getAccounts().size() + "";
+    }
+
+    public void changePosition(int oldPos, int newPos) {
+        mAccountLab.changePosition(oldPos, newPos);
     }
 }

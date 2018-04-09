@@ -51,10 +51,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <ImageView
+                android:id="@+id/to_income_image_view"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/back"
+                android:layout_gravity="center_vertical|left"
+                tools:ignore="RtlHardcoded" />
+
             <android.support.v4.view.ViewPager
                 android:id="@+id/classify_view_pager"
                 android:layout_width="match_parent"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
                 android:layout_height="250dp" />
+
+            <ImageView
+                android:id="@+id/to_expense_image_view"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/more"
+                android:layout_gravity="center_vertical|right"
+                tools:ignore="RtlHardcoded" />
+
         </FrameLayout>
 
         <android.support.v7.widget.RecyclerView

@@ -1,6 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.view_model;
 
 import android.databinding.BaseObservable;
+import android.util.Log;
 
 import io.github.skywalkerdarren.simpleaccounting.model.Account;
 
@@ -13,6 +14,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.Account;
 
 public class AccountItemViewModel extends BaseObservable {
     private Account mAccount;
+    private static final String TAG = "AccountItemViewModel";
 
     public AccountItemViewModel(Account account) {
         mAccount = account;
@@ -51,5 +53,9 @@ public class AccountItemViewModel extends BaseObservable {
      */
     public String getBalanceHint() {
         return mAccount.getBalanceHint();
+    }
+
+    public void test() {
+        Log.d(TAG, "test() called");
     }
 }

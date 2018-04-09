@@ -1,15 +1,20 @@
 package io.github.skywalkerdarren.simpleaccounting.ui;
 
 
+import android.animation.ObjectAnimator;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
+import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
+import com.chad.library.adapter.base.listener.OnItemDragListener;
 
 import java.util.List;
 
@@ -30,10 +35,10 @@ import io.github.skywalkerdarren.simpleaccounting.view_model.AccountViewModel;
 public class AccountFragment extends BaseFragment {
     private AccountLab mAccountLab;
     private RecyclerView mAccountRecyclerView;
-    private TextView mLendTextView;
-    private TextView mBorrowTextView;
     private AccountAdapter mAdapter;
-    FragmentAccountBinding mBinding;
+    private FragmentAccountBinding mBinding;
+    private AccountViewModel mViewModel;
+    private static final String TAG = "AccountFragment";
 
     public AccountFragment() {
         // Required empty public constructor
@@ -64,9 +69,8 @@ public class AccountFragment extends BaseFragment {
         // Inflate the layout for this fragment
         mBinding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_account, container, false);
+        mViewModel = new AccountViewModel(getContext());
         mAccountRecyclerView = mBinding.accountRecyclerView;
-        mLendTextView = mBinding.lendTextView;
-        mBorrowTextView = mBinding.borrowTextView;
         mAccountRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return mBinding.getRoot();
     }
@@ -81,10 +85,37 @@ public class AccountFragment extends BaseFragment {
             mAdapter.notifyDataSetChanged();
         }
         mAccountRecyclerView.setAdapter(mAdapter);
+        ItemDragAndSwipeCallback itemDragAndSwipeCallback = new ItemDragAndSwipeCallback(mAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemDragAndSwipeCallback);
+        itemTouchHelper.attachToRecyclerView(mAccountRecyclerView);
+        mAdapter.enableDragItem(itemTouchHelper);
+        mAdapter.setOnItemDragListener(new OnItemDragListener() {
+            private int mSub;
 
-        mBinding.setAccount(new AccountViewModel(getContext()));
-        // TODO: 2018/3/24 演示数据
-        mBorrowTextView.setText("0");
-        mLendTextView.setText("0");
+            @Override
+            public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
+                float st = viewHolder.itemView.getElevation();
+                ObjectAnimator animator = ObjectAnimator.ofFloat(viewHolder.itemView, "elevation", st, st * 2);
+                animator.setDuration(50);
+                animator.start();
+                mSub = pos;
+            }
+
+            @Override
+            public void onItemDragMoving(RecyclerView.ViewHolder source, int from, RecyclerView.ViewHolder target, int to) {
+
+            }
+
+            @Override
+            public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {
+                float ed = viewHolder.itemView.getElevation();
+                ObjectAnimator animator = ObjectAnimator.ofFloat(viewHolder.itemView, "elevation", ed * 2, ed);
+                animator.setDuration(50);
+                animator.start();
+                Log.d(TAG, "onItemDragEnd: " + mSub + " " + pos);
+                mViewModel.changePosition(mSub, pos);
+            }
+        });
+        mBinding.setAccount(mViewModel);
     }
 }

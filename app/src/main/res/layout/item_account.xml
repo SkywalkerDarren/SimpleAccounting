@@ -19,7 +19,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
         app:cardCornerRadius="5dp"
-        app:cardElevation="0dp"
+        android:foreground="?android:attr/selectableItemBackground"
         app:cardUseCompatPadding="true">
 
         <android.support.constraint.ConstraintLayout
@@ -30,7 +30,9 @@
                 android:id="@+id/account_type_card_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
                 app:cardBackgroundColor="@{account.color}"
                 app:cardCornerRadius="5dp"
                 app:cardElevation="0dp"
@@ -43,8 +45,8 @@
 
                 <ImageView
                     android:id="@+id/account_type_image_view"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:src="@{account.img}"
                     app:srcCompat="@drawable/account_cash" />
             </android.support.v7.widget.CardView>
@@ -56,6 +58,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="@{account.name}"
+                android:textSize="18sp"
                 app:layout_constraintStart_toEndOf="@+id/account_type_card_view"
                 app:layout_constraintTop_toTopOf="@+id/account_type_card_view"
                 tools:text="现金" />
@@ -67,7 +70,7 @@
                 android:layout_marginEnd="16dp"
                 android:fontFamily="@font/droid_sans"
                 android:text="@{account.balance}"
-                android:textSize="24sp"
+                android:textSize="30sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
