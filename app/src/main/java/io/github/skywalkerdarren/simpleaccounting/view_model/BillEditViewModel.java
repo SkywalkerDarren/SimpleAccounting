@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 import io.github.skywalkerdarren.simpleaccounting.model.Account;
-import io.github.skywalkerdarren.simpleaccounting.model.AccountLab;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
 import io.github.skywalkerdarren.simpleaccounting.model.Type;
@@ -69,14 +68,14 @@ public class BillEditViewModel extends BaseObservable {
      * @return 类型id
      */
     public UUID getTypeId() {
-        return mType.getId();
+        return mBill.getTypeId();
     }
 
     /**
      * @return 账户id
      */
     public UUID getAccountId() {
-        return mAccount.getId();
+        return mBill.getAccountId();
     }
 
     /**
@@ -135,9 +134,6 @@ public class BillEditViewModel extends BaseObservable {
         try {
             BigDecimal r = new BigDecimal(balance);
             mBill.setBalance(r);
-            // 设定账户
-            r = mType.getExpense() ? r.negate() : r;
-            mAccount.plusBalance(r);
         } catch (Exception e) {
             Toast.makeText(mContext, "表达式错误", Toast.LENGTH_SHORT).show();
             return false;
@@ -157,9 +153,6 @@ public class BillEditViewModel extends BaseObservable {
         } else {
             billLab.updateBill(mBill);
         }
-        // 刷新账户数据库
-        AccountLab accountLab = AccountLab.getInstance(mContext);
-        accountLab.updateAccount(mAccount);
         return true;
     }
 

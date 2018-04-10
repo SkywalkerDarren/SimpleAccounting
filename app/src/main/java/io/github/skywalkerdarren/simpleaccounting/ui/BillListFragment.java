@@ -50,7 +50,6 @@ public class BillListFragment extends BaseFragment {
 
     private SharedPreferences mSharedPref;
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -55,4 +55,10 @@ public class BillEditActivity extends BaseFragmentActivity {
         int cy = getIntent().getIntExtra(EXTRA_CENTER_Y, 0);
         return BillEditFragment.newInstance(bill, cx, cy);
     }
+
+    @Override
+    public void finish() {
+        setResult(RESULT_OK);
+        super.finish();
+    }
 }

@@ -31,6 +31,7 @@ import io.github.skywalkerdarren.simpleaccounting.view_model.AccountViewModel;
  * A simple {@link Fragment} subclass.
  * Use the {@link AccountFragment#newInstance} factory method to
  * create an instance of this fragment.
+ * @author darren
  */
 public class AccountFragment extends BaseFragment {
     private AccountLab mAccountLab;
@@ -39,23 +40,6 @@ public class AccountFragment extends BaseFragment {
     private FragmentAccountBinding mBinding;
     private AccountViewModel mViewModel;
     private static final String TAG = "AccountFragment";
-
-    public AccountFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment AccountFragment.
-     */
-    public static AccountFragment newInstance() {
-        AccountFragment fragment = new AccountFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,6 +57,35 @@ public class AccountFragment extends BaseFragment {
         mAccountRecyclerView = mBinding.accountRecyclerView;
         mAccountRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return mBinding.getRoot();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause() called");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.d(TAG, "onDetach() called");
+    }
+
+    public AccountFragment() {
+        // Required empty public constructor
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @return A new instance of fragment AccountFragment.
+     */
+    public static AccountFragment newInstance() {
+        AccountFragment fragment = new AccountFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -95,9 +108,7 @@ public class AccountFragment extends BaseFragment {
             @Override
             public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
                 float st = viewHolder.itemView.getElevation();
-                ObjectAnimator animator = ObjectAnimator.ofFloat(viewHolder.itemView, "elevation", st, st * 2);
-                animator.setDuration(50);
-                animator.start();
+                itemRaiseAnimator(viewHolder.itemView, st, true);
                 mSub = pos;
             }
 
@@ -109,13 +120,21 @@ public class AccountFragment extends BaseFragment {
             @Override
             public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {
                 float ed = viewHolder.itemView.getElevation();
-                ObjectAnimator animator = ObjectAnimator.ofFloat(viewHolder.itemView, "elevation", ed * 2, ed);
-                animator.setDuration(50);
-                animator.start();
+                itemRaiseAnimator(viewHolder.itemView, ed, false);
                 Log.d(TAG, "onItemDragEnd: " + mSub + " " + pos);
                 mViewModel.changePosition(mSub, pos);
             }
         });
+        mViewModel.setStats();
         mBinding.setAccount(mViewModel);
+        Log.d(TAG, "updateUI: ");
+    }
+
+    private void itemRaiseAnimator(View view, final float start, boolean raise) {
+        final float end = start * 2;
+        ObjectAnimator animator = ObjectAnimator.ofFloat(view, "elevation",
+                raise ? start : end, raise ? end : start);
+        animator.setDuration(50);
+        animator.start();
     }
 }

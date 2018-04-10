@@ -2,6 +2,7 @@ package io.github.skywalkerdarren.simpleaccounting.view_model;
 
 import android.content.Context;
 import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 
 import org.joda.time.DateTime;
 
@@ -17,6 +18,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
 
 public class AccountViewModel extends BaseObservable {
     private AccountLab mAccountLab;
+    private StatsLab mStatsLab;
     private StatsLab.BillStats mStats;
 
     /**
@@ -25,14 +27,20 @@ public class AccountViewModel extends BaseObservable {
      * @param context 上下文
      */
     public AccountViewModel(Context context) {
-        StatsLab statsLab = StatsLab.getInstance(context);
+        mStatsLab = StatsLab.getInstance(context);
         mAccountLab = AccountLab.getInstance(context);
-        mStats = statsLab.getStats(new DateTime(0), DateTime.now());
+        mStats = mStatsLab.getStats(new DateTime(0), DateTime.now());
+    }
+
+    public void setStats() {
+        mStats = mStatsLab.getStats(new DateTime(0), DateTime.now());
+        notifyChange();
     }
 
     /**
      * @return 净资产
      */
+    @Bindable
     public String getNav() {
         return mStats.getSum().toString();
     }
@@ -40,6 +48,7 @@ public class AccountViewModel extends BaseObservable {
     /**
      * @return 负债
      */
+    @Bindable
     public String getLiability() {
         return mStats.getExpense().toString();
     }
@@ -47,6 +56,7 @@ public class AccountViewModel extends BaseObservable {
     /**
      * @return 总资产
      */
+    @Bindable
     public String getTotalAssets() {
         return mStats.getIncome().toString();
     }
@@ -54,6 +64,7 @@ public class AccountViewModel extends BaseObservable {
     /**
      * @return 账户数目
      */
+    @Bindable
     public String getAccountSize() {
         return mAccountLab.getAccounts().size() + "";
     }

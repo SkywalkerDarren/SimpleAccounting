@@ -150,22 +150,34 @@ public class StatsLab {
                 0, 0);
         for (int m = 0; m < month; m++) {
             dateTime = dateTime.plusMonths(1);
-            BigDecimal income = BigDecimal.ZERO;
-            BigDecimal expense = BigDecimal.ZERO;
-            try (CursorWrapper cursor = getAccountCursor(dateTime, dateTime.plusMonths(1), accountId)) {
-                cursor.moveToFirst();
-                while (!cursor.isAfterLast()) {
-                    if ("1".equals(cursor.getString(0))) {
-                        expense = new BigDecimal(cursor.getString(1));
-                    } else {
-                        income = new BigDecimal(cursor.getString(1));
-                    }
-                    cursor.moveToNext();
-                }
-            }
-            stats.add(new AccountStats(income, expense));
+            stats.add(getAccountStats(accountId, dateTime, dateTime.plusMonths(1)));
         }
         return stats;
+    }
+
+    /**
+     * 一段时间内的账户统计
+     *
+     * @param accountId 账户id
+     * @param start     起始时间
+     * @param end       结束时间
+     * @return 统计结果
+     */
+    public AccountStats getAccountStats(UUID accountId, DateTime start, DateTime end) {
+        BigDecimal income = BigDecimal.ZERO;
+        BigDecimal expense = BigDecimal.ZERO;
+        try (CursorWrapper cursor = getAccountCursor(start, end, accountId)) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                if ("1".equals(cursor.getString(0))) {
+                    expense = new BigDecimal(cursor.getString(1));
+                } else {
+                    income = new BigDecimal(cursor.getString(1));
+                }
+                cursor.moveToNext();
+            }
+        }
+        return new AccountStats(income, expense);
     }
 
     private CursorWrapper getAccountCursor(DateTime start, DateTime end, UUID accountId) {

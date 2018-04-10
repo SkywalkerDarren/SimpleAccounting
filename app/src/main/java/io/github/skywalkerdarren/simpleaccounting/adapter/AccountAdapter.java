@@ -19,6 +19,6 @@ public class AccountAdapter extends BaseDraggableDataBindingAdapter<Account, Ite
     }
     @Override
     protected void convert(ItemAccountBinding binding, Account item) {
-        binding.setAccount(new AccountItemViewModel(item));
+        binding.setAccount(new AccountItemViewModel(item, mContext));
     }
 }

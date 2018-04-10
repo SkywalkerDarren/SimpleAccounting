@@ -1,9 +1,13 @@
 package io.github.skywalkerdarren.simpleaccounting.view_model;
 
+import android.content.Context;
 import android.databinding.BaseObservable;
 import android.util.Log;
 
+import org.joda.time.DateTime;
+
 import io.github.skywalkerdarren.simpleaccounting.model.Account;
+import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
 
 /**
  * 账户vm
@@ -14,10 +18,12 @@ import io.github.skywalkerdarren.simpleaccounting.model.Account;
 
 public class AccountItemViewModel extends BaseObservable {
     private Account mAccount;
+    private Context mContext;
     private static final String TAG = "AccountItemViewModel";
 
-    public AccountItemViewModel(Account account) {
+    public AccountItemViewModel(Account account, Context context) {
         mAccount = account;
+        mContext = context;
     }
 
     /**
@@ -38,7 +44,12 @@ public class AccountItemViewModel extends BaseObservable {
      * @return 账户盈余
      */
     public String getBalance() {
-        return mAccount.getBalance().toString();
+        Log.d(TAG, "getBalance() called");
+        StatsLab lab = StatsLab.getInstance(mContext);
+        StatsLab.AccountStats stats = lab.getAccountStats(mAccount.getId(),
+                new DateTime(0), DateTime.now());
+        // 账户基础金额 + 统计盈余
+        return mAccount.getBalance().add(stats.getSum()).toString();
     }
 
     /**

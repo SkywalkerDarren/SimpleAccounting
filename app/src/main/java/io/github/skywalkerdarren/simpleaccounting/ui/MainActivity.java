@@ -33,9 +33,13 @@ import io.github.skywalkerdarren.simpleaccounting.model.Bill;
  */
 public class MainActivity extends AppCompatActivity {
 
+    private static final int REQUEST_UPDATE_BILL = 0;
     private ViewPager mViewPager;
 
     private FloatingActionButton mAddBillButton;
+    private AccountFragment mAccountFragment;
+    private BillListFragment mBillListFragment;
+    private DiscoveryFragment mDiscoveryFragment;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -72,13 +76,17 @@ public class MainActivity extends AppCompatActivity {
         mViewPager = binding.contentViewPager;
         mAddBillButton = binding.addBillFab;
 
+        mAccountFragment = AccountFragment.newInstance();
+        mBillListFragment = BillListFragment.newInstance();
+        mDiscoveryFragment = DiscoveryFragment.newInstance();
+
         // 点击增加按钮事件
         mAddBillButton.setOnClickListener(view -> {
             Bill bill = new Bill();
             int x = (int) view.getX() + view.getWidth() / 2;
             int y = (int) view.getY() + view.getHeight() / 2;
             Intent intent = BillEditActivity.newIntent(this, bill, x, y);
-            startActivity(intent);
+            startActivityForResult(intent, REQUEST_UPDATE_BILL);
         });
         FragmentManager fragmentManager = getSupportFragmentManager();
         mViewPager.setAdapter(new FragmentPagerAdapter(fragmentManager) {
@@ -95,11 +103,11 @@ public class MainActivity extends AppCompatActivity {
             public Fragment getItem(int position) {
                 switch (position) {
                     case 0:
-                        return AccountFragment.newInstance();
+                        return mAccountFragment;
                     case 1:
-                        return BillListFragment.newInstance();
+                        return mBillListFragment;
                     case 2:
-                        return DiscoveryFragment.newInstance();
+                        return mDiscoveryFragment;
                     default:
                         return null;
                 }
@@ -182,4 +190,19 @@ public class MainActivity extends AppCompatActivity {
         return set;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+
+        switch (requestCode) {
+            case REQUEST_UPDATE_BILL:
+                mAccountFragment.onResume();
+                break;
+            default:
+                break;
+        }
+    }
 }
