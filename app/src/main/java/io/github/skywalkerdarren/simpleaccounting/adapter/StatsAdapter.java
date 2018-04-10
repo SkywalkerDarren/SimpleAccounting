@@ -1,6 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.adapter;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.List;
 
@@ -18,7 +19,6 @@ import io.github.skywalkerdarren.simpleaccounting.view_model.StatsItemViewModel;
  */
 
 public class StatsAdapter extends BaseDataBindingAdapter<StatsLab.BillStats, ItemStatsBinding> {
-
     /**
      * 统计适配器
      *
@@ -29,7 +29,12 @@ public class StatsAdapter extends BaseDataBindingAdapter<StatsLab.BillStats, Ite
     }
 
     @Override
+    public void setNewData(@Nullable List<StatsLab.BillStats> data) {
+        super.setNewData(data);
+    }
+
+    @Override
     protected void convert(ItemStatsBinding binding, StatsLab.BillStats item) {
-        binding.setStats(new StatsItemViewModel(item, getParentPosition(item) + 1));
+        binding.setStats(new StatsItemViewModel(item, mData.indexOf(item) + 1));
     }
 }

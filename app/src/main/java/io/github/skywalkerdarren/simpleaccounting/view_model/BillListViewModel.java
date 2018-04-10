@@ -7,6 +7,7 @@ import android.databinding.Bindable;
 
 import org.joda.time.DateTime;
 
+import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
 import io.github.skywalkerdarren.simpleaccounting.ui.StatsActivity;
 
@@ -75,6 +76,9 @@ public class BillListViewModel extends BaseObservable {
     @Bindable
     public String getBudget() {
         // TODO: 2018/4/5 预算逻辑
+        if (mContext.getString(R.string.set_budget).equals(getBudgetText())) {
+            return "0";
+        }
         return "0";
     }
 
@@ -84,7 +88,7 @@ public class BillListViewModel extends BaseObservable {
     @Bindable
     public String getBudgetText() {
         // TODO: 2018/4/5 设置预算
-        return "设置预算";
+        return mContext.getString(R.string.set_budget);
     }
 
     /**

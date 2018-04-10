@@ -1,6 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.view_model;
 
 import android.databinding.BaseObservable;
+import android.support.annotation.IntRange;
 
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
 
@@ -15,7 +16,10 @@ public class StatsItemViewModel extends BaseObservable {
     private StatsLab.BillStats mStats;
     private int mMonth;
 
-    public StatsItemViewModel(StatsLab.BillStats mStats, int month) {
+    /**
+     * @param month 从1开始
+     */
+    public StatsItemViewModel(StatsLab.BillStats mStats, @IntRange(from = 1, to = 12) int month) {
         this.mStats = mStats;
         mMonth = month;
     }
