@@ -7,7 +7,6 @@
             android:duration="@android:integer/config_shortAnimTime"
             android:propertyName="translationZ"
             android:valueTo="4dp"
-            android:startOffset="160"
             android:valueType="floatType" />
     </item>
     <item>
