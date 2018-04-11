@@ -1,6 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.model;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
@@ -138,6 +139,36 @@ public class StatsLab {
     }
 
     /**
+     * 类型的统计数据
+     *
+     * @param start  起始日期
+     * @param end    结束日期
+     * @param typeId 类型id
+     * @return 统计数据, null则找不到
+     */
+    public BigDecimal getTypeStats(DateTime start, DateTime end, UUID typeId) {
+        try (CursorWrapper cursor = getTypeCursor(typeId, start, end)) {
+            cursor.moveToFirst();
+            if (!cursor.isAfterLast()) {
+                return new BigDecimal(cursor.getString(0));
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 该类型的金额总额
+     */
+    private CursorWrapper getTypeCursor(UUID typeId, DateTime start, DateTime end) {
+        return queryStats(new String[]{"sum(" + DbSchema.BillTable.Cols.BALANCE + ")"},
+                DbSchema.TypeTable.Cols.UUID + " = ? and " +
+                        DbSchema.BillTable.Cols.DATE + " between ? and ?",
+                new String[]{typeId.toString(), start.getMillis() + "", end.getMillis() + ""},
+                null, null);
+    }
+
+
+    /**
      * 获取一年内一个账户的收支统计信息
      *
      * @param accountId 账户id
@@ -254,9 +285,31 @@ public class StatsLab {
     }
 
     /**
+     * 类型的平均值
+     */
+    public BigDecimal getTypeAverage(DateTime start, DateTime end, UUID typeId) {
+        try (Cursor cursor = getTypeAvgCursorWrapper(start, end, typeId)) {
+            cursor.moveToFirst();
+            if (!cursor.isAfterLast()) {
+                return new BigDecimal(cursor.getString(0));
+            }
+        }
+        return null;
+    }
+
+    @NonNull
+    private CursorWrapper getTypeAvgCursorWrapper(DateTime start, DateTime end, UUID typeId) {
+        return queryStats(new String[]{"avg(" + DbSchema.BillTable.Cols.BALANCE + ")"},
+                DbSchema.TypeTable.Cols.UUID + " = ? and " +
+                        DbSchema.BillTable.Cols.DATE + " between ? and ?",
+                new String[]{typeId.toString(), start.getMillis() + "", end.getMillis() + ""},
+                null, null);
+    }
+
+    /**
      * 类型统计类
      */
-    public class TypeStats extends Stats {
+    public class TypeStats extends BaseStats {
         private Type mType;
 
         TypeStats(Type type, BigDecimal balance) {
@@ -284,25 +337,25 @@ public class StatsLab {
     /**
      * 账单统计结果类
      */
-    public class BillStats extends Stats {
+    public class BillStats extends BaseStats {
         BillStats(BigDecimal income, BigDecimal expense) {
             super(income, expense);
         }
     }
 
 
-    public abstract class Stats {
+    public abstract class BaseStats {
         private BigDecimal income;
         private BigDecimal expense;
         private BigDecimal sum;
 
-        Stats(BigDecimal income, BigDecimal expense) {
+        BaseStats(BigDecimal income, BigDecimal expense) {
             this.income = income;
             this.expense = expense;
             sum = income.subtract(expense);
         }
 
-        Stats(BigDecimal sum) {
+        BaseStats(BigDecimal sum) {
             income = BigDecimal.ZERO;
             expense = BigDecimal.ZERO;
             this.sum = sum;
@@ -324,7 +377,7 @@ public class StatsLab {
     /**
      * 账户账单统计
      */
-    public class AccountStats extends Stats {
+    public class AccountStats extends BaseStats {
         AccountStats(BigDecimal income, BigDecimal expense) {
             super(income, expense);
         }

@@ -19,7 +19,7 @@
     <string name="remark">备注</string>
     <string name="month">月</string>
     <string name="year">年</string>
-    <string name="detail_bill">详细账单</string>
+    <string name="detail_bill">账单明细</string>
     <string name="edit_bill">编辑账单</string>
     <string name="save">保存</string>
     <string name="month_income">月收入</string>
@@ -69,4 +69,15 @@
     <string name="delete_all_bill">删除并重置所有账单</string>
     <string name="setting">设置</string>
     <string name="set_budget">设置预算</string>
+    <string name="same_type_percent">同分类中占比</string>
+    <string name="same_account_percent">同账户中占比</string>
+    <string name="expense_percent">支出占比</string>
+    <string name="higher_than_average">高于分类平均值</string>
+    <string name="income_percent">收入占比</string>
+    <string name="less_than_average">低于分类平均值</string>
+    <string name="annual_stats">年度统计</string>
+    <string name="day_stats">当日统计</string>
+    <string name="monthly_stats">月度统计</string>
+    <string name="type_average">分类平均值</string>
+    <string name="current_classify">当前分类</string>
 </resources>

@@ -11,7 +11,8 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -45,7 +46,7 @@ public class BillDetailFragment extends BaseFragment {
     private static final String ARG_START_COLOR = "startColor";
 
     private Bill mBill;
-    private ActionBar mActionBar;
+    private Toolbar mToolbar;
     private FragmentBillDetailBinding mBinding;
     private static final int REQUEST_DESTROY = 0;
 
@@ -64,10 +65,12 @@ public class BillDetailFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         mBinding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_bill_detail, container, false);
-        mActionBar = initToolbar(R.id.toolbar, mBinding.toolbar);
-
-        mActionBar.setTitle(R.string.detail_bill);
-        mActionBar.setDisplayHomeAsUpEnabled(true);
+        mToolbar = mBinding.toolbar;
+        mToolbar.setTitle(R.string.detail_bill);
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.setSupportActionBar(mToolbar);
+        activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         updateUI();
 

@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.chad.library.adapter.base.animation.AlphaInAnimation;
 import com.oushangfeng.pinnedsectionitemdecoration.PinnedHeaderItemDecoration;
 
 import org.joda.time.DateTime;
@@ -68,7 +67,7 @@ public class BillListFragment extends BaseFragment {
 
         mBillListRecyclerView = mBinding.billRecycleView;
 
-        mSharedPref = getActivity().getSharedPreferences(SHARED_BUDGET, Context.MODE_PRIVATE);
+        mSharedPref = getContext().getSharedPreferences(SHARED_BUDGET, Context.MODE_PRIVATE);
         mViewModel.setDate(DateTime.now());
 
         mBinding.dateImageView.setOnClickListener(view1 -> {
@@ -84,10 +83,6 @@ public class BillListFragment extends BaseFragment {
         mBinding.setBudgeTextView.setOnClickListener(view -> {
 
         });
-        updateUI();
-        mBillListRecyclerView.addItemDecoration(new PinnedHeaderItemDecoration
-                .Builder(HEADER)
-                .create());
 
         return mBinding.getRoot();
     }
@@ -116,9 +111,13 @@ public class BillListFragment extends BaseFragment {
             mBillAdapter = new BillAdapter(billInfoList, getActivity());
             configAdapter();
             mBillListRecyclerView.setAdapter(mBillAdapter);
+            mBillListRecyclerView.addItemDecoration(new PinnedHeaderItemDecoration
+                    .Builder(HEADER)
+                    .create());
         } else {
             mBillAdapter.setBills(billInfoList);
             mBillAdapter.notifyDataSetChanged();
+//            runLayoutAnimation(mBillListRecyclerView);
         }
     }
 
@@ -139,8 +138,13 @@ public class BillListFragment extends BaseFragment {
      */
     private void configAdapter() {
         mBillAdapter.setEmptyView(emptyView());
-        mBillAdapter.openLoadAnimation(new AlphaInAnimation());
-        mBillAdapter.isFirstOnly(false);
+//        mBillAdapter.openLoadAnimation(view -> {
+//            ObjectAnimator animator = ObjectAnimator.ofFloat(view, "alpha", 0, 1);
+//            animator.setDuration(50);
+//            animator.setInterpolator(new AccelerateDecelerateInterpolator());
+//            return new Animator[]{animator};
+//        });
+//        mBillAdapter.isFirstOnly(true);
     }
 
     /**
