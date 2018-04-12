@@ -27,19 +27,74 @@
                 app:contentScrim="?attr/colorPrimary"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed|enterAlways"
                 app:toolbarId="@+id/toolbar">
-
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="160dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/bg2"
-                    tools:ignore="ContentDescription" />
+                    android:layout_height="200dp"
+                    android:background="@drawable/bg2"
+                    android:scaleType="fitXY" />
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     app:layout_collapseMode="pin" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layout_collapseMode="parallax"
+                    app:layout_collapseParallaxMultiplier="1">
+
+                    <android.support.v4.widget.Space
+                        android:id="@+id/space"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginLeft="32dp"
+                        android:layout_marginRight="16dp"
+                        tools:ignore="RtlHardcoded" />
+
+                    <TextView
+                        android:id="@+id/toolbar_title"
+                        style="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+                        android:layout_width="match_parent"
+                        android:layout_height="?attr/actionBarSize"
+                        android:gravity="center_vertical" />
+                </LinearLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    app:layout_collapseMode="parallax"
+                    app:layout_collapseParallaxMultiplier="1">
+
+                    <TextView
+                        android:id="@+id/title_toolbar_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="?attr/actionBarSize"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="56dp"
+                        android:layout_marginRight="56dp"
+                        android:layout_marginTop="130dp"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="@{detail.typeName}"
+                        android:textColor="#FFF"
+                        android:textSize="24sp"
+                        tools:ignore="HardcodedText" />
+
+                    <ImageView
+                        android:id="@+id/type_toolbar_image_view"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="?attr/actionBarSize"
+                        android:src="@{detail.typeImage}"
+                        android:transitionName="type_image_view"
+                        android:padding="1dp" />
+                </FrameLayout>
 
             </android.support.design.widget.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>
@@ -111,7 +166,6 @@
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="8dp"
                             android:src="@{detail.typeImage}"
-                            android:transitionName="type_image_view"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />

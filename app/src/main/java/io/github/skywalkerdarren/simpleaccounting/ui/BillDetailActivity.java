@@ -21,6 +21,7 @@ public class BillDetailActivity extends BaseFragmentActivity {
     public static final String EXTRA_CENTER_X = "io.github.skywalkerdarren.simpleaccounting.centerX";
     public static final String EXTRA_CENTER_Y = "io.github.skywalkerdarren.simpleaccounting.centerY";
     public static final String EXTRA_START_COLOR = "io.github.skywalkerdarren.simpleaccounting.startColor";
+    private BillDetailFragment mBillDetailFragment;
 
     /**
      * @param context 应用上下文
@@ -49,9 +50,15 @@ public class BillDetailActivity extends BaseFragmentActivity {
         int cx = getIntent().getIntExtra(EXTRA_CENTER_X, w);
         int cy = getIntent().getIntExtra(EXTRA_CENTER_Y, h);
         int startColor = getIntent().getIntExtra(EXTRA_START_COLOR, R.color.colorPrimary);
-        return BillDetailFragment.newInstance(bill, cx, cy, startColor);
+        return mBillDetailFragment = BillDetailFragment.newInstance(bill, cx, cy, startColor);
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        // 需要在窗口完成后调用
+        mBillDetailFragment.resetPoints();
+    }
 
     @Override
     public void onBackPressed() {

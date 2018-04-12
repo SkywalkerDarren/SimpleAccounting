@@ -10,9 +10,13 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.Space;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,12 +26,16 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
+import io.github.skywalkerdarren.simpleaccounting.base.BaseAppBarStateChangeListener;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillDetailBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
+import io.github.skywalkerdarren.simpleaccounting.util.DpConvertUtils;
 import io.github.skywalkerdarren.simpleaccounting.view_model.BillDetailViewModel;
 
 /**
@@ -40,15 +48,30 @@ import io.github.skywalkerdarren.simpleaccounting.view_model.BillDetailViewModel
  * @date 2018/2/21
  */
 public class BillDetailFragment extends BaseFragment {
+    private static final String TAG = "BillDetailFragment";
+
     private static final String ARG_BILL = "bill";
     private static final String ARG_CX = "cx";
     private static final String ARG_CY = "cy";
     private static final String ARG_START_COLOR = "startColor";
+    private final static float EXPAND_TYPE_SIZE_DP = 80f;
+    private final static float COLLAPSED_TYPE_SIZE_DP = 32f;
 
     private Bill mBill;
     private Toolbar mToolbar;
+    private Space mSpace;
+    private TextView mTypeTitleTextView;
+    private AppBarLayout mAppBarLayout;
     private FragmentBillDetailBinding mBinding;
     private static final int REQUEST_DESTROY = 0;
+    private BaseAppBarStateChangeListener mAppBarStateChangeListener;
+    private int[] mTypePoint = new int[2],
+            mSpacePoint = new int[2],
+            mToolbarTextPoint = new int[2],
+            mTitleTextViewPoint = new int[2];
+    private TextView mToolbarTextView;
+    private float mTitleTextSize;
+    private ImageView mTypeImageView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,12 +88,20 @@ public class BillDetailFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         mBinding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_bill_detail, container, false);
+        mSpace = mBinding.space;
+        mTypeTitleTextView = mBinding.titleToolbarTextView;
+        mTitleTextSize = mTypeTitleTextView.getTextSize();
+        mTypeImageView = mBinding.typeToolbarImageView;
+        mToolbarTextView = mBinding.toolbarTitle;
+        mAppBarLayout = mBinding.appbar;
         mToolbar = mBinding.toolbar;
-        mToolbar.setTitle(R.string.detail_bill);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(mToolbar);
+        //noinspection ConstantConditions
         activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setToolbarChange();
+
 
         updateUI();
 
@@ -113,6 +144,75 @@ public class BillDetailFragment extends BaseFragment {
                 set.setInterpolator(new AccelerateInterpolator());
                 set.start();
             }
+        });
+    }
+
+    private void setToolbarChange() {
+        mAppBarStateChangeListener = new BaseAppBarStateChangeListener() {
+
+            @Override
+            public void onStateChanged(AppBarLayout appBarLayout,
+                                       BaseAppBarStateChangeListener.State state) {
+            }
+
+            @Override
+            public void onOffsetChanged(BaseAppBarStateChangeListener.State state, float offset) {
+                translationView(offset);
+            }
+        };
+        mAppBarLayout.addOnOffsetChangedListener(mAppBarStateChangeListener);
+    }
+
+    private void translationView(float offset) {
+        Log.d(TAG, "translationView() called with: offset = [" + offset + "]");
+        Log.d(TAG, "translationView: mTypePoint" + mTypePoint[0] + " " + mTypePoint[1]);
+        Log.d(TAG, "translationView: mSpacePoint" + mSpacePoint[0] + " " + mSpacePoint[1]);
+        // 设定图像偏移
+        float xOffset = -(mTypePoint[0] - mSpacePoint[0]) * offset;
+        float yOffset = -(mTypePoint[1] - mSpacePoint[1]) * offset;
+        // 设定文字偏移
+        float xTitleOffset = -(mTitleTextViewPoint[0] - mToolbarTextPoint[0]) * offset;
+        float yTitleOffset = -(mTitleTextViewPoint[1] - mToolbarTextPoint[1]) * offset;
+        // 设定新大小
+        int newSize = DpConvertUtils.convertDpToPixelSize(
+                EXPAND_TYPE_SIZE_DP - (EXPAND_TYPE_SIZE_DP - COLLAPSED_TYPE_SIZE_DP) * offset,
+                getContext());
+        float newTextSize =
+                mTitleTextSize - (mTitleTextSize - mToolbarTextView.getTextSize()) * offset;
+        Log.d(TAG, "translationView: xOffset:" + xOffset + "yOffset:" + yOffset + "newSize:" + newSize);
+        Log.d(TAG, "translationView: xTitleOffset:" + xTitleOffset + "yTitleOffset:" + yTitleOffset + "newTextSize:" + newTextSize);
+        mTypeImageView.getLayoutParams().width = newSize;
+        mTypeImageView.getLayoutParams().height = newSize;
+        mTypeImageView.setTranslationX(xOffset);
+        mTypeImageView.setTranslationY(yOffset);
+        mTypeTitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, newTextSize);
+        mTypeTitleTextView.setTranslationX(xTitleOffset);
+        mTypeTitleTextView.setTranslationY(yTitleOffset);
+    }
+
+    private void clearAnim() {
+        mTypeImageView.setTranslationX(0);
+        mTypeImageView.setTranslationY(0);
+        mTypeTitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTitleTextSize);
+        mTypeTitleTextView.setTranslationX(0);
+        mTypeTitleTextView.setTranslationY(0);
+    }
+
+    void resetPoints() {
+        clearAnim();
+
+        int avatarSize = DpConvertUtils.convertDpToPixelSize(EXPAND_TYPE_SIZE_DP, getContext());
+        mTypeImageView.getLocationOnScreen(mTypePoint);
+        Log.d(TAG, "resetPoints: mTypePoint" + mTypePoint[0] + " " + mTypePoint[1]);
+        mTypePoint[0] -= (avatarSize - mTypeImageView.getWidth()) / 2;
+        mSpace.getLocationOnScreen(mSpacePoint);
+        Log.d(TAG, "resetPoints: mSpacePoint" + mSpacePoint[0] + " " + mSpacePoint[1]);
+        mToolbarTextView.getLocationOnScreen(mToolbarTextPoint);
+        Log.d(TAG, "resetPoints: mToolbarTextPoint" + mToolbarTextPoint[0] + " " + mToolbarTextPoint[1]);
+        mToolbarTextPoint[0] += DpConvertUtils.convertDpToPixelSize(16, getContext());
+        mTypeTitleTextView.post(() -> {
+            mTypeTitleTextView.getLocationOnScreen(mTitleTextViewPoint);
+            translationView(mAppBarStateChangeListener.getCurrentOffset());
         });
     }
 
