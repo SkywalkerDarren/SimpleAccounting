@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
 import io.github.skywalkerdarren.simpleaccounting.ui.StatsActivity;
+import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
  * 账单列表vm
@@ -51,7 +52,7 @@ public class BillListViewModel extends BaseObservable {
      */
     @Bindable
     public String getIncome() {
-        return mStatsLab.getStats(mMonth, mMonth.plusMonths(1)).getIncome().toString();
+        return FormatUtil.getNumberic(mStatsLab.getStats(mMonth, mMonth.plusMonths(1)).getIncome());
     }
 
     /**
@@ -59,7 +60,7 @@ public class BillListViewModel extends BaseObservable {
      */
     @Bindable
     public String getExpense() {
-        return mStatsLab.getStats(mMonth, mMonth.plusMonths(1)).getExpense().toString();
+        return FormatUtil.getNumberic(mStatsLab.getStats(mMonth, mMonth.plusMonths(1)).getExpense());
     }
 
     /**

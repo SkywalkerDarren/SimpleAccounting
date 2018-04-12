@@ -8,6 +8,7 @@ import org.joda.time.DateTime;
 
 import io.github.skywalkerdarren.simpleaccounting.model.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
+import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
  * 账户vm
@@ -49,7 +50,7 @@ public class AccountItemViewModel extends BaseObservable {
         StatsLab.AccountStats stats = lab.getAccountStats(mAccount.getId(),
                 new DateTime(0), DateTime.now());
         // 账户基础金额 + 统计盈余
-        return mAccount.getBalance().add(stats.getSum()).toString();
+        return FormatUtil.getNumberic(mAccount.getBalance().add(stats.getSum()));
     }
 
     /**
@@ -64,9 +65,5 @@ public class AccountItemViewModel extends BaseObservable {
      */
     public String getBalanceHint() {
         return mAccount.getBalanceHint();
-    }
-
-    public void test() {
-        Log.d(TAG, "test() called");
     }
 }

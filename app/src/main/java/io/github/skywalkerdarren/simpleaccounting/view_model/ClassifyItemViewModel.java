@@ -5,6 +5,7 @@ import android.databinding.BaseObservable;
 import java.math.BigDecimal;
 
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
+import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
  * 分类项目vm
@@ -40,7 +41,7 @@ public class ClassifyItemViewModel extends BaseObservable {
      * @return 总盈余
      */
     public String getBalance() {
-        return mStats.getSum().toString();
+        return FormatUtil.getNumberic(mStats.getSum());
     }
 
     /**

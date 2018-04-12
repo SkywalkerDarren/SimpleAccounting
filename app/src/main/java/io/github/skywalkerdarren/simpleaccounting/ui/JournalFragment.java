@@ -47,9 +47,9 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
     private LineChart mLineChart;
     private StatsAdapter mStatsAdapter;
     private JournalViewModel mViewModel;
-    private boolean mShowIncome;
-    private boolean mShowExpense;
-    private boolean mShowBalance;
+    private boolean mShowIncome = true;
+    private boolean mShowExpense = true;
+    private boolean mShowBalance = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

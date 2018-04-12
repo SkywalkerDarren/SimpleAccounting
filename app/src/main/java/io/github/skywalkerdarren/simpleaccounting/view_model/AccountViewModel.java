@@ -8,6 +8,7 @@ import org.joda.time.DateTime;
 
 import io.github.skywalkerdarren.simpleaccounting.model.AccountLab;
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
+import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
  * 账户页vm
@@ -42,7 +43,7 @@ public class AccountViewModel extends BaseObservable {
      */
     @Bindable
     public String getNav() {
-        return mStats.getSum().toString();
+        return FormatUtil.getNumberic(mStats.getSum());
     }
 
     /**
@@ -50,7 +51,7 @@ public class AccountViewModel extends BaseObservable {
      */
     @Bindable
     public String getLiability() {
-        return mStats.getExpense().toString();
+        return FormatUtil.getNumberic(mStats.getExpense());
     }
 
     /**
@@ -58,7 +59,7 @@ public class AccountViewModel extends BaseObservable {
      */
     @Bindable
     public String getTotalAssets() {
-        return mStats.getIncome().toString();
+        return FormatUtil.getNumberic(mStats.getIncome());
     }
 
     /**

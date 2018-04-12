@@ -23,8 +23,8 @@
 
             <ImageView
                 android:id="@+id/back_image_view"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:src="@drawable/back" />
 
             <TextView
@@ -42,8 +42,8 @@
 
             <ImageView
                 android:id="@+id/more_image_view"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:src="@drawable/more" />
         </LinearLayout>
 
@@ -62,9 +62,9 @@
             <android.support.v4.view.ViewPager
                 android:id="@+id/classify_view_pager"
                 android:layout_width="match_parent"
-                android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
-                android:layout_height="250dp" />
+                android:layout_height="250dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp" />
 
             <ImageView
                 android:id="@+id/to_expense_image_view"

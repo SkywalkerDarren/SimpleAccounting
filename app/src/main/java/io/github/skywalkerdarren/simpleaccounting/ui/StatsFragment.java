@@ -5,8 +5,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -23,6 +26,7 @@ public class StatsFragment extends Fragment {
     private static final String ARG_POSITION = "mPosition";
     private SegmentedButtonGroup mStatsSbg;
     private ViewPager mViewPager;
+    private Toolbar mToolbar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,14 @@ public class StatsFragment extends Fragment {
                 R.layout.fragment_stats, container, false);
         mStatsSbg = binding.statsSbg;
         mViewPager = binding.fragmentContainer;
+        mToolbar = binding.toolbar;
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.setSupportActionBar(mToolbar);
+        //noinspection ConstantConditions
+        activity.getSupportActionBar()
+                .setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar()
+                .setDisplayShowTitleEnabled(false);
 
         mViewPager.setAdapter(new FragmentStatePagerAdapter(getChildFragmentManager()) {
             @Override
@@ -78,6 +90,17 @@ public class StatsFragment extends Fragment {
 
         mStatsSbg.setOnClickedButtonListener(position -> mViewPager.setCurrentItem(position));
         return binding.getRoot();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     /**

@@ -4,6 +4,8 @@ import org.joda.time.DateTime;
 
 import java.math.BigDecimal;
 
+import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
+
 /**
  * 账单分隔符
  *
@@ -42,7 +44,7 @@ class DateHeaderDivider implements HeaderDivider {
      */
     @Override
     public String getExpense() {
-        return mExpense.toString();
+        return FormatUtil.getNumberic(mExpense);
     }
 
     /**
@@ -50,6 +52,6 @@ class DateHeaderDivider implements HeaderDivider {
      */
     @Override
     public String getIncome() {
-        return mIncome.toString();
+        return FormatUtil.getNumberic(mIncome);
     }
 }

@@ -130,16 +130,19 @@
 
                         <TextView
                             android:id="@+id/balance_edit_text"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
+                            android:layout_marginStart="8dp"
                             android:text="@{detail.balance}"
+                            android:textAlignment="textEnd"
                             android:textColor="@{detail.balanceColor}"
                             android:textSize="24sp"
                             android:textStyle="bold"
                             android:transitionName="balance_text_view"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/title_text_view"
                             app:layout_constraintTop_toTopOf="parent"
                             tools:text="156" />
 
@@ -425,29 +428,32 @@
                                 android:layout_height="18dp"
                                 app:srcCompat="@drawable/detail_calendar" />
 
-                            <FrameLayout
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="16dp">
+                                android:layout_marginStart="16dp"
+                                android:orientation="horizontal">
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_gravity="start"
                                     android:text="@string/type_average"
                                     android:textColor="@android:color/black"
                                     android:textSize="16sp" />
 
                                 <TextView
                                     android:id="@+id/type_average_text_view"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_gravity="end"
+                                    android:layout_weight="1"
+                                    android:layout_marginLeft="8dp"
                                     android:text="@{detail.typeAverage}"
+                                    android:textAlignment="textEnd"
                                     android:textColor="@android:color/black"
                                     android:textSize="16sp"
-                                    tools:text="50%" />
-                            </FrameLayout>
+                                    tools:text="50%"
+                                    tools:ignore="RtlHardcoded" />
+                            </LinearLayout>
                         </LinearLayout>
 
 

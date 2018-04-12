@@ -6,5 +6,5 @@
         android:id="@+id/del"
         android:icon="@drawable/ic_del_menu"
         android:title="@string/del_bill"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 </menu>

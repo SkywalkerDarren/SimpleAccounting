@@ -21,6 +21,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
 import io.github.skywalkerdarren.simpleaccounting.model.Type;
 import io.github.skywalkerdarren.simpleaccounting.model.TypeLab;
 import io.github.skywalkerdarren.simpleaccounting.ui.BillEditActivity;
+import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
  * 账单详单vm
@@ -121,7 +122,7 @@ public class BillDetailViewModel extends BaseObservable {
      * @return 账单收支
      */
     public String getBalance() {
-        return mBill.getBalance().toString();
+        return FormatUtil.getNumberic(mBill.getBalance());
     }
 
     /**
@@ -204,7 +205,8 @@ public class BillDetailViewModel extends BaseObservable {
 
     @Bindable
     public String getTypeAverage() {
-        return mStatsLab.getTypeAverage(mStart, mEnd, mBill.getTypeId()).toString();
+        BigDecimal avg = mStatsLab.getTypeAverage(mStart, mEnd, mBill.getTypeId());
+        return FormatUtil.getNumberic(avg);
     }
 
     @Bindable

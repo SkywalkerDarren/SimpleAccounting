@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
+import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
  * 流水vm
@@ -55,7 +56,7 @@ public class JournalViewModel extends BaseObservable {
      */
     @Bindable
     public String getIncome() {
-        return mIncome.toString();
+        return FormatUtil.getNumberic(mIncome);
     }
 
     /**
@@ -63,7 +64,7 @@ public class JournalViewModel extends BaseObservable {
      */
     @Bindable
     public String getExpense() {
-        return mExpense.toString();
+        return FormatUtil.getNumberic(mExpense);
     }
 
     /**
@@ -71,7 +72,7 @@ public class JournalViewModel extends BaseObservable {
      */
     @Bindable
     public String getSum() {
-        return mSum.toString();
+        return FormatUtil.getNumberic(mSum);
     }
 
     /**

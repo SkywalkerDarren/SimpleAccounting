@@ -31,6 +31,7 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentChartBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
+import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -99,7 +100,7 @@ public class PieChartFragment extends BaseFragment {
 
         StatsLab.BillStats stats = StatsLab.getInstance(getContext())
                 .getStats(mStartDateTime, mEndDateTime);
-        String s = mIsExpense ? stats.getExpense().toString() : stats.getIncome().toString();
+        String s = FormatUtil.getNumberic(mIsExpense ? stats.getExpense() : stats.getIncome());
         mPieChart.setCenterText(generateCenterText(s));
 
         mPieChart.setCenterTextSize(24);
@@ -108,8 +109,6 @@ public class PieChartFragment extends BaseFragment {
         mPieChart.setTransparentCircleRadius(75f);
         mPieChart.setUsePercentValues(true);
         mPieChart.animateY(1000, Easing.EasingOption.EaseInOutExpo);
-        // TODO: 2018/3/28 暂无法解决view pager与图表滑动的冲突
-        //        mPieChart.setTouchEnabled(false);
 
         // 关闭图注
         Legend legend = mPieChart.getLegend();

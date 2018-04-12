@@ -4,6 +4,7 @@ import android.databinding.BaseObservable;
 import android.support.annotation.IntRange;
 
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
+import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
  * 统计项目vm
@@ -28,21 +29,21 @@ public class StatsItemViewModel extends BaseObservable {
      * @return 收入
      */
     public String getIncome() {
-        return mStats.getIncome().toString();
+        return FormatUtil.getNumberic(mStats.getIncome());
     }
 
     /**
      * @return 支出
      */
     public String getExpense() {
-        return mStats.getExpense().toString();
+        return FormatUtil.getNumberic(mStats.getExpense());
     }
 
     /**
      * @return 盈余
      */
     public String getBalance() {
-        return mStats.getSum().toString();
+        return FormatUtil.getNumberic(mStats.getSum());
     }
 
     /**

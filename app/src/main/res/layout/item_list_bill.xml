@@ -72,7 +72,9 @@
 
                     <android.support.constraint.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        app:layout_constraintBottom_toBottomOf="@+id/title_text_view"
+                        app:layout_constraintTop_toBottomOf="@+id/title_text_view">
 
                         <TextView
                             android:id="@+id/title_text_view"
@@ -85,25 +87,28 @@
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:transitionName="title_text_view"
+                            app:layout_constraintBottom_toTopOf="@+id/remark_text_view"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             tools:text="标题" />
 
                         <TextView
                             android:id="@+id/balance_edit_text"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="16dp"
-                            android:layout_marginEnd="16dp"
+                            android:layout_marginStart="8dp"
                             android:layout_marginTop="16dp"
                             android:fontFamily="@font/droid_sans"
                             android:text="@{bill.balance}"
+                            android:textAlignment="textEnd"
                             android:textColor="@{bill.balanceColor}"
                             android:textSize="24sp"
                             android:textStyle="bold"
                             android:transitionName="balance_text_view"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/remark_text_view"
                             app:layout_constraintTop_toTopOf="parent"
                             tools:text="9999" />
 
@@ -111,6 +116,7 @@
                             android:id="@+id/remark_text_view"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginTop="4dp"
                             android:layout_weight="1"
@@ -118,7 +124,9 @@
                             android:text="@{bill.remark}"
                             android:textAlignment="viewStart"
                             android:textSize="12sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/balance_edit_text"
+                            app:layout_constraintHorizontal_chainStyle="spread_inside"
                             app:layout_constraintStart_toStartOf="@+id/title_text_view"
                             app:layout_constraintTop_toBottomOf="@+id/title_text_view"
                             tools:text="备注" />

@@ -19,6 +19,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
 import io.github.skywalkerdarren.simpleaccounting.model.Type;
 import io.github.skywalkerdarren.simpleaccounting.model.TypeLab;
+import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 import static io.github.skywalkerdarren.simpleaccounting.adapter.BillAdapter.HEADER;
 import static io.github.skywalkerdarren.simpleaccounting.adapter.BillAdapter.WITHOUT_REMARK;
@@ -59,7 +60,7 @@ public class BillInfo implements MultiItemEntity {
         mUUID = bill.getId();
         mTitle = bill.getName();
         mRemark = bill.getRemark();
-        mBalance = bill.getBalance().toString();
+        mBalance = FormatUtil.getNumberic(bill.getBalance());
         mIsExpense = type.getExpense();
         mBillTypeResId = type.getTypeId();
         mDateTime = bill.getDate();
