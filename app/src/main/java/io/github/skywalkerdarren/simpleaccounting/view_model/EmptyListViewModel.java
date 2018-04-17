@@ -9,7 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
-import io.github.skywalkerdarren.simpleaccounting.ui.BillEditActivity;
+import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillEditActivity;
 
 /**
  * 空列表vm

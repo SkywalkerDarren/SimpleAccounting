@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.ui;
+package io.github.skywalkerdarren.simpleaccounting.ui.fragment;
 
 
 import android.animation.ObjectAnimator;

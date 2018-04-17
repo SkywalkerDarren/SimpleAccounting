@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.ui;
+package io.github.skywalkerdarren.simpleaccounting.ui.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -25,8 +25,8 @@ public class PeriodDialogFragment extends DialogFragment {
 
     private static final String ARG_START = "start";
     private static final String ARG_END = "end";
-    public static final String EXTRA_END_DATE = "io.github.skywalkerdarren.simpleaccounting.ui.PeriodDialogFragment.EXTRA_END_DATE";
-    public static final String EXTRA_START_DATE = "io.github.skywalkerdarren.simpleaccounting.ui.PeriodDialogFragment.EXTRA_START_DATE";
+    public static final String EXTRA_END_DATE = "io.github.skywalkerdarren.simpleaccounting.ui.fragment.PeriodDialogFragment.EXTRA_END_DATE";
+    public static final String EXTRA_START_DATE = "io.github.skywalkerdarren.simpleaccounting.ui.fragment.PeriodDialogFragment.EXTRA_START_DATE";
     private DatePicker mStartDatePicker;
     private DatePicker mEndDatePicker;
 

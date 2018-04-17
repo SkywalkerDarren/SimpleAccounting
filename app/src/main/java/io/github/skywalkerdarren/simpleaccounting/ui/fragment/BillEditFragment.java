@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.ui;
+package io.github.skywalkerdarren.simpleaccounting.ui.fragment;
 
 
 import android.animation.Animator;
@@ -9,14 +9,19 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.transition.Fade;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.transition.Explode;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,8 +29,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 
 import org.joda.time.DateTime;
 
@@ -34,14 +41,19 @@ import java.util.List;
 
 import co.ceryle.segmentedbutton.SegmentedButtonGroup;
 import io.github.skywalkerdarren.simpleaccounting.R;
+import io.github.skywalkerdarren.simpleaccounting.adapter.AccountMenuAdapter;
 import io.github.skywalkerdarren.simpleaccounting.adapter.TypeAdapter;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillEditBinding;
+import io.github.skywalkerdarren.simpleaccounting.databinding.MenuAccountBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.AccountLab;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.Type;
 import io.github.skywalkerdarren.simpleaccounting.model.TypeLab;
+import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
+import io.github.skywalkerdarren.simpleaccounting.ui.NumPad;
+import io.github.skywalkerdarren.simpleaccounting.util.DpConvertUtils;
 import io.github.skywalkerdarren.simpleaccounting.view_model.BillEditViewModel;
 
 /**
@@ -51,6 +63,8 @@ import io.github.skywalkerdarren.simpleaccounting.view_model.BillEditViewModel;
  * @date 2018/2/21
  */
 public class BillEditFragment extends BaseFragment {
+    private static final String TAG = "BillEditFragment";
+
     private static final String ARG_BILL = "bill";
     private static final int REQUEST_DATE = 0;
     private static final String ARG_CX = "cx";
@@ -77,7 +91,6 @@ public class BillEditFragment extends BaseFragment {
         setHasOptionsMenu(true);
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -99,10 +112,10 @@ public class BillEditFragment extends BaseFragment {
 
         // 配置适配器
         TypeAdapter adapter = new TypeAdapter(null, binding);
-        adapter.openLoadAnimation(view14 -> {
+        adapter.openLoadAnimation(view -> {
                     Animator animator = AnimatorInflater.loadAnimator(getActivity(),
                             R.animator.type_item_appear);
-                    animator.setTarget(view14);
+                    animator.setTarget(view);
                     return new Animator[]{animator};
                 }
         );
@@ -127,36 +140,42 @@ public class BillEditFragment extends BaseFragment {
         }
 
         mNumPad.setStrReceiver(mBalanceEditText);
-        mBalanceEditText.setOnTouchListener((view16, motionEvent) -> {
-            mRemarkEditText.clearFocus();
-            mNumPad.hideSysKeyboard();
-            new Handler().postDelayed(() -> mNumPad.showKeyboard(), 200);
-            return true;
-        });
-        mBalanceEditText.setSelection(mBalanceEditText.getText().length());
-        mBalanceEditText.setOnFocusChangeListener((view15, b) -> {
-            if (!b) {
-                mNumPad.hideKeyboard();
-            }
-        });
+        setBalanceEditText();
 
-        mRemarkEditText.setOnClickListener((view1) -> mNumPad.hideKeyboard());
+        mRemarkEditText.setOnClickListener((view) -> mNumPad.hideKeyboard());
 
-        binding.dateImageView.setOnClickListener(view13 -> {
+        binding.dateImageView.setOnClickListener(view -> {
             DatePickerFragment datePicker = DatePickerFragment.newInstance(mViewModel.getDate());
             datePicker.setTargetFragment(this, REQUEST_DATE);
             datePicker.show(getFragmentManager(), "datePicker");
         });
 
         // TODO: 2018/4/2 监听账户点击
-        binding.accountTypeCardView.setOnClickListener(view18 -> {
-
+        binding.accountTypeImageView.setOnClickListener(view -> {
+            Log.d(TAG, "onCreateView: clickImage");
+            getPopupWindow(binding.accountTypeImageView);
         });
 
         binding.setEdit(mViewModel);
         viewEnterAnimation(binding.getRoot());
         return binding.getRoot();
     }
+
+    private void setBalanceEditText() {
+        mBalanceEditText.setOnTouchListener((view, motionEvent) -> {
+            mRemarkEditText.clearFocus();
+            mNumPad.hideSysKeyboard();
+            new Handler().postDelayed(() -> mNumPad.showKeyboard(), 200);
+            return true;
+        });
+        mBalanceEditText.setSelection(mBalanceEditText.getText().length());
+        mBalanceEditText.setOnFocusChangeListener((view, b) -> {
+            if (!b) {
+                mNumPad.hideKeyboard();
+            }
+        });
+    }
+
 
     /**
      * 配置初始账单，将账单信息绑定到视图
@@ -292,5 +311,36 @@ public class BillEditFragment extends BaseFragment {
     @Override
     protected void updateUI() {
 
+    }
+
+    public BillEditViewModel getViewModel() {
+        return mViewModel;
+    }
+
+    private void getPopupWindow(View view) {
+        MenuAccountBinding binding = MenuAccountBinding.inflate(LayoutInflater.from(getContext()));
+        View menu = binding.getRoot();
+        AccountMenuAdapter adapter = new AccountMenuAdapter(AccountLab.getInstance(getContext()).getAccounts());
+        PopupWindow popupWindow = new PopupWindow(menu);
+        adapter.setOnItemClickListener((adapter1, view1, position) -> {
+            Account account = (Account) adapter1.getData().get(position);
+            mViewModel.setAccount(account);
+            popupWindow.dismiss();
+        });
+        binding.accountRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.accountRecyclerView.setAdapter(adapter);
+        binding.accountRecyclerView.addItemDecoration(
+                new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow.setElevation(DpConvertUtils.convertDpToPixel(2, getContext()));
+        popupWindow.getContentView().measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
+        popupWindow.setAnimationStyle(R.style.anim_menu_account);
+        int height = popupWindow.getContentView().getMeasuredHeight();
+        Log.d(TAG, "getPopupWindow() called with: view = [" + height + "]");
+        popupWindow.showAsDropDown(view, 0,
+                (int) -(height + view.getHeight() * 1.3), Gravity.TOP);
     }
 }

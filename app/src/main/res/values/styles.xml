@@ -10,5 +10,8 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowContentTransitions">true</item>
     </style>
-
+    <style name="anim_menu_account">
+        <item name="android:windowEnterAnimation">@anim/menu_account_in</item>
+        <item name="android:windowExitAnimation">@anim/menu_account_out</item>
+    </style>
 </resources>

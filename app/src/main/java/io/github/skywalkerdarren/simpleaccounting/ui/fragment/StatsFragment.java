@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.ui;
+package io.github.skywalkerdarren.simpleaccounting.ui.fragment;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;

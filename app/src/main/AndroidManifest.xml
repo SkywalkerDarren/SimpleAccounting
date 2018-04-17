@@ -9,15 +9,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:label="@string/title_activity_bill"
             android:launchMode="singleTop">
         </activity>
         <activity
-            android:name=".ui.BillDetailActivity"
+            android:name=".ui.activity.BillDetailActivity"
             android:label="@string/detail_bill" />
         <activity
-            android:name=".ui.BillEditActivity"
+            android:name=".ui.activity.BillEditActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <receiver android:name=".ui.DesktopWidget">
@@ -30,9 +30,9 @@
                 android:resource="@xml/bill_widget" />
         </receiver>
 
-        <activity android:name=".ui.StatsActivity" />
+        <activity android:name=".ui.activity.StatsActivity" />
         <activity
-            android:name=".ui.WelcomeActivity"
+            android:name=".ui.fragment.WelcomeActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

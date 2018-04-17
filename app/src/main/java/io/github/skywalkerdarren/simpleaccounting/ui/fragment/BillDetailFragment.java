@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.ui;
+package io.github.skywalkerdarren.simpleaccounting.ui.fragment;
 
 
 import android.animation.Animator;
@@ -58,7 +58,6 @@ public class BillDetailFragment extends BaseFragment {
     private final static float COLLAPSED_TYPE_SIZE_DP = 32f;
 
     private Bill mBill;
-    private Toolbar mToolbar;
     private Space mSpace;
     private TextView mTypeTitleTextView;
     private AppBarLayout mAppBarLayout;
@@ -94,9 +93,9 @@ public class BillDetailFragment extends BaseFragment {
         mTypeImageView = mBinding.typeToolbarImageView;
         mToolbarTextView = mBinding.toolbarTitle;
         mAppBarLayout = mBinding.appbar;
-        mToolbar = mBinding.toolbar;
+        Toolbar toolbar = mBinding.toolbar;
         AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.setSupportActionBar(mToolbar);
+        activity.setSupportActionBar(toolbar);
         //noinspection ConstantConditions
         activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -198,7 +197,7 @@ public class BillDetailFragment extends BaseFragment {
         mTypeTitleTextView.setTranslationY(0);
     }
 
-    void resetPoints() {
+    public void resetPoints() {
         clearAnim();
 
         int avatarSize = DpConvertUtils.convertDpToPixelSize(EXPAND_TYPE_SIZE_DP, getContext());

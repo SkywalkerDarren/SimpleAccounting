@@ -13,6 +13,8 @@ import org.joda.time.DateTime;
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
+import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillEditActivity;
+import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
  * 桌面小部件
@@ -51,9 +53,9 @@ public class DesktopWidget extends AppWidgetProvider {
                 .get(DateTime.now().getMonthOfYear() - 1);
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_bill);
         views.setOnClickPendingIntent(R.id.add_bill_text_view, pendingIntent);
-        views.setTextViewText(R.id.income_text_view, stats.getIncome().toString());
-        views.setTextViewText(R.id.expense_text_view, stats.getExpense().toString());
-        views.setTextViewText(R.id.total_text_view, stats.getSum().toString());
+        views.setTextViewText(R.id.income_text_view, FormatUtil.getNumberic(stats.getIncome()));
+        views.setTextViewText(R.id.expense_text_view, FormatUtil.getNumberic(stats.getExpense()));
+        views.setTextViewText(R.id.total_text_view, FormatUtil.getNumberic(stats.getSum()));
         mComponentName = new ComponentName(context, DesktopWidget.class);
         appWidgetManager.updateAppWidget(mComponentName, views);
     }

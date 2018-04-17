@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.ui;
+package io.github.skywalkerdarren.simpleaccounting.ui.activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -24,6 +24,9 @@ import android.view.animation.DecelerateInterpolator;
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.databinding.ActivityBillBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
+import io.github.skywalkerdarren.simpleaccounting.ui.fragment.AccountFragment;
+import io.github.skywalkerdarren.simpleaccounting.ui.fragment.BillListFragment;
+import io.github.skywalkerdarren.simpleaccounting.ui.fragment.DiscoveryFragment;
 
 /**
  * 主界面

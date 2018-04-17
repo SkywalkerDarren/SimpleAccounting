@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.BillInfo;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
-import io.github.skywalkerdarren.simpleaccounting.ui.BillDetailActivity;
+import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillDetailActivity;
 
 /**
  * 账单列表物品vm

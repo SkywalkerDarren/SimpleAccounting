@@ -9,7 +9,7 @@ import org.joda.time.DateTime;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
-import io.github.skywalkerdarren.simpleaccounting.ui.StatsActivity;
+import io.github.skywalkerdarren.simpleaccounting.ui.activity.StatsActivity;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**

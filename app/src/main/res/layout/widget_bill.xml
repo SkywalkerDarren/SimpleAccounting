@@ -15,15 +15,16 @@
         android:layout_marginBottom="4dp"
         android:background="@drawable/widget_fg"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="3dp">
 
         <ImageView
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:layout_marginEnd="4dp"
-            android:layout_marginStart="8dp"
-            android:background="@mipmap/ic_logo"
-            android:text="@string/add_bill" />
+            android:layout_marginStart="4dp"
+            android:background="@drawable/widget_logo"
+            android:text="@string/add_bill"/>
 
         <ImageView
             android:layout_width="1dp"
@@ -60,7 +61,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/widget_fg"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="2dp">
 
         <LinearLayout
             android:id="@+id/expense_linear_layout"
@@ -74,7 +76,7 @@
                 android:id="@+id/expense_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/expense"
+                android:textColor="@color/orange900"
                 android:textSize="14sp"
                 tools:text="1234" />
 
@@ -82,7 +84,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/expense"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 tools:ignore="SmallSp" />
         </LinearLayout>
 
@@ -105,7 +107,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:textColor="@color/expense"
+                android:textColor="@color/balance"
                 android:textSize="14sp"
                 tools:text="1234" />
 
@@ -114,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/total_balance"
                 android:textAlignment="center"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 tools:ignore="SmallSp" />
 
         </LinearLayout>
@@ -138,7 +140,7 @@
                 android:id="@+id/income_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/expense"
+                android:textColor="@color/income"
                 android:textSize="14sp"
                 tools:text="1234" />
 
@@ -146,7 +148,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/income"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 tools:ignore="SmallSp" />
         </LinearLayout>
 

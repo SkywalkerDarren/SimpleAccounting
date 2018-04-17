@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.ui;
+package io.github.skywalkerdarren.simpleaccounting.ui.fragment;
 
 
 import android.animation.Animator;
@@ -30,9 +30,6 @@ import io.github.skywalkerdarren.simpleaccounting.databinding.EmptyStatsBinding;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentClassifyBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
 import io.github.skywalkerdarren.simpleaccounting.view_model.ClassifyViewModel;
-
-import static io.github.skywalkerdarren.simpleaccounting.ui.PeriodDialogFragment.EXTRA_END_DATE;
-import static io.github.skywalkerdarren.simpleaccounting.ui.PeriodDialogFragment.EXTRA_START_DATE;
 
 
 /**
@@ -211,8 +208,8 @@ public class ClassifyFragment extends BaseFragment {
         }
         switch (requestCode) {
             case REQUEST_PERIOD:
-                DateTime start = (DateTime) data.getSerializableExtra(EXTRA_START_DATE);
-                DateTime end = (DateTime) data.getSerializableExtra(EXTRA_END_DATE);
+                DateTime start = (DateTime) data.getSerializableExtra(PeriodDialogFragment.EXTRA_START_DATE);
+                DateTime end = (DateTime) data.getSerializableExtra(PeriodDialogFragment.EXTRA_END_DATE);
                 mViewModel.setDate(start, end);
                 updateUI();
                 break;
