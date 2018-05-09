@@ -15,14 +15,16 @@
         android:layout_height="wrap_content"
         android:background="@color/grey50"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginBottom="6dp"
+        android:layout_marginTop="6dp">
 
         <TextView
             android:id="@+id/bills_date_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="14dp"
             android:layout_marginTop="8dp"
             android:text="@{header.date}"
             tools:text="2018-2-2" />
@@ -58,7 +60,7 @@
             android:id="@+id/bill_income_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="23dp"
             android:text="@{header.income}"
             android:textAlignment="center"
             android:textColor="@android:color/holo_green_light"
