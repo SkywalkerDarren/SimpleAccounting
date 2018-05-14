@@ -14,6 +14,9 @@
     <color name="expense">#ffab40</color>
     <color name="balance">#039be5</color>
 
+    <color name="indicator_focused">#317aba</color>
+    <color name="indicator_unfocused">#c7dcf2</color>
+
     <color name="red50">#fde0dc</color>
     <color name="red100">#f9bdbb</color>
     <color name="red200">#f69988</color>

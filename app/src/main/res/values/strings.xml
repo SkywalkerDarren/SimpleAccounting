@@ -154,4 +154,5 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_settings2">Settings</string>
+    <string name="enter">开始记账</string>
 </resources>

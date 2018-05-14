@@ -35,14 +35,14 @@
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="50dp"
                 android:background="@android:color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <FrameLayout
                     android:id="@+id/image_card_view"
-                    android:layout_width="33dp"
+                    android:layout_width="35dp"
                     android:layout_height="0dp"
                     android:layout_marginBottom="4dp"
                     android:layout_marginStart="15dp"
@@ -82,7 +82,7 @@
                             android:layout_weight="1"
                             android:text="@{bill.title}"
                             android:textColor="@color/black"
-                            android:textSize="16sp"
+                            android:textSize="18sp"
                             android:transitionName="title_text_view"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -99,7 +99,7 @@
                             android:text="@{bill.balance}"
                             android:textAlignment="textEnd"
                             android:textColor="@{bill.balanceColor}"
-                            android:textSize="20sp"
+                            android:textSize="24sp"
                             android:transitionName="balance_text_view"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
