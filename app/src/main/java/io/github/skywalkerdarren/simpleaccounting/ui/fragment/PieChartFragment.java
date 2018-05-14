@@ -3,12 +3,16 @@ package io.github.skywalkerdarren.simpleaccounting.ui.fragment;
 import android.annotation.SuppressLint;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.graphics.TypefaceCompat;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
+import android.text.style.TypefaceSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +35,7 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentChartBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
+import io.github.skywalkerdarren.simpleaccounting.util.CustomTypefaceSpan;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
@@ -120,6 +125,10 @@ public class PieChartFragment extends BaseFragment {
         SpannableString s = new SpannableString(str + "\n" + sum);
         s.setSpan(new RelativeSizeSpan(2f), 0, str.length(), 0);
         s.setSpan(new ForegroundColorSpan(Color.GRAY), str.length(), s.length(), 0);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            Typeface typeface = getResources().getFont(R.font.lalezar);
+            s.setSpan(new CustomTypefaceSpan("", typeface), str.length(), s.length(), 0);
+        }
         return s;
     }
 

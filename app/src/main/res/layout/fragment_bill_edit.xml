@@ -132,19 +132,12 @@
                     android:singleLine="true"
                     android:textAlignment="viewEnd"
                     android:textSize="24sp"
-                    android:textStyle="bold"
+                    android:fontFamily="@font/lalezar"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/title_text_view"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <!--<View-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="1dp"-->
-                    <!--android:background="@color/grey500"-->
-                    <!--app:layout_constraintBottom_toBottomOf="parent"-->
-                    <!--app:layout_constraintEnd_toEndOf="parent"-->
-                    <!--app:layout_constraintStart_toStartOf="parent" />-->
             </android.support.constraint.ConstraintLayout>
 
             <android.support.v7.widget.RecyclerView

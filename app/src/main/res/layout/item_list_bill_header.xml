@@ -13,11 +13,9 @@
         android:id="@+id/bills_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/grey50"
+        android:background="@color/grey100"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:layout_marginBottom="6dp"
-        android:layout_marginTop="6dp">
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/bills_date_text_view"
@@ -48,6 +46,7 @@
             android:layout_marginEnd="16dp"
             android:text="@{header.expense}"
             android:textColor="@android:color/holo_red_light"
+            android:fontFamily="@font/concert_one"
             tools:text="1000" />
 
         <TextView
@@ -64,6 +63,7 @@
             android:text="@{header.income}"
             android:textAlignment="center"
             android:textColor="@android:color/holo_green_light"
+            android:fontFamily="@font/concert_one"
             tools:text="10000" />
     </LinearLayout>
 </layout>

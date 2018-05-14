@@ -55,12 +55,12 @@
                     android:id="@+id/money_income_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="casual"
+                    android:fontFamily="@font/concert_one"
                     android:text="@{billList.income}"
                     android:textAlignment="center"
+                    android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="24sp"
-                    android:textStyle="bold"
                     tools:text="233" />
 
                 <TextView
@@ -88,12 +88,11 @@
                     android:id="@+id/money_budge_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="casual"
+                    android:fontFamily="@font/concert_one"
                     android:text="@{billList.budget}"
                     android:textAlignment="center"
                     android:textColor="@color/white"
                     android:textSize="30sp"
-                    android:textStyle="bold"
                     tools:text="233" />
 
                 <TextView
@@ -121,12 +120,11 @@
                     android:id="@+id/money_expense_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="casual"
+                    android:fontFamily="@font/concert_one"
                     android:text="@{billList.expense}"
                     android:textAlignment="center"
                     android:textColor="@color/white"
                     android:textSize="24sp"
-                    android:textStyle="bold"
                     tools:text="2339999" />
 
                 <TextView

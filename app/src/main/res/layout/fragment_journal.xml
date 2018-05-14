@@ -132,8 +132,8 @@
                     android:id="@+id/expense_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{journal.expense ,default=@string/zero}"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/concert_one"
+                    android:text="@{journal.expense ,default=@string/zero}" />
 
             </LinearLayout>
 
@@ -168,8 +168,8 @@
                     android:id="@+id/income_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{journal.income, default=@string/zero}"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/concert_one"
+                    android:text="@{journal.income, default=@string/zero}" />
 
             </LinearLayout>
 
@@ -204,8 +204,8 @@
                     android:id="@+id/balance_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{journal.sum, default=@string/zero}"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/concert_one"
+                    android:text="@{journal.sum, default=@string/zero}" />
 
             </LinearLayout>
 
