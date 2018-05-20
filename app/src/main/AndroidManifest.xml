@@ -9,16 +9,25 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".ui.activity.WelcomeActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".ui.activity.MainActivity"
             android:label="@string/title_activity_bill"
-            android:launchMode="singleTop">
-        </activity>
+            android:launchMode="singleTop" />
         <activity
             android:name=".ui.activity.BillDetailActivity"
             android:label="@string/detail_bill" />
         <activity
             android:name=".ui.activity.BillEditActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity android:name=".ui.activity.StatsActivity" />
 
         <receiver android:name=".ui.DesktopWidget">
             <intent-filter>
@@ -30,13 +39,11 @@
                 android:resource="@xml/bill_widget" />
         </receiver>
 
-        <activity android:name=".ui.activity.StatsActivity" />
-        <activity
-            android:name=".ui.fragment.WelcomeActivity"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+        <activity android:name=".ui.activity.SettingsActivity2"/>
+        <activity android:name=".ui.activity.AboutActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="simpleaccounting.about"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
     </application>

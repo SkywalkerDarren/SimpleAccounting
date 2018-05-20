@@ -16,16 +16,19 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="48dp"
             android:layout_gravity="bottom|center"/>
+
         <Button
             android:id="@+id/enter_button"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
-            android:text="@string/enter"
+            android:layout_marginBottom="30dp"
             android:layout_marginRight="32dp"
-            android:layout_marginBottom="48dp"
-            android:visibility="gone"
+            android:text="@string/enter"
+            android:textAllCaps="false"
             android:textColor="@color/indicator_focused"
-            android:background="@color/transparent"/>
+            android:textSize="17sp"
+            android:visibility="gone" />
     </FrameLayout>
 </layout>

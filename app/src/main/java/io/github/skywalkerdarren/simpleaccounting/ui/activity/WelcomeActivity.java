@@ -5,8 +5,13 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -31,11 +36,11 @@ public class WelcomeActivity extends Activity {
         super.onCreate(savedInstanceState);
         bind();
         setImage();
-        mButton.setOnClickListener(view -> {
+        mButton.setOnClickListener(view -> new Handler().post(() -> {
             Intent intent = MainActivity.newIntent(WelcomeActivity.this);
             startActivity(intent);
             WelcomeActivity.this.finish();
-        });
+        }));
         mDotLayout.getChildAt(0).setEnabled(true);
         mViewPager.setAdapter(new WelcomeAdapter());
         mViewPager.addOnPageChangeListener(new WelcomeListener());
@@ -55,7 +60,8 @@ public class WelcomeActivity extends Activity {
         mImageViews = new ArrayList<>(productPhotos.length);
         for (int i : productPhotos) {
             ImageView imageView = new ImageView(this);
-            imageView.setBackgroundResource(i);
+            imageView.setImageResource(i);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             mImageViews.add(imageView);
 
             View view = new View(this);
