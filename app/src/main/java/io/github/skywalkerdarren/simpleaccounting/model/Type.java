@@ -1,5 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.model;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 
@@ -15,11 +17,10 @@ import java.util.UUID;
 public class Type {
     private UUID mId;
     private String mName;
-    @DrawableRes
-    private int mResId;
     @ColorRes
     private int mColorId;
     private boolean mIsExpense;
+    private Bitmap mBitmap;
 
     /**
      * 根据id创建类型
@@ -38,8 +39,8 @@ public class Type {
     /**
      * 设定类型图标资源
      */
-    public Type setResId(int resId) {
-        mResId = resId;
+    public Type setBitmap(Bitmap bitmap) {
+        mBitmap = bitmap;
         return this;
     }
 
@@ -84,9 +85,8 @@ public class Type {
      *
      * @return 资源id
      */
-    public @DrawableRes
-    int getTypeId() {
-        return mResId;
+    public Bitmap getBitmap() {
+        return mBitmap;
     }
 
     /**

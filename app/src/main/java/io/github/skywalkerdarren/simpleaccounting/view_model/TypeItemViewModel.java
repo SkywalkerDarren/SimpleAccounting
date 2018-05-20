@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.content.Context;
 import android.databinding.BaseObservable;
+import android.graphics.Bitmap;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillEditBinding;
@@ -37,8 +38,8 @@ public class TypeItemViewModel extends BaseObservable {
     /**
      * @return 类型图id
      */
-    public int getRes() {
-        return mType.getTypeId();
+    public Bitmap getRes() {
+        return mType.getBitmap();
     }
 
     /**

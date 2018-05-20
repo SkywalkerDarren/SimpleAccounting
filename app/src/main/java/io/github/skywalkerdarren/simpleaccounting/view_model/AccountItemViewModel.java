@@ -2,6 +2,7 @@ package io.github.skywalkerdarren.simpleaccounting.view_model;
 
 import android.content.Context;
 import android.databinding.BaseObservable;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import org.joda.time.DateTime;
@@ -30,8 +31,8 @@ public class AccountItemViewModel extends BaseObservable {
     /**
      * @return 账户图片id
      */
-    public int getImg() {
-        return mAccount.getImageId();
+    public Bitmap getImg() {
+        return mAccount.getBitmap();
     }
 
     /**

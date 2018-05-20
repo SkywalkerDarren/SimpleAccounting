@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.graphics.Bitmap;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.util.Log;
@@ -106,9 +107,8 @@ public class BillDetailViewModel extends BaseObservable {
     /**
      * @return 类型图id
      */
-    @DrawableRes
-    public int getTypeImage() {
-        return mType.getTypeId();
+    public Bitmap getTypeImage() {
+        return mType.getBitmap();
     }
 
     /**

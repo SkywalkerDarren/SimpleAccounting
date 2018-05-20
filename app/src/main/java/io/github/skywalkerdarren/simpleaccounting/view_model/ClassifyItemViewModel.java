@@ -1,6 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.view_model;
 
 import android.databinding.BaseObservable;
+import android.graphics.Bitmap;
 
 import java.math.BigDecimal;
 
@@ -33,8 +34,8 @@ public class ClassifyItemViewModel extends BaseObservable {
     /**
      * @return 类型图片id
      */
-    public int getImg() {
-        return mStats.getType().getTypeId();
+    public Bitmap getImg() {
+        return mStats.getType().getBitmap();
     }
 
     /**

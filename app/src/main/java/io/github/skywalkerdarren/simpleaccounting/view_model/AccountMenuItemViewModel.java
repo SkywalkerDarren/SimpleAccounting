@@ -1,6 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.view_model;
 
 import android.databinding.BaseObservable;
+import android.graphics.Bitmap;
 
 import io.github.skywalkerdarren.simpleaccounting.model.Account;
 
@@ -16,8 +17,8 @@ public class AccountMenuItemViewModel extends BaseObservable {
         mAccount = account;
     }
 
-    public int getImg() {
-        return mAccount.getImageId();
+    public Bitmap getImg() {
+        return mAccount.getBitmap();
     }
 
     public int getColor() {

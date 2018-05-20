@@ -47,7 +47,7 @@ class DbSchema {
         static final class Cols {
             static final String UUID = TABLE_NAME + "_uuid";
             static final String NAME = TABLE_NAME + "_name";
-            static final String RES_ID = TABLE_NAME + "_res_id";
+            static final String RES = TABLE_NAME + "_res";
             static final String COLOR = TABLE_NAME + "_color";
             static final String IS_EXPENSE = TABLE_NAME + "_is_expense";
         }
@@ -69,7 +69,7 @@ class DbSchema {
         static final class Cols {
             static final String UUID = TABLE_NAME + "_uuid";
             static final String NAME = TABLE_NAME + "_name";
-            static final String IMAGE_ID = TABLE_NAME + "_image_id";
+            static final String IMAGE = TABLE_NAME + "_image";
             static final String COLOR_ID = TABLE_NAME + "_color_id";
             static final String BALANCE = TABLE_NAME + "_balance";
             static final String BALANCE_HINT = TABLE_NAME + "_balance_hint";

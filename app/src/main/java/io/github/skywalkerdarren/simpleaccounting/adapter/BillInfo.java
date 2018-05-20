@@ -1,6 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -41,8 +42,7 @@ public class BillInfo implements MultiItemEntity {
     private String mRemark;
     private String mBalance;
     private boolean mIsExpense;
-    @DrawableRes
-    private int mBillTypeResId;
+    private Bitmap mBillTypeRes;
 
     private String mIncome;
     private String mExpense;
@@ -62,7 +62,7 @@ public class BillInfo implements MultiItemEntity {
         mRemark = bill.getRemark();
         mBalance = FormatUtil.getNumberic(bill.getBalance());
         mIsExpense = type.getExpense();
-        mBillTypeResId = type.getTypeId();
+        mBillTypeRes = type.getBitmap();
         mDateTime = bill.getDate();
     }
 
@@ -131,9 +131,8 @@ public class BillInfo implements MultiItemEntity {
     /**
      * @return 账单类型资源id
      */
-    @DrawableRes
-    public int getBillTypeResId() {
-        return mBillTypeResId;
+    public Bitmap getBillTypeRes() {
+        return mBillTypeRes;
     }
 
     /**

@@ -1,5 +1,6 @@
 package io.github.skywalkerdarren.simpleaccounting.model;
 
+import android.graphics.Bitmap;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 
@@ -18,8 +19,7 @@ public class Account {
     private String mName;
     private String mBalanceHint;
     private BigDecimal mBalance;
-    @DrawableRes
-    private int mImageId;
+    private Bitmap mBitmap;
     private int mColor;
     @ColorRes
     private int mColorId;
@@ -55,8 +55,8 @@ public class Account {
         mBalance = mBalance.subtract(balance);
     }
 
-    public Account setImageId(int imageId) {
-        mImageId = imageId;
+    public Account setBitmap(Bitmap bitmap) {
+        mBitmap = bitmap;
         return this;
     }
 
@@ -87,9 +87,8 @@ public class Account {
         return mBalance;
     }
 
-    @DrawableRes
-    public int getImageId() {
-        return mImageId;
+    public Bitmap getBitmap() {
+        return mBitmap;
     }
 
     public int getColor() {

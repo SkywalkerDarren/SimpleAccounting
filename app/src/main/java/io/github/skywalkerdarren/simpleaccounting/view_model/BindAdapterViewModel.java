@@ -2,6 +2,7 @@ package io.github.skywalkerdarren.simpleaccounting.view_model;
 
 import android.databinding.BaseObservable;
 import android.databinding.BindingAdapter;
+import android.graphics.Bitmap;
 import android.support.v7.widget.CardView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,6 +16,11 @@ public class BindAdapterViewModel extends BaseObservable {
     /**
      * 通过id设置图片
      */
+    @BindingAdapter("android:src")
+    public static void setTypeImage(ImageView view, Bitmap res) {
+        view.setImageBitmap(res);
+    }
+
     @BindingAdapter("android:src")
     public static void setTypeImage(ImageView view, int res) {
         view.setImageResource(res);

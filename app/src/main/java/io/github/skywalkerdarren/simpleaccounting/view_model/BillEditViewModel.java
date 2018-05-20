@@ -3,6 +3,7 @@ package io.github.skywalkerdarren.simpleaccounting.view_model;
 import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -60,8 +61,8 @@ public class BillEditViewModel extends BaseObservable {
      * @return 类型图id
      */
     @Bindable
-    public int getTypeImg() {
-        return mType.getTypeId();
+    public Bitmap getTypeImg() {
+        return mType.getBitmap();
     }
 
     /**
@@ -82,8 +83,8 @@ public class BillEditViewModel extends BaseObservable {
      * @return 账户图id
      */
     @Bindable
-    public int getAccountImg() {
-        return mAccount.getImageId();
+    public Bitmap getAccountImg() {
+        return mAccount.getBitmap();
     }
 
     /**

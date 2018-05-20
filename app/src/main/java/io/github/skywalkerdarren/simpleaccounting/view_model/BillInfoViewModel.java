@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.databinding.BaseObservable;
 import android.databinding.BindingAdapter;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.view.MotionEvent;
@@ -65,8 +66,8 @@ public class BillInfoViewModel extends BaseObservable {
     /**
      * @return 账单类型图id
      */
-    public int getTypeRes() {
-        return mBillInfo.getBillTypeResId();
+    public Bitmap getTypeRes() {
+        return mBillInfo.getBillTypeRes();
     }
 
     /**
