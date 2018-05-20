@@ -177,7 +177,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
                 android:contentDescription="@string/bills_date"
-                android:src="@drawable/detail_calendar"
+                android:src="@drawable/detail_calendar_black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -196,13 +196,15 @@
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/account_type_card_view"
+                app:layout_constraintStart_toEndOf="@+id/lend_bg_card_view"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <android.support.v7.widget.CardView
-                android:id="@+id/account_type_card_view"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:id="@+id/lend_bg_card_view"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
                 android:layout_marginStart="8dp"
                 app:cardBackgroundColor="@{edit.accountColor}"
                 app:cardCornerRadius="5dp"

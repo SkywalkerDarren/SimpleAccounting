@@ -155,4 +155,8 @@
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_settings2">Settings</string>
     <string name="enter">开始记账</string>
+    <string name="pref_header_about">关于</string>
+    <string name="my_borrow">我的借款</string>
+    <string name="borrow_hint">应收款</string>
+    <string name="lend_hint">应还款</string>
 </resources>

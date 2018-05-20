@@ -286,7 +286,7 @@
                             <ImageView
                                 android:layout_width="18dp"
                                 android:layout_height="18dp"
-                                app:srcCompat="@drawable/detail_calendar" />
+                                app:srcCompat="@drawable/time" />
 
                             <FrameLayout
                                 android:layout_width="match_parent"
@@ -538,11 +538,14 @@
 
                         <Button
                             android:id="@+id/mode_button"
+                            style="@style/Widget.AppCompat.Button.Borderless.Colored"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
                             android:onClick="@{() -> detail.setDate()}"
                             android:text="@{detail.mode}"
+                            android:textColor="@color/colorPrimary"
+                            android:textAllCaps="false"
                             tools:ignore="RtlHardcoded" />
 
                     </LinearLayout>
@@ -575,7 +578,7 @@
                         <ImageView
                             android:layout_width="18dp"
                             android:layout_height="18dp"
-                            app:srcCompat="@android:color/darker_gray" />
+                            app:srcCompat="@drawable/markup" />
 
                         <Space
                             android:layout_width="16dp"

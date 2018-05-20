@@ -12,12 +12,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
         android:orientation="horizontal">
 
         <android.support.v7.widget.CardView
             android:id="@+id/account_card_view"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
             android:background="@color/green500"
             android:elevation="0dp"
             android:padding="4dp"
@@ -39,9 +43,9 @@
             android:id="@+id/account_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="8dp"
+            android:padding="4dp"
             android:text="@{account.name}"
-            android:textSize="18sp"
+            android:textSize="14sp"
             tools:ignore="HardcodedText"
             tools:text="支付宝" />
 
