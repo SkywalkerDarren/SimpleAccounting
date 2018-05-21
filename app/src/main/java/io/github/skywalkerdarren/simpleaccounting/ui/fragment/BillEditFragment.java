@@ -79,6 +79,22 @@ public class BillEditFragment extends BaseFragment {
     private NumPad mNumPad;
     private ImageView mTypeImageView;
 
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param bill 要编辑的账单
+     * @return A new instance of fragment BillEditFragment.
+     */
+    public static BillEditFragment newInstance(Bill bill, int centerX, int centerY) {
+        BillEditFragment fragment = new BillEditFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_BILL, bill);
+        args.putInt(ARG_CX, centerX);
+        args.putInt(ARG_CY, centerY);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -176,7 +192,6 @@ public class BillEditFragment extends BaseFragment {
         });
     }
 
-
     /**
      * 配置初始账单，将账单信息绑定到视图
      */
@@ -238,23 +253,6 @@ public class BillEditFragment extends BaseFragment {
                 set.start();
             }
         });
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param bill 要编辑的账单
-     * @return A new instance of fragment BillEditFragment.
-     */
-    public static BillEditFragment newInstance(Bill bill, int centerX, int centerY) {
-        BillEditFragment fragment = new BillEditFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(ARG_BILL, bill);
-        args.putInt(ARG_CX, centerX);
-        args.putInt(ARG_CY, centerY);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override

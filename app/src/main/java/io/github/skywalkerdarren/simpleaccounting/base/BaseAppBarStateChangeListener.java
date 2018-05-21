@@ -4,10 +4,6 @@ import android.support.design.widget.AppBarLayout;
 
 public abstract class BaseAppBarStateChangeListener implements AppBarLayout.OnOffsetChangedListener {
 
-    public enum State {
-        EXPANDED, COLLAPSED, IDLE
-    }
-
     private State mCurrentState = State.IDLE;
     private float mCurrentOffset = 0f;
 
@@ -47,4 +43,8 @@ public abstract class BaseAppBarStateChangeListener implements AppBarLayout.OnOf
     public abstract void onStateChanged(AppBarLayout appBarLayout, State state);
 
     public abstract void onOffsetChanged(State state, float offset);
+
+    public enum State {
+        EXPANDED, COLLAPSED, IDLE
+    }
 }

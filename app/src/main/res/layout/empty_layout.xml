@@ -23,8 +23,8 @@
             android:onClick="@{() -> empty.onClick()}"
             android:text="@string/start_accounting"
             android:textAlignment="center"
-            android:textSize="16sp"
             android:textColor="@color/orange500"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:onTouch="@{false}" />
     </LinearLayout>

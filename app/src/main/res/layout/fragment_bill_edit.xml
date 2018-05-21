@@ -127,12 +127,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
                     android:layout_marginStart="8dp"
+                    android:fontFamily="@font/lalezar"
                     android:hint="@string/zero"
                     android:inputType="text"
                     android:singleLine="true"
                     android:textAlignment="viewEnd"
                     android:textSize="24sp"
-                    android:fontFamily="@font/lalezar"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/title_text_view"
@@ -161,13 +161,13 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <!--<View-->
-                <!--android:id="@+id/line2"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="1dp"-->
-                <!--android:background="@android:color/darker_gray"-->
-                <!--app:layout_constraintEnd_toEndOf="parent"-->
-                <!--app:layout_constraintStart_toStartOf="parent"-->
-                <!--app:layout_constraintTop_toBottomOf="parent" />-->
+            <!--android:id="@+id/line2"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:background="@android:color/darker_gray"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--app:layout_constraintTop_toBottomOf="parent" />-->
 
             <ImageView
                 android:id="@+id/date_image_view"
@@ -203,9 +203,9 @@
                 android:id="@+id/lend_bg_card_view"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                android:layout_marginTop="3dp"
                 android:layout_marginBottom="3dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="3dp"
                 app:cardBackgroundColor="@{edit.accountColor}"
                 app:cardCornerRadius="5dp"
                 app:cardElevation="0dp"

@@ -5,14 +5,11 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.graphics.TypefaceCompat;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
-import android.text.style.TypefaceSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,11 +45,11 @@ public class PieChartFragment extends BaseFragment {
     private static final String ARG_START = "start";
     private static final String ARG_END = "end";
     private static final String ARG_IS_EXPENSE = "isExpense";
+    private static final String TAG = "PieChartFragment";
     private DateTime mStartDateTime;
     private DateTime mEndDateTime;
     private PieChart mPieChart;
     private boolean mIsExpense;
-    private static final String TAG = "PieChartFragment";
 
     /**
      * Use this factory method to create a new instance of

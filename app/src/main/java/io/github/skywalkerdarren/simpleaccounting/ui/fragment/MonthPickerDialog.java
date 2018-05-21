@@ -3,8 +3,6 @@ package io.github.skywalkerdarren.simpleaccounting.ui.fragment;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
@@ -26,8 +24,8 @@ import io.github.skywalkerdarren.simpleaccounting.R;
  */
 
 public class MonthPickerDialog extends DialogFragment {
-    private final static String ARG_DATE_TIME = "datetime";
     public static final String EXTRA_DATE = "io.github.skywalkerdarren.simpleaccounting.datetime";
+    private final static String ARG_DATE_TIME = "datetime";
     private NumberPicker mYearPicker;
     private NumberPicker mMonthPicker;
 

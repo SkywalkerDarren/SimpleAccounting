@@ -17,6 +17,7 @@ public class AccountAdapter extends BaseDraggableDataBindingAdapter<Account, Ite
     public AccountAdapter(List<Account> data) {
         super(R.layout.item_account, data);
     }
+
     @Override
     protected void convert(ItemAccountBinding binding, Account item) {
         binding.setAccount(new AccountItemViewModel(item, mContext));

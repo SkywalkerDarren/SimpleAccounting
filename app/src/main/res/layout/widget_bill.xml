@@ -24,7 +24,7 @@
             android:layout_marginEnd="4dp"
             android:layout_marginStart="4dp"
             android:background="@drawable/widget_logo"
-            android:text="@string/add_bill"/>
+            android:text="@string/add_bill" />
 
         <ImageView
             android:layout_width="1dp"

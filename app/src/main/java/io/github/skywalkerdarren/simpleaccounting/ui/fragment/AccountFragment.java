@@ -33,15 +33,33 @@ import io.github.skywalkerdarren.simpleaccounting.view_model.AccountViewModel;
  * A simple {@link Fragment} subclass.
  * Use the {@link AccountFragment#newInstance} factory method to
  * create an instance of this fragment.
+ *
  * @author darren
  */
 public class AccountFragment extends BaseFragment {
+    private static final String TAG = "AccountFragment";
     private AccountLab mAccountLab;
     private RecyclerView mAccountRecyclerView;
     private AccountAdapter mAdapter;
     private FragmentAccountBinding mBinding;
     private AccountViewModel mViewModel;
-    private static final String TAG = "AccountFragment";
+
+    public AccountFragment() {
+        // Required empty public constructor
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @return A new instance of fragment AccountFragment.
+     */
+    public static AccountFragment newInstance() {
+        AccountFragment fragment = new AccountFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,23 +95,6 @@ public class AccountFragment extends BaseFragment {
     public void onDetach() {
         super.onDetach();
         Log.d(TAG, "onDetach() called");
-    }
-
-    public AccountFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment AccountFragment.
-     */
-    public static AccountFragment newInstance() {
-        AccountFragment fragment = new AccountFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override

@@ -113,6 +113,14 @@ public class Bill implements Serializable {
     }
 
     /**
+     * @param typeId 类型ID
+     */
+    public Bill setTypeId(UUID typeId) {
+        mTypeId = typeId;
+        return this;
+    }
+
+    /**
      * @return 账户ID
      */
     public UUID getAccountId() {
@@ -124,14 +132,6 @@ public class Bill implements Serializable {
      */
     public Bill setAccountId(UUID accountId) {
         mAccountId = accountId;
-        return this;
-    }
-
-    /**
-     * @param typeId 类型ID
-     */
-    public Bill setTypeId(UUID typeId) {
-        mTypeId = typeId;
         return this;
     }
 

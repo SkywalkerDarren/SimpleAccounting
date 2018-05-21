@@ -40,12 +40,24 @@ import io.github.skywalkerdarren.simpleaccounting.view_model.ClassifyViewModel;
 public class ClassifyFragment extends BaseFragment {
 
     private static final int REQUEST_PERIOD = 0;
+    ClassifyViewModel mViewModel;
     private ViewPager mViewPager;
     private ClassifyAdapter mClassifyAdapter;
     private ImageView mToIncomeImageView;
     private ImageView mToExpenseImageView;
 
-    ClassifyViewModel mViewModel;
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @return A new instance of fragment ClassifyFragment.
+     */
+    public static ClassifyFragment newInstance() {
+        ClassifyFragment fragment = new ClassifyFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,19 +110,6 @@ public class ClassifyFragment extends BaseFragment {
         binding.setClassify(mViewModel);
 
         return binding.getRoot();
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment ClassifyFragment.
-     */
-    public static ClassifyFragment newInstance() {
-        ClassifyFragment fragment = new ClassifyFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
     }
 
     private void customDialog() {

@@ -34,7 +34,6 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="6dp"
                 android:padding="4dp"
-                tools:cardBackgroundColor="@color/red"
                 app:cardBackgroundColor="@{account.color}"
                 app:cardCornerRadius="5dp"
                 app:cardElevation="0dp"
@@ -42,7 +41,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.6">
+                app:layout_constraintVertical_bias="0.6"
+                tools:cardBackgroundColor="@color/red">
 
                 <ImageView
                     android:id="@+id/account_type_image_view"
@@ -72,8 +72,8 @@
                 android:layout_marginStart="8dp"
                 android:fontFamily="@font/lalezar"
                 android:text="@{account.balance}"
-                android:textColor="@color/black"
                 android:textAlignment="textEnd"
+                android:textColor="@color/black"
                 android:textSize="22sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -19,9 +19,9 @@ import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
  */
 
 public class AccountItemViewModel extends BaseObservable {
+    private static final String TAG = "AccountItemViewModel";
     private Account mAccount;
     private Context mContext;
-    private static final String TAG = "AccountItemViewModel";
 
     public AccountItemViewModel(Account account, Context context) {
         mAccount = account;

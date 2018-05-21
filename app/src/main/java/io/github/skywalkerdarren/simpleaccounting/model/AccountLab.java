@@ -56,6 +56,27 @@ public class AccountLab {
         return values;
     }
 
+    static void initAccountDb(SQLiteDatabase sqLiteDatabase, Context context) {
+        context = context.getApplicationContext();
+        List<Account> accounts = new ArrayList<>(3);
+        accounts.add(new Account().setName("现金").setBalanceHint("现金金额")
+                .setBitmap(idToBitmap(context, R.drawable.account_cash))
+                .setColorId(R.color.amber500)
+                .setBalance(BigDecimal.ZERO));
+        accounts.add(new Account().setName("支付宝").setBalanceHint("在线支付余额")
+                .setBitmap(idToBitmap(context, R.drawable.account_alipay))
+                .setColorId(R.color.lightblue500)
+                .setBalance(BigDecimal.ZERO));
+        accounts.add(new Account().setName("微信").setBalanceHint("在线支付余额")
+                .setBitmap(idToBitmap(context, R.drawable.account_wechat))
+                .setColorId(R.color.lightgreen500)
+                .setBalance(BigDecimal.ZERO));
+        for (Account account : accounts) {
+            sqLiteDatabase.insert(TABLE_NAME, null,
+                    getContentValues(account));
+        }
+    }
+
     private AccountCursorWrapper queryAccounts(String where, String[] args) {
         @SuppressLint("Recycle") Cursor cursor = mDatabase.query(TABLE_NAME,
                 null,
@@ -91,27 +112,6 @@ public class AccountLab {
             }
         }
         return accounts;
-    }
-
-    static void initAccountDb(SQLiteDatabase sqLiteDatabase, Context context) {
-        context = context.getApplicationContext();
-        List<Account> accounts = new ArrayList<>(3);
-        accounts.add(new Account().setName("现金").setBalanceHint("现金金额")
-                .setBitmap(idToBitmap(context,R.drawable.account_cash))
-                .setColorId(R.color.amber500)
-                .setBalance(BigDecimal.ZERO));
-        accounts.add(new Account().setName("支付宝").setBalanceHint("在线支付余额")
-                .setBitmap(idToBitmap(context,R.drawable.account_alipay))
-                .setColorId(R.color.lightblue500)
-                .setBalance(BigDecimal.ZERO));
-        accounts.add(new Account().setName("微信").setBalanceHint("在线支付余额")
-                .setBitmap(idToBitmap(context,R.drawable.account_wechat))
-                .setColorId(R.color.lightgreen500)
-                .setBalance(BigDecimal.ZERO));
-        for (Account account : accounts) {
-            sqLiteDatabase.insert(TABLE_NAME, null,
-                    getContentValues(account));
-        }
     }
 
     public void updateAccount(Account account) {

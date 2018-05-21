@@ -27,6 +27,7 @@
                 app:contentScrim="?attr/colorPrimary"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed|enterAlways"
                 app:toolbarId="@+id/toolbar">
+
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
@@ -91,9 +92,9 @@
                         android:layout_height="80dp"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="?attr/actionBarSize"
+                        android:padding="1dp"
                         android:src="@{detail.typeImage}"
-                        android:transitionName="type_image_view"
-                        android:padding="1dp" />
+                        android:transitionName="type_image_view" />
                 </FrameLayout>
 
             </android.support.design.widget.CollapsingToolbarLayout>
@@ -445,14 +446,14 @@
                                     android:id="@+id/type_average_text_view"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="1"
                                     android:layout_marginLeft="8dp"
+                                    android:layout_weight="1"
                                     android:text="@{detail.typeAverage}"
                                     android:textAlignment="textEnd"
                                     android:textColor="@android:color/black"
                                     android:textSize="16sp"
-                                    tools:text="50%"
-                                    tools:ignore="RtlHardcoded" />
+                                    tools:ignore="RtlHardcoded"
+                                    tools:text="50%" />
                             </LinearLayout>
                         </LinearLayout>
 
@@ -544,8 +545,8 @@
                             android:layout_gravity="right"
                             android:onClick="@{() -> detail.setDate()}"
                             android:text="@{detail.mode}"
-                            android:textColor="@color/colorPrimary"
                             android:textAllCaps="false"
+                            android:textColor="@color/colorPrimary"
                             tools:ignore="RtlHardcoded" />
 
                     </LinearLayout>

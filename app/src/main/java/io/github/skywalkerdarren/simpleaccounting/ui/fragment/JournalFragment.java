@@ -51,6 +51,19 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
     private boolean mShowExpense = true;
     private boolean mShowBalance = true;
 
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @return A new instance of fragment JournalFragment.
+     */
+    public static JournalFragment newInstance() {
+        JournalFragment fragment = new JournalFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,19 +88,6 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
         // TODO 动态年份
         configChartStyle();
         return binding.getRoot();
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment JournalFragment.
-     */
-    public static JournalFragment newInstance() {
-        JournalFragment fragment = new JournalFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
     }
 
     /**

@@ -71,8 +71,8 @@
                 android:id="@+id/date_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{journal.date}"
                 android:onClick="@{() -> journal.changeDate()}"
+                android:text="@{journal.date}"
                 tools:layout_editor_absoluteX="290dp"
                 tools:layout_editor_absoluteY="21dp"
                 tools:text="@sample/tools:date/mmddyy" />

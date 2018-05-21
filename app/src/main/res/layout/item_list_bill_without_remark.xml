@@ -14,10 +14,10 @@
         android:id="@+id/bill_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="4dp"
         android:paddingEnd="13dp"
         android:paddingStart="13dp"
         android:paddingTop="4dp"
-        android:paddingBottom="4dp"
         tools:ignore="ContentDescription">
 
         <android.support.v7.widget.CardView
@@ -57,8 +57,8 @@
                         android:id="@+id/type_image_view"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:transitionName="type_image_view"
                         android:src="@{bill.typeRes}"
+                        android:transitionName="type_image_view"
                         app:srcCompat="@drawable/type_image_diet" />
                 </FrameLayout>
 

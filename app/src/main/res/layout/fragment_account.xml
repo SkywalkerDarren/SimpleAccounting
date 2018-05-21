@@ -75,8 +75,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="14dp"
                         android:text="@string/liability_s"
-                        android:textSize="16sp"
                         android:textColor="@color/white"
+                        android:textSize="16sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/nav_text_view" />
@@ -87,8 +87,8 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/concert_one"
                         android:text="@{account.liability}"
-                        android:textSize="16sp"
                         android:textColor="@color/white"
+                        android:textSize="16sp"
                         app:layout_constraintStart_toEndOf="@+id/textView4"
                         app:layout_constraintTop_toTopOf="@+id/textView4"
                         tools:text="103" />
@@ -99,8 +99,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:text="@string/total_assets_s"
-                        android:textSize="16sp"
                         android:textColor="@color/white"
+                        android:textSize="16sp"
                         app:layout_constraintStart_toEndOf="@+id/liability_text_view"
                         app:layout_constraintTop_toTopOf="@+id/liability_text_view" />
 
@@ -110,8 +110,8 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/concert_one"
                         android:text="@{account.totalAssets}"
-                        android:textSize="16sp"
                         android:textColor="@color/white"
+                        android:textSize="16sp"
                         app:layout_constraintStart_toEndOf="@+id/textView6"
                         app:layout_constraintTop_toTopOf="@+id/textView6"
                         tools:text="233" />
@@ -396,8 +396,8 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?android:attr/selectableItemBackground"
-                        app:cardCornerRadius="5dp"
                         app:cardBackgroundColor="@color/orange500"
+                        app:cardCornerRadius="5dp"
                         app:cardElevation="1dp">
 
                         <FrameLayout
@@ -410,9 +410,9 @@
                                 android:layout_gravity="center"
                                 android:layout_margin="8dp"
                                 android:text="@string/setting"
-                                android:textStyle="bold"
                                 android:textColor="@color/white"
-                                android:textSize="24sp" />
+                                android:textSize="24sp"
+                                android:textStyle="bold" />
                         </FrameLayout>
                     </android.support.v7.widget.CardView>
 

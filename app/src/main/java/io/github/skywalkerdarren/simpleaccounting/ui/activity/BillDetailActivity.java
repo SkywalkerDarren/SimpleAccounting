@@ -18,10 +18,10 @@ import io.github.skywalkerdarren.simpleaccounting.ui.fragment.BillDetailFragment
  * @date 2018/2/21
  */
 public class BillDetailActivity extends BaseFragmentActivity {
-    private static final String EXTRA_BILL = "bill";
     public static final String EXTRA_CENTER_X = "io.github.skywalkerdarren.simpleaccounting.centerX";
     public static final String EXTRA_CENTER_Y = "io.github.skywalkerdarren.simpleaccounting.centerY";
     public static final String EXTRA_START_COLOR = "io.github.skywalkerdarren.simpleaccounting.startColor";
+    private static final String EXTRA_BILL = "bill";
     private BillDetailFragment mBillDetailFragment;
 
     /**

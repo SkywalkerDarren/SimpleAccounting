@@ -23,10 +23,10 @@ import io.github.skywalkerdarren.simpleaccounting.databinding.PeriodDialogFragme
 
 public class PeriodDialogFragment extends DialogFragment {
 
-    private static final String ARG_START = "start";
-    private static final String ARG_END = "end";
     public static final String EXTRA_END_DATE = "io.github.skywalkerdarren.simpleaccounting.ui.fragment.PeriodDialogFragment.EXTRA_END_DATE";
     public static final String EXTRA_START_DATE = "io.github.skywalkerdarren.simpleaccounting.ui.fragment.PeriodDialogFragment.EXTRA_START_DATE";
+    private static final String ARG_START = "start";
+    private static final String ARG_END = "end";
     private DatePicker mStartDatePicker;
     private DatePicker mEndDatePicker;
 

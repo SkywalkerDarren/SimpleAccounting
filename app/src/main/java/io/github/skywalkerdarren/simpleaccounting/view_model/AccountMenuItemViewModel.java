@@ -13,7 +13,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.Account;
 public class AccountMenuItemViewModel extends BaseObservable {
     private Account mAccount;
 
-    public AccountMenuItemViewModel(Account account){
+    public AccountMenuItemViewModel(Account account) {
         mAccount = account;
     }
 

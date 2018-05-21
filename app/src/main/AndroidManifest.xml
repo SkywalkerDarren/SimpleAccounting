@@ -39,13 +39,15 @@
                 android:resource="@xml/bill_widget" />
         </receiver>
 
-        <activity android:name=".ui.activity.SettingsActivity2"/>
+        <activity android:name=".ui.activity.SettingsActivity2" />
         <activity android:name=".ui.activity.AboutActivity">
             <intent-filter>
-                <action android:name="simpleaccounting.about"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="simpleaccounting.about" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.activity.MyAccountActivity"></activity>
     </application>
 
 </manifest>

@@ -41,13 +41,25 @@ import static io.github.skywalkerdarren.simpleaccounting.adapter.BillAdapter.HEA
 public class BillListFragment extends BaseFragment {
     private static final int REQUEST_DATE_TIME = 0;
     private static final String SHARED_BUDGET = "budget";
-    private RecyclerView mBillListRecyclerView;
-    private BillAdapter mBillAdapter;
-
     FragmentBillListBinding mBinding;
     BillListViewModel mViewModel;
-
+    private RecyclerView mBillListRecyclerView;
+    private BillAdapter mBillAdapter;
     private SharedPreferences mSharedPref;
+
+    /**
+     * 账单示例构造
+     *
+     * @return 当前账单
+     */
+    public static BillListFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        BillListFragment fragment = new BillListFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -145,20 +157,6 @@ public class BillListFragment extends BaseFragment {
 //            return new Animator[]{animator};
 //        });
 //        mBillAdapter.isFirstOnly(true);
-    }
-
-    /**
-     * 账单示例构造
-     *
-     * @return 当前账单
-     */
-    public static BillListFragment newInstance() {
-
-        Bundle args = new Bundle();
-
-        BillListFragment fragment = new BillListFragment();
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override

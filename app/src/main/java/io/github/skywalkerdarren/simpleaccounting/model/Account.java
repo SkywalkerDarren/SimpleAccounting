@@ -2,7 +2,6 @@ package io.github.skywalkerdarren.simpleaccounting.model;
 
 import android.graphics.Bitmap;
 import android.support.annotation.ColorRes;
-import android.support.annotation.DrawableRes;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -32,21 +31,6 @@ public class Account {
         mUUID = UUID.randomUUID();
     }
 
-    public Account setName(String name) {
-        mName = name;
-        return this;
-    }
-
-    public Account setBalanceHint(String balanceHint) {
-        mBalanceHint = balanceHint;
-        return this;
-    }
-
-    public Account setBalance(BigDecimal balance) {
-        mBalance = balance;
-        return this;
-    }
-
     public void plusBalance(BigDecimal balance) {
         mBalance = mBalance.add(balance);
     }
@@ -55,14 +39,9 @@ public class Account {
         mBalance = mBalance.subtract(balance);
     }
 
-    public Account setBitmap(Bitmap bitmap) {
-        mBitmap = bitmap;
-        return this;
-    }
-
-    public Account setColor(int color) {
-        mColor = color;
-        return this;
+    @ColorRes
+    public int getColorId() {
+        return mColorId;
     }
 
     public Account setColorId(@ColorRes int colorId) {
@@ -70,29 +49,49 @@ public class Account {
         return this;
     }
 
-    @ColorRes
-    public int getColorId() {
-        return mColorId;
-    }
-
     public String getName() {
         return mName;
+    }
+
+    public Account setName(String name) {
+        mName = name;
+        return this;
     }
 
     public String getBalanceHint() {
         return mBalanceHint;
     }
 
+    public Account setBalanceHint(String balanceHint) {
+        mBalanceHint = balanceHint;
+        return this;
+    }
+
     public BigDecimal getBalance() {
         return mBalance;
+    }
+
+    public Account setBalance(BigDecimal balance) {
+        mBalance = balance;
+        return this;
     }
 
     public Bitmap getBitmap() {
         return mBitmap;
     }
 
+    public Account setBitmap(Bitmap bitmap) {
+        mBitmap = bitmap;
+        return this;
+    }
+
     public int getColor() {
         return mColor;
+    }
+
+    public Account setColor(int color) {
+        mColor = color;
+        return this;
     }
 
     public UUID getId() {

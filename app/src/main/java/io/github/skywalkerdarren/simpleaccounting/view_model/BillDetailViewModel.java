@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.graphics.Bitmap;
-import android.support.annotation.DrawableRes;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.util.Log;
 import android.view.View;
@@ -32,6 +31,8 @@ import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
  */
 
 public class BillDetailViewModel extends BaseObservable {
+    private static final String TAG = "BillDetailViewModel";
+    private static int mode = 0;
     private Bill mBill;
     private Type mType;
     private Account mAccount;
@@ -39,9 +40,6 @@ public class BillDetailViewModel extends BaseObservable {
     private StatsLab mStatsLab;
     private DateTime mStart;
     private DateTime mEnd;
-    private static final String TAG = "BillDetailViewModel";
-
-    private static int mode = 0;
 
     public BillDetailViewModel(Bill bill, Activity activity) {
         mActivity = activity;

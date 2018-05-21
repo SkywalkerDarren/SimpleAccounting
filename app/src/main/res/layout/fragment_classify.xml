@@ -55,8 +55,8 @@
                 android:id="@+id/to_income_image_view"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:src="@drawable/back"
                 android:layout_gravity="center_vertical|left"
+                android:src="@drawable/back"
                 tools:ignore="RtlHardcoded" />
 
             <android.support.v4.view.ViewPager
@@ -70,8 +70,8 @@
                 android:id="@+id/to_expense_image_view"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:src="@drawable/more"
                 android:layout_gravity="center_vertical|right"
+                android:src="@drawable/more"
                 tools:ignore="RtlHardcoded" />
 
         </FrameLayout>

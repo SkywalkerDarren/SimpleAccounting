@@ -28,9 +28,9 @@ import io.github.skywalkerdarren.simpleaccounting.util.CalculateUtil;
  */
 
 public class NumPad extends LinearLayout {
+    private final float y = getTranslationY();
     private EditText mEditText;
     private Context mContext;
-    private final float y = getTranslationY();
 
     /**
      * 小键盘构造

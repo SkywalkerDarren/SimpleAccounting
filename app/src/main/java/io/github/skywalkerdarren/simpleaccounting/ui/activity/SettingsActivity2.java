@@ -12,16 +12,16 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
-import io.github.skywalkerdarren.simpleaccounting.R;
-
 import java.util.List;
+
+import io.github.skywalkerdarren.simpleaccounting.R;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -35,10 +35,6 @@ import java.util.List;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity2 extends AppCompatPreferenceActivity {
-
-    public static Intent newIntent(Context context) {
-        return new Intent(context, SettingsActivity2.class);
-    }
 
     /**
      * A preference value change listener that updates the preference's summary
@@ -88,6 +84,10 @@ public class SettingsActivity2 extends AppCompatPreferenceActivity {
         }
         return true;
     };
+
+    public static Intent newIntent(Context context) {
+        return new Intent(context, SettingsActivity2.class);
+    }
 
     /**
      * Helper method to determine if the device has an extra-large screen. For
@@ -195,7 +195,7 @@ public class SettingsActivity2 extends AppCompatPreferenceActivity {
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class AboutPreferenceFragment  extends PreferenceFragment {
+    public static class AboutPreferenceFragment extends PreferenceFragment {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);

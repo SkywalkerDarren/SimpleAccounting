@@ -6,12 +6,12 @@
         android:toYDelta="30%" />
     <alpha
         android:fromAlpha="1"
-        android:toAlpha="0"/>
+        android:toAlpha="0" />
     <scale
-        android:pivotX="0%"
-        android:pivotY="100%"
         android:fromXScale="100%"
         android:fromYScale="100%"
+        android:pivotX="0%"
+        android:pivotY="100%"
         android:toXScale="0%"
-        android:toYScale="0%"/>
+        android:toYScale="0%" />
 </set>

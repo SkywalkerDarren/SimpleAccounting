@@ -28,6 +28,19 @@ public class StatsFragment extends Fragment {
     private ViewPager mViewPager;
     private Toolbar mToolbar;
 
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @return A new instance of fragment StatsFragment.
+     */
+    public static StatsFragment newInstance() {
+        Bundle args = new Bundle();
+        StatsFragment fragment = new StatsFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,19 +114,6 @@ public class StatsFragment extends Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment StatsFragment.
-     */
-    public static StatsFragment newInstance() {
-        Bundle args = new Bundle();
-        StatsFragment fragment = new StatsFragment();
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override

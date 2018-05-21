@@ -47,7 +47,7 @@ public class DatePickerFragment extends DialogFragment {
      * 发送结果
      *
      * @param resultCode 结果代码：决定下一步该采取什么行动
-     * @param date 日期
+     * @param date       日期
      */
     private void sendResult(int resultCode, DateTime date) {
         if (getTargetFragment() == null) {

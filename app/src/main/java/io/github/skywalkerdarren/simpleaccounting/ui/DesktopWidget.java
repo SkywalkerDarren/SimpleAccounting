@@ -24,8 +24,8 @@ import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
  */
 
 public class DesktopWidget extends AppWidgetProvider {
-    private static final int REQUEST_BILL = 0;
     public static final String EXTRA_ACTION_UP = "android.appwidget.action.APPWIDGET_UPDATE";
+    private static final int REQUEST_BILL = 0;
     private ComponentName mComponentName;
 
     public DesktopWidget() {

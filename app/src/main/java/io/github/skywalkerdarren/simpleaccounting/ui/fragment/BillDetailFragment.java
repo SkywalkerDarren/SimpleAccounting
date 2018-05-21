@@ -56,13 +56,12 @@ public class BillDetailFragment extends BaseFragment {
     private static final String ARG_START_COLOR = "startColor";
     private final static float EXPAND_TYPE_SIZE_DP = 80f;
     private final static float COLLAPSED_TYPE_SIZE_DP = 32f;
-
+    private static final int REQUEST_DESTROY = 0;
     private Bill mBill;
     private Space mSpace;
     private TextView mTypeTitleTextView;
     private AppBarLayout mAppBarLayout;
     private FragmentBillDetailBinding mBinding;
-    private static final int REQUEST_DESTROY = 0;
     private BaseAppBarStateChangeListener mAppBarStateChangeListener;
     private int[] mTypePoint = new int[2],
             mSpacePoint = new int[2],
@@ -71,6 +70,22 @@ public class BillDetailFragment extends BaseFragment {
     private TextView mToolbarTextView;
     private float mTitleTextSize;
     private ImageView mTypeImageView;
+
+    /**
+     * @param bill 存储的账单
+     * @param cx   x中心点
+     * @param cy   y中心点
+     */
+    public static BillDetailFragment newInstance(Bill bill, int cx, int cy, @ColorRes int startColor) {
+        BillDetailFragment fragment = new BillDetailFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_BILL, bill);
+        args.putInt(ARG_CX, cx);
+        args.putInt(ARG_CY, cy);
+        args.putInt(ARG_START_COLOR, startColor);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -213,22 +228,6 @@ public class BillDetailFragment extends BaseFragment {
             mTypeTitleTextView.getLocationOnScreen(mTitleTextViewPoint);
             translationView(mAppBarStateChangeListener.getCurrentOffset());
         });
-    }
-
-    /**
-     * @param bill 存储的账单
-     * @param cx   x中心点
-     * @param cy   y中心点
-     */
-    public static BillDetailFragment newInstance(Bill bill, int cx, int cy, @ColorRes int startColor) {
-        BillDetailFragment fragment = new BillDetailFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(ARG_BILL, bill);
-        args.putInt(ARG_CX, cx);
-        args.putInt(ARG_CY, cy);
-        args.putInt(ARG_START_COLOR, startColor);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override

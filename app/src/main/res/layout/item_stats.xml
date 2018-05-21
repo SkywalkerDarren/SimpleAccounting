@@ -35,11 +35,11 @@
                     android:id="@+id/income_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/lalezar"
                     android:text="@{stats.income}"
                     android:textAlignment="center"
                     android:textColor="@color/income"
                     android:textSize="18sp"
-                    android:fontFamily="@font/lalezar"
                     tools:text="1000" />
             </LinearLayout>
 
@@ -51,10 +51,10 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:fontFamily="@font/lalezar"
                     android:id="@+id/expense_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/lalezar"
                     android:text="@{stats.expense}"
                     android:textAlignment="center"
                     android:textColor="@color/expense"
@@ -70,10 +70,10 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:fontFamily="@font/lalezar"
                     android:id="@+id/balance_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/lalezar"
                     android:text="@{stats.balance}"
                     android:textAlignment="center"
                     android:textColor="@color/balance"
@@ -95,11 +95,11 @@
                     app:cardElevation="0dp">
 
                     <TextView
-                        android:fontFamily="@font/shrikhand"
                         android:id="@+id/month_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:fontFamily="@font/shrikhand"
                         android:text="@{stats.month}"
                         android:textAlignment="center"
                         android:textColor="@color/white"

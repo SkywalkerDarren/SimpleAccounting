@@ -22,14 +22,9 @@ import io.github.skywalkerdarren.simpleaccounting.ui.fragment.BillEditFragment;
  */
 
 public class BillEditActivity extends BaseFragmentActivity {
-    private static final String EXTRA_BILL = "bill";
     public static final String EXTRA_CENTER_X = "io.github.skywalkerdarren.simpleaccounting.centerX";
     public static final String EXTRA_CENTER_Y = "io.github.skywalkerdarren.simpleaccounting.centerY";
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
-    }
+    private static final String EXTRA_BILL = "bill";
 
     public static Intent newIntent(Context context, Bill bill, int x, int y) {
         Intent intent = new Intent(context, BillEditActivity.class);
@@ -39,6 +34,10 @@ public class BillEditActivity extends BaseFragmentActivity {
         return intent;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        super.onCreate(savedInstanceState, persistentState);
+    }
 
     @Override
     public void onBackPressed() {
