@@ -2,6 +2,7 @@ package io.github.skywalkerdarren.simpleaccounting.adapter;
 
 import android.animation.Animator;
 import android.support.annotation.Nullable;
+import android.view.View;
 
 import java.util.List;
 

@@ -85,6 +85,9 @@
                 android:background="@color/grey50"
                 android:gravity="center"
                 android:orientation="horizontal"
+                android:foreground="?attr/selectableItemBackground"
+                android:focusable="true"
+                android:clickable="true"
                 android:padding="8dp"
                 android:paddingStart="16dp">
 
@@ -106,6 +109,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/grey50"
+                android:foreground="?attr/selectableItemBackground"
+                android:focusable="true"
+                android:clickable="true"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="8dp"

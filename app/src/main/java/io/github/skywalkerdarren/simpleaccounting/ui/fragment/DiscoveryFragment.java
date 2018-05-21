@@ -81,7 +81,7 @@ public class DiscoveryFragment extends BaseFragment {
             View view = new View(getContext());
             view.setBackgroundResource(R.drawable.indicator);
             view.setEnabled(false);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(30, 30);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(15, 15);
             if (i != productPhotos[0]) {
                 params.leftMargin = 10;
             }

@@ -16,14 +16,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/grey100"
+                android:background="@color/grey50"
                 android:orientation="vertical"
                 tools:ignore="ContentDescription">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/grey50"
+                    android:background="@color/white"
                     android:gravity="center"
                     android:padding="4dp"
                     android:paddingEnd="14dp"
@@ -53,7 +53,7 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/grey50">
+                    android:background="@color/white">
 
                     <android.support.v4.view.ViewPager
                         android:id="@+id/show_pager"
@@ -73,7 +73,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:background="@color/grey50"
+                    android:background="@color/white"
                     android:baselineAligned="false"
                     android:paddingBottom="4dp"
                     android:paddingTop="4dp"
@@ -167,7 +167,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="1dp"
-                        android:background="@color/grey50"
+                        android:background="@color/white"
                         android:paddingEnd="17dp"
                         android:paddingStart="17dp">
 
@@ -223,7 +223,7 @@
                     <android.support.constraint.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/grey50"
+                        android:background="@color/white"
                         android:paddingEnd="17dp"
                         android:paddingStart="17dp">
 
@@ -278,7 +278,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/grey50"
+                    android:background="@color/white"
                     android:orientation="vertical"
                     android:paddingBottom="9dp"
                     android:paddingStart="17dp"

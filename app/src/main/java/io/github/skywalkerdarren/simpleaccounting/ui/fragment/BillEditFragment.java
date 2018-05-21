@@ -141,6 +141,10 @@ public class BillEditFragment extends BaseFragment {
         mTypeSbg.setOnClickedButtonListener(position -> {
             List<Type> types = TypeLab
                     .getInstance(getContext()).getTypes(position == 1);
+            for (int i = 0; i < adapter.getItemCount(); i++) {
+                adapter.getViewByPosition(binding.typeListRecyclerView,
+                        i, R.id.type_item).setAlpha(0);
+            }
             adapter.setNewData(types);
             mViewModel.setType(types.get(0));
             typeImageAnimator();

@@ -65,7 +65,7 @@ public class WelcomeActivity extends Activity {
             View view = new View(this);
             view.setBackgroundResource(R.drawable.indicator);
             view.setEnabled(false);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(30, 30);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(20, 20);
             if (i != productPhotos[0]) {
                 params.leftMargin = 10;
             }
