@@ -1,6 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.view_model;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.graphics.Bitmap;
@@ -16,6 +17,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
 import io.github.skywalkerdarren.simpleaccounting.model.Type;
+import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
 
 /**
  * @author darren
@@ -154,6 +156,7 @@ public class BillEditViewModel extends BaseObservable {
         } else {
             billLab.updateBill(mBill);
         }
+        DesktopWidget.refresh(mContext);
         return true;
     }
 

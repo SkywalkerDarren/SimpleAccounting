@@ -277,8 +277,6 @@ public class BillEditFragment extends BaseFragment {
             case android.R.id.home:
                 mNumPad.setVisibility(View.INVISIBLE);
                 getActivity().onBackPressed();
-                Intent intent = new Intent(DesktopWidget.EXTRA_ACTION_UP);
-                getActivity().sendBroadcast(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

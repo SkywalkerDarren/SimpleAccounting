@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
 import java.util.UUID;
 
@@ -14,6 +15,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.AccountLab;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
 import io.github.skywalkerdarren.simpleaccounting.model.TypeLab;
+import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
 
 /**
  * 删除帐单对话框
@@ -25,6 +27,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.TypeLab;
 public class DeleteBillAlertDialog extends DialogFragment {
     private final static String ARG_BILL_ID = "id";
     private UUID mBillId;
+    private static final String TAG = "DeleteBillAlertDialog";
 
     public static DeleteBillAlertDialog newInstance(UUID billId) {
         Bundle args = new Bundle();
@@ -48,7 +51,6 @@ public class DeleteBillAlertDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         BillLab lab = BillLab.getInstance(getContext());
         mBillId = (UUID) getArguments().getSerializable(ARG_BILL_ID);
-        Bill bill = BillLab.getInstance(getContext()).getBill(mBillId);
         return new AlertDialog.Builder(getActivity())
                 .setTitle("确认删除")
                 .setMessage("确定永久删除此账单？")
@@ -57,16 +59,7 @@ public class DeleteBillAlertDialog extends DialogFragment {
                 .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
                     // 删除帐单
                     lab.delBill(mBillId);
-                    // 从账户中增减数额
-                    AccountLab accountLab = AccountLab.getInstance(getContext());
-                    Account account = accountLab.getAccount(bill.getAccountId());
-                    if (TypeLab.getInstance(getContext()).getType(bill.getTypeId()).getExpense()) {
-                        account.plusBalance(bill.getBalance());
-                    } else {
-                        account.minusBalance(bill.getBalance());
-                    }
-                    // 更新账户
-                    accountLab.updateAccount(account);
+                    DesktopWidget.refresh(getContext());
                     sendResult(Activity.RESULT_OK);
                 })
                 .create();

@@ -41,10 +41,10 @@ import static io.github.skywalkerdarren.simpleaccounting.adapter.BillAdapter.HEA
 public class BillListFragment extends BaseFragment {
     private static final int REQUEST_DATE_TIME = 0;
     private static final String SHARED_BUDGET = "budget";
-    FragmentBillListBinding mBinding;
-    BillListViewModel mViewModel;
+    private FragmentBillListBinding mBinding;
+    private BillListViewModel mViewModel;
     private RecyclerView mBillListRecyclerView;
-    private BillAdapter mBillAdapter;
+    public BillAdapter mBillAdapter;
     private SharedPreferences mSharedPref;
 
     /**
@@ -150,13 +150,6 @@ public class BillListFragment extends BaseFragment {
      */
     private void configAdapter() {
         mBillAdapter.setEmptyView(emptyView());
-//        mBillAdapter.openLoadAnimation(view -> {
-//            ObjectAnimator animator = ObjectAnimator.ofFloat(view, "alpha", 0, 1);
-//            animator.setDuration(50);
-//            animator.setInterpolator(new AccelerateDecelerateInterpolator());
-//            return new Animator[]{animator};
-//        });
-//        mBillAdapter.isFirstOnly(true);
     }
 
     @Override

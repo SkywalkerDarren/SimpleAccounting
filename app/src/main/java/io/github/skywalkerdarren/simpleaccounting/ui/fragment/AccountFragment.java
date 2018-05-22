@@ -2,10 +2,13 @@ package io.github.skywalkerdarren.simpleaccounting.ui.fragment;
 
 
 import android.animation.ObjectAnimator;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -25,6 +28,10 @@ import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentAccountBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.AccountLab;
+import io.github.skywalkerdarren.simpleaccounting.model.Bill;
+import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
+import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
+import io.github.skywalkerdarren.simpleaccounting.ui.activity.MainActivity;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.SettingsActivity2;
 import io.github.skywalkerdarren.simpleaccounting.view_model.AccountViewModel;
 
@@ -77,6 +84,24 @@ public class AccountFragment extends BaseFragment {
         mAccountRecyclerView = mBinding.accountRecyclerView;
         mAccountRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mBinding.settingCardView.setOnClickListener(view -> toSettingActivity());
+        // TODO toVM
+        mBinding.deleteAllCardView.setOnClickListener(view -> {
+            new AlertDialog.Builder(getContext())
+                    .setCancelable(true)
+                    .setMessage("是否删除所有账单，删除后的账单将无法恢复！")
+                    .setTitle("警告")
+                    .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
+                            BillLab.getInstance(getContext()).clearBill();
+                            DesktopWidget.refresh(getContext());
+                            onResume();
+                            MainActivity activity = (MainActivity) getActivity();
+                            BillListFragment fragment = activity.mBillListFragment;
+                            fragment.onResume();
+                    })
+                    .create()
+                    .show();
+
+        });
         return mBinding.getRoot();
     }
 

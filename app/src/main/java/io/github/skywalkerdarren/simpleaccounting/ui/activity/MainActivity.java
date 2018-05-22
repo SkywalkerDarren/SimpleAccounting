@@ -27,6 +27,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.ui.fragment.AccountFragment;
 import io.github.skywalkerdarren.simpleaccounting.ui.fragment.BillListFragment;
 import io.github.skywalkerdarren.simpleaccounting.ui.fragment.DiscoveryFragment;
+import io.github.skywalkerdarren.simpleaccounting.view_model.BillListViewModel;
 
 /**
  * 主界面
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     private FloatingActionButton mAddBillButton;
     private AccountFragment mAccountFragment;
-    private BillListFragment mBillListFragment;
+    public BillListFragment mBillListFragment;
     private DiscoveryFragment mDiscoveryFragment;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener

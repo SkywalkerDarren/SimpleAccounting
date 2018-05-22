@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">必记</string>
+    <string name="app_name">拾记</string>
     <string name="action_settings">设置</string>
     <string name="type_image">表示类型的图片</string>
     <string name="bills_date">日期</string>

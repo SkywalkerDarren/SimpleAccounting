@@ -1,6 +1,8 @@
 package io.github.skywalkerdarren.simpleaccounting.adapter;
 
+import android.animation.Animator;
 import android.support.annotation.Nullable;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -41,6 +43,13 @@ public class ClassifyAdapter extends BaseDataBindingAdapter<StatsLab.TypeStats, 
         for (StatsLab.TypeStats stats : data) {
             mSum = mSum.add(stats.getSum());
         }
+    }
+
+    @Override
+    protected void startAnim(Animator anim, int index) {
+        anim.setDuration(300);
+        anim.setInterpolator(new AccelerateDecelerateInterpolator());
+        anim.start();
     }
 
     @Override

@@ -160,4 +160,12 @@ public class BillLab {
         mDatabase.update(BillTable.TABLE_NAME, values, BillTable.Cols.UUID + " = ?",
                 new String[]{bill.getId().toString()});
     }
+
+    /**
+     * 删除所有账单
+     * DANGER！！！
+     */
+    public void clearBill() {
+        mDatabase.delete(BillTable.TABLE_NAME, null, null);
+    }
 }
