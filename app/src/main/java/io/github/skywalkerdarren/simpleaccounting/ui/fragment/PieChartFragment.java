@@ -102,7 +102,7 @@ public class PieChartFragment extends BaseFragment {
 
         StatsLab.BillStats stats = StatsLab.getInstance(getContext())
                 .getStats(mStartDateTime, mEndDateTime);
-        String s = FormatUtil.getNumberic(mIsExpense ? stats.getExpense() : stats.getIncome());
+        String s = FormatUtil.getNumeric(mIsExpense ? stats.getExpense() : stats.getIncome());
         mPieChart.setCenterText(generateCenterText(s));
 
         mPieChart.setCenterTextSize(24);

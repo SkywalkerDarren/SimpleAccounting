@@ -12,6 +12,7 @@ import android.databinding.DataBindingUtil;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.transition.Fade;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.ActionBar;
@@ -51,7 +52,6 @@ import io.github.skywalkerdarren.simpleaccounting.model.AccountLab;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.Type;
 import io.github.skywalkerdarren.simpleaccounting.model.TypeLab;
-import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
 import io.github.skywalkerdarren.simpleaccounting.ui.NumPad;
 import io.github.skywalkerdarren.simpleaccounting.util.DpConvertUtils;
 import io.github.skywalkerdarren.simpleaccounting.view_model.BillEditViewModel;
@@ -99,8 +99,6 @@ public class BillEditFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setEnterTransition(new Explode());
-        setExitTransition(new Fade());
         if (getArguments() != null) {
             mBill = (Bill) getArguments().getSerializable(ARG_BILL);
         }
@@ -108,7 +106,7 @@ public class BillEditFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         FragmentBillEditBinding binding = DataBindingUtil
@@ -311,10 +309,6 @@ public class BillEditFragment extends BaseFragment {
     @Override
     protected void updateUI() {
 
-    }
-
-    public BillEditViewModel getViewModel() {
-        return mViewModel;
     }
 
     private void getPopupWindow(View view) {

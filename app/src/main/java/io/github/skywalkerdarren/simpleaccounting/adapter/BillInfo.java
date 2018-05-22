@@ -59,7 +59,7 @@ public class BillInfo implements MultiItemEntity {
         mUUID = bill.getId();
         mTitle = bill.getName();
         mRemark = bill.getRemark();
-        mBalance = FormatUtil.getNumberic(bill.getBalance());
+        mBalance = FormatUtil.getNumeric(bill.getBalance());
         mIsExpense = type.getExpense();
         mBillTypeRes = type.getBitmap();
         mDateTime = bill.getDate();

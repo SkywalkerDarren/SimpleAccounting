@@ -15,7 +15,7 @@ import java.text.DecimalFormat;
  */
 
 public class FormatUtil {
-    public static String getNumberic(BigDecimal bigDecimal) {
+    public static String getNumeric(BigDecimal bigDecimal) {
         DecimalFormat format = new DecimalFormat("#,###.##");
         return format.format(bigDecimal);
     }

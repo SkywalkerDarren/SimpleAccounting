@@ -43,7 +43,7 @@ public class AccountViewModel extends BaseObservable {
      */
     @Bindable
     public String getNav() {
-        return FormatUtil.getNumberic(mStats.getSum());
+        return FormatUtil.getNumeric(mStats.getSum());
     }
 
     /**
@@ -51,7 +51,7 @@ public class AccountViewModel extends BaseObservable {
      */
     @Bindable
     public String getLiability() {
-        return FormatUtil.getNumberic(mStats.getExpense());
+        return FormatUtil.getNumeric(mStats.getExpense());
     }
 
     /**
@@ -59,7 +59,7 @@ public class AccountViewModel extends BaseObservable {
      */
     @Bindable
     public String getTotalAssets() {
-        return FormatUtil.getNumberic(mStats.getIncome());
+        return FormatUtil.getNumeric(mStats.getIncome());
     }
 
     /**

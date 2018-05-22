@@ -13,7 +13,7 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentMyAccountBinding;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.AboutActivity;
-import io.github.skywalkerdarren.simpleaccounting.ui.activity.SettingsActivity2;
+import io.github.skywalkerdarren.simpleaccounting.ui.activity.SettingsActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,7 +47,7 @@ public class MyAccountFragment extends BaseFragment {
             startActivity(intent);
         });
         binding.setting.setOnClickListener(view -> {
-            Intent intent = SettingsActivity2.newIntent(getContext());
+            Intent intent = SettingsActivity.newIntent(getContext());
             startActivity(intent);
         });
         binding.back.setOnClickListener(view -> getActivity().finish());

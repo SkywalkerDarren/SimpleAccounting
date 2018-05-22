@@ -2,8 +2,6 @@ package io.github.skywalkerdarren.simpleaccounting.ui.fragment;
 
 
 import android.animation.ObjectAnimator;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -28,11 +26,10 @@ import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentAccountBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.AccountLab;
-import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
 import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.MainActivity;
-import io.github.skywalkerdarren.simpleaccounting.ui.activity.SettingsActivity2;
+import io.github.skywalkerdarren.simpleaccounting.ui.activity.SettingsActivity;
 import io.github.skywalkerdarren.simpleaccounting.view_model.AccountViewModel;
 
 
@@ -106,7 +103,7 @@ public class AccountFragment extends BaseFragment {
     }
 
     private void toSettingActivity() {
-        Intent intent = SettingsActivity2.newIntent(getContext());
+        Intent intent = SettingsActivity.newIntent(getContext());
         startActivity(intent);
     }
 

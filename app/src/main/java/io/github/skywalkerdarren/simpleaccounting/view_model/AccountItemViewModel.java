@@ -51,7 +51,7 @@ public class AccountItemViewModel extends BaseObservable {
         StatsLab.AccountStats stats = lab.getAccountStats(mAccount.getId(),
                 new DateTime(0), DateTime.now());
         // 账户基础金额 + 统计盈余
-        return FormatUtil.getNumberic(mAccount.getBalance().add(stats.getSum()));
+        return FormatUtil.getNumeric(mAccount.getBalance().add(stats.getSum()));
     }
 
     /**

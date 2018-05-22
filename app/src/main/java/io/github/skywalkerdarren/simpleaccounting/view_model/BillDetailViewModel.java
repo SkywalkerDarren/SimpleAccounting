@@ -120,7 +120,7 @@ public class BillDetailViewModel extends BaseObservable {
      * @return 账单收支
      */
     public String getBalance() {
-        return FormatUtil.getNumberic(mBill.getBalance());
+        return FormatUtil.getNumeric(mBill.getBalance());
     }
 
     /**
@@ -204,7 +204,7 @@ public class BillDetailViewModel extends BaseObservable {
     @Bindable
     public String getTypeAverage() {
         BigDecimal avg = mStatsLab.getTypeAverage(mStart, mEnd, mBill.getTypeId());
-        return FormatUtil.getNumberic(avg);
+        return FormatUtil.getNumeric(avg);
     }
 
     @Bindable

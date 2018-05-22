@@ -42,7 +42,7 @@ public class ClassifyItemViewModel extends BaseObservable {
      * @return 总盈余
      */
     public String getBalance() {
-        return FormatUtil.getNumberic(mStats.getSum());
+        return FormatUtil.getNumeric(mStats.getSum());
     }
 
     /**

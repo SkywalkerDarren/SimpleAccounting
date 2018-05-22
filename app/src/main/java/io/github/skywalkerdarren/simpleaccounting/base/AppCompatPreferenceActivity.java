@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.ui.activity;
+package io.github.skywalkerdarren.simpleaccounting.base;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

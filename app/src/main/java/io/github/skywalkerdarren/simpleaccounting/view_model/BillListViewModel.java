@@ -52,7 +52,7 @@ public class BillListViewModel extends BaseObservable {
      */
     @Bindable
     public String getIncome() {
-        return FormatUtil.getNumberic(mStatsLab.getStats(mMonth, mMonth.plusMonths(1)).getIncome());
+        return FormatUtil.getNumeric(mStatsLab.getStats(mMonth, mMonth.plusMonths(1)).getIncome());
     }
 
     /**
@@ -60,7 +60,7 @@ public class BillListViewModel extends BaseObservable {
      */
     @Bindable
     public String getExpense() {
-        return FormatUtil.getNumberic(mStatsLab.getStats(mMonth, mMonth.plusMonths(1)).getExpense());
+        return FormatUtil.getNumeric(mStatsLab.getStats(mMonth, mMonth.plusMonths(1)).getExpense());
     }
 
     /**

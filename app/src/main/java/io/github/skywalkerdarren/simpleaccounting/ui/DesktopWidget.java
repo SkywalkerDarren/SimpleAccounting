@@ -6,7 +6,6 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.widget.RemoteViews;
 
 import org.joda.time.DateTime;
@@ -15,6 +14,7 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillEditActivity;
+import io.github.skywalkerdarren.simpleaccounting.ui.activity.MainActivity;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
@@ -54,15 +54,20 @@ public class DesktopWidget extends AppWidgetProvider {
                 .getAnnualStats(DateTime.now().getYear())
                 .get(DateTime.now().getMonthOfYear() - 1);
 
-        Intent intent = BillEditActivity.newIntent(context, new Bill(), 0, 0);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, REQUEST_BILL,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent addIntent = BillEditActivity.newIntent(context, new Bill(), 0, 0);
+        PendingIntent pendingAddIntent = PendingIntent.getActivity(context, REQUEST_BILL,
+                addIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent iconIntent = MainActivity.newIntent(context);
+        PendingIntent pendingIconIntent = PendingIntent.getActivity(context, REQUEST_BILL,
+                iconIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_bill);
-        views.setOnClickPendingIntent(R.id.add_bill_text_view, pendingIntent);
-        views.setTextViewText(R.id.income_text_view, FormatUtil.getNumberic(stats.getIncome()));
-        views.setTextViewText(R.id.expense_text_view, FormatUtil.getNumberic(stats.getExpense()));
-        views.setTextViewText(R.id.total_text_view, FormatUtil.getNumberic(stats.getSum()));
+        views.setOnClickPendingIntent(R.id.add_bill_text_view, pendingAddIntent);
+        views.setOnClickPendingIntent(R.id.icon, pendingIconIntent);
+        views.setTextViewText(R.id.income_text_view, FormatUtil.getNumeric(stats.getIncome()));
+        views.setTextViewText(R.id.expense_text_view, FormatUtil.getNumeric(stats.getExpense()));
+        views.setTextViewText(R.id.total_text_view, FormatUtil.getNumeric(stats.getSum()));
 
         ComponentName name = new ComponentName(context, DesktopWidget.class);
         AppWidgetManager.getInstance(context).updateAppWidget(name, views);

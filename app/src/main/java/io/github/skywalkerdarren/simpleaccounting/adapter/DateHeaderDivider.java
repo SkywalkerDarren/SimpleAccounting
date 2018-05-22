@@ -44,7 +44,7 @@ class DateHeaderDivider implements HeaderDivider {
      */
     @Override
     public String getExpense() {
-        return FormatUtil.getNumberic(mExpense);
+        return FormatUtil.getNumeric(mExpense);
     }
 
     /**
@@ -52,6 +52,6 @@ class DateHeaderDivider implements HeaderDivider {
      */
     @Override
     public String getIncome() {
-        return FormatUtil.getNumberic(mIncome);
+        return FormatUtil.getNumeric(mIncome);
     }
 }

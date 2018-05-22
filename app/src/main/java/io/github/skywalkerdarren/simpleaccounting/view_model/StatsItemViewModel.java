@@ -29,21 +29,21 @@ public class StatsItemViewModel extends BaseObservable {
      * @return 收入
      */
     public String getIncome() {
-        return FormatUtil.getNumberic(mStats.getIncome());
+        return FormatUtil.getNumeric(mStats.getIncome());
     }
 
     /**
      * @return 支出
      */
     public String getExpense() {
-        return FormatUtil.getNumberic(mStats.getExpense());
+        return FormatUtil.getNumeric(mStats.getExpense());
     }
 
     /**
      * @return 盈余
      */
     public String getBalance() {
-        return FormatUtil.getNumberic(mStats.getSum());
+        return FormatUtil.getNumeric(mStats.getSum());
     }
 
     /**

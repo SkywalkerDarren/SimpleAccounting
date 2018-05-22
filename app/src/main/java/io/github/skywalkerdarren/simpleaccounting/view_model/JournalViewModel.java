@@ -56,7 +56,7 @@ public class JournalViewModel extends BaseObservable {
      */
     @Bindable
     public String getIncome() {
-        return FormatUtil.getNumberic(mIncome);
+        return FormatUtil.getNumeric(mIncome);
     }
 
     /**
@@ -64,7 +64,7 @@ public class JournalViewModel extends BaseObservable {
      */
     @Bindable
     public String getExpense() {
-        return FormatUtil.getNumberic(mExpense);
+        return FormatUtil.getNumeric(mExpense);
     }
 
     /**
@@ -72,7 +72,7 @@ public class JournalViewModel extends BaseObservable {
      */
     @Bindable
     public String getSum() {
-        return FormatUtil.getNumberic(mSum);
+        return FormatUtil.getNumeric(mSum);
     }
 
     /**
