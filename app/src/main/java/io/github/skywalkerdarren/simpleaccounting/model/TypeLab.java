@@ -5,18 +5,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.DbSchema.TypeTable.Cols;
-
-import static io.github.skywalkerdarren.simpleaccounting.util.FormatUtil.idToBitmap;
 
 /**
  * @author darren
@@ -44,10 +39,7 @@ public class TypeLab {
         values.put(Cols.UUID, type.getId().toString());
         values.put(Cols.NAME, type.getName());
         values.put(Cols.COLOR, type.getColorId());
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        Bitmap bitmap = type.getBitmap();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
-        values.put(Cols.RES, os.toByteArray());
+        values.put(Cols.IMAGE, type.getAssetsName());
         values.put(Cols.IS_EXPENSE, type.getExpense() ? 1 : 0);
         return values;
     }
@@ -55,59 +47,58 @@ public class TypeLab {
     /**
      * 设置初始数据
      */
-    static void initTypeDb(SQLiteDatabase sqLiteDatabase, Context context) {
-        context = context.getApplicationContext();
+    static void initTypeDb(SQLiteDatabase sqLiteDatabase) {
         List<Type> types = new ArrayList<>(10);
         // 支出类型
         types.add(new Type().setName("吃喝").setExpense(true)
-                .setBitmap(idToBitmap(context, R.drawable.type_image_diet))
+                .setAssetsName("diet" + Type.PNG)
                 .setColorId(Color.rgb(0xe6, 0xc4, 0x53)));
         types.add(new Type().setName("娱乐").setExpense(true)
-                .setBitmap(idToBitmap(context, R.drawable.type_image_entertainment))
+                .setAssetsName("entertainment" + Type.PNG)
                 .setColorId(Color.rgb(0x73, 0xc8, 0xd5)));
         types.add(new Type().setName("交通").setExpense(true)
-                .setBitmap(idToBitmap(context, R.drawable.type_image_traffic))
+                .setAssetsName("traffic" + Type.PNG)
                 .setColorId(Color.rgb(0xf9, 0xd5, 0x5d)));
         types.add(new Type().setName("日用品").setExpense(true)
-                .setBitmap(idToBitmap(context, R.drawable.type_image_daily_necessities))
+                .setAssetsName("daily_necessities" + Type.PNG)
                 .setColorId(Color.rgb(0xf0, 0x8d, 0x78)));
         types.add(new Type().setName("化妆护肤").setExpense(true)
-                .setBitmap(idToBitmap(context, R.drawable.type_image_make_up))
+                .setAssetsName("make_up" + Type.PNG)
                 .setColorId(Color.rgb(0xfe, 0x4c, 0x5e)));
         types.add(new Type().setName("医疗").setExpense(true)
-                .setBitmap(idToBitmap(context, R.drawable.type_image_medical))
+                .setAssetsName("medical" + Type.PNG)
                 .setColorId(Color.rgb(0xc0, 0xf1, 0xf9)));
         types.add(new Type().setName("服饰").setExpense(true)
-                .setBitmap(idToBitmap(context, R.drawable.type_image_apparel))
+                .setAssetsName("apparel" + Type.PNG)
                 .setColorId(Color.rgb(0x7e, 0xb7, 0x9f)));
         types.add(new Type().setName("话费").setExpense(true)
-                .setBitmap(idToBitmap(context, R.drawable.type_image_calls))
+                .setAssetsName("calls" + Type.PNG)
                 .setColorId(Color.rgb(0x83, 0x6c, 0xab)));
         types.add(new Type().setName("红包").setExpense(true)
-                .setBitmap(idToBitmap(context, R.drawable.type_image_red_package))
+                .setAssetsName("red_package" + Type.PNG)
                 .setColorId(Color.rgb(0xf7, 0x2e, 0x42)));
         types.add(new Type().setName("其他").setExpense(true)
-                .setBitmap(idToBitmap(context, R.drawable.type_image_other))
+                .setAssetsName("other" + Type.PNG)
                 .setColorId(Color.rgb(0xcd, 0x53, 0x3b)));
 
         // 收入类型
         types.add(new Type().setName("工资").setExpense(false)
-                .setBitmap(idToBitmap(context, R.drawable.type_image_wage))
+                .setAssetsName("wage" + Type.PNG)
                 .setColorId(Color.rgb(0x97, 0x73, 0x69)));
         types.add(new Type().setName("兼职").setExpense(false)
-                .setBitmap(idToBitmap(context, R.drawable.type_image_part_time))
+                .setAssetsName("part_time" + Type.PNG)
                 .setColorId(Color.rgb(0xa7, 0xee, 0xf9)));
         types.add(new Type().setName("奖金").setExpense(false)
-                .setBitmap(idToBitmap(context, R.drawable.type_image_prize))
+                .setAssetsName("prize" + Type.PNG)
                 .setColorId(Color.rgb(0xf4, 0xbc, 0xb1)));
         types.add(new Type().setName("理财投资").setExpense(false)
-                .setBitmap(idToBitmap(context, R.drawable.type_image_invest))
+                .setAssetsName("invest" + Type.PNG)
                 .setColorId(Color.rgb(0xff, 0xec, 0xab)));
         types.add(new Type().setName("红包").setExpense(false)
-                .setBitmap(idToBitmap(context, R.drawable.type_image_red_package))
+                .setAssetsName("red_package" + Type.PNG)
                 .setColorId(Color.rgb(0xf7, 0x2e, 0x42)));
         types.add(new Type().setName("其他").setExpense(false)
-                .setBitmap(idToBitmap(context, R.drawable.type_image_other))
+                .setAssetsName("other" + Type.PNG)
                 .setColorId(Color.rgb(0xcd, 0x53, 0x3b)));
 
         for (Type type : types) {

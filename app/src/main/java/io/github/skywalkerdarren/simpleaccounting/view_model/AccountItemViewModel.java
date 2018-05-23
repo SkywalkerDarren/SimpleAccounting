@@ -11,6 +11,8 @@ import io.github.skywalkerdarren.simpleaccounting.model.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
+import static io.github.skywalkerdarren.simpleaccounting.model.Account.FOLDER;
+
 /**
  * 账户vm
  *
@@ -31,8 +33,8 @@ public class AccountItemViewModel extends BaseObservable {
     /**
      * @return 账户图片id
      */
-    public Bitmap getImg() {
-        return mAccount.getBitmap();
+    public String getImg() {
+        return FOLDER + mAccount.getBitmap();
     }
 
     /**

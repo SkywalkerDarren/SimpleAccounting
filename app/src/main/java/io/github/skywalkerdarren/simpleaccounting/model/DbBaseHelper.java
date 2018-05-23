@@ -26,9 +26,6 @@ class DbBaseHelper extends SQLiteOpenHelper {
      */
     private static final String DATABASE_NAME = "Bills.db";
 
-
-    public static Context sContext;
-
     /**
      * 构造bill账单游标
      *
@@ -36,7 +33,6 @@ class DbBaseHelper extends SQLiteOpenHelper {
      */
     DbBaseHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION);
-        sContext = context;
     }
 
     @Override
@@ -64,11 +60,11 @@ class DbBaseHelper extends SQLiteOpenHelper {
                         DbSchema.TypeTable.Cols.UUID + ", " +
                         DbSchema.TypeTable.Cols.NAME + ", " +
                         DbSchema.TypeTable.Cols.IS_EXPENSE + " INT , " +
-                        DbSchema.TypeTable.Cols.RES + " BLOB , " +
+                        DbSchema.TypeTable.Cols.IMAGE + " VARCHAR(32) , " +
                         DbSchema.TypeTable.Cols.COLOR +
                         ")"
         );
-        initTypeDb(sqLiteDatabase, sContext);
+        initTypeDb(sqLiteDatabase);
 
         // 创建账户表
         sqLiteDatabase.execSQL(
@@ -79,11 +75,11 @@ class DbBaseHelper extends SQLiteOpenHelper {
                         DbSchema.AccountTable.Cols.NAME + ", " +
                         DbSchema.AccountTable.Cols.BALANCE + " , " +
                         DbSchema.AccountTable.Cols.BALANCE_HINT + " , " +
-                        DbSchema.AccountTable.Cols.IMAGE + " BLOB , " +
+                        DbSchema.AccountTable.Cols.IMAGE + " VARCHAR(32) , " +
                         DbSchema.AccountTable.Cols.COLOR_ID +
                         ")"
         );
-        initAccountDb(sqLiteDatabase, sContext);
+        initAccountDb(sqLiteDatabase);
     }
 
     @Override

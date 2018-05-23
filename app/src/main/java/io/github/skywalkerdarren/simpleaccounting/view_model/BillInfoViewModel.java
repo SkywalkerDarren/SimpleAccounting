@@ -12,10 +12,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.BillInfo;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
+import io.github.skywalkerdarren.simpleaccounting.model.Type;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillDetailActivity;
+import io.github.skywalkerdarren.simpleaccounting.util.BitmapDecodeUtil;
 
 /**
  * 账单列表物品vm
@@ -66,8 +71,8 @@ public class BillInfoViewModel extends BaseObservable {
     /**
      * @return 账单类型图id
      */
-    public Bitmap getTypeRes() {
-        return mBillInfo.getBillTypeRes();
+    public String getTypeRes() {
+        return Type.FOLDER + mBillInfo.getBillTypeRes();
     }
 
     /**

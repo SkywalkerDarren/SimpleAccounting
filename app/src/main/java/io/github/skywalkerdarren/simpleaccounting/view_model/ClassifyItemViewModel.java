@@ -1,11 +1,11 @@
 package io.github.skywalkerdarren.simpleaccounting.view_model;
 
 import android.databinding.BaseObservable;
-import android.graphics.Bitmap;
 
 import java.math.BigDecimal;
 
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
+import io.github.skywalkerdarren.simpleaccounting.model.Type;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
@@ -34,8 +34,8 @@ public class ClassifyItemViewModel extends BaseObservable {
     /**
      * @return 类型图片id
      */
-    public Bitmap getImg() {
-        return mStats.getType().getBitmap();
+    public String getImg() {
+        return Type.FOLDER + mStats.getType().getAssetsName();
     }
 
     /**

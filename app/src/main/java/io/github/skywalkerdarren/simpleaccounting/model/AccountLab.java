@@ -16,6 +16,7 @@ import java.util.UUID;
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.DbSchema.AccountTable.Cols;
 
+import static io.github.skywalkerdarren.simpleaccounting.model.Account.PNG;
 import static io.github.skywalkerdarren.simpleaccounting.model.DbSchema.AccountTable.TABLE_NAME;
 import static io.github.skywalkerdarren.simpleaccounting.util.FormatUtil.idToBitmap;
 
@@ -49,26 +50,23 @@ public class AccountLab {
         values.put(Cols.NAME, account.getName());
         values.put(Cols.BALANCE, account.getBalance().toString());
         values.put(Cols.BALANCE_HINT, account.getBalanceHint());
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        account.getBitmap().compress(Bitmap.CompressFormat.PNG, 100, os);
-        values.put(Cols.IMAGE, os.toByteArray());
+        values.put(Cols.IMAGE, account.getBitmap());
         values.put(Cols.COLOR_ID, account.getColorId());
         return values;
     }
 
-    static void initAccountDb(SQLiteDatabase sqLiteDatabase, Context context) {
-        context = context.getApplicationContext();
+    static void initAccountDb(SQLiteDatabase sqLiteDatabase) {
         List<Account> accounts = new ArrayList<>(3);
         accounts.add(new Account().setName("现金").setBalanceHint("现金金额")
-                .setBitmap(idToBitmap(context, R.drawable.account_cash))
+                .setBitmap("cash" + PNG)
                 .setColorId(R.color.amber500)
                 .setBalance(BigDecimal.ZERO));
         accounts.add(new Account().setName("支付宝").setBalanceHint("在线支付余额")
-                .setBitmap(idToBitmap(context, R.drawable.account_alipay))
+                .setBitmap("alipay" + PNG)
                 .setColorId(R.color.lightblue500)
                 .setBalance(BigDecimal.ZERO));
         accounts.add(new Account().setName("微信").setBalanceHint("在线支付余额")
-                .setBitmap(idToBitmap(context, R.drawable.account_wechat))
+                .setBitmap("wechat" + PNG)
                 .setColorId(R.color.lightgreen500)
                 .setBalance(BigDecimal.ZERO));
         for (Account account : accounts) {

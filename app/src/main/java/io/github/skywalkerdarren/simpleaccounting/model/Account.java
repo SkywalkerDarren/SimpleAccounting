@@ -14,11 +14,13 @@ import java.util.UUID;
  */
 
 public class Account {
+    public static final String FOLDER = "account/";
+    public static final String PNG = ".png";
     private UUID mUUID;
     private String mName;
     private String mBalanceHint;
     private BigDecimal mBalance;
-    private Bitmap mBitmap;
+    private String mBitmap;
     private int mColor;
     @ColorRes
     private int mColorId;
@@ -76,12 +78,12 @@ public class Account {
         return this;
     }
 
-    public Bitmap getBitmap() {
+    public String getBitmap() {
         return mBitmap;
     }
 
-    public Account setBitmap(Bitmap bitmap) {
-        mBitmap = bitmap;
+    public Account setBitmap(String name) {
+        mBitmap = name;
         return this;
     }
 

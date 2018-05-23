@@ -48,8 +48,7 @@
                     android:id="@+id/account_type_image_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@{account.img}"
-                    app:srcCompat="@drawable/account_cash" />
+                    android:src="@{account.img}"/>
             </android.support.v7.widget.CardView>
 
             <TextView

@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 
 import io.github.skywalkerdarren.simpleaccounting.model.Account;
 
+import static io.github.skywalkerdarren.simpleaccounting.model.Account.FOLDER;
+
 /**
  * @author darren
  * @date 2018/4/13
@@ -17,8 +19,8 @@ public class AccountMenuItemViewModel extends BaseObservable {
         mAccount = account;
     }
 
-    public Bitmap getImg() {
-        return mAccount.getBitmap();
+    public String getImg() {
+        return FOLDER + mAccount.getBitmap();
     }
 
     public int getColor() {

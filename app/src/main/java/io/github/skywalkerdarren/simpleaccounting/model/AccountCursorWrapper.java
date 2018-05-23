@@ -21,13 +21,11 @@ class AccountCursorWrapper extends CursorWrapper {
     }
 
     Account getAccount() {
-        byte[] bytes = getBlob(getColumnIndex(Cols.IMAGE));
-        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         return new Account(UUID.fromString(getString(getColumnIndex(Cols.UUID))))
                 .setName(getString(getColumnIndex(Cols.NAME)))
                 .setBalanceHint(getString(getColumnIndex(Cols.BALANCE_HINT)))
                 .setBalance(new BigDecimal(getString(getColumnIndex(Cols.BALANCE))))
-                .setBitmap(bitmap)
+                .setBitmap(getString(getColumnIndex(Cols.IMAGE)))
                 .setColorId(getInt(getColumnIndex(Cols.COLOR_ID)));
     }
 }

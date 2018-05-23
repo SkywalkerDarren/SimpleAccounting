@@ -15,12 +15,14 @@ import java.util.UUID;
  */
 
 public class Type {
+    public static final String FOLDER = "type/";
+    public static final String PNG = ".png";
     private UUID mId;
     private String mName;
     @ColorRes
     private int mColorId;
     private boolean mIsExpense;
-    private Bitmap mBitmap;
+    private String mFileName;
 
     /**
      * 根据id创建类型
@@ -77,15 +79,15 @@ public class Type {
      *
      * @return 资源id
      */
-    public Bitmap getBitmap() {
-        return mBitmap;
+    public String getAssetsName() {
+        return mFileName;
     }
 
     /**
      * 设定类型图标资源
      */
-    public Type setBitmap(Bitmap bitmap) {
-        mBitmap = bitmap;
+    public Type setAssetsName(String path) {
+        mFileName = path;
         return this;
     }
 

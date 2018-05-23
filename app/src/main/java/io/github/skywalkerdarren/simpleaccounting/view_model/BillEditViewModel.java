@@ -1,7 +1,6 @@
 package io.github.skywalkerdarren.simpleaccounting.view_model;
 
 import android.content.Context;
-import android.content.Intent;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.graphics.Bitmap;
@@ -18,6 +17,8 @@ import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
 import io.github.skywalkerdarren.simpleaccounting.model.Type;
 import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
+
+import static io.github.skywalkerdarren.simpleaccounting.model.Account.FOLDER;
 
 /**
  * @author darren
@@ -63,8 +64,8 @@ public class BillEditViewModel extends BaseObservable {
      * @return 类型图id
      */
     @Bindable
-    public Bitmap getTypeImg() {
-        return mType.getBitmap();
+    public String getTypeImg() {
+        return Type.FOLDER + mType.getAssetsName();
     }
 
     /**
@@ -85,8 +86,8 @@ public class BillEditViewModel extends BaseObservable {
      * @return 账户图id
      */
     @Bindable
-    public Bitmap getAccountImg() {
-        return mAccount.getBitmap();
+    public String getAccountImg() {
+        return FOLDER + mAccount.getBitmap();
     }
 
     /**
