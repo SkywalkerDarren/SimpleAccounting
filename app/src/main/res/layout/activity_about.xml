@@ -96,8 +96,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="加入我们"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
+                    android:textColor="@color/black"/>
 
                 <ImageView
                     android:layout_width="24dp"
@@ -122,8 +121,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="交流反馈"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
+                    android:textColor="@color/black"/>
 
                 <ImageView
                     android:layout_width="24dp"
@@ -135,8 +133,21 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:gravity="center"
+            android:text="@string/author"
+            android:textColor="@color/grey500"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toTopOf="@+id/version"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <TextView
+            android:id="@+id/version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:text="V.0.6.4"
+            android:text="@string/version"
             android:textColor="@color/black"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
