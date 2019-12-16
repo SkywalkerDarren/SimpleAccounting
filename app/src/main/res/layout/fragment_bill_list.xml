@@ -10,13 +10,13 @@
             type="io.github.skywalkerdarren.simpleaccounting.view_model.BillListViewModel" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         tools:ignore="ContentDescription">
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/head_constraint_layout"
             android:layout_width="match_parent"
             android:layout_height="206dp"
@@ -146,9 +146,9 @@
                 app:layout_constraintStart_toEndOf="@+id/stats_image_view"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/detail_calendar" />
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/bill_recycle_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -163,5 +163,5 @@
             app:layout_constraintTop_toBottomOf="@+id/head_constraint_layout" />
 
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

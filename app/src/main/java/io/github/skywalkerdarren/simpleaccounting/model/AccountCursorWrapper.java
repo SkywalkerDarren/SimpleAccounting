@@ -2,8 +2,6 @@ package io.github.skywalkerdarren.simpleaccounting.model;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 import java.math.BigDecimal;
 import java.util.UUID;

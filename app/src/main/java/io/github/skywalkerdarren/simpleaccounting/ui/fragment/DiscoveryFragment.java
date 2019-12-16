@@ -1,16 +1,17 @@
 package io.github.skywalkerdarren.simpleaccounting.ui.fragment;
 
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import java.util.ArrayList;
 
@@ -27,6 +28,8 @@ import io.github.skywalkerdarren.simpleaccounting.ui.activity.MyAccountActivity;
 public class DiscoveryFragment extends BaseFragment {
     private LinearLayout mDotLayout;
     private ArrayList<ImageView> mImageViews;
+    private static final String TAG = "DiscoveryFragment";
+    private FragmentDiscoveryBinding mBinding;
 
     /**
      * Use this factory method to create a new instance of
@@ -50,22 +53,21 @@ public class DiscoveryFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        FragmentDiscoveryBinding binding = DataBindingUtil
-                .inflate(inflater, R.layout.fragment_discovery, container, false);
-
-        binding.myAccount.setOnClickListener(view -> {
+        mBinding = DataBindingUtil.inflate(inflater,
+                R.layout.fragment_discovery, container, false);
+        mBinding.myAccount.setOnClickListener(view -> {
             Intent intent = MyAccountActivity.newIntent(getContext());
             startActivity(intent);
         });
 
-        ViewPager viewPager = binding.showPager;
-        mDotLayout = binding.dotLayout;
+        ViewPager viewPager = mBinding.showPager;
+        mDotLayout = mBinding.dotLayout;
         setImage();
         mDotLayout.getChildAt(0).setEnabled(true);
         viewPager.setAdapter(new DiscoverAdapter());
         viewPager.addOnPageChangeListener(new DiscoverListener());
         viewPager.setOffscreenPageLimit(2);
-        return binding.getRoot();
+        return mBinding.getRoot();
     }
 
     private void setImage() {

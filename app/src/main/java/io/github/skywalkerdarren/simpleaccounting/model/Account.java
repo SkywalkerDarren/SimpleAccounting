@@ -1,7 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.model;
 
-import android.graphics.Bitmap;
-import android.support.annotation.ColorRes;
+
+import androidx.annotation.ColorRes;
 
 import java.math.BigDecimal;
 import java.util.UUID;

@@ -1,6 +1,6 @@
 package io.github.skywalkerdarren.simpleaccounting.model;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.joda.time.DateTime;
 

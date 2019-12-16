@@ -33,7 +33,7 @@
                 android:textSize="18sp" />
         </Toolbar>
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.ConstraintLayout
             android:layout_width="match_parent"
             android:foreground="?attr/selectableItemBackground"
             android:focusable="true"
@@ -96,7 +96,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/more" />
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.ConstraintLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

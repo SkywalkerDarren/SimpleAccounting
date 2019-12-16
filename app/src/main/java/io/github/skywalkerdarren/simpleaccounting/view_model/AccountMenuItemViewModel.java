@@ -1,7 +1,6 @@
 package io.github.skywalkerdarren.simpleaccounting.view_model;
 
-import android.databinding.BaseObservable;
-import android.graphics.Bitmap;
+import androidx.databinding.BaseObservable;
 
 import io.github.skywalkerdarren.simpleaccounting.model.Account;
 

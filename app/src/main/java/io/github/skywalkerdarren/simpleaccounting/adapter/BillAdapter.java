@@ -1,7 +1,8 @@
 package io.github.skywalkerdarren.simpleaccounting.adapter;
 
 import android.app.Activity;
-import android.databinding.ViewDataBinding;
+
+import androidx.databinding.ViewDataBinding;
 
 import java.util.List;
 

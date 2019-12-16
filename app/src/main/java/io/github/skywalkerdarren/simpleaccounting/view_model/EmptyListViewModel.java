@@ -3,10 +3,11 @@ package io.github.skywalkerdarren.simpleaccounting.view_model;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.databinding.BaseObservable;
-import android.databinding.BindingAdapter;
 import android.view.MotionEvent;
 import android.view.View;
+
+import androidx.databinding.BaseObservable;
+import androidx.databinding.BindingAdapter;
 
 import io.github.skywalkerdarren.simpleaccounting.model.Bill;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillEditActivity;

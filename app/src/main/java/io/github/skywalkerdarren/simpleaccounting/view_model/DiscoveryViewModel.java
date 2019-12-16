@@ -2,10 +2,8 @@ package io.github.skywalkerdarren.simpleaccounting.view_model;
 
 import androidx.databinding.BaseObservable;
 
-/**
- * @author darren
- * @date 2018/4/8
- */
+public class DiscoveryViewModel extends BaseObservable {
+    public void test() {
 
-public class BillViewModel extends BaseObservable {
+    }
 }

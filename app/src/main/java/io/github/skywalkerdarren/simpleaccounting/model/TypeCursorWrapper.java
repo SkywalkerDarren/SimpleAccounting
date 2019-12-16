@@ -2,6 +2,7 @@ package io.github.skywalkerdarren.simpleaccounting.model;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;
+
 import java.util.UUID;
 
 import io.github.skywalkerdarren.simpleaccounting.model.DbSchema.TypeTable.Cols;

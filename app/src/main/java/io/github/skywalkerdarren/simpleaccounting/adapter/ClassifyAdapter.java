@@ -1,8 +1,9 @@
 package io.github.skywalkerdarren.simpleaccounting.adapter;
 
 import android.animation.Animator;
-import android.support.annotation.Nullable;
 import android.view.animation.AccelerateDecelerateInterpolator;
+
+import androidx.annotation.Nullable;
 
 import java.math.BigDecimal;
 import java.util.List;

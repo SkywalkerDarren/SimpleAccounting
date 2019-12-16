@@ -1,6 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.base;
 
-import android.support.design.widget.AppBarLayout;
+
+import com.google.android.material.appbar.AppBarLayout;
 
 public abstract class BaseAppBarStateChangeListener implements AppBarLayout.OnOffsetChangedListener {
 

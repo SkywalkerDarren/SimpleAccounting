@@ -1,16 +1,14 @@
 package io.github.skywalkerdarren.simpleaccounting.view_model;
 
-import android.databinding.BaseObservable;
-import android.databinding.BindingAdapter;
 import android.graphics.Bitmap;
-import android.support.v7.widget.CardView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import androidx.cardview.widget.CardView;
+import androidx.databinding.BaseObservable;
+import androidx.databinding.BindingAdapter;
 
-import io.github.skywalkerdarren.simpleaccounting.model.Type;
+import com.bumptech.glide.Glide;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 

@@ -2,11 +2,12 @@ package io.github.skywalkerdarren.simpleaccounting.view_model;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.databinding.BaseObservable;
-import android.databinding.Bindable;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.util.Log;
 import android.view.View;
+
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
 
 import org.joda.time.DateTime;
 

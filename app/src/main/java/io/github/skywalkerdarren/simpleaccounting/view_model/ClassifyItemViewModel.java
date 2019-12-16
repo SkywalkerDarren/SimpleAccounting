@@ -1,6 +1,6 @@
 package io.github.skywalkerdarren.simpleaccounting.view_model;
 
-import android.databinding.BaseObservable;
+import androidx.databinding.BaseObservable;
 
 import java.math.BigDecimal;
 

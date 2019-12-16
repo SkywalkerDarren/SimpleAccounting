@@ -20,7 +20,7 @@
         android:paddingStart="13dp"
         android:paddingTop="4dp">
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/content_card_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -33,7 +33,7 @@
             app:cardElevation="0dp"
             app:location="@{false}">
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@android:color/white"
@@ -60,7 +60,7 @@
                         android:transitionName="type_image_view"/>
                 </FrameLayout>
 
-                <android.support.constraint.ConstraintLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
 
@@ -120,10 +120,10 @@
                         app:layout_constraintTop_toBottomOf="@+id/title_text_view"
                         tools:ignore="SmallSp"
                         tools:text="备注" />
-                </android.support.constraint.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-            </android.support.constraint.ConstraintLayout>
-        </android.support.v7.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
     </FrameLayout>
 </layout>

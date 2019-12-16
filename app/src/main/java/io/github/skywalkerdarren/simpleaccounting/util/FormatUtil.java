@@ -4,7 +4,8 @@ package io.github.skywalkerdarren.simpleaccounting.util;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.annotation.DrawableRes;
+
+import androidx.annotation.DrawableRes;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;

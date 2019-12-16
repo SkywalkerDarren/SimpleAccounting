@@ -3,7 +3,8 @@ package io.github.skywalkerdarren.simpleaccounting.view_model;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.content.Context;
-import android.databinding.BaseObservable;
+
+import androidx.databinding.BaseObservable;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillEditBinding;

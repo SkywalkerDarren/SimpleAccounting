@@ -3,24 +3,20 @@ package io.github.skywalkerdarren.simpleaccounting.view_model;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.databinding.BaseObservable;
-import android.databinding.BindingAdapter;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
-import java.io.IOException;
-import java.io.InputStream;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.databinding.BaseObservable;
+import androidx.databinding.BindingAdapter;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.BillInfo;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
 import io.github.skywalkerdarren.simpleaccounting.model.Type;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillDetailActivity;
-import io.github.skywalkerdarren.simpleaccounting.util.BitmapDecodeUtil;
 
 /**
  * 账单列表物品vm

@@ -59,7 +59,7 @@
                 android:src="@drawable/back"
                 tools:ignore="RtlHardcoded" />
 
-            <android.support.v4.view.ViewPager
+            <androidx.viewpager.widget.ViewPager
                 android:id="@+id/classify_view_pager"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
@@ -76,7 +76,7 @@
 
         </FrameLayout>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/classify_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"

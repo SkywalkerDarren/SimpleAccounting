@@ -1,8 +1,9 @@
 package io.github.skywalkerdarren.simpleaccounting.adapter;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
+
+import androidx.annotation.Nullable;
 
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 

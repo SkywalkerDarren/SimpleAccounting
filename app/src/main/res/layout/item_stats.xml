@@ -87,7 +87,7 @@
                 android:layout_weight="1"
                 android:gravity="center">
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     app:cardBackgroundColor="@color/yellow400"
@@ -106,7 +106,7 @@
                         android:textSize="24sp"
                         android:textStyle="bold"
                         tools:text="12" />
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
             </LinearLayout>
 
         </LinearLayout>

@@ -159,6 +159,6 @@
     <string name="my_borrow">我的借款</string>
     <string name="borrow_hint">应收款</string>
     <string name="lend_hint">应还款</string>
-    <string name="author">Designed by Chung Programmed by Darren</string>
+    <string name="author">Made By 杨弘 B15041212\nhttps://github.com/SkywalkerDarren</string>
     <string name="version">v0.1.0</string>
 </resources>

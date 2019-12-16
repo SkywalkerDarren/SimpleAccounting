@@ -1,7 +1,8 @@
 package io.github.skywalkerdarren.simpleaccounting.base;
 
-import android.databinding.ViewDataBinding;
 import android.view.View;
+
+import androidx.databinding.ViewDataBinding;
 
 import com.chad.library.adapter.base.BaseViewHolder;
 

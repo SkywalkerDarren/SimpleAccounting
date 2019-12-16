@@ -1,7 +1,8 @@
 package io.github.skywalkerdarren.simpleaccounting.model;
 
 import android.content.Context;
-import android.support.test.InstrumentationRegistry;
+
+import androidx.test.core.app.ApplicationProvider;
 
 import org.junit.Test;
 
@@ -13,7 +14,7 @@ import java.util.List;
 public class BillLabTest {
     @Test
     public void getMonthStats() throws Exception {
-        Context appContext = InstrumentationRegistry.getTargetContext();
+        Context appContext = ApplicationProvider.getApplicationContext();
         List<StatsLab.BillStats> statsList = StatsLab.getInstance(appContext).getMonthStats(2018, 3);
         for (StatsLab.BillStats stats : statsList) {
             System.out.println(stats.getSum().toString());

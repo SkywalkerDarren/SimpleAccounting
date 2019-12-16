@@ -1,8 +1,9 @@
 package io.github.skywalkerdarren.simpleaccounting.model;
 
 import android.content.Context;
-import android.support.test.InstrumentationRegistry;
 import android.util.Log;
+
+import androidx.test.core.app.ApplicationProvider;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -21,7 +22,7 @@ public class BillStatsLabTest {
 
     @Before
     public void setUp() throws Exception {
-        mContext = InstrumentationRegistry.getTargetContext();
+        mContext = ApplicationProvider.getApplicationContext();
         mStatsLab = StatsLab.getInstance(mContext);
     }
 

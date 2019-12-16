@@ -1,8 +1,9 @@
 package io.github.skywalkerdarren.simpleaccounting.model;
 
 import android.content.Context;
-import android.support.test.InstrumentationRegistry;
 import android.util.Log;
+
+import androidx.test.core.app.ApplicationProvider;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +20,7 @@ public class TypeLabTest {
 
     @Before
     public void setUp() {
-        mContext = InstrumentationRegistry.getTargetContext();
+        mContext = ApplicationProvider.getApplicationContext();
     }
 
     @Test

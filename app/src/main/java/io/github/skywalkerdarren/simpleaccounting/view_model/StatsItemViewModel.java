@@ -1,7 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.view_model;
 
-import android.databinding.BaseObservable;
-import android.support.annotation.IntRange;
+import androidx.annotation.IntRange;
+import androidx.databinding.BaseObservable;
 
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
