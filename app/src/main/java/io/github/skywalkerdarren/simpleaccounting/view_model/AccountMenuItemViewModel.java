@@ -1,5 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.view_model;
 
+import android.content.Context;
+
 import androidx.databinding.BaseObservable;
 
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
@@ -13,9 +15,11 @@ import static io.github.skywalkerdarren.simpleaccounting.model.entity.Account.FO
 
 public class AccountMenuItemViewModel extends BaseObservable {
     private Account mAccount;
+    private Context mContext;
 
-    public AccountMenuItemViewModel(Account account) {
+    public AccountMenuItemViewModel(Account account, Context context) {
         mAccount = account;
+        mContext = context;
     }
 
     public String getImg() {
@@ -23,7 +27,7 @@ public class AccountMenuItemViewModel extends BaseObservable {
     }
 
     public int getColor() {
-        return mAccount.getColor();
+        return mContext.getResources().getColor(mAccount.getColorId());
     }
 
     public String getName() {

@@ -46,12 +46,12 @@ public class Demo {
         BigDecimal balance;
         if (getRandomInt(10) > 1) {
             type = mExpense.get(getRandomInt(mExpense.size()));
-            type.setExpense(true);
+            type.setIsExpense(true);
             // 1-201
             balance = new BigDecimal(getRandomFloat(200, 1));
         } else {
             type = mIncome.get(getRandomInt(mIncome.size()));
-            type.setExpense(false);
+            type.setIsExpense(false);
             // 500-1.5k
             balance = new BigDecimal(getRandomFloat(1000, 500));
         }

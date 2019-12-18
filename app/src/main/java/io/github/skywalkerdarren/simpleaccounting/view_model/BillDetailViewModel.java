@@ -127,7 +127,7 @@ public class BillDetailViewModel extends BaseObservable {
      * @return 收支颜色
      */
     public int getBalanceColor() {
-        return mActivity.getResources().getColor(mType.getExpense() ?
+        return mActivity.getResources().getColor(mType.getIsExpense() ?
                 R.color.deeporange800 :
                 R.color.lightgreen700);
     }
@@ -184,7 +184,7 @@ public class BillDetailViewModel extends BaseObservable {
         // 当前支出/收入，在当前时间段内，占当前账户的支出/收入百分比
         Log.d(TAG, "getAccountPercent: " + mStart.toString());
         StatsLab.AccountStats stats = mStatsLab.getAccountStats(mBill.getAccountId(), mStart, mEnd);
-        return mType.getExpense() ? getPercent(stats.getExpense()) : getPercent(stats.getIncome());
+        return mType.getIsExpense() ? getPercent(stats.getExpense()) : getPercent(stats.getIncome());
     }
 
     @Bindable
@@ -221,12 +221,12 @@ public class BillDetailViewModel extends BaseObservable {
     @Bindable
     public String getExpensePercent() {
         StatsLab.BillStats stats = mStatsLab.getStats(mStart, mEnd);
-        return mType.getExpense() ? getPercent(stats.getExpense()) : getPercent(stats.getIncome());
+        return mType.getIsExpense() ? getPercent(stats.getExpense()) : getPercent(stats.getIncome());
     }
 
     @Bindable
     public String getExpensePercentHint() {
-        return mType.getExpense() ? mActivity.getString(R.string.expense_percent) :
+        return mType.getIsExpense() ? mActivity.getString(R.string.expense_percent) :
                 mActivity.getString(R.string.income_percent);
     }
 

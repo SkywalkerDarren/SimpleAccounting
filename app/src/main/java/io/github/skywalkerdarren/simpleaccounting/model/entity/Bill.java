@@ -1,12 +1,19 @@
 package io.github.skywalkerdarren.simpleaccounting.model.entity;
 
 import androidx.annotation.Nullable;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.UUID;
+
+import static androidx.room.ForeignKey.CASCADE;
 
 /**
  * 账单类
@@ -15,42 +22,53 @@ import java.util.UUID;
  * @author darren
  * @date 2018/1/29
  */
-
+@Entity(tableName = "bill", indices = @Index(value = "uuid", unique = true), foreignKeys = {
+        @ForeignKey(entity = Type.class, parentColumns = "uuid", childColumns = "type_id", onDelete = CASCADE, onUpdate = CASCADE),
+        @ForeignKey(entity = Account.class, parentColumns = "uuid", childColumns = "account_id", onDelete = CASCADE, onUpdate = CASCADE)})
 public class Bill implements Serializable {
+    @ColumnInfo(name = "id")
+    @PrimaryKey(autoGenerate = true)
     private Integer mId;
     /**
      * 账单ID号
      */
+    @ColumnInfo(name = "uuid")
     private UUID mUUID;
 
     /**
      * 账单类型ID
      */
+    @ColumnInfo(name = "type_id")
     private UUID mTypeId;
 
     /**
      * 账单账户类型ID
      */
+    @ColumnInfo(name = "account_id")
     private UUID mAccountId;
 
     /**
      * 账单日期
      */
+    @ColumnInfo(name = "date")
     private DateTime mDate;
 
     /**
      * 账单名称
      */
+    @ColumnInfo(name = "name")
     private String mName;
 
     /**
      * 账单收支
      */
+    @ColumnInfo(name = "balance")
     private BigDecimal mBalance;
 
     /**
      * 账单备注
      */
+    @ColumnInfo(name = "remark")
     private String mRemark;
 
     /**
@@ -69,102 +87,67 @@ public class Bill implements Serializable {
         this(UUID.randomUUID());
     }
 
-    /**
-     * @return 账单id
-     */
+    public Integer getId() {
+        return mId;
+    }
+
+    public void setId(Integer id) {
+        mId = id;
+    }
+
     public UUID getUUID() {
         return mUUID;
     }
 
-    /**
-     * @return 账单日期
-     */
-    public DateTime getDate() {
-        return mDate;
+    public void setUUID(UUID UUID) {
+        mUUID = UUID;
     }
 
-    /**
-     * @param date 账单日期
-     */
-    public Bill setDate(DateTime date) {
-        mDate = date;
-        return this;
-    }
-
-    /**
-     * @return 账单标题
-     */
-    public String getName() {
-        return mName;
-    }
-
-    /**
-     * @param name 账单标题
-     */
-    public Bill setName(String name) {
-        mName = name;
-        return this;
-    }
-
-    /**
-     * @return 账单类型名
-     */
     public UUID getTypeId() {
         return mTypeId;
     }
 
-    /**
-     * @param typeId 类型ID
-     */
-    public Bill setTypeId(UUID typeId) {
+    public void setTypeId(UUID typeId) {
         mTypeId = typeId;
-        return this;
     }
 
-    /**
-     * @return 账户ID
-     */
     public UUID getAccountId() {
         return mAccountId;
     }
 
-    /**
-     * @param accountId 账户ID
-     */
-    public Bill setAccountId(UUID accountId) {
+    public void setAccountId(UUID accountId) {
         mAccountId = accountId;
-        return this;
     }
 
-    /**
-     * @return 账单数额
-     */
+    public DateTime getDate() {
+        return mDate;
+    }
+
+    public void setDate(DateTime date) {
+        mDate = date;
+    }
+
+    public String getName() {
+        return mName;
+    }
+
+    public void setName(String name) {
+        mName = name;
+    }
+
     public BigDecimal getBalance() {
         return mBalance;
     }
 
-    /**
-     * @param balance 账单数额
-     */
-    public Bill setBalance(BigDecimal balance) {
+    public void setBalance(BigDecimal balance) {
         mBalance = balance;
-        return this;
     }
 
-    /**
-     * @return 账单备注
-     */
-    @Nullable
     public String getRemark() {
         return mRemark;
     }
 
-    /**
-     * @param remark 账单备注
-     */
-    public Bill setRemark(@Nullable String remark) {
+    public void setRemark(String remark) {
         mRemark = remark;
-        return this;
     }
-
 }

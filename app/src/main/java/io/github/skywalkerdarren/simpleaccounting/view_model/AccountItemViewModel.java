@@ -41,7 +41,7 @@ public class AccountItemViewModel extends BaseObservable {
      * @return 账户背景色值
      */
     public int getColor() {
-        return mAccount.getColor();
+        return mContext.getResources().getColor(mAccount.getColorId());
     }
 
     /**

@@ -95,7 +95,7 @@ public class BillEditViewModel extends BaseObservable {
      */
     @Bindable
     public int getAccountColor() {
-        return mAccount.getColor();
+        return mContext.getResources().getColor(mAccount.getColorId());
     }
 
     /**
@@ -165,6 +165,6 @@ public class BillEditViewModel extends BaseObservable {
      * @return true为支出类型
      */
     public boolean getExpense() {
-        return mType.getExpense();
+        return mType.getIsExpense();
     }
 }

@@ -2,6 +2,11 @@ package io.github.skywalkerdarren.simpleaccounting.model.entity;
 
 
 import androidx.annotation.ColorRes;
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -12,19 +17,27 @@ import java.util.UUID;
  * @author darren
  * @date 2018/3/24
  */
-
+@Entity(tableName = "account", indices = @Index(value = "uuid", unique = true))
 public class Account {
     public static final String FOLDER = "account/";
     public static final String PNG = ".png";
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    @NonNull
     private Integer mId;
+    @ColumnInfo(name = "uuid")
     private UUID mUUID;
+    @ColumnInfo(name = "name")
     private String mName;
+    @ColumnInfo(name = "balance_hint")
     private String mBalanceHint;
+    @ColumnInfo(name = "balance")
     private BigDecimal mBalance;
+    @ColumnInfo(name = "image")
     private String mBitmap;
-    private int mColor;
     @ColorRes
-    private int mColorId;
+    @ColumnInfo(name = "color_id")
+    private Integer mColorId;
 
     public Account(UUID uuid) {
         mUUID = uuid;
@@ -32,6 +45,15 @@ public class Account {
 
     public Account() {
         mUUID = UUID.randomUUID();
+    }
+
+    public Account(String name, String balanceHint, BigDecimal balance, String bitmap, Integer colorId) {
+        mUUID = UUID.randomUUID();
+        mName = name;
+        mBalanceHint = balanceHint;
+        mBalance = balance;
+        mBitmap = bitmap;
+        mColorId = colorId;
     }
 
     public void plusBalance(BigDecimal balance) {
@@ -42,62 +64,59 @@ public class Account {
         mBalance = mBalance.subtract(balance);
     }
 
-    @ColorRes
-    public int getColorId() {
-        return mColorId;
+    public Integer getId() {
+        return mId;
     }
 
-    public Account setColorId(@ColorRes int colorId) {
-        mColorId = colorId;
-        return this;
+    public void setId(Integer id) {
+        mId = id;
+    }
+
+    public UUID getUUID() {
+        return mUUID;
+    }
+
+    public void setUUID(UUID UUID) {
+        mUUID = UUID;
     }
 
     public String getName() {
         return mName;
     }
 
-    public Account setName(String name) {
+    public void setName(String name) {
         mName = name;
-        return this;
     }
 
     public String getBalanceHint() {
         return mBalanceHint;
     }
 
-    public Account setBalanceHint(String balanceHint) {
+    public void setBalanceHint(String balanceHint) {
         mBalanceHint = balanceHint;
-        return this;
     }
 
     public BigDecimal getBalance() {
         return mBalance;
     }
 
-    public Account setBalance(BigDecimal balance) {
+    public void setBalance(BigDecimal balance) {
         mBalance = balance;
-        return this;
     }
 
     public String getBitmap() {
         return mBitmap;
     }
 
-    public Account setBitmap(String name) {
-        mBitmap = name;
-        return this;
+    public void setBitmap(String bitmap) {
+        mBitmap = bitmap;
     }
 
-    public int getColor() {
-        return mColor;
+    public Integer getColorId() {
+        return mColorId;
     }
 
-    public Account setColor(int color) {
-        mColor = color;
-        return this;
-    }
-
-    public UUID getUUID() {
-        return mUUID;
+    public void setColorId(Integer colorId) {
+        mColorId = colorId;
     }
 }

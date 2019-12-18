@@ -20,6 +20,6 @@ public class AccountMenuAdapter extends BaseDataBindingAdapter<Account, MenuAcco
 
     @Override
     protected void convert(MenuAccountItemBinding binding, Account item) {
-        binding.setAccount(new AccountMenuItemViewModel(item));
+        binding.setAccount(new AccountMenuItemViewModel(item, mContext));
     }
 }
