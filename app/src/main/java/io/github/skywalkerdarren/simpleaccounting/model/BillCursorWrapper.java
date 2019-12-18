@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 import io.github.skywalkerdarren.simpleaccounting.model.DbSchema.BillTable.Cols;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 
 /**
  * 账单游标封装

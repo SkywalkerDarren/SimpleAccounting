@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragmentActivity;
-import io.github.skywalkerdarren.simpleaccounting.model.Bill;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.ui.NumPad;
 import io.github.skywalkerdarren.simpleaccounting.ui.fragment.BillEditFragment;
 

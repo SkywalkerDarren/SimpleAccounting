@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.model;
+package io.github.skywalkerdarren.simpleaccounting.model.entity;
 
 import androidx.annotation.Nullable;
 
@@ -17,10 +17,11 @@ import java.util.UUID;
  */
 
 public class Bill implements Serializable {
+    private Integer mId;
     /**
      * 账单ID号
      */
-    private UUID mId;
+    private UUID mUUID;
 
     /**
      * 账单类型ID
@@ -58,7 +59,7 @@ public class Bill implements Serializable {
      * @param id 账单id
      */
     public Bill(UUID id) {
-        mId = id;
+        mUUID = id;
     }
 
     /**
@@ -71,8 +72,8 @@ public class Bill implements Serializable {
     /**
      * @return 账单id
      */
-    public UUID getId() {
-        return mId;
+    public UUID getUUID() {
+        return mUUID;
     }
 
     /**

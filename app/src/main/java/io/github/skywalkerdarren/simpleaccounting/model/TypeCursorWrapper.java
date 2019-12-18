@@ -6,6 +6,7 @@ import android.database.CursorWrapper;
 import java.util.UUID;
 
 import io.github.skywalkerdarren.simpleaccounting.model.DbSchema.TypeTable.Cols;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 
 
 /**

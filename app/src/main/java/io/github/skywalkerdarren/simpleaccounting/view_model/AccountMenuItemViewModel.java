@@ -2,9 +2,9 @@ package io.github.skywalkerdarren.simpleaccounting.view_model;
 
 import androidx.databinding.BaseObservable;
 
-import io.github.skywalkerdarren.simpleaccounting.model.Account;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 
-import static io.github.skywalkerdarren.simpleaccounting.model.Account.FOLDER;
+import static io.github.skywalkerdarren.simpleaccounting.model.entity.Account.FOLDER;
 
 /**
  * @author darren

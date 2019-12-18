@@ -8,7 +8,7 @@ import androidx.databinding.BaseObservable;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillEditBinding;
-import io.github.skywalkerdarren.simpleaccounting.model.Type;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 
 /**
  * 类型项目vm

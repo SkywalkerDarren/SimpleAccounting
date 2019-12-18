@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
+
 import static io.github.skywalkerdarren.simpleaccounting.model.DbSchema.BillTable;
 
 /**
@@ -62,7 +64,7 @@ public class BillLab {
      */
     private ContentValues getContentValues(Bill bill) {
         ContentValues values = new ContentValues();
-        values.put(BillTable.Cols.UUID, bill.getId().toString());
+        values.put(BillTable.Cols.UUID, bill.getUUID().toString());
         values.put(BillTable.Cols.BALANCE, bill.getBalance().toString());
         values.put(BillTable.Cols.DATE, bill.getDate().getMillis());
         values.put(BillTable.Cols.NAME, bill.getName());
@@ -158,7 +160,7 @@ public class BillLab {
     public void updateBill(Bill bill) {
         ContentValues values = getContentValues(bill);
         mDatabase.update(BillTable.TABLE_NAME, values, BillTable.Cols.UUID + " = ?",
-                new String[]{bill.getId().toString()});
+                new String[]{bill.getUUID().toString()});
     }
 
     /**

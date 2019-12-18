@@ -12,13 +12,13 @@ import org.joda.time.DateTime;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import io.github.skywalkerdarren.simpleaccounting.model.Account;
-import io.github.skywalkerdarren.simpleaccounting.model.Bill;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
-import io.github.skywalkerdarren.simpleaccounting.model.Type;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
 
-import static io.github.skywalkerdarren.simpleaccounting.model.Account.FOLDER;
+import static io.github.skywalkerdarren.simpleaccounting.model.entity.Account.FOLDER;
 
 /**
  * @author darren
@@ -147,12 +147,12 @@ public class BillEditViewModel extends BaseObservable {
         mBill.setName(getTypeName());
         mBill.setDate(getDate());
         mBill.setRemark(remark);
-        mBill.setTypeId(mType.getId());
-        mBill.setAccountId(mAccount.getId());
+        mBill.setTypeId(mType.getUUID());
+        mBill.setAccountId(mAccount.getUUID());
 
         // 刷新账单数据库
         BillLab billLab = BillLab.getInstance(mContext);
-        if (billLab.getBill(mBill.getId()) == null) {
+        if (billLab.getBill(mBill.getUUID()) == null) {
             billLab.addBill(mBill);
         } else {
             billLab.updateBill(mBill);

@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
+
 /**
  * @author darren
  * @date 2018/3/31

@@ -9,6 +9,10 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Random;
 
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
+
 /**
  * @author darren
  * @date 2018/5/22
@@ -51,11 +55,11 @@ public class Demo {
             // 500-1.5k
             balance = new BigDecimal(getRandomFloat(1000, 500));
         }
-        bill.setTypeId(type.getId());
+        bill.setTypeId(type.getUUID());
         bill.setName(type.getName());
         bill.setBalance(balance);
 
-        bill.setAccountId(mAccounts.get(getRandomInt(mAccounts.size())).getId());
+        bill.setAccountId(mAccounts.get(getRandomInt(mAccounts.size())).getUUID());
 
         long p = end.getMillis() - start.getMillis();
         p = mRandom.nextLong() % p;

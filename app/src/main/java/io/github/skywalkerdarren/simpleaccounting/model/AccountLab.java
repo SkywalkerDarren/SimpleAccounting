@@ -13,8 +13,9 @@ import java.util.UUID;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.DbSchema.AccountTable.Cols;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 
-import static io.github.skywalkerdarren.simpleaccounting.model.Account.PNG;
+import static io.github.skywalkerdarren.simpleaccounting.model.entity.Account.PNG;
 import static io.github.skywalkerdarren.simpleaccounting.model.DbSchema.AccountTable.TABLE_NAME;
 
 /**
@@ -43,7 +44,7 @@ public class AccountLab {
 
     private static ContentValues getContentValues(Account account) {
         ContentValues values = new ContentValues();
-        values.put(Cols.UUID, account.getId().toString());
+        values.put(Cols.UUID, account.getUUID().toString());
         values.put(Cols.NAME, account.getName());
         values.put(Cols.BALANCE, account.getBalance().toString());
         values.put(Cols.BALANCE_HINT, account.getBalanceHint());
@@ -112,7 +113,7 @@ public class AccountLab {
     public void updateAccount(Account account) {
         ContentValues values = getContentValues(account);
         mDatabase.update(TABLE_NAME, values, Cols.UUID + " = ?",
-                new String[]{account.getId().toString()});
+                new String[]{account.getUUID().toString()});
     }
 
     /**

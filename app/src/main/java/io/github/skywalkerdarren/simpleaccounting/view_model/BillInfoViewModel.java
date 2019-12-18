@@ -15,7 +15,7 @@ import androidx.databinding.BindingAdapter;
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.BillInfo;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
-import io.github.skywalkerdarren.simpleaccounting.model.Type;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillDetailActivity;
 
 /**

@@ -5,7 +5,7 @@ import java.util.List;
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseDataBindingAdapter;
 import io.github.skywalkerdarren.simpleaccounting.databinding.MenuAccountItemBinding;
-import io.github.skywalkerdarren.simpleaccounting.model.Account;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.view_model.AccountMenuItemViewModel;
 
 /**

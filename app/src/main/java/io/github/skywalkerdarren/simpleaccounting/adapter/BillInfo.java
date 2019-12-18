@@ -14,10 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import io.github.skywalkerdarren.simpleaccounting.model.Bill;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
-import io.github.skywalkerdarren.simpleaccounting.model.Type;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 import io.github.skywalkerdarren.simpleaccounting.model.TypeLab;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
@@ -56,7 +56,7 @@ public class BillInfo implements MultiItemEntity {
      */
     private BillInfo(Bill bill, Type type) {
         mType = TextUtils.isEmpty(bill.getRemark()) ? WITHOUT_REMARK : WITH_REMARK;
-        mUUID = bill.getId();
+        mUUID = bill.getUUID();
         mTitle = bill.getName();
         mRemark = bill.getRemark();
         mBalance = FormatUtil.getNumeric(bill.getBalance());

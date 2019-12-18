@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 import io.github.skywalkerdarren.simpleaccounting.model.DbSchema.AccountTable.Cols;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 
 /**
  * @author darren

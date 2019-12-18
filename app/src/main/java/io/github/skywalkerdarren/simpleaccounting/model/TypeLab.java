@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 import io.github.skywalkerdarren.simpleaccounting.model.DbSchema.TypeTable.Cols;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 
 /**
  * @author darren
@@ -36,7 +37,7 @@ public class TypeLab {
 
     private static ContentValues getContentValues(Type type) {
         ContentValues values = new ContentValues();
-        values.put(Cols.UUID, type.getId().toString());
+        values.put(Cols.UUID, type.getUUID().toString());
         values.put(Cols.NAME, type.getName());
         values.put(Cols.COLOR, type.getColorId());
         values.put(Cols.IMAGE, type.getAssetsName());

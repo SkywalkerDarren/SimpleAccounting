@@ -25,7 +25,7 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.AccountAdapter;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentAccountBinding;
-import io.github.skywalkerdarren.simpleaccounting.model.Account;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.AccountLab;
 import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
 import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;

@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.model;
+package io.github.skywalkerdarren.simpleaccounting.model.entity;
 
 
 import androidx.annotation.ColorRes;
@@ -16,6 +16,7 @@ import java.util.UUID;
 public class Account {
     public static final String FOLDER = "account/";
     public static final String PNG = ".png";
+    private Integer mId;
     private UUID mUUID;
     private String mName;
     private String mBalanceHint;
@@ -96,7 +97,7 @@ public class Account {
         return this;
     }
 
-    public UUID getId() {
+    public UUID getUUID() {
         return mUUID;
     }
 }

@@ -10,7 +10,7 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseDataBindingAdapter;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillEditBinding;
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemTypeBinding;
-import io.github.skywalkerdarren.simpleaccounting.model.Type;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 import io.github.skywalkerdarren.simpleaccounting.view_model.TypeItemViewModel;
 
 /**
