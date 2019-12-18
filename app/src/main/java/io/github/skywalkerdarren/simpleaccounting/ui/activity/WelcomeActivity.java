@@ -19,9 +19,6 @@ import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.databinding.ActivityWelcomeBinding;
-import io.github.skywalkerdarren.simpleaccounting.model.AccountLab;
-import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
-import io.github.skywalkerdarren.simpleaccounting.model.TypeLab;
 
 public class WelcomeActivity extends Activity {
     private ViewPager mViewPager;
@@ -73,9 +70,7 @@ public class WelcomeActivity extends Activity {
             mDotLayout.addView(view, params);
         }
         getWindow().getDecorView().post(() -> {
-            AccountLab.getInstance(WelcomeActivity.this);
-            TypeLab.getInstance(WelcomeActivity.this);
-            BillLab.getInstance(WelcomeActivity.this);
+            //TODO DB init
         });
     }
 

@@ -14,11 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
-import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
-import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
-import io.github.skywalkerdarren.simpleaccounting.model.TypeLab;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 import static io.github.skywalkerdarren.simpleaccounting.adapter.BillAdapter.HEADER;
@@ -85,16 +83,14 @@ public class BillInfo implements MultiItemEntity {
      * @return 账单摘要列表
      */
     public static List<BillInfo> getBillInfoList(int year, int month, Context context) {
-        BillLab billLab = BillLab.getInstance(context);
-        TypeLab typeLab = TypeLab.getInstance(context);
-        StatsLab statsLab = StatsLab.getInstance(context);
-        List<Bill> bills = billLab.getsBills(year, month);
+        AppRepositry repositry = AppRepositry.getInstance(context);
+        List<Bill> bills = repositry.getsBills(year, month);
         List<BillInfo> billInfoList = new ArrayList<>();
         // 上一个账单的年月日
         DateTime date = null;
         for (int i = 0; i < bills.size(); i++) {
             Bill bill = bills.get(i);
-            Type type = typeLab.getType(bill.getTypeId());
+            Type type = repositry.getType(bill.getTypeId());
             DateTime dateTime = bill.getDate();
             int y = dateTime.getYear();
             int m = dateTime.getMonthOfYear();
@@ -104,8 +100,8 @@ public class BillInfo implements MultiItemEntity {
             // 如果当前帐单与上一张单年月日不同，则添加账单
             if (date == null || !date.equals(currentDate)) {
                 date = currentDate;
-                BigDecimal income = statsLab.getStats(date, date.plusDays(1)).getIncome();
-                BigDecimal expense = statsLab.getStats(date, date.plusDays(1)).getExpense();
+                BigDecimal income = repositry.getBillStats(date, date.plusDays(1)).getIncome();
+                BigDecimal expense = repositry.getBillStats(date, date.plusDays(1)).getExpense();
                 billInfoList.add(new BillInfo(new DateHeaderDivider(date, income, expense)));
             }
             billInfoList.add(new BillInfo(bill, type));

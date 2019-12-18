@@ -46,11 +46,10 @@ import io.github.skywalkerdarren.simpleaccounting.adapter.TypeAdapter;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillEditBinding;
 import io.github.skywalkerdarren.simpleaccounting.databinding.MenuAccountBinding;
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
-import io.github.skywalkerdarren.simpleaccounting.model.AccountLab;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
-import io.github.skywalkerdarren.simpleaccounting.model.TypeLab;
 import io.github.skywalkerdarren.simpleaccounting.ui.NumPad;
 import io.github.skywalkerdarren.simpleaccounting.util.DpConvertUtils;
 import io.github.skywalkerdarren.simpleaccounting.view_model.BillEditViewModel;
@@ -136,7 +135,7 @@ public class BillEditFragment extends BaseFragment {
 
         // 配置选择按钮
         mTypeSbg.setOnClickedButtonListener(position -> {
-            List<Type> types = TypeLab
+            List<Type> types = AppRepositry
                     .getInstance(getContext()).getTypes(position == 1);
             for (int i = 0; i < adapter.getItemCount(); i++) {
                 adapter.getViewByPosition(binding.typeListRecyclerView,
@@ -197,24 +196,25 @@ public class BillEditFragment extends BaseFragment {
      * 配置初始账单，将账单信息绑定到视图
      */
     private void configBill(TypeAdapter adapter) {
+        AppRepositry repositry = AppRepositry.getInstance(getContext());
         Account account;
         if (mViewModel.getDate() == null) {
             // 创建账单(日期不存在则一定是刚创建的)
             mViewModel.setDate(DateTime.now());
-            adapter.setNewData(TypeLab.getInstance(getContext()).getTypes(true));
+            adapter.setNewData(repositry.getTypes(true));
             mViewModel.setType(adapter.getItem(0));
-            account = AccountLab.getInstance(getContext()).getAccounts().get(0);
+            account = repositry.getAccounts().get(0);
         } else {
             // 编辑账单
-            mViewModel.setType(TypeLab.getInstance(getContext()).getType(mViewModel.getTypeId()));
-            account = AccountLab.getInstance(getContext()).getAccount(mViewModel.getAccountId());
+            mViewModel.setType(repositry.getType(mViewModel.getTypeId()));
+            account = repositry.getAccount(mViewModel.getAccountId());
             // 初始化账户到没当前账单时
             if (mViewModel.getExpense()) {
-                adapter.setNewData(TypeLab.getInstance(getContext()).getTypes(true));
+                adapter.setNewData(repositry.getTypes(true));
                 account.plusBalance(new BigDecimal(mViewModel.getBalance()));
             } else {
                 mTypeSbg.setPosition(0);
-                adapter.setNewData(TypeLab.getInstance(getContext()).getTypes(false));
+                adapter.setNewData(repositry.getTypes(false));
                 account.minusBalance(new BigDecimal(mViewModel.getBalance()));
             }
             mBalanceEditText.setText(mViewModel.getBalance());
@@ -313,7 +313,7 @@ public class BillEditFragment extends BaseFragment {
     private void getPopupWindow(View view) {
         MenuAccountBinding binding = MenuAccountBinding.inflate(LayoutInflater.from(getContext()));
         View menu = binding.getRoot();
-        AccountMenuAdapter adapter = new AccountMenuAdapter(AccountLab.getInstance(getContext()).getAccounts());
+        AccountMenuAdapter adapter = new AccountMenuAdapter(AppRepositry.getInstance(getContext()).getAccounts());
         PopupWindow popupWindow = new PopupWindow(menu);
         adapter.setOnItemClickListener((adapter1, view1, position) -> {
             Account account = (Account) adapter1.getData().get(position);

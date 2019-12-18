@@ -7,8 +7,9 @@ import androidx.databinding.Bindable;
 
 import org.joda.time.DateTime;
 
-import io.github.skywalkerdarren.simpleaccounting.model.AccountLab;
-import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
@@ -19,9 +20,8 @@ import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
  */
 
 public class AccountViewModel extends BaseObservable {
-    private AccountLab mAccountLab;
-    private StatsLab mStatsLab;
-    private StatsLab.BillStats mStats;
+    private BillStats mStats;
+    private AppRepositry mRepositry;
 
     /**
      * 初始化lab 和列表stats
@@ -29,13 +29,12 @@ public class AccountViewModel extends BaseObservable {
      * @param context 上下文
      */
     public AccountViewModel(Context context) {
-        mStatsLab = StatsLab.getInstance(context);
-        mAccountLab = AccountLab.getInstance(context);
-        mStats = mStatsLab.getStats(new DateTime(0), DateTime.now());
+        mRepositry = AppRepositry.getInstance(context);
+        mStats = mRepositry.getBillStats(new DateTime(0), DateTime.now());
     }
 
     public void setStats() {
-        mStats = mStatsLab.getStats(new DateTime(0), DateTime.now());
+        mStats = mRepositry.getBillStats(new DateTime(0), DateTime.now());
         notifyChange();
     }
 
@@ -68,10 +67,10 @@ public class AccountViewModel extends BaseObservable {
      */
     @Bindable
     public String getAccountSize() {
-        return mAccountLab.getAccounts().size() + "";
+        return mRepositry.getAccounts().size() + "";
     }
 
-    public void changePosition(int oldPos, int newPos) {
-        mAccountLab.changePosition(oldPos, newPos);
+    public void changePosition(Account a, Account b) {
+        mRepositry.changePosition(a, b);
     }
 }

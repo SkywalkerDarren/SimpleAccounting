@@ -12,9 +12,9 @@ import org.joda.time.DateTime;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
-import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
 
@@ -30,10 +30,12 @@ public class BillEditViewModel extends BaseObservable {
     private Bill mBill;
     private Type mType;
     private Account mAccount;
+    private AppRepositry mRepositry;
 
     public BillEditViewModel(Bill bill, Context context) {
         mBill = bill;
         mContext = context;
+        mRepositry = AppRepositry.getInstance(context);
     }
 
     /**
@@ -151,11 +153,10 @@ public class BillEditViewModel extends BaseObservable {
         mBill.setAccountId(mAccount.getUUID());
 
         // 刷新账单数据库
-        BillLab billLab = BillLab.getInstance(mContext);
-        if (billLab.getBill(mBill.getUUID()) == null) {
-            billLab.addBill(mBill);
+        if (mRepositry.getBill(mBill.getUUID()) == null) {
+            mRepositry.addBill(mBill);
         } else {
-            billLab.updateBill(mBill);
+            mRepositry.updateBill(mBill);
         }
         DesktopWidget.refresh(mContext);
         return true;

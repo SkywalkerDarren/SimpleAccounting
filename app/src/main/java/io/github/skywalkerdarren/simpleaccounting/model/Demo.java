@@ -23,14 +23,14 @@ public class Demo {
     private List<Type> mExpense;
     private List<Type> mIncome;
     private List<Account> mAccounts;
-    private BillLab mLab;
+    private AppRepositry mRepositry;
     private static final String TAG = "Demo";
 
     public Demo(Context context) {
-        mExpense = TypeLab.getInstance(context).getTypes(true);
-        mIncome = TypeLab.getInstance(context).getTypes(false);
-        mAccounts = AccountLab.getInstance(context).getAccounts();
-        mLab = BillLab.getInstance(context);
+        mRepositry = AppRepositry.getInstance(context);
+        mExpense = mRepositry.getTypes(true);
+        mIncome = mRepositry.getTypes(false);
+        mAccounts = mRepositry.getAccounts();
         mRandom = new Random(DateTime.now().getMillis());
     }
 
@@ -70,7 +70,7 @@ public class Demo {
         }
 
         Log.d(TAG, "createRandomBill: " + p);
-        mLab.addBill(bill);
+        mRepositry.addBill(bill);
     }
 
     private float getRandomFloat(int range, int base) {

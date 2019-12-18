@@ -21,7 +21,7 @@ public interface AccountDao {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateAccount(Account account);
     @Delete
-    void delAccount(UUID uuid);
+    void delAccount(Account account);
     @Insert
     void newAccount(Account account);
 }

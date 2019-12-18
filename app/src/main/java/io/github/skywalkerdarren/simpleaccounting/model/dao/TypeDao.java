@@ -18,7 +18,7 @@ public interface TypeDao {
     @Query("SELECT * FROM type WHERE is_expense == :isExpense")
     List<Type> getTypes(Boolean isExpense);
     @Delete
-    void delType(Bill bill);
+    void delType(Type type);
     @Insert
     void newType(Type type);
 }

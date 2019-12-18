@@ -35,8 +35,8 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseAppBarStateChangeListener;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillDetailBinding;
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
-import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
 import io.github.skywalkerdarren.simpleaccounting.util.DpConvertUtils;
 import io.github.skywalkerdarren.simpleaccounting.view_model.BillDetailViewModel;
 
@@ -256,7 +256,7 @@ public class BillDetailFragment extends BaseFragment {
 
     @Override
     protected void updateUI() {
-        mBill = BillLab.getInstance(getActivity()).getBill(mBill.getUUID());
+        mBill = AppRepositry.getInstance(getActivity()).getBill(mBill.getUUID());
         mBinding.setDetail(new BillDetailViewModel(mBill, getActivity()));
     }
 

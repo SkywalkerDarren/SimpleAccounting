@@ -5,6 +5,7 @@ import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
@@ -19,7 +20,9 @@ import java.util.UUID;
  */
 @Entity(tableName = "account", indices = @Index(value = "uuid", unique = true))
 public class Account {
+    @Ignore
     public static final String FOLDER = "account/";
+    @Ignore
     public static final String PNG = ".png";
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
@@ -39,6 +42,7 @@ public class Account {
     @ColumnInfo(name = "color_id")
     private Integer mColorId;
 
+    @Ignore
     public Account(UUID uuid) {
         mUUID = uuid;
     }
@@ -47,6 +51,7 @@ public class Account {
         mUUID = UUID.randomUUID();
     }
 
+    @Ignore
     public Account(String name, String balanceHint, BigDecimal balance, String bitmap, Integer colorId) {
         mUUID = UUID.randomUUID();
         mName = name;

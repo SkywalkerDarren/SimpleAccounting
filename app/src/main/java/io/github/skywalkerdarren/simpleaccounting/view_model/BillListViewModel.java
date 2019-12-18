@@ -9,7 +9,7 @@ import androidx.databinding.Bindable;
 import org.joda.time.DateTime;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
-import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.StatsActivity;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
@@ -21,14 +21,14 @@ import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
  */
 
 public class BillListViewModel extends BaseObservable {
-    private StatsLab mStatsLab;
     private Context mContext;
     private DateTime mDateTime;
     private DateTime mMonth;
+    private AppRepositry mRepositry;
 
     public BillListViewModel(Context context) {
         mContext = context;
-        mStatsLab = StatsLab.getInstance(mContext);
+        mRepositry = AppRepositry.getInstance(context);
     }
 
     /**
@@ -53,7 +53,7 @@ public class BillListViewModel extends BaseObservable {
      */
     @Bindable
     public String getIncome() {
-        return FormatUtil.getNumeric(mStatsLab.getStats(mMonth, mMonth.plusMonths(1)).getIncome());
+        return FormatUtil.getNumeric(mRepositry.getBillStats(mMonth, mMonth.plusMonths(1)).getIncome());
     }
 
     /**
@@ -61,7 +61,7 @@ public class BillListViewModel extends BaseObservable {
      */
     @Bindable
     public String getExpense() {
-        return FormatUtil.getNumeric(mStatsLab.getStats(mMonth, mMonth.plusMonths(1)).getExpense());
+        return FormatUtil.getNumeric(mRepositry.getBillStats(mMonth, mMonth.plusMonths(1)).getExpense());
     }
 
     /**

@@ -4,6 +4,7 @@ import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
@@ -17,7 +18,9 @@ import java.util.UUID;
  */
 @Entity(tableName = "type", indices = @Index(value = "uuid", unique = true))
 public class Type {
+    @Ignore
     public static final String FOLDER = "type/";
+    @Ignore
     public static final String PNG = ".png";
     @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)
@@ -38,6 +41,7 @@ public class Type {
     /**
      * 根据id创建类型
      */
+    @Ignore
     public Type(UUID id) {
         mUUID = id;
     }
@@ -49,6 +53,7 @@ public class Type {
         mUUID = UUID.randomUUID();
     }
 
+    @Ignore
     public Type(String name, Integer colorId, Boolean isExpense, String assetsName) {
         mUUID = UUID.randomUUID();
         mName = name;

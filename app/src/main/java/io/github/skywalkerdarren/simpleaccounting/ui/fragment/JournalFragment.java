@@ -35,7 +35,7 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.StatsAdapter;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentJournalBinding;
-import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
 import io.github.skywalkerdarren.simpleaccounting.view_model.JournalViewModel;
 
 /**
@@ -94,12 +94,12 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
     /**
      * 更新数据
      */
-    private void updateLineDataSets(List<StatsLab.BillStats> statsList, boolean showIncome, boolean showExpense, boolean showSum) {
+    private void updateLineDataSets(List<BillStats> statsList, boolean showIncome, boolean showExpense, boolean showSum) {
         List<Entry> income = new ArrayList<>();
         List<Entry> expense = new ArrayList<>();
         List<Entry> sum = new ArrayList<>();
         for (int i = 0; i < statsList.size(); i++) {
-            StatsLab.BillStats stats = statsList.get(i);
+            BillStats stats = statsList.get(i);
             expense.add(new Entry(i, stats.getExpense().floatValue()));
             income.add(new Entry(i, stats.getIncome().floatValue()));
             sum.add(new Entry(i, stats.getSum().floatValue()));
@@ -128,7 +128,7 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
      */
     @Override
     public void updateUI() {
-        List<StatsLab.BillStats> statsList = mViewModel.getStats();
+        List<BillStats> statsList = mViewModel.getStats();
         mStatsAdapter.setNewData(statsList);
         mStatsAdapter.notifyDataSetChanged();
         updateLineDataSets(statsList, true, true, true);

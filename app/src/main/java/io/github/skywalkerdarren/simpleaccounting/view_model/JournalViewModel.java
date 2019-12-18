@@ -11,7 +11,8 @@ import org.joda.time.DateTime;
 import java.math.BigDecimal;
 import java.util.List;
 
-import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
@@ -27,18 +28,20 @@ public class JournalViewModel extends BaseObservable {
     private BigDecimal mExpense;
     private BigDecimal mSum;
     private int mYear;
-    private List<StatsLab.BillStats> mStats;
+    private List<BillStats> mStats;
+    private AppRepositry mRepositry;
 
     public JournalViewModel(Context context) {
         mContext = context;
+        mRepositry = AppRepositry.getInstance(context);
         mYear = DateTime.now().getYear();
-        mStats = StatsLab.getInstance(mContext).getAnnualStats(DateTime.now().getYear());
+        mStats = mRepositry.getAnnualStats(DateTime.now().getYear());
         mIncome = BigDecimal.ZERO;
         mExpense = BigDecimal.ZERO;
         mSum = BigDecimal.ZERO;
         // 初始化求和
         for (int i = 0; i < mStats.size(); i++) {
-            StatsLab.BillStats stats = mStats.get(i);
+            BillStats stats = mStats.get(i);
             mExpense = mExpense.add(stats.getExpense());
             mIncome = mIncome.add(stats.getIncome());
             mSum = mSum.add(stats.getSum());
@@ -48,7 +51,7 @@ public class JournalViewModel extends BaseObservable {
     /**
      * @return 统计列表
      */
-    public List<StatsLab.BillStats> getStats() {
+    public List<BillStats> getStats() {
         return mStats;
     }
 
