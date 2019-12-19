@@ -11,6 +11,9 @@ import org.junit.Test;
 
 import java.util.List;
 
+import io.github.skywalkerdarren.simpleaccounting.model.Database.AccountDatabase;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
+
 /**
  * @author darren
  * @date 2018/4/8
@@ -45,8 +48,8 @@ public class BillStatsLabTest {
 
     @Test
     public void getAccountStats() throws Exception {
-        Account account = AccountLab.getInstance(mContext).getAccounts().get(0);
-        List<StatsLab.AccountStats> stats = mStatsLab.getAccountStats(account.getId(), 2018);
+        Account account = AccountDatabase.getInstance(mContext).accountDao().getAccounts().get(0);
+        List<StatsLab.AccountStats> stats = mStatsLab.getAccountStats(account.getUUID(), 2018);
     }
 
     @Test

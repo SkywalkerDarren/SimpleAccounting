@@ -7,11 +7,12 @@ import androidx.databinding.BaseObservable;
 
 import org.joda.time.DateTime;
 
-import io.github.skywalkerdarren.simpleaccounting.model.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
+import io.github.skywalkerdarren.simpleaccounting.util.ColorConvertUtils;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
-import static io.github.skywalkerdarren.simpleaccounting.model.Account.FOLDER;
+import static io.github.skywalkerdarren.simpleaccounting.model.entity.Account.FOLDER;
 
 /**
  * 账户vm
@@ -41,7 +42,7 @@ public class AccountItemViewModel extends BaseObservable {
      * @return 账户背景色值
      */
     public int getColor() {
-        return mAccount.getColor();
+        return ColorConvertUtils.convertIdToColor(mContext, mAccount.getColorId());
     }
 
     /**
@@ -50,7 +51,7 @@ public class AccountItemViewModel extends BaseObservable {
     public String getBalance() {
         Log.d(TAG, "getBalance() called");
         StatsLab lab = StatsLab.getInstance(mContext);
-        StatsLab.AccountStats stats = lab.getAccountStats(mAccount.getId(),
+        StatsLab.AccountStats stats = lab.getAccountStats(mAccount.getUUID(),
                 new DateTime(0), DateTime.now());
         // 账户基础金额 + 统计盈余
         return FormatUtil.getNumeric(mAccount.getBalance().add(stats.getSum()));

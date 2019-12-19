@@ -9,7 +9,7 @@ import android.view.View;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.BindingAdapter;
 
-import io.github.skywalkerdarren.simpleaccounting.model.Bill;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillEditActivity;
 
 /**

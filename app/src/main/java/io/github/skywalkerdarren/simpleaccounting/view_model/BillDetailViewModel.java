@@ -14,12 +14,10 @@ import org.joda.time.DateTime;
 import java.math.BigDecimal;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
-import io.github.skywalkerdarren.simpleaccounting.model.Account;
-import io.github.skywalkerdarren.simpleaccounting.model.AccountLab;
-import io.github.skywalkerdarren.simpleaccounting.model.Bill;
-import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
-import io.github.skywalkerdarren.simpleaccounting.model.Type;
-import io.github.skywalkerdarren.simpleaccounting.model.TypeLab;
+import io.github.skywalkerdarren.simpleaccounting.model.Database.AccountDatabase;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillEditActivity;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
@@ -40,12 +38,14 @@ public class BillDetailViewModel extends BaseObservable {
     private StatsLab mStatsLab;
     private DateTime mStart;
     private DateTime mEnd;
+    private AccountDatabase mDatabase;
 
     public BillDetailViewModel(Bill bill, Activity activity) {
         mActivity = activity;
+        mDatabase = AccountDatabase.getInstance(mActivity);
         mBill = bill;
-        mAccount = AccountLab.getInstance(mActivity).getAccount(mBill.getAccountId());
-        mType = TypeLab.getInstance(mActivity).getType(mBill.getTypeId());
+        mAccount = mDatabase.accountDao().getAccount(mBill.getAccountId());
+        mType = mDatabase.typeDao().getInstance(mActivity).getType(mBill.getTypeId());
         mStatsLab = StatsLab.getInstance(mActivity);
         int month = mBill.getDate().getMonthOfYear();
         int year = mBill.getDate().getYear();

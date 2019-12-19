@@ -10,6 +10,8 @@ import org.junit.Test;
 
 import java.util.List;
 
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
+
 /**
  * @author darren
  * @date 2018/3/31

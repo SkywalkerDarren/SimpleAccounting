@@ -35,8 +35,8 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseAppBarStateChangeListener;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillDetailBinding;
-import io.github.skywalkerdarren.simpleaccounting.model.Bill;
-import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
+import io.github.skywalkerdarren.simpleaccounting.model.Database.AccountDatabase;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.util.DpConvertUtils;
 import io.github.skywalkerdarren.simpleaccounting.view_model.BillDetailViewModel;
 
@@ -245,7 +245,7 @@ public class BillDetailFragment extends BaseFragment {
                 getActivity().onBackPressed();
                 return true;
             case R.id.del:
-                DeleteBillAlertDialog dialog = DeleteBillAlertDialog.newInstance(mBill.getId());
+                DeleteBillAlertDialog dialog = DeleteBillAlertDialog.newInstance(mBill.getUUID());
                 dialog.setTargetFragment(this, REQUEST_DESTROY);
                 dialog.show(getFragmentManager(), "alertDialog");
                 return true;
@@ -256,7 +256,7 @@ public class BillDetailFragment extends BaseFragment {
 
     @Override
     protected void updateUI() {
-        mBill = BillLab.getInstance(getActivity()).getBill(mBill.getId());
+        mBill = AccountDatabase.getInstance(getActivity()).billDao().getBill(mBill.getUUID());
         mBinding.setDetail(new BillDetailViewModel(mBill, getActivity()));
     }
 

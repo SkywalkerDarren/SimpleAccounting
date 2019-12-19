@@ -7,8 +7,9 @@ import androidx.databinding.Bindable;
 
 import org.joda.time.DateTime;
 
-import io.github.skywalkerdarren.simpleaccounting.model.AccountLab;
+import io.github.skywalkerdarren.simpleaccounting.model.Database.AccountDatabase;
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
@@ -19,9 +20,9 @@ import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
  */
 
 public class AccountViewModel extends BaseObservable {
-    private AccountLab mAccountLab;
     private StatsLab mStatsLab;
     private StatsLab.BillStats mStats;
+    private AccountDatabase mDatabase;
 
     /**
      * 初始化lab 和列表stats
@@ -30,8 +31,8 @@ public class AccountViewModel extends BaseObservable {
      */
     public AccountViewModel(Context context) {
         mStatsLab = StatsLab.getInstance(context);
-        mAccountLab = AccountLab.getInstance(context);
         mStats = mStatsLab.getStats(new DateTime(0), DateTime.now());
+        mDatabase = AccountDatabase.getInstance(context);
     }
 
     public void setStats() {
@@ -68,10 +69,21 @@ public class AccountViewModel extends BaseObservable {
      */
     @Bindable
     public String getAccountSize() {
-        return mAccountLab.getAccounts().size() + "";
+        return mDatabase.accountDao().getAccounts().size() + "";
     }
 
     public void changePosition(int oldPos, int newPos) {
-        mAccountLab.changePosition(oldPos, newPos);
+        Account oldAccount = mDatabase.accountDao().getAccount(oldPos);
+        Account newAccount = mDatabase.accountDao().getAccount(newPos);
+        Integer newId = newAccount.getId();
+        Integer oldId = oldAccount.getId();
+
+        newAccount.setId(-1);
+        mDatabase.accountDao().updateAccount(newAccount);
+
+        oldAccount.setId(newId);
+        newAccount.setId(oldId);
+        mDatabase.accountDao().updateAccount(oldAccount);
+        mDatabase.accountDao().updateAccount(newAccount);
     }
 }

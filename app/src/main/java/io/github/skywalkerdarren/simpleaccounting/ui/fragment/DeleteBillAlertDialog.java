@@ -10,7 +10,9 @@ import androidx.fragment.app.DialogFragment;
 
 import java.util.UUID;
 
-import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
+import io.github.skywalkerdarren.simpleaccounting.model.Database.AccountDatabase;
+import io.github.skywalkerdarren.simpleaccounting.model.dao.BillDao;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
 
 /**
@@ -45,7 +47,7 @@ public class DeleteBillAlertDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        BillLab lab = BillLab.getInstance(getContext());
+        BillDao dao = AccountDatabase.getInstance(getContext()).billDao();
         mBillId = (UUID) getArguments().getSerializable(ARG_BILL_ID);
         return new AlertDialog.Builder(getActivity())
                 .setTitle("确认删除")
@@ -54,7 +56,7 @@ public class DeleteBillAlertDialog extends DialogFragment {
                         sendResult(Activity.RESULT_CANCELED))
                 .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
                     // 删除帐单
-                    lab.delBill(mBillId);
+                    dao.deleteBill(new Bill(mBillId));
                     DesktopWidget.refresh(getContext());
                     sendResult(Activity.RESULT_OK);
                 })

@@ -52,26 +52,6 @@ public class StatsLab {
         }
     }
 
-    /**
-     * 三表联表查询
-     */
-    private CursorWrapper queryStats(String[] cols, String where, String[] args,
-                                     String group, String order) {
-        return new CursorWrapper(mDatabase
-                .query(DbSchema.BillTable.TABLE_NAME + " inner join " +
-                                DbSchema.TypeTable.TABLE_NAME + " inner join " +
-                                DbSchema.AccountTable.TABLE_NAME + " on " +
-                                DbSchema.BillTable.Cols.ACCOUNT_ID + " = " +
-                                DbSchema.AccountTable.Cols.UUID + " and " +
-                                DbSchema.BillTable.Cols.TYPE_ID + " = " +
-                                DbSchema.TypeTable.Cols.UUID,
-                        cols,
-                        where,
-                        args,
-                        group,
-                        null,
-                        order));
-    }
 
     /**
      * 年度统计
@@ -217,7 +197,7 @@ public class StatsLab {
                 new String[]{DbSchema.TypeTable.Cols.IS_EXPENSE,
                         "sum(" + DbSchema.BillTable.Cols.BALANCE + ")"},
                 DbSchema.BillTable.Cols.DATE + " between ? and ? and " +
-                        DbSchema.AccountTable.Cols.UUID + " = ?",
+                        "uuid" + " = ?",
                 new String[]{start.getMillis() + "", end.getMillis() + "", accountId.toString()},
                 DbSchema.TypeTable.Cols.IS_EXPENSE,
                 null
@@ -305,82 +285,5 @@ public class StatsLab {
                         DbSchema.BillTable.Cols.DATE + " between ? and ?",
                 new String[]{typeId.toString(), start.getMillis() + "", end.getMillis() + ""},
                 null, null);
-    }
-
-    /**
-     * 类型统计类
-     */
-    public class TypeStats extends BaseStats {
-        private Type mType;
-
-        TypeStats(Type type, BigDecimal balance) {
-            super(balance);
-            mType = type;
-        }
-
-        public Type getType() {
-            return mType;
-        }
-
-        @Deprecated
-        @Override
-        public BigDecimal getIncome() {
-            return getSum();
-        }
-
-        @Deprecated
-        @Override
-        public BigDecimal getExpense() {
-            return getSum();
-        }
-    }
-
-    /**
-     * 账单统计结果类
-     */
-    public class BillStats extends BaseStats {
-        BillStats(BigDecimal income, BigDecimal expense) {
-            super(income, expense);
-        }
-    }
-
-
-    public abstract class BaseStats {
-        private BigDecimal income;
-        private BigDecimal expense;
-        private BigDecimal sum;
-
-        BaseStats(BigDecimal income, BigDecimal expense) {
-            this.income = income;
-            this.expense = expense;
-            sum = income.subtract(expense);
-        }
-
-        BaseStats(BigDecimal sum) {
-            income = BigDecimal.ZERO;
-            expense = BigDecimal.ZERO;
-            this.sum = sum;
-        }
-
-        public BigDecimal getIncome() {
-            return income;
-        }
-
-        public BigDecimal getExpense() {
-            return expense;
-        }
-
-        public BigDecimal getSum() {
-            return sum;
-        }
-    }
-
-    /**
-     * 账户账单统计
-     */
-    public class AccountStats extends BaseStats {
-        AccountStats(BigDecimal income, BigDecimal expense) {
-            super(income, expense);
-        }
     }
 }

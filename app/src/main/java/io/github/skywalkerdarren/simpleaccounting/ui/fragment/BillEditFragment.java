@@ -46,11 +46,11 @@ import io.github.skywalkerdarren.simpleaccounting.adapter.TypeAdapter;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillEditBinding;
 import io.github.skywalkerdarren.simpleaccounting.databinding.MenuAccountBinding;
-import io.github.skywalkerdarren.simpleaccounting.model.Account;
-import io.github.skywalkerdarren.simpleaccounting.model.AccountLab;
-import io.github.skywalkerdarren.simpleaccounting.model.Bill;
-import io.github.skywalkerdarren.simpleaccounting.model.Type;
+import io.github.skywalkerdarren.simpleaccounting.model.Database.AccountDatabase;
 import io.github.skywalkerdarren.simpleaccounting.model.TypeLab;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 import io.github.skywalkerdarren.simpleaccounting.ui.NumPad;
 import io.github.skywalkerdarren.simpleaccounting.util.DpConvertUtils;
 import io.github.skywalkerdarren.simpleaccounting.view_model.BillEditViewModel;
@@ -203,11 +203,11 @@ public class BillEditFragment extends BaseFragment {
             mViewModel.setDate(DateTime.now());
             adapter.setNewData(TypeLab.getInstance(getContext()).getTypes(true));
             mViewModel.setType(adapter.getItem(0));
-            account = AccountLab.getInstance(getContext()).getAccounts().get(0);
+            account = AccountDatabase.getInstance(getContext()).accountDao().getAccounts().get(0);
         } else {
             // 编辑账单
             mViewModel.setType(TypeLab.getInstance(getContext()).getType(mViewModel.getTypeId()));
-            account = AccountLab.getInstance(getContext()).getAccount(mViewModel.getAccountId());
+            account = AccountDatabase.getInstance(getContext()).accountDao().getAccount(mViewModel.getAccountId());
             // 初始化账户到没当前账单时
             if (mViewModel.getExpense()) {
                 adapter.setNewData(TypeLab.getInstance(getContext()).getTypes(true));
@@ -313,7 +313,8 @@ public class BillEditFragment extends BaseFragment {
     private void getPopupWindow(View view) {
         MenuAccountBinding binding = MenuAccountBinding.inflate(LayoutInflater.from(getContext()));
         View menu = binding.getRoot();
-        AccountMenuAdapter adapter = new AccountMenuAdapter(AccountLab.getInstance(getContext()).getAccounts());
+        AccountMenuAdapter adapter = new AccountMenuAdapter(
+                AccountDatabase.getInstance(getContext()).accountDao().getAccounts());
         PopupWindow popupWindow = new PopupWindow(menu);
         adapter.setOnItemClickListener((adapter1, view1, position) -> {
             Account account = (Account) adapter1.getData().get(position);

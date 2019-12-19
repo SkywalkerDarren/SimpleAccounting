@@ -1,6 +1,9 @@
-package io.github.skywalkerdarren.simpleaccounting.model;
+package io.github.skywalkerdarren.simpleaccounting.model.entity;
 
 import androidx.annotation.ColorRes;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Index;
 
 import java.util.UUID;
 
@@ -11,28 +14,35 @@ import java.util.UUID;
  * @date 2018/3/31
  */
 
+@Entity(tableName = "type", indices = @Index(value = "uuid", unique = true))
 public class Type {
     public static final String FOLDER = "type/";
     public static final String PNG = ".png";
-    private UUID mId;
+    @ColumnInfo(name = "id")
+    private Integer mId;
+    @ColumnInfo(name = "uuid")
+    private UUID mUUID;
+    @ColumnInfo(name = "name")
     private String mName;
     @ColorRes
+    @ColumnInfo(name = "color_id")
     private int mColorId;
+    @ColumnInfo(name = "is_expense")
     private boolean mIsExpense;
-    private String mFileName;
-
+    @ColumnInfo(name = "assets_name")
+    private String mAssetsName;
     /**
      * 根据id创建类型
      */
     public Type(UUID id) {
-        mId = id;
+        mUUID = id;
     }
 
     /**
      * 创建新类型
      */
     public Type() {
-        mId = UUID.randomUUID();
+        mUUID = UUID.randomUUID();
     }
 
     /**
@@ -77,14 +87,14 @@ public class Type {
      * @return 资源id
      */
     public String getAssetsName() {
-        return mFileName;
+        return mAssetsName;
     }
 
     /**
      * 设定类型图标资源
      */
     public Type setAssetsName(String path) {
-        mFileName = path;
+        mAssetsName = path;
         return this;
     }
 
@@ -110,7 +120,7 @@ public class Type {
      *
      * @return id
      */
-    public UUID getId() {
-        return mId;
+    public UUID getUUID() {
+        return mUUID;
     }
 }

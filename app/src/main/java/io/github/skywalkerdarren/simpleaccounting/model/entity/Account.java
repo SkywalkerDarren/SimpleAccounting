@@ -1,0 +1,129 @@
+package io.github.skywalkerdarren.simpleaccounting.model.entity;
+
+
+import androidx.annotation.ColorRes;
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+import java.math.BigDecimal;
+import java.util.UUID;
+
+/**
+ * 存钱的账户
+ *
+ * @author darren
+ * @date 2018/3/24
+ */
+@Entity(tableName = "account")
+public class Account {
+    public static final String FOLDER = "account/";
+    public static final String PNG = ".png";
+
+    @NonNull
+    @ColumnInfo(name = "id", index = true)
+    @PrimaryKey(autoGenerate = true)
+    private Integer mId;
+
+    @ColumnInfo(name = "uuid")
+    private UUID mUUID;
+
+    @ColumnInfo(name = "name")
+    private String mName;
+
+    @ColumnInfo(name = "balance_hint")
+    private String mBalanceHint;
+
+    @ColumnInfo(name = "balance")
+    private BigDecimal mBalance;
+
+    @ColumnInfo(name = "image")
+    private String mBitmap;
+
+    @ColorRes
+    @ColumnInfo(name = "color_id")
+    private int mColorId;
+
+    public Account(UUID uuid) {
+        mUUID = uuid;
+    }
+
+    public Account() {
+        mUUID = UUID.randomUUID();
+    }
+
+    public Account(UUID UUID, String name, String balanceHint, BigDecimal balance, String bitmap, int colorId) {
+        mUUID = UUID;
+        mName = name;
+        mBalanceHint = balanceHint;
+        mBalance = balance;
+        mBitmap = bitmap;
+        mColorId = colorId;
+    }
+
+    public synchronized void plusBalance(BigDecimal balance) {
+        mBalance = mBalance.add(balance);
+    }
+
+    public synchronized void minusBalance(BigDecimal balance) {
+        mBalance = mBalance.subtract(balance);
+    }
+
+    public Integer getId() {
+        return mId;
+    }
+
+    public void setId(Integer id) {
+        mId = id;
+    }
+
+    public UUID getUUID() {
+        return mUUID;
+    }
+
+    public void setUUID(UUID UUID) {
+        mUUID = UUID;
+    }
+
+    public String getName() {
+        return mName;
+    }
+
+    public void setName(String name) {
+        mName = name;
+    }
+
+    public String getBalanceHint() {
+        return mBalanceHint;
+    }
+
+    public void setBalanceHint(String balanceHint) {
+        mBalanceHint = balanceHint;
+    }
+
+    public BigDecimal getBalance() {
+        return mBalance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        mBalance = balance;
+    }
+
+    public String getBitmap() {
+        return mBitmap;
+    }
+
+    public void setBitmap(String bitmap) {
+        mBitmap = bitmap;
+    }
+
+    @ColorRes
+    public int getColorId() {
+        return mColorId;
+    }
+
+    public void setColorId(@ColorRes int colorId) {
+        mColorId = colorId;
+    }
+}

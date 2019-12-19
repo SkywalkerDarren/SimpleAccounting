@@ -14,11 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import io.github.skywalkerdarren.simpleaccounting.model.Bill;
-import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
+import io.github.skywalkerdarren.simpleaccounting.model.Database.AccountDatabase;
 import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
-import io.github.skywalkerdarren.simpleaccounting.model.Type;
 import io.github.skywalkerdarren.simpleaccounting.model.TypeLab;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 import static io.github.skywalkerdarren.simpleaccounting.adapter.BillAdapter.HEADER;
@@ -56,7 +56,7 @@ public class BillInfo implements MultiItemEntity {
      */
     private BillInfo(Bill bill, Type type) {
         mType = TextUtils.isEmpty(bill.getRemark()) ? WITHOUT_REMARK : WITH_REMARK;
-        mUUID = bill.getId();
+        mUUID = bill.getUUID();
         mTitle = bill.getName();
         mRemark = bill.getRemark();
         mBalance = FormatUtil.getNumeric(bill.getBalance());
@@ -85,10 +85,12 @@ public class BillInfo implements MultiItemEntity {
      * @return 账单摘要列表
      */
     public static List<BillInfo> getBillInfoList(int year, int month, Context context) {
-        BillLab billLab = BillLab.getInstance(context);
+        AccountDatabase database = AccountDatabase.getInstance(context);
         TypeLab typeLab = TypeLab.getInstance(context);
         StatsLab statsLab = StatsLab.getInstance(context);
-        List<Bill> bills = billLab.getsBills(year, month);
+        DateTime start = new DateTime(year, month, 1, 0, 0);
+        DateTime end = start.plusMonths(1);
+        List<Bill> bills = database.billDao().getBills(start.toDate(), end.toDate());
         List<BillInfo> billInfoList = new ArrayList<>();
         // 上一个账单的年月日
         DateTime date = null;

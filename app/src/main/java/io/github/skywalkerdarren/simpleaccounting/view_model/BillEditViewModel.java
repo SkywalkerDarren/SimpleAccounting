@@ -12,13 +12,14 @@ import org.joda.time.DateTime;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import io.github.skywalkerdarren.simpleaccounting.model.Account;
-import io.github.skywalkerdarren.simpleaccounting.model.Bill;
-import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
-import io.github.skywalkerdarren.simpleaccounting.model.Type;
+import io.github.skywalkerdarren.simpleaccounting.model.Database.AccountDatabase;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
+import io.github.skywalkerdarren.simpleaccounting.util.ColorConvertUtils;
 
-import static io.github.skywalkerdarren.simpleaccounting.model.Account.FOLDER;
+import static io.github.skywalkerdarren.simpleaccounting.model.entity.Account.FOLDER;
 
 /**
  * @author darren
@@ -95,7 +96,7 @@ public class BillEditViewModel extends BaseObservable {
      */
     @Bindable
     public int getAccountColor() {
-        return mAccount.getColor();
+        return ColorConvertUtils.convertIdToColor(mContext, mAccount.getColorId());
     }
 
     /**
@@ -147,15 +148,15 @@ public class BillEditViewModel extends BaseObservable {
         mBill.setName(getTypeName());
         mBill.setDate(getDate());
         mBill.setRemark(remark);
-        mBill.setTypeId(mType.getId());
-        mBill.setAccountId(mAccount.getId());
+        mBill.setTypeId(mType.getUUID());
+        mBill.setAccountId(mAccount.getUUID());
 
         // 刷新账单数据库
-        BillLab billLab = BillLab.getInstance(mContext);
-        if (billLab.getBill(mBill.getId()) == null) {
-            billLab.addBill(mBill);
+        AccountDatabase database = AccountDatabase.getInstance(mContext);
+        if (database.billDao().getBill(mBill.getUUID()) == null) {
+            database.billDao().addBill(mBill);
         } else {
-            billLab.updateBill(mBill);
+            database.billDao().updateBill(mBill);
         }
         DesktopWidget.refresh(mContext);
         return true;

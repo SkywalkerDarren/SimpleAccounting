@@ -14,8 +14,8 @@ import androidx.databinding.BindingAdapter;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.BillInfo;
-import io.github.skywalkerdarren.simpleaccounting.model.BillLab;
-import io.github.skywalkerdarren.simpleaccounting.model.Type;
+import io.github.skywalkerdarren.simpleaccounting.model.Database.AccountDatabase;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillDetailActivity;
 
 /**
@@ -127,7 +127,7 @@ public class BillInfoViewModel extends BaseObservable {
      */
     public void click() {
         Intent intent = BillDetailActivity.newIntent(mActivity,
-                BillLab.getInstance(mActivity).getBill(mBillInfo.getUUID()),
+                AccountDatabase.getInstance(mActivity).billDao().getBill(mBillInfo.getUUID()),
                 mX, mY, R.color.orangea200);
         intent.putExtra(BillDetailActivity.EXTRA_START_COLOR, R.color.orangea200);
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
