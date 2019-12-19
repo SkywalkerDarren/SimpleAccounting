@@ -5,9 +5,9 @@ import androidx.room.Entity;
 import java.math.BigDecimal;
 
 public class BillStats {
-    private BigDecimal income;
-    private BigDecimal expense;
-    private BigDecimal sum;
+    private BigDecimal income = BigDecimal.ZERO;
+    private BigDecimal expense = BigDecimal.ZERO;
+    private BigDecimal sum = BigDecimal.ZERO;
 
     public BigDecimal getIncome() {
         return income;

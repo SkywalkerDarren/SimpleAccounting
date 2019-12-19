@@ -11,19 +11,24 @@ import org.junit.Test;
 
 import java.util.List;
 
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.AccountStats;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.TypeStats;
+
 /**
  * @author darren
  * @date 2018/4/8
  */
 public class BillStatsLabTest {
-    private StatsLab mStatsLab;
     private Context mContext;
     private static final String TAG = "BillStatsLabTest";
+    private AppRepositry mRepositry;
 
     @Before
     public void setUp() throws Exception {
         mContext = ApplicationProvider.getApplicationContext();
-        mStatsLab = StatsLab.getInstance(mContext);
+        mRepositry = AppRepositry.getInstance(mContext);
     }
 
     @Test
@@ -36,17 +41,18 @@ public class BillStatsLabTest {
 
     @Test
     public void getTypeStats() throws Exception {
-        List<StatsLab.TypeStats> stats = mStatsLab.getTypeStats(DateTime.now().minusYears(1), DateTime.now(), false);
-        for (StatsLab.TypeStats typeStats : stats) {
-            Log.d(TAG, "getTypeStats: " + typeStats.getType().getName());
-            Log.d(TAG, "getTypeStats: " + typeStats.getSum());
+        List<TypeStats> stats = mRepositry.getTypesStats(DateTime.now().minusYears(1), DateTime.now(), false);
+        for (TypeStats typeStats : stats) {
+            Type type = mRepositry.getType(typeStats.getTypeId());
+            Log.d(TAG, "getTypeStats: " + type.getName());
+            Log.d(TAG, "getTypeStats: " + typeStats.getBalance());
         }
     }
 
     @Test
     public void getAccountStats() throws Exception {
-        Account account = AccountLab.getInstance(mContext).getAccounts().get(0);
-        List<StatsLab.AccountStats> stats = mStatsLab.getAccountStats(account.getId(), 2018);
+        Account account = AppRepositry.getInstance(mContext).getAccounts().get(0);
+        List<AccountStats> stats = mRepositry.getAccountStats(account.getUUID(), 2018);
     }
 
     @Test

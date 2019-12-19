@@ -1,6 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.model;
 
 import android.content.Context;
+import android.graphics.Color;
 
 import androidx.annotation.NonNull;
 
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.dao.AccountDao;
 import io.github.skywalkerdarren.simpleaccounting.model.dao.BillDao;
 import io.github.skywalkerdarren.simpleaccounting.model.dao.StatsDao;
@@ -51,6 +53,24 @@ public class AppRepositry implements AppDataSource {
         return INSTANCE;
     }
 
+    private AppRepositry(AppDatabase database) {
+        mAccountDao = database.accountDao();
+        mTypeDao = database.typeDao();
+        mBillDao = database.billDao();
+        mStatsDao = database.statsDao();
+    }
+
+    public static AppRepositry getInstance(AppDatabase database) {
+        if (INSTANCE == null) {
+            synchronized (AppRepositry.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new AppRepositry(database);
+                }
+            }
+        }
+        return INSTANCE;
+    }
+
     @Override
     public Account getAccount(UUID uuid) {
         return mAccountDao.getAccount(uuid);
@@ -62,25 +82,22 @@ public class AppRepositry implements AppDataSource {
     }
 
     @Override
-    public void updateAccount(Account account) {
-        mAccountDao.updateAccount(account);
+    public void updateAccountId(UUID uuid, Integer id) {
+        mAccountDao.updateAccountId(uuid, id);
     }
 
     @Override
     public void delAccount(UUID uuid) {
-        mAccountDao.delAccount(new Account(uuid));
+        mAccountDao.delAccount(uuid);
     }
 
     @Override
     public void changePosition(Account a, Account b) {
         Integer i = a.getId();
         Integer j = b.getId();
-        a.setId(-1);
-        updateAccount(a);
-        b.setId(i);
-        updateAccount(b);
-        a.setId(j);
-        updateAccount(a);
+        updateAccountId(a.getUUID(), -1);
+        updateAccountId(b.getUUID(), i);
+        updateAccountId(a.getUUID(), j);
     }
 
     @Override
@@ -102,7 +119,7 @@ public class AppRepositry implements AppDataSource {
 
     @Override
     public void delBill(UUID id) {
-        mBillDao.delBill(new Bill(id));
+        mBillDao.delBill(id);
     }
 
     @Override
@@ -112,7 +129,7 @@ public class AppRepositry implements AppDataSource {
 
     @Override
     public void clearBill() {
-        mBillDao.delBill(null);
+        mBillDao.clearBill();
     }
 
     @Override
@@ -127,7 +144,7 @@ public class AppRepositry implements AppDataSource {
 
     @Override
     public void delType(UUID uuid) {
-        mTypeDao.delType(new Type(uuid));
+        mTypeDao.delType(uuid);
     }
 
     @Override
@@ -138,8 +155,8 @@ public class AppRepositry implements AppDataSource {
         for (int i = 1; i <= 12; i++) {
             BillStats billStats = getBillStats(start, end);
             billStatsList.add(billStats);
-            start.plusMonths(1);
-            end.plusMonths(1);
+            start = start.plusMonths(1);
+            end = end.plusMonths(1);
         }
         return billStatsList;
     }
@@ -153,8 +170,8 @@ public class AppRepositry implements AppDataSource {
         for (int i = 1; i <= days; i++) {
             BillStats billStats = getBillStats(start, end);
             statsList.add(billStats);
-            start.plusDays(1);
-            end.plusDays(1);
+            start = start.plusDays(1);
+            end = end.plusDays(1);
         }
         return statsList;
     }
@@ -177,8 +194,8 @@ public class AppRepositry implements AppDataSource {
         for (int i = 1; i <= 12; i++) {
             AccountStats accountStats = getAccountStats(accountId, start, end);
             accountStatsList.add(accountStats);
-            start.plusMonths(1);
-            end.plusMonths(1);
+            start = start.plusMonths(1);
+            end = end.plusMonths(1);
         }
         return accountStatsList;
     }
@@ -214,5 +231,50 @@ public class AppRepositry implements AppDataSource {
     @Override
     public BigDecimal getTypeAverage(DateTime start, DateTime end, UUID typeId) {
         return mStatsDao.getTypeAverageStats(start, end, typeId).getBalance();
+    }
+
+    public static void clearInstance() {
+        INSTANCE = null;
+    }
+
+    public void initDb() {
+        mAccountDao.newAccount(new Account("现金","现金金额",
+                BigDecimal.ZERO,"cash.png", R.color.amber500));
+        mAccountDao.newAccount(new Account("支付宝","在线支付余额",
+                BigDecimal.ZERO,"alipay.png", R.color.lightblue500));
+        mAccountDao.newAccount(new Account("微信","在线支付余额",
+                BigDecimal.ZERO,"wechat.png", R.color.lightgreen500));
+        mTypeDao.newType(new Type("吃喝", Color.rgb(0xe6, 0xc4, 0x53),
+                true,"diet.png"));
+        mTypeDao.newType(new Type("娱乐", Color.rgb(0x73, 0xc8, 0xd5),
+                true,"entertainment.png"));
+        mTypeDao.newType(new Type("交通", Color.rgb(0xf9, 0xd5, 0x5d),
+                true,"traffic.png"));
+        mTypeDao.newType(new Type("日用品", Color.rgb(0xf0, 0x8d, 0x78),
+                true,"daily_necessities.png"));
+        mTypeDao.newType(new Type("化妆护肤", Color.rgb(0xfe, 0x4c, 0x5e),
+                true,"make_up.png"));
+        mTypeDao.newType(new Type("医疗", Color.rgb(0xc0, 0xf1, 0xf9),
+                true,"medical.png"));
+        mTypeDao.newType(new Type("服饰", Color.rgb(0x7e, 0xb7, 0x9f),
+                true,"apparel.png"));
+        mTypeDao.newType(new Type("话费", Color.rgb(0x83, 0x6c, 0xab),
+                true,"calls.png"));
+        mTypeDao.newType(new Type("红包", Color.rgb(0xf7, 0x2e, 0x42),
+                true,"red_package.png"));
+        mTypeDao.newType(new Type("其他", Color.rgb(0xcd, 0x53, 0x3b),
+                true,"other.png"));
+        mTypeDao.newType(new Type("工资", Color.rgb(0x97, 0x73, 0x69),
+                false,"wage.png"));
+        mTypeDao.newType(new Type("兼职", Color.rgb(0xa7, 0xee, 0xf9),
+                false,"part_time.png"));
+        mTypeDao.newType(new Type("奖金", Color.rgb(0xf4, 0xbc, 0xb1),
+                false,"prize.png"));
+        mTypeDao.newType(new Type("理财投资", Color.rgb(0xff, 0xec, 0xab),
+                false,"invest.png"));
+        mTypeDao.newType(new Type("红包", Color.rgb(0xf7, 0x2e, 0x42),
+                false,"red_package.png"));
+        mTypeDao.newType(new Type("其他", Color.rgb(0xcd, 0x53, 0x3b),
+                false,"other.png"));
     }
 }

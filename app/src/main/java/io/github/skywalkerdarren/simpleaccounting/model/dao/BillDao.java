@@ -3,6 +3,7 @@ package io.github.skywalkerdarren.simpleaccounting.model.dao;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -21,8 +22,10 @@ public interface BillDao {
     List<Bill> getsBillsByDate(DateTime start, DateTime end);
     @Insert
     void addBill(Bill bill);
-    @Delete
-    void delBill(Bill bill);
-    @Update
+    @Query("DELETE FROM bill WHERE uuid = :uuid")
+    void delBill(UUID uuid);
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateBill(Bill bill);
+    @Query("DELETE FROM bill")
+    void clearBill();
 }

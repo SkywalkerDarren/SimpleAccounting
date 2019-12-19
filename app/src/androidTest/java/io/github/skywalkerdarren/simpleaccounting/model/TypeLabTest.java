@@ -10,6 +10,8 @@ import org.junit.Test;
 
 import java.util.List;
 
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
+
 /**
  * @author darren
  * @date 2018/3/31
@@ -25,7 +27,7 @@ public class TypeLabTest {
 
     @Test
     public void getTypes() throws Exception {
-        List<Type> types = TypeLab.getInstance(mContext).getTypes(false);
+        List<Type> types = AppRepositry.getInstance(mContext).getTypes(false);
         for (Type type : types) {
             Log.d(TAG, type.getName());
         }

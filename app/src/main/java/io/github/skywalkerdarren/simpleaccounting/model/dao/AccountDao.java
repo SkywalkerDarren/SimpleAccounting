@@ -18,10 +18,10 @@ public interface AccountDao {
     Account getAccount(UUID uuid);
     @Query("SELECT * FROM account")
     List<Account> getAccounts();
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    void updateAccount(Account account);
-    @Delete
-    void delAccount(Account account);
+    @Query("UPDATE OR REPLACE account SET id = :id WHERE uuid = :uuid")
+    void updateAccountId(UUID uuid, Integer id);
+    @Query("DELETE FROM account WHERE uuid = :uuid")
+    void delAccount(UUID uuid);
     @Insert
     void newAccount(Account account);
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
@@ -18,6 +19,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
 
+import static androidx.core.util.Preconditions.checkNotNull;
 import static io.github.skywalkerdarren.simpleaccounting.model.entity.Account.FOLDER;
 
 /**
@@ -49,7 +51,8 @@ public class BillEditViewModel extends BaseObservable {
     /**
      * @param type 设置类型
      */
-    public void setType(Type type) {
+    public void setType(@NonNull Type type) {
+        checkNotNull(type);
         mType = type;
         notifyChange();
     }
@@ -105,6 +108,9 @@ public class BillEditViewModel extends BaseObservable {
      */
     @Bindable
     public String getBalance() {
+        if (mBill.getBalance() == null) {
+            return "0";
+        }
         return mBill.getBalance().toString();
     }
 

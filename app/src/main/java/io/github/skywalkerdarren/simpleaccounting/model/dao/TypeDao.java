@@ -17,8 +17,8 @@ public interface TypeDao {
     Type getType(UUID uuid);
     @Query("SELECT * FROM type WHERE is_expense == :isExpense")
     List<Type> getTypes(Boolean isExpense);
-    @Delete
-    void delType(Type type);
+    @Query("DELETE FROM type WHERE uuid = :uuid")
+    void delType(UUID uuid);
     @Insert
     void newType(Type type);
 }

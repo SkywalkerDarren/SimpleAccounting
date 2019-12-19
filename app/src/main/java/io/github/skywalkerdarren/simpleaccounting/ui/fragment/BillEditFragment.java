@@ -38,6 +38,7 @@ import org.joda.time.DateTime;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 import co.ceryle.segmentedbutton.SegmentedButtonGroup;
 import io.github.skywalkerdarren.simpleaccounting.R;
@@ -206,7 +207,12 @@ public class BillEditFragment extends BaseFragment {
             account = repositry.getAccounts().get(0);
         } else {
             // 编辑账单
-            mViewModel.setType(repositry.getType(mViewModel.getTypeId()));
+            UUID typeId = mViewModel.getTypeId();
+            if (typeId == null) {
+                mViewModel.setType(repositry.getTypes(true).get(0));
+            } else {
+                mViewModel.setType(repositry.getType(typeId));
+            }
             account = repositry.getAccount(mViewModel.getAccountId());
             // 初始化账户到没当前账单时
             if (mViewModel.getExpense()) {

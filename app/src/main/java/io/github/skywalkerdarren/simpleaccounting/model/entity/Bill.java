@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
@@ -33,7 +34,7 @@ public class Bill implements Serializable {
      * 账单ID号
      */
     @ColumnInfo(name = "uuid")
-    private UUID mUUID;
+    private UUID mUUID = UUID.randomUUID();
 
     /**
      * 账单类型ID
@@ -57,25 +58,26 @@ public class Bill implements Serializable {
      * 账单名称
      */
     @ColumnInfo(name = "name")
-    private String mName;
+    private String mName = "";
 
     /**
      * 账单收支
      */
     @ColumnInfo(name = "balance")
-    private BigDecimal mBalance;
+    private BigDecimal mBalance = BigDecimal.ZERO;
 
     /**
      * 账单备注
      */
     @ColumnInfo(name = "remark")
-    private String mRemark;
+    private String mRemark = "";
 
     /**
      * 通过id新建账单
      *
      * @param id 账单id
      */
+    @Ignore
     public Bill(UUID id) {
         mUUID = id;
     }
@@ -85,6 +87,16 @@ public class Bill implements Serializable {
      */
     public Bill() {
         this(UUID.randomUUID());
+    }
+
+    @Ignore
+    public Bill(UUID typeId, UUID accountId, DateTime date, String name, BigDecimal balance, String remark) {
+        mTypeId = typeId;
+        mAccountId = accountId;
+        mDate = date;
+        mName = name;
+        mBalance = balance;
+        mRemark = remark;
     }
 
     public Integer getId() {

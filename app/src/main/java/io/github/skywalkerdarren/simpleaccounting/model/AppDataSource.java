@@ -17,7 +17,7 @@ public interface AppDataSource {
 
     Account getAccount(UUID uuid);
     List<Account> getAccounts();
-    void updateAccount(Account account);
+    void updateAccountId(UUID uuid, Integer id);
     void delAccount(UUID uuid);
     void changePosition(Account a, Account b);
 
