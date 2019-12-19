@@ -5,7 +5,6 @@ import android.content.Context;
 import androidx.databinding.BaseObservable;
 
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
-import io.github.skywalkerdarren.simpleaccounting.util.ColorConvertUtils;
 
 import static io.github.skywalkerdarren.simpleaccounting.model.entity.Account.FOLDER;
 
@@ -28,7 +27,7 @@ public class AccountMenuItemViewModel extends BaseObservable {
     }
 
     public int getColor() {
-        return ColorConvertUtils.convertIdToColor(mContext, mAccount.getColorId());
+        return mContext.getResources().getColor(mAccount.getColorId());
     }
 
     public String getName() {

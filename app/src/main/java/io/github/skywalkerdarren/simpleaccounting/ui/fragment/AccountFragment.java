@@ -25,9 +25,8 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.AccountAdapter;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentAccountBinding;
-import io.github.skywalkerdarren.simpleaccounting.model.Database.AccountDatabase;
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
-import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.MainActivity;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.SettingsActivity;
@@ -43,7 +42,6 @@ import io.github.skywalkerdarren.simpleaccounting.view_model.AccountViewModel;
  */
 public class AccountFragment extends BaseFragment {
     private static final String TAG = "AccountFragment";
-    private AccountDatabase mDatabase;
     private RecyclerView mAccountRecyclerView;
     private AccountAdapter mAdapter;
     private FragmentAccountBinding mBinding;
@@ -69,7 +67,6 @@ public class AccountFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDatabase = AccountDatabase.getInstance(getContext());
     }
 
     @Override
@@ -89,14 +86,12 @@ public class AccountFragment extends BaseFragment {
                     .setMessage("是否删除所有账单，删除后的账单将无法恢复！")
                     .setTitle("警告")
                     .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
-                        Bill clear = new Bill();
-                        clear.setUUID(null);
-                        AccountDatabase.getInstance(getContext()).billDao().deleteBill(clear);
-                        DesktopWidget.refresh(getContext());
-                        onResume();
-                        MainActivity activity = (MainActivity) getActivity();
-                        BillListFragment fragment = activity.mBillListFragment;
-                        fragment.onResume();
+                            AppRepositry.getInstance(getContext()).clearBill();
+                            DesktopWidget.refresh(getContext());
+                            onResume();
+                            MainActivity activity = (MainActivity) getActivity();
+                            BillListFragment fragment = activity.mBillListFragment;
+                            fragment.onResume();
                     })
                     .create()
                     .show();
@@ -124,7 +119,7 @@ public class AccountFragment extends BaseFragment {
 
     @Override
     protected void updateUI() {
-        List<Account> accounts = mDatabase.accountDao().getAccounts();
+        List<Account> accounts = AppRepositry.getInstance(getContext()).getAccounts();
         if (mAdapter == null) {
             mAdapter = new AccountAdapter(accounts);
         } else {
@@ -137,13 +132,14 @@ public class AccountFragment extends BaseFragment {
         itemTouchHelper.attachToRecyclerView(mAccountRecyclerView);
         mAdapter.enableDragItem(itemTouchHelper);
         mAdapter.setOnItemDragListener(new OnItemDragListener() {
-            private int mSub;
+            private Account accountA;
+            private Account accountB;
 
             @Override
             public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
                 float st = viewHolder.itemView.getElevation();
                 itemRaiseAnimator(viewHolder.itemView, st, true);
-                mSub = pos;
+                accountA = mAdapter.getItem(pos);
             }
 
             @Override
@@ -155,8 +151,8 @@ public class AccountFragment extends BaseFragment {
             public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {
                 float ed = viewHolder.itemView.getElevation();
                 itemRaiseAnimator(viewHolder.itemView, ed, false);
-                Log.d(TAG, "onItemDragEnd: " + mSub + " " + pos);
-                mViewModel.changePosition(mSub, pos);
+                accountB = mAdapter.getItem(pos);
+                mViewModel.changePosition(accountA, accountB);
             }
         });
         mViewModel.setStats();

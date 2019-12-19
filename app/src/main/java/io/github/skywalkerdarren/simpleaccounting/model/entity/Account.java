@@ -5,6 +5,8 @@ import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.math.BigDecimal;
@@ -16,35 +18,31 @@ import java.util.UUID;
  * @author darren
  * @date 2018/3/24
  */
-@Entity(tableName = "account")
+@Entity(tableName = "account", indices = @Index(value = "uuid", unique = true))
 public class Account {
+    @Ignore
     public static final String FOLDER = "account/";
+    @Ignore
     public static final String PNG = ".png";
-
-    @NonNull
-    @ColumnInfo(name = "id", index = true)
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    @NonNull
     private Integer mId;
-
     @ColumnInfo(name = "uuid")
     private UUID mUUID;
-
     @ColumnInfo(name = "name")
     private String mName;
-
     @ColumnInfo(name = "balance_hint")
     private String mBalanceHint;
-
     @ColumnInfo(name = "balance")
     private BigDecimal mBalance;
-
     @ColumnInfo(name = "image")
     private String mBitmap;
-
     @ColorRes
     @ColumnInfo(name = "color_id")
-    private int mColorId;
+    private Integer mColorId;
 
+    @Ignore
     public Account(UUID uuid) {
         mUUID = uuid;
     }
@@ -53,8 +51,9 @@ public class Account {
         mUUID = UUID.randomUUID();
     }
 
-    public Account(UUID UUID, String name, String balanceHint, BigDecimal balance, String bitmap, int colorId) {
-        mUUID = UUID;
+    @Ignore
+    public Account(String name, String balanceHint, BigDecimal balance, String bitmap, Integer colorId) {
+        mUUID = UUID.randomUUID();
         mName = name;
         mBalanceHint = balanceHint;
         mBalance = balance;
@@ -62,11 +61,11 @@ public class Account {
         mColorId = colorId;
     }
 
-    public synchronized void plusBalance(BigDecimal balance) {
+    public void plusBalance(BigDecimal balance) {
         mBalance = mBalance.add(balance);
     }
 
-    public synchronized void minusBalance(BigDecimal balance) {
+    public void minusBalance(BigDecimal balance) {
         mBalance = mBalance.subtract(balance);
     }
 
@@ -118,12 +117,12 @@ public class Account {
         mBitmap = bitmap;
     }
 
-    @ColorRes
-    public int getColorId() {
+
+    public Integer getColorId() {
         return mColorId;
     }
 
-    public void setColorId(@ColorRes int colorId) {
+    public void setColorId(Integer colorId) {
         mColorId = colorId;
     }
 }

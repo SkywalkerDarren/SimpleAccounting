@@ -32,7 +32,10 @@ import java.util.List;
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentChartBinding;
-import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.TypeStats;
 import io.github.skywalkerdarren.simpleaccounting.util.CustomTypefaceSpan;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
@@ -101,8 +104,8 @@ public class PieChartFragment extends BaseFragment {
         description.setEnabled(false);
         mPieChart.setDescription(description);
 
-        StatsLab.BillStats stats = StatsLab.getInstance(getContext())
-                .getStats(mStartDateTime, mEndDateTime);
+        BillStats stats = AppRepositry.getInstance(getContext())
+                .getBillStats(mStartDateTime, mEndDateTime);
         String s = FormatUtil.getNumeric(mIsExpense ? stats.getExpense() : stats.getIncome());
         mPieChart.setCenterText(generateCenterText(s));
 
@@ -132,15 +135,16 @@ public class PieChartFragment extends BaseFragment {
 
     @Override
     protected void updateUI() {
-        List<StatsLab.TypeStats> typeStats = StatsLab.getInstance(getContext())
-                .getTypeStats(mStartDateTime, mEndDateTime, mIsExpense);
+        AppRepositry repositry = AppRepositry.getInstance(getContext());
+        List<TypeStats> typeStats = repositry.getTypesStats(mStartDateTime, mEndDateTime, mIsExpense);
 
         List<PieEntry> pieEntries = new ArrayList<>(10);
         List<Integer> colorList = new ArrayList<>(10);
         if (typeStats != null) {
-            for (StatsLab.TypeStats stats : typeStats) {
-                PieEntry entry = new PieEntry(stats.getSum().floatValue(), stats.getType().getName());
-                colorList.add(stats.getType().getColorId());
+            for (TypeStats stats : typeStats) {
+                Type type = repositry.getType(stats.getTypeId());
+                PieEntry entry = new PieEntry(stats.getBalance().floatValue(), type.getName());
+                colorList.add(type.getColorId());
                 pieEntries.add(entry);
             }
         }

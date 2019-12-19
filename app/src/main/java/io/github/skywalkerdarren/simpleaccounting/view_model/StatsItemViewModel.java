@@ -3,7 +3,7 @@ package io.github.skywalkerdarren.simpleaccounting.view_model;
 import androidx.annotation.IntRange;
 import androidx.databinding.BaseObservable;
 
-import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
@@ -14,13 +14,13 @@ import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
  */
 
 public class StatsItemViewModel extends BaseObservable {
-    private StatsLab.BillStats mStats;
+    private BillStats mStats;
     private int mMonth;
 
     /**
      * @param month 从1开始
      */
-    public StatsItemViewModel(StatsLab.BillStats mStats, @IntRange(from = 1, to = 12) int month) {
+    public StatsItemViewModel(BillStats mStats, @IntRange(from = 1, to = 12) int month) {
         this.mStats = mStats;
         mMonth = month;
     }

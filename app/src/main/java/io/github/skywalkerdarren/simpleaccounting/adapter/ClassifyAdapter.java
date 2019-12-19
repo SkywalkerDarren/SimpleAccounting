@@ -11,7 +11,7 @@ import java.util.List;
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseDataBindingAdapter;
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemClassifyBinding;
-import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.TypeStats;
 import io.github.skywalkerdarren.simpleaccounting.view_model.ClassifyItemViewModel;
 
 /**
@@ -21,28 +21,28 @@ import io.github.skywalkerdarren.simpleaccounting.view_model.ClassifyItemViewMod
  * @date 2018/3/25
  */
 
-public class ClassifyAdapter extends BaseDataBindingAdapter<StatsLab.TypeStats, ItemClassifyBinding> {
+public class ClassifyAdapter extends BaseDataBindingAdapter<TypeStats, ItemClassifyBinding> {
     private BigDecimal mSum = BigDecimal.ZERO;
 
-    public ClassifyAdapter(@Nullable List<StatsLab.TypeStats> data) {
+    public ClassifyAdapter(@Nullable List<TypeStats> data) {
         super(R.layout.item_classify, data);
         if (data == null) {
             return;
         }
-        for (StatsLab.TypeStats stats : data) {
-            mSum = mSum.add(stats.getSum());
+        for (TypeStats stats : data) {
+            mSum = mSum.add(stats.getBalance());
         }
     }
 
     @Override
-    public void setNewData(List<StatsLab.TypeStats> data) {
+    public void setNewData(List<TypeStats> data) {
         super.setNewData(data);
         mSum = BigDecimal.ZERO;
         if (data == null) {
             return;
         }
-        for (StatsLab.TypeStats stats : data) {
-            mSum = mSum.add(stats.getSum());
+        for (TypeStats stats : data) {
+            mSum = mSum.add(stats.getBalance());
         }
     }
 
@@ -54,7 +54,7 @@ public class ClassifyAdapter extends BaseDataBindingAdapter<StatsLab.TypeStats, 
     }
 
     @Override
-    protected void convert(ItemClassifyBinding binding, StatsLab.TypeStats item) {
-        binding.setClassify(new ClassifyItemViewModel(item, mSum));
+    protected void convert(ItemClassifyBinding binding, TypeStats item) {
+        binding.setClassify(new ClassifyItemViewModel(item, mSum, mContext));
     }
 }

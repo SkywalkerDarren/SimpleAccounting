@@ -1,7 +1,9 @@
 package io.github.skywalkerdarren.simpleaccounting.ui.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -16,12 +18,17 @@ import androidx.viewpager.widget.ViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.databinding.ActivityWelcomeBinding;
-import io.github.skywalkerdarren.simpleaccounting.model.TypeLab;
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 
 public class WelcomeActivity extends Activity {
+    private static final String START_UP = "START_UP";
+    private static final String RUN_COUNT = "RUN_COUNT";
+    private int mCount;
+    private SharedPreferences mPreferences;
     private ViewPager mViewPager;
     private LinearLayout mDotLayout;
     private List<ImageView> mImageViews;
@@ -31,6 +38,9 @@ public class WelcomeActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPreferences = getApplicationContext().getSharedPreferences(START_UP, Context.MODE_PRIVATE);
+        mCount = mPreferences.getInt(RUN_COUNT, 0);
+
         bind();
         setImage();
         mButton.setOnClickListener(view -> new Handler().post(() -> {
@@ -71,8 +81,13 @@ public class WelcomeActivity extends Activity {
             mDotLayout.addView(view, params);
         }
         getWindow().getDecorView().post(() -> {
-            TypeLab.getInstance(WelcomeActivity.this);
-            //BillLab.getInstance(WelcomeActivity.this);
+            if (mCount == 0) {
+                mCount++;
+                SharedPreferences.Editor editor = mPreferences.edit();
+                editor.putInt(RUN_COUNT, mCount);
+                AppRepositry.getInstance(getApplicationContext()).initDb();
+                editor.apply();
+            }
         });
     }
 

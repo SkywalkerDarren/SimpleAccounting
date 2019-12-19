@@ -29,7 +29,7 @@ import io.github.skywalkerdarren.simpleaccounting.adapter.ClassifyAdapter;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.EmptyStatsBinding;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentClassifyBinding;
-import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.TypeStats;
 import io.github.skywalkerdarren.simpleaccounting.view_model.ClassifyViewModel;
 
 
@@ -189,7 +189,7 @@ public class ClassifyFragment extends BaseFragment {
     private void setStatsData(boolean t, ClassifyAdapter adapter) {
         changeImageView(t);
         mViewModel.setExpense(t);
-        List<StatsLab.TypeStats> list = mViewModel.getStatsList();
+        List<TypeStats> list = mViewModel.getStatsList();
         adapter.setNewData(list);
         adapter.openLoadAnimation(t ?
                 BaseQuickAdapter.SLIDEIN_RIGHT : BaseQuickAdapter.SLIDEIN_LEFT);

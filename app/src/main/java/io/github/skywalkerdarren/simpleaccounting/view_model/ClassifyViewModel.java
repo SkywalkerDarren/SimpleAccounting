@@ -10,7 +10,9 @@ import org.joda.time.Period;
 
 import java.util.List;
 
-import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.TypeStats;
+
 
 /**
  * 分类页vm
@@ -25,6 +27,7 @@ public class ClassifyViewModel extends BaseObservable {
     private Period mPeriod;
     private boolean mIsExpense;
     private Context mContext;
+    private AppRepositry mRepositry;
 
     public ClassifyViewModel(DateTime dateTime, Context context) {
         mContext = context;
@@ -32,6 +35,7 @@ public class ClassifyViewModel extends BaseObservable {
         mEnd = mStart.plusMonths(1);
         mIsExpense = true;
         mPeriod = new Period(mStart, mEnd);
+        mRepositry = AppRepositry.getInstance(context);
     }
 
     /**
@@ -108,7 +112,7 @@ public class ClassifyViewModel extends BaseObservable {
      * @return 统计列表
      */
     @Bindable
-    public List<StatsLab.TypeStats> getStatsList() {
-        return StatsLab.getInstance(mContext).getTypeStats(mStart, mEnd, mIsExpense);
+    public List<TypeStats> getStatsList() {
+        return mRepositry.getTypesStats(mStart, mEnd, mIsExpense);
     }
 }

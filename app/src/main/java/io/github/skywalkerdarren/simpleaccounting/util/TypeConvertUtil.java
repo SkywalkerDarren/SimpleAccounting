@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
 
-public final class TypeConvertUtil {
+public class TypeConvertUtil {
     @TypeConverter
     public String bigDecimalToString(BigDecimal bigDecimal) {
         return bigDecimal == null ? null : bigDecimal.toString();
@@ -39,10 +39,12 @@ public final class TypeConvertUtil {
         return l == null ? null : new Date(l);
     }
 
-    public Long dateTimeToLong(DateTime dateTime) {
-        return dateTime == null ? null : dateTime.getMillis();
+    @TypeConverter
+    public Long dateTimeToLong(DateTime date) {
+        return date == null ? null : date.getMillis();
     }
 
+    @TypeConverter
     public DateTime longToDateTime(Long l) {
         return l == null ? null : new DateTime(l);
     }

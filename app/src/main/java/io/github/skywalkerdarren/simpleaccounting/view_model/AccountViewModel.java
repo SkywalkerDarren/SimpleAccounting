@@ -7,9 +7,9 @@ import androidx.databinding.Bindable;
 
 import org.joda.time.DateTime;
 
-import io.github.skywalkerdarren.simpleaccounting.model.Database.AccountDatabase;
-import io.github.skywalkerdarren.simpleaccounting.model.StatsLab;
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
@@ -20,9 +20,8 @@ import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
  */
 
 public class AccountViewModel extends BaseObservable {
-    private StatsLab mStatsLab;
-    private StatsLab.BillStats mStats;
-    private AccountDatabase mDatabase;
+    private BillStats mStats;
+    private AppRepositry mRepositry;
 
     /**
      * 初始化lab 和列表stats
@@ -30,13 +29,12 @@ public class AccountViewModel extends BaseObservable {
      * @param context 上下文
      */
     public AccountViewModel(Context context) {
-        mStatsLab = StatsLab.getInstance(context);
-        mStats = mStatsLab.getStats(new DateTime(0), DateTime.now());
-        mDatabase = AccountDatabase.getInstance(context);
+        mRepositry = AppRepositry.getInstance(context);
+        mStats = mRepositry.getBillStats(new DateTime(0), DateTime.now());
     }
 
     public void setStats() {
-        mStats = mStatsLab.getStats(new DateTime(0), DateTime.now());
+        mStats = mRepositry.getBillStats(new DateTime(0), DateTime.now());
         notifyChange();
     }
 
@@ -69,21 +67,10 @@ public class AccountViewModel extends BaseObservable {
      */
     @Bindable
     public String getAccountSize() {
-        return mDatabase.accountDao().getAccounts().size() + "";
+        return mRepositry.getAccounts().size() + "";
     }
 
-    public void changePosition(int oldPos, int newPos) {
-        Account oldAccount = mDatabase.accountDao().getAccount(oldPos);
-        Account newAccount = mDatabase.accountDao().getAccount(newPos);
-        Integer newId = newAccount.getId();
-        Integer oldId = oldAccount.getId();
-
-        newAccount.setId(-1);
-        mDatabase.accountDao().updateAccount(newAccount);
-
-        oldAccount.setId(newId);
-        newAccount.setId(oldId);
-        mDatabase.accountDao().updateAccount(oldAccount);
-        mDatabase.accountDao().updateAccount(newAccount);
+    public void changePosition(Account a, Account b) {
+        mRepositry.changePosition(a, b);
     }
 }

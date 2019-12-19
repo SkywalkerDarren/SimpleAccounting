@@ -10,6 +10,12 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation":
+                                     "$projectDir/schemas".toString()]
+            }
+        }
     }
     buildTypes {
         debug {
@@ -60,4 +66,6 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
     implementation 'org.apache.commons:commons-csv:1.7'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    annotationProcessor 'androidx.room:room-compiler:2.2.2'
+    implementation 'androidx.room:room-runtime:2.2.2'
 }

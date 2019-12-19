@@ -1,9 +1,12 @@
 package io.github.skywalkerdarren.simpleaccounting.model.entity;
 
 import androidx.annotation.ColorRes;
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
 import java.util.UUID;
 
@@ -16,9 +19,13 @@ import java.util.UUID;
 
 @Entity(tableName = "type", indices = @Index(value = "uuid", unique = true))
 public class Type {
+    @Ignore
     public static final String FOLDER = "type/";
+    @Ignore
     public static final String PNG = ".png";
     @ColumnInfo(name = "id")
+    @PrimaryKey(autoGenerate = true)
+    @NonNull
     private Integer mId;
     @ColumnInfo(name = "uuid")
     private UUID mUUID;
@@ -34,6 +41,7 @@ public class Type {
     /**
      * 根据id创建类型
      */
+    @Ignore
     public Type(UUID id) {
         mUUID = id;
     }
@@ -45,82 +53,60 @@ public class Type {
         mUUID = UUID.randomUUID();
     }
 
-    /**
-     * 获取当前类型是否为支出
-     *
-     * @return true为支出
-     */
-    public boolean getExpense() {
-        return mIsExpense;
+    @Ignore
+    public Type(String name, int colorId, boolean isExpense, String assetsName) {
+        mUUID = UUID.randomUUID();
+        mName = name;
+        mColorId = colorId;
+        mIsExpense = isExpense;
+        mAssetsName = assetsName;
     }
 
-    /**
-     * 设定是否为支出
-     *
-     * @param expense true为支出
-     */
-    public Type setExpense(boolean expense) {
-        mIsExpense = expense;
-        return this;
+    public Integer getId() {
+        return mId;
     }
 
-    /**
-     * 获取当前类型名称
-     *
-     * @return 名称
-     */
+    public void setId(Integer id) {
+        mId = id;
+    }
+
+    public UUID getUUID() {
+        return mUUID;
+    }
+
+    public void setUUID(UUID UUID) {
+        mUUID = UUID;
+    }
+
     public String getName() {
         return mName;
     }
 
-    /**
-     * 设定类型名称
-     */
-    public Type setName(String name) {
+    public void setName(String name) {
         mName = name;
-        return this;
     }
 
-    /**
-     * 获取当前类型的资源id
-     *
-     * @return 资源id
-     */
-    public String getAssetsName() {
-        return mAssetsName;
-    }
-
-    /**
-     * 设定类型图标资源
-     */
-    public Type setAssetsName(String path) {
-        mAssetsName = path;
-        return this;
-    }
-
-    /**
-     * 获取当前类型的背景颜色id
-     *
-     * @return 颜色id
-     */
     public int getColorId() {
         return mColorId;
     }
 
-    /**
-     * 设定颜色资源
-     */
-    public Type setColorId(int colorId) {
+    public void setColorId(int colorId) {
         mColorId = colorId;
-        return this;
     }
 
-    /**
-     * 类型唯一id
-     *
-     * @return id
-     */
-    public UUID getUUID() {
-        return mUUID;
+    public boolean getIsExpense() {
+        return mIsExpense;
+    }
+
+    public void setIsExpense(boolean expense) {
+        mIsExpense = expense;
+    }
+
+    public String getAssetsName() {
+        return mAssetsName;
+    }
+
+    public void setAssetsName(String assetsName) {
+        mAssetsName = assetsName;
     }
 }

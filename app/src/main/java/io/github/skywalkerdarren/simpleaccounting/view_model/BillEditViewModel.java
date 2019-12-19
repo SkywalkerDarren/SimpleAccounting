@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
@@ -12,13 +13,13 @@ import org.joda.time.DateTime;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import io.github.skywalkerdarren.simpleaccounting.model.Database.AccountDatabase;
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
-import io.github.skywalkerdarren.simpleaccounting.util.ColorConvertUtils;
 
+import static androidx.core.util.Preconditions.checkNotNull;
 import static io.github.skywalkerdarren.simpleaccounting.model.entity.Account.FOLDER;
 
 /**
@@ -31,10 +32,12 @@ public class BillEditViewModel extends BaseObservable {
     private Bill mBill;
     private Type mType;
     private Account mAccount;
+    private AppRepositry mRepositry;
 
     public BillEditViewModel(Bill bill, Context context) {
         mBill = bill;
         mContext = context;
+        mRepositry = AppRepositry.getInstance(context);
     }
 
     /**
@@ -48,7 +51,8 @@ public class BillEditViewModel extends BaseObservable {
     /**
      * @param type 设置类型
      */
-    public void setType(Type type) {
+    public void setType(@NonNull Type type) {
+        checkNotNull(type);
         mType = type;
         notifyChange();
     }
@@ -96,7 +100,7 @@ public class BillEditViewModel extends BaseObservable {
      */
     @Bindable
     public int getAccountColor() {
-        return ColorConvertUtils.convertIdToColor(mContext, mAccount.getColorId());
+        return mContext.getResources().getColor(mAccount.getColorId());
     }
 
     /**
@@ -104,6 +108,9 @@ public class BillEditViewModel extends BaseObservable {
      */
     @Bindable
     public String getBalance() {
+        if (mBill.getBalance() == null) {
+            return "0";
+        }
         return mBill.getBalance().toString();
     }
 
@@ -152,11 +159,10 @@ public class BillEditViewModel extends BaseObservable {
         mBill.setAccountId(mAccount.getUUID());
 
         // 刷新账单数据库
-        AccountDatabase database = AccountDatabase.getInstance(mContext);
-        if (database.billDao().getBill(mBill.getUUID()) == null) {
-            database.billDao().addBill(mBill);
+        if (mRepositry.getBill(mBill.getUUID()) == null) {
+            mRepositry.addBill(mBill);
         } else {
-            database.billDao().updateBill(mBill);
+            mRepositry.updateBill(mBill);
         }
         DesktopWidget.refresh(mContext);
         return true;
@@ -166,6 +172,6 @@ public class BillEditViewModel extends BaseObservable {
      * @return true为支出类型
      */
     public boolean getExpense() {
-        return mType.getExpense();
+        return mType.getIsExpense();
     }
 }

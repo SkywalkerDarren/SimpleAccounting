@@ -3,6 +3,9 @@ package io.github.skywalkerdarren.simpleaccounting.model.entity;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import org.joda.time.DateTime;
@@ -10,6 +13,8 @@ import org.joda.time.DateTime;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.UUID;
+
+import static androidx.room.ForeignKey.CASCADE;
 
 /**
  * 账单类
@@ -19,12 +24,14 @@ import java.util.UUID;
  * @date 2018/1/29
  */
 
-@Entity(tableName = "bill")
+@Entity(tableName = "bill", indices = {@Index(value = "uuid", unique = true), @Index("type_id"), @Index("account_id")}, foreignKeys = {
+        @ForeignKey(entity = Type.class, parentColumns = "uuid", childColumns = "type_id", onDelete = CASCADE, onUpdate = CASCADE),
+        @ForeignKey(entity = Account.class, parentColumns = "uuid", childColumns = "account_id", onDelete = CASCADE, onUpdate = CASCADE)})
 public class Bill implements Serializable {
 
     @NonNull
     @ColumnInfo(name = "id")
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private Integer mId;
 
     /**
@@ -74,6 +81,7 @@ public class Bill implements Serializable {
      *
      * @param UUID 账单id
      */
+    @Ignore
     public Bill(UUID UUID) {
         mUUID = UUID;
     }
@@ -83,6 +91,17 @@ public class Bill implements Serializable {
      */
     public Bill() {
         this(UUID.randomUUID());
+    }
+
+    @Ignore
+    public Bill(UUID typeId, UUID accountId, DateTime date, String name, BigDecimal balance, String remark) {
+        mUUID = UUID.randomUUID();
+        mTypeId = typeId;
+        mAccountId = accountId;
+        mDate = date;
+        mName = name;
+        mBalance = balance;
+        mRemark = remark;
     }
 
     public Integer getId() {

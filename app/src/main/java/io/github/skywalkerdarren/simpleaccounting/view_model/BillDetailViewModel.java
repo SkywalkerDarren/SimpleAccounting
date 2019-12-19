@@ -14,9 +14,11 @@ import org.joda.time.DateTime;
 import java.math.BigDecimal;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
-import io.github.skywalkerdarren.simpleaccounting.model.Database.AccountDatabase;
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.AccountStats;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillEditActivity;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
@@ -35,18 +37,16 @@ public class BillDetailViewModel extends BaseObservable {
     private Type mType;
     private Account mAccount;
     private Activity mActivity;
-    private StatsLab mStatsLab;
+    private AppRepositry mRepositry;
     private DateTime mStart;
     private DateTime mEnd;
-    private AccountDatabase mDatabase;
 
     public BillDetailViewModel(Bill bill, Activity activity) {
         mActivity = activity;
-        mDatabase = AccountDatabase.getInstance(mActivity);
+        mRepositry = AppRepositry.getInstance(activity);
         mBill = bill;
-        mAccount = mDatabase.accountDao().getAccount(mBill.getAccountId());
-        mType = mDatabase.typeDao().getInstance(mActivity).getType(mBill.getTypeId());
-        mStatsLab = StatsLab.getInstance(mActivity);
+        mAccount = mRepositry.getAccount(mBill.getAccountId());
+        mType = mRepositry.getType(mBill.getTypeId());
         int month = mBill.getDate().getMonthOfYear();
         int year = mBill.getDate().getYear();
         // 默认为月度统计
@@ -127,7 +127,7 @@ public class BillDetailViewModel extends BaseObservable {
      * @return 收支颜色
      */
     public int getBalanceColor() {
-        return mActivity.getResources().getColor(mType.getExpense() ?
+        return mActivity.getResources().getColor(mType.getIsExpense() ?
                 R.color.deeporange800 :
                 R.color.lightgreen700);
     }
@@ -183,19 +183,19 @@ public class BillDetailViewModel extends BaseObservable {
     public String getAccountPercent() {
         // 当前支出/收入，在当前时间段内，占当前账户的支出/收入百分比
         Log.d(TAG, "getAccountPercent: " + mStart.toString());
-        StatsLab.AccountStats stats = mStatsLab.getAccountStats(mBill.getAccountId(), mStart, mEnd);
-        return mType.getExpense() ? getPercent(stats.getExpense()) : getPercent(stats.getIncome());
+        AccountStats stats = mRepositry.getAccountStats(mBill.getAccountId(), mStart, mEnd);
+        return mType.getIsExpense() ? getPercent(stats.getExpense()) : getPercent(stats.getIncome());
     }
 
     @Bindable
     public String getTypePercent() {
-        BigDecimal sum = mStatsLab.getTypeStats(mStart, mEnd, mBill.getTypeId());
+        BigDecimal sum = mRepositry.getTypeStats(mStart, mEnd, mBill.getTypeId());
         return getPercent(sum);
     }
 
     @Bindable
     public String getThanAverage() {
-        BigDecimal avg = mStatsLab.getTypeAverage(mStart, mEnd, mBill.getTypeId());
+        BigDecimal avg = mRepositry.getTypeAverage(mStart, mEnd, mBill.getTypeId());
         BigDecimal sub = mBill.getBalance().subtract(avg).abs();
         return sub.multiply(BigDecimal.valueOf(100))
                 .divide(avg, 2, BigDecimal.ROUND_HALF_UP) + "%";
@@ -203,13 +203,13 @@ public class BillDetailViewModel extends BaseObservable {
 
     @Bindable
     public String getTypeAverage() {
-        BigDecimal avg = mStatsLab.getTypeAverage(mStart, mEnd, mBill.getTypeId());
+        BigDecimal avg = mRepositry.getTypeAverage(mStart, mEnd, mBill.getTypeId());
         return FormatUtil.getNumeric(avg);
     }
 
     @Bindable
     public String getThanAverageHint() {
-        BigDecimal avg = mStatsLab.getTypeAverage(mStart, mEnd, mBill.getTypeId());
+        BigDecimal avg = mRepositry.getTypeAverage(mStart, mEnd, mBill.getTypeId());
         if (mBill.getBalance().compareTo(avg) >= 0) {
             // 大于等于
             return mActivity.getString(R.string.higher_than_average);
@@ -220,13 +220,13 @@ public class BillDetailViewModel extends BaseObservable {
 
     @Bindable
     public String getExpensePercent() {
-        StatsLab.BillStats stats = mStatsLab.getStats(mStart, mEnd);
-        return mType.getExpense() ? getPercent(stats.getExpense()) : getPercent(stats.getIncome());
+        BillStats stats = mRepositry.getBillStats(mStart, mEnd);
+        return mType.getIsExpense() ? getPercent(stats.getExpense()) : getPercent(stats.getIncome());
     }
 
     @Bindable
     public String getExpensePercentHint() {
-        return mType.getExpense() ? mActivity.getString(R.string.expense_percent) :
+        return mType.getIsExpense() ? mActivity.getString(R.string.expense_percent) :
                 mActivity.getString(R.string.income_percent);
     }
 
