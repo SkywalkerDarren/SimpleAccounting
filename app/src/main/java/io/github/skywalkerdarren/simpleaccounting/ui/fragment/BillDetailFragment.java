@@ -80,6 +80,7 @@ public class BillDetailFragment extends BaseFragment {
     private TextView mToolbarTextView;
     private float mTitleTextSize;
     private ImageView mTypeImageView;
+    private BillDetailViewModel mViewModel;
 
     /**
      * @param bill 存储的账单
@@ -136,7 +137,6 @@ public class BillDetailFragment extends BaseFragment {
             startActivity(intent, options.toBundle());
         });
         setToolbarChange();
-        updateUI();
         // 启动动画
         enterViewAnimator(mBinding.getRoot());
         return mBinding.getRoot();
@@ -275,15 +275,14 @@ public class BillDetailFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ViewModelFactory factory = ViewModelFactory.getInstance(Objects.requireNonNull(getActivity()).getApplication());
-        BillDetailViewModel viewModel = ViewModelProviders.of(this, factory).get(BillDetailViewModel.class);
-        viewModel.start(mBill);
-        mBinding.setDetail(viewModel);
+        mViewModel = ViewModelProviders.of(this, factory).get(BillDetailViewModel.class);
+        mBinding.setDetail(mViewModel);
         mBinding.setLifecycleOwner(this);
     }
 
     @Override
     protected void updateUI() {
-
+        mViewModel.start(mBill);
     }
 
     @Override

@@ -148,10 +148,19 @@ public class AppRepositryTest {
         assertEquals(acc[1].getId(), i);
     }
 
+    CountDownLatch mCountDownLatch = new CountDownLatch(1);
     @Test
     public void getBill() {
-        Bill bill = mRepositry.getBill(mBill.getUUID());
-        assertBill(mBill, bill);
+        mRepositry.getBill(mBill.getUUID(), bill -> {
+            b = bill;
+            mCountDownLatch.countDown();
+        });
+        try {
+            mCountDownLatch.await();
+            assertBill(mBill, b);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test

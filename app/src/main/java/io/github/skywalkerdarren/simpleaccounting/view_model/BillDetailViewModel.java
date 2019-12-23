@@ -6,10 +6,10 @@ import androidx.lifecycle.ViewModel;
 import org.joda.time.DateTime;
 
 import java.math.BigDecimal;
-import java.util.concurrent.CountDownLatch;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
+import io.github.skywalkerdarren.simpleaccounting.model.database.BillDataSource;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
@@ -20,12 +20,12 @@ import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
  * @author darren
  * @date 2018/4/4
  */
-public class BillDetailViewModel extends ViewModel {
+public class BillDetailViewModel extends ViewModel implements BillDataSource.LoadBillCallBack {
     private static int mode = 0;
-    private Bill mBill;
     private AppRepositry mRepositry;
     private DateTime mStart;
     private DateTime mEnd;
+    private volatile Bill mBill;
     private MutableLiveData<Integer> statsMode = new MutableLiveData<>(R.string.brvah_loading);
     private MutableLiveData<String> typeImage = new MutableLiveData<>();
     private MutableLiveData<String> typeName = new MutableLiveData<>();
@@ -42,65 +42,60 @@ public class BillDetailViewModel extends ViewModel {
     private MutableLiveData<Integer> thanAverageHint = new MutableLiveData<>(R.string.brvah_loading);
     private MutableLiveData<Integer> expensePercentHint = new MutableLiveData<>(R.string.brvah_loading);
     private MutableLiveData<String> expensePercent = new MutableLiveData<>();
-    private Type mType;
-    private CountDownLatch mCountDownLatch = new CountDownLatch(1);
 
     public BillDetailViewModel(AppRepositry repositry) {
         mRepositry = repositry;
     }
 
-    public void start(Bill bill) {
+    public void start(Bill b) {
+        mRepositry.getBill(b.getUUID(), this);
+    }
+
+    @Override
+    public void onBillLoaded(Bill bill) {
         mBill = bill;
         int month = mBill.getDate().getMonthOfYear();
         int year = mBill.getDate().getYear();
         // 默认为月度统计
         mStart = new DateTime(year, month, 1, 0, 0);
         mEnd = mStart.plusMonths(1);
-        mRepositry.getAccount(mBill.getAccountId(), account -> accountName.setValue(account.getName()));
-        mRepositry.getType(mBill.getTypeId(), type -> {
-            mType = type;
-            mCountDownLatch.countDown();
-            typeImage.setValue(Type.FOLDER + type.getAssetsName());
-            typeName.setValue(type.getName());
-            balanceColor.setValue(type.getIsExpense() ? R.color.deeporange800 : R.color.lightgreen700);
-            expensePercentHint.setValue(type.getIsExpense() ? R.string.expense_percent : R.string.income_percent);
-        });
-        balance.setValue(FormatUtil.getNumeric(mBill.getBalance()));
-        time.setValue(mBill.getDate().toString("yyyy-MM-dd hh:mm"));
-        remark.setValue(mBill.getRemark());
         update();
     }
 
     private void update() {
-        mRepositry.getAccountStats(mBill.getAccountId(), mStart, mEnd, accountStats -> {
-            try {
-                mCountDownLatch.await();
-                accountPercent.setValue(mType.getIsExpense() ? getPercent(accountStats.getExpense()) : getPercent(accountStats.getIncome()));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        mRepositry.getAccount(mBill.getAccountId(), account ->
+                accountName.setValue(account.getName()));
+        mRepositry.getType(mBill.getTypeId(), type -> {
+            typeImage.setValue(Type.FOLDER + type.getAssetsName());
+            typeName.setValue(type.getName());
+            balanceColor.setValue(type.getIsExpense() ?
+                    R.color.deeporange800 : R.color.lightgreen700);
+            expensePercentHint.setValue(type.getIsExpense() ?
+                    R.string.expense_percent : R.string.income_percent);
+            mRepositry.getAccountStats(mBill.getAccountId(), mStart, mEnd, accountStats ->
+                    accountPercent.setValue(type.getIsExpense() ?
+                            getPercent(accountStats.getExpense()) :
+                            getPercent(accountStats.getIncome())));
+            mRepositry.getBillStats(mStart, mEnd, billStats ->
+                    expensePercent.setValue(type.getIsExpense() ?
+                            getPercent(billStats.getExpense()) :
+                            getPercent(billStats.getIncome())));
         });
-        mRepositry.getTypeStats(mStart, mEnd, mBill.getTypeId(), typeStats -> typePercent.setValue(getPercent(typeStats.getBalance())));
+        mRepositry.getTypeStats(mStart, mEnd, mBill.getTypeId(), typeStats ->
+                typePercent.setValue(getPercent(typeStats.getBalance())));
         mRepositry.getTypeAverage(mStart, mEnd, mBill.getTypeId(), typeStats -> {
             BigDecimal sub = mBill.getBalance().subtract(typeStats.getBalance()).abs();
             thanAverage.setValue(sub.multiply(BigDecimal.valueOf(100))
                     .divide(typeStats.getBalance(), 2, BigDecimal.ROUND_HALF_UP) + "%");
             typeAverage.setValue(FormatUtil.getNumeric(typeStats.getBalance()));
-            if (mBill.getBalance().compareTo(typeStats.getBalance()) >= 0) {
-                // 大于等于
-                thanAverageHint.setValue(R.string.higher_than_average);
-            } else {
-                thanAverageHint.setValue(R.string.less_than_average);
-            }
+            thanAverageHint.setValue(mBill.getBalance().compareTo(typeStats.getBalance()) >= 0 ?
+                    R.string.higher_than_average : R.string.less_than_average);
         });
-        mRepositry.getBillStats(mStart, mEnd, billStats -> {
-            try {
-                mCountDownLatch.await();
-                expensePercent.setValue(mType.getIsExpense() ? getPercent(billStats.getExpense()) : getPercent(billStats.getIncome()));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
+
+        balance.setValue(FormatUtil.getNumeric(mBill.getBalance()));
+        time.setValue(mBill.getDate().toString("yyyy-MM-dd hh:mm"));
+        remark.setValue(mBill.getRemark());
+
         switch (mode %= 3) {
             case 0:
                 statsMode.setValue(R.string.monthly_stats);
