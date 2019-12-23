@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
+import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 
 /**
  * 删除帐单对话框
@@ -45,7 +46,7 @@ public class DeleteBillAlertDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AppRepositry repositry = AppRepositry.getInstance(getContext());
+        AppRepositry repositry = AppRepositry.getInstance(new AppExecutors(), getContext());
         mBillId = (UUID) getArguments().getSerializable(ARG_BILL_ID);
         return new AlertDialog.Builder(getActivity())
                 .setTitle("确认删除")

@@ -16,6 +16,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillEditActivity;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.MainActivity;
+import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
@@ -51,7 +52,7 @@ public class DesktopWidget extends AppWidgetProvider {
     }
 
     private void refreshData(Context context) {
-        BillStats stats = AppRepositry.getInstance(context)
+        BillStats stats = AppRepositry.getInstance(new AppExecutors(), context)
                 .getAnnualStats(DateTime.now().getYear())
                 .get(DateTime.now().getMonthOfYear() - 1);
 

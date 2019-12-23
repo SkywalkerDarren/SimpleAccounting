@@ -36,6 +36,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.TypeStats;
+import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 import io.github.skywalkerdarren.simpleaccounting.util.CustomTypefaceSpan;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
@@ -104,7 +105,7 @@ public class PieChartFragment extends BaseFragment {
         description.setEnabled(false);
         mPieChart.setDescription(description);
 
-        BillStats stats = AppRepositry.getInstance(getContext())
+        BillStats stats = AppRepositry.getInstance(new AppExecutors(), getContext())
                 .getBillStats(mStartDateTime, mEndDateTime);
         String s = FormatUtil.getNumeric(mIsExpense ? stats.getExpense() : stats.getIncome());
         mPieChart.setCenterText(generateCenterText(s));
@@ -135,7 +136,7 @@ public class PieChartFragment extends BaseFragment {
 
     @Override
     protected void updateUI() {
-        AppRepositry repositry = AppRepositry.getInstance(getContext());
+        AppRepositry repositry = AppRepositry.getInstance(new AppExecutors(), getContext());
         List<TypeStats> typeStats = repositry.getTypesStats(mStartDateTime, mEndDateTime, mIsExpense);
 
         List<PieEntry> pieEntries = new ArrayList<>(10);

@@ -17,6 +17,7 @@ import io.github.skywalkerdarren.simpleaccounting.adapter.BillInfo;
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillDetailActivity;
+import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 
 /**
  * 账单列表物品vm
@@ -37,7 +38,7 @@ public class BillInfoViewModel extends BaseObservable {
     public BillInfoViewModel(BillInfo billinfo, Activity activity) {
         mActivity = activity;
         mBillInfo = billinfo;
-        mRepositry = AppRepositry.getInstance(mActivity);
+        mRepositry = AppRepositry.getInstance(new AppExecutors(), mActivity);
     }
 
     /**

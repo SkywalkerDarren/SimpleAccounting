@@ -13,6 +13,7 @@ import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
+import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
@@ -33,7 +34,7 @@ public class JournalViewModel extends BaseObservable {
 
     public JournalViewModel(Context context) {
         mContext = context;
-        mRepositry = AppRepositry.getInstance(context);
+        mRepositry = AppRepositry.getInstance(new AppExecutors(), context);
         mYear = DateTime.now().getYear();
         mStats = mRepositry.getAnnualStats(DateTime.now().getYear());
         mIncome = BigDecimal.ZERO;

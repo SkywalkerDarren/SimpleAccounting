@@ -12,6 +12,7 @@ import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.TypeStats;
+import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 
 
 /**
@@ -35,7 +36,7 @@ public class ClassifyViewModel extends BaseObservable {
         mEnd = mStart.plusMonths(1);
         mIsExpense = true;
         mPeriod = new Period(mStart, mEnd);
-        mRepositry = AppRepositry.getInstance(context);
+        mRepositry = AppRepositry.getInstance(new AppExecutors(), context);
     }
 
     /**

@@ -18,11 +18,11 @@ import androidx.viewpager.widget.ViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.databinding.ActivityWelcomeBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
+import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 
 public class WelcomeActivity extends Activity {
     private static final String START_UP = "START_UP";
@@ -85,7 +85,7 @@ public class WelcomeActivity extends Activity {
                 mCount++;
                 SharedPreferences.Editor editor = mPreferences.edit();
                 editor.putInt(RUN_COUNT, mCount);
-                AppRepositry.getInstance(getApplicationContext()).initDb();
+                AppRepositry.getInstance(new AppExecutors(), getApplicationContext()).initDb();
                 editor.apply();
             }
         });

@@ -52,6 +52,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 import io.github.skywalkerdarren.simpleaccounting.ui.NumPad;
+import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 import io.github.skywalkerdarren.simpleaccounting.util.DpConvertUtils;
 import io.github.skywalkerdarren.simpleaccounting.view_model.BillEditViewModel;
 
@@ -137,7 +138,7 @@ public class BillEditFragment extends BaseFragment {
         // 配置选择按钮
         mTypeSbg.setOnClickedButtonListener(position -> {
             List<Type> types = AppRepositry
-                    .getInstance(getContext()).getTypes(position == 1);
+                    .getInstance(new AppExecutors(), getContext()).getTypes(position == 1);
             for (int i = 0; i < adapter.getItemCount(); i++) {
                 adapter.getViewByPosition(binding.typeListRecyclerView,
                         i, R.id.type_item).setAlpha(0);
@@ -197,7 +198,7 @@ public class BillEditFragment extends BaseFragment {
      * 配置初始账单，将账单信息绑定到视图
      */
     private void configBill(TypeAdapter adapter) {
-        AppRepositry repositry = AppRepositry.getInstance(getContext());
+        AppRepositry repositry = AppRepositry.getInstance(new AppExecutors(), getContext());
         Account account;
         if (mViewModel.getDate() == null) {
             // 创建账单(日期不存在则一定是刚创建的)
@@ -319,7 +320,7 @@ public class BillEditFragment extends BaseFragment {
     private void getPopupWindow(View view) {
         MenuAccountBinding binding = MenuAccountBinding.inflate(LayoutInflater.from(getContext()));
         View menu = binding.getRoot();
-        AccountMenuAdapter adapter = new AccountMenuAdapter(AppRepositry.getInstance(getContext()).getAccounts());
+        AccountMenuAdapter adapter = new AccountMenuAdapter(AppRepositry.getInstance(new AppExecutors(), getContext()).getAccounts());
         PopupWindow popupWindow = new PopupWindow(menu);
         adapter.setOnItemClickListener((adapter1, view1, position) -> {
             Account account = (Account) adapter1.getData().get(position);

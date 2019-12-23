@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.TypeStats;
+import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
@@ -26,7 +27,7 @@ public class ClassifyItemViewModel extends BaseObservable {
     public ClassifyItemViewModel(TypeStats stats, BigDecimal sum, Context context) {
         mStats = stats;
         mSum = sum;
-        mType = AppRepositry.getInstance(context).getType(stats.getTypeId());
+        mType = AppRepositry.getInstance(new AppExecutors(), context).getType(stats.getTypeId());
     }
 
     /**

@@ -1,7 +1,5 @@
 package io.github.skywalkerdarren.simpleaccounting.model;
 
-import android.util.Log;
-
 import androidx.room.Room;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
@@ -15,11 +13,10 @@ import org.junit.runner.RunWith;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
-import io.github.skywalkerdarren.simpleaccounting.model.dao.AccountDao;
-import io.github.skywalkerdarren.simpleaccounting.model.dao.BillDao;
-import io.github.skywalkerdarren.simpleaccounting.model.dao.TypeDao;
 import io.github.skywalkerdarren.simpleaccounting.model.database.AppDatabase;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.AccountStats;
@@ -27,12 +24,14 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.TypeStats;
+import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
-import static org.hamcrest.Matchers.arrayContaining;
+import static java.lang.Thread.sleep;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -41,6 +40,9 @@ public class AppRepositryTest {
     private AppRepositry mRepositry;
     private Bill mBill;
     private Bill mBill2;
+    private Account a;
+    private Bill b;
+    private Type t;
 
     private AppDatabase mDatabase = Room.inMemoryDatabaseBuilder(getApplicationContext(),
             AppDatabase.class)
@@ -71,7 +73,7 @@ public class AppRepositryTest {
         mBill2 = new Bill(type2.getUUID(), account2.getUUID(), new DateTime(), "name2", new BigDecimal(200), "remark");
 
         AppRepositry.clearInstance();
-        mRepositry = AppRepositry.getInstance(mDatabase);
+        mRepositry = AppRepositry.getInstance(new AppExecutors(), mDatabase);
         mDatabase.accountDao().newAccount(account);
         mDatabase.accountDao().newAccount(account2);
         mDatabase.typeDao().newType(type);
@@ -98,19 +100,22 @@ public class AppRepositryTest {
     }
 
     @Test
-    public void updateAccount() {
+    public void updateAccount() throws InterruptedException {
         Account account = mRepositry.getAccount(mBill.getAccountId());
         account.setId(-1);
         mRepositry.updateAccountId(account.getUUID(), -1);
+        sleep(10);
         account = mRepositry.getAccount(mBill.getAccountId());
         assertEquals(-1, (int) account.getId());
     }
 
+
     @Test
     public void delAccount() {
         mRepositry.delAccount(mBill.getAccountId());
-        Account account = mRepositry.getAccount(mBill.getAccountId());
-        assertNull(account);
+
+        mRepositry.getAccount(mBill.getAccountId(), account -> a = account);
+        assertNull(a);
     }
 
     @Test
@@ -277,7 +282,17 @@ public class AppRepositryTest {
         DateTime dateTime = DateTime.now();
         DateTime start = dateTime.minusDays(1);
         DateTime end = dateTime.plusDays(1);
-        BigDecimal average = mRepositry.getTypeAverage(start, end, mBill.getTypeId());
-        assertEquals(100, average.intValue());
+        AtomicReference<TypeStats> ts = new AtomicReference<>();
+        CountDownLatch latch = new CountDownLatch(1);
+        mRepositry.getTypeAverage(start, end, mBill.getTypeId(), typeStats -> {
+            ts.set(typeStats);
+            latch.countDown();
+        });
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertEquals(100, ts.get().getBalance().intValue());
     }
 }

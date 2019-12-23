@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
+import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
@@ -29,7 +30,7 @@ public class AccountViewModel extends BaseObservable {
      * @param context 上下文
      */
     public AccountViewModel(Context context) {
-        mRepositry = AppRepositry.getInstance(context);
+        mRepositry = AppRepositry.getInstance(new AppExecutors(), context);
         mStats = mRepositry.getBillStats(new DateTime(0), DateTime.now());
     }
 

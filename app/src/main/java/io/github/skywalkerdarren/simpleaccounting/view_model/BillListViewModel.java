@@ -11,6 +11,7 @@ import org.joda.time.DateTime;
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.StatsActivity;
+import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
@@ -28,7 +29,7 @@ public class BillListViewModel extends BaseObservable {
 
     public BillListViewModel(Context context) {
         mContext = context;
-        mRepositry = AppRepositry.getInstance(context);
+        mRepositry = AppRepositry.getInstance(new AppExecutors(), context);
     }
 
     /**

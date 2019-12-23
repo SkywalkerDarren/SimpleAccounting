@@ -12,6 +12,7 @@ import java.util.Random;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
+import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 
 /**
  * @author darren
@@ -27,7 +28,7 @@ public class Demo {
     private static final String TAG = "Demo";
 
     public Demo(Context context) {
-        mRepositry = AppRepositry.getInstance(context);
+        mRepositry = AppRepositry.getInstance(new AppExecutors(), context);
         mExpense = mRepositry.getTypes(true);
         mIncome = mRepositry.getTypes(false);
         mAccounts = mRepositry.getAccounts();

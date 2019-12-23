@@ -17,7 +17,6 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 public interface BillDao {
     @Query("SELECT * FROM bill WHERE uuid == :id")
     Bill getBill(UUID id);
-
     @Query("SELECT * FROM bill WHERE date BETWEEN :start AND :end ORDER BY date DESC")
     List<Bill> getsBillsByDate(DateTime start, DateTime end);
     @Insert

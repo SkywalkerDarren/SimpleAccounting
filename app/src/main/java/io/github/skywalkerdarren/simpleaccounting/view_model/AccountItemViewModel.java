@@ -7,12 +7,10 @@ import androidx.databinding.BaseObservable;
 
 import org.joda.time.DateTime;
 
-
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
-import io.github.skywalkerdarren.simpleaccounting.model.dao.StatsDao;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.AccountStats;
-
+import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 import io.github.skywalkerdarren.simpleaccounting.util.ColorConvertUtils;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
@@ -55,7 +53,7 @@ public class AccountItemViewModel extends BaseObservable {
      */
     public String getBalance() {
         Log.d(TAG, "getBalance() called");
-        AppRepositry repositry = AppRepositry.getInstance(mContext);
+        AppRepositry repositry = AppRepositry.getInstance(new AppExecutors(), mContext);
         AccountStats stats = repositry.getAccountStats(mAccount.getUUID(),
 
                 new DateTime(0), DateTime.now());

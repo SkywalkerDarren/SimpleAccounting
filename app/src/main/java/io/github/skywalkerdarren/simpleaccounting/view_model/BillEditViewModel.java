@@ -18,6 +18,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
+import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 
 import static androidx.core.util.Preconditions.checkNotNull;
 import static io.github.skywalkerdarren.simpleaccounting.model.entity.Account.FOLDER;
@@ -37,7 +38,7 @@ public class BillEditViewModel extends BaseObservable {
     public BillEditViewModel(Bill bill, Context context) {
         mBill = bill;
         mContext = context;
-        mRepositry = AppRepositry.getInstance(context);
+        mRepositry = AppRepositry.getInstance(new AppExecutors(), context);
     }
 
     /**

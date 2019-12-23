@@ -21,6 +21,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillEditActivity;
+import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
@@ -43,7 +44,7 @@ public class BillDetailViewModel extends BaseObservable {
 
     public BillDetailViewModel(Bill bill, Activity activity) {
         mActivity = activity;
-        mRepositry = AppRepositry.getInstance(activity);
+        mRepositry = AppRepositry.getInstance(new AppExecutors(), activity);
         mBill = bill;
         mAccount = mRepositry.getAccount(mBill.getAccountId());
         mType = mRepositry.getType(mBill.getTypeId());

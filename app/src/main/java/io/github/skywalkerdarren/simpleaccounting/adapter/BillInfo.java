@@ -14,10 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
+import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 import static io.github.skywalkerdarren.simpleaccounting.adapter.BillAdapter.HEADER;
@@ -84,7 +84,7 @@ public class BillInfo implements MultiItemEntity {
      * @return 账单摘要列表
      */
     public static List<BillInfo> getBillInfoList(int year, int month, Context context) {
-        AppRepositry repositry = AppRepositry.getInstance(context);
+        AppRepositry repositry = AppRepositry.getInstance(new AppExecutors(), context);
         List<Bill> bills = repositry.getsBills(year, month);
         List<BillInfo> billInfoList = new ArrayList<>();
         // 上一个账单的年月日
