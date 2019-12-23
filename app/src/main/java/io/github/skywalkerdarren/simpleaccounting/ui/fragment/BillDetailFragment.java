@@ -24,22 +24,29 @@ import android.widget.Space;
 import android.widget.TextView;
 
 import androidx.annotation.ColorRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.appbar.AppBarLayout;
+
+import java.util.Objects;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseAppBarStateChangeListener;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillDetailBinding;
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
-import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
+import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillEditActivity;
 import io.github.skywalkerdarren.simpleaccounting.util.DpConvertUtils;
 import io.github.skywalkerdarren.simpleaccounting.view_model.BillDetailViewModel;
+import io.github.skywalkerdarren.simpleaccounting.view_model.ViewModelFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -101,7 +108,7 @@ public class BillDetailFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mBinding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_bill_detail, container, false);
@@ -113,15 +120,23 @@ public class BillDetailFragment extends BaseFragment {
         mAppBarLayout = mBinding.appbar;
         Toolbar toolbar = mBinding.toolbar;
         AppCompatActivity activity = (AppCompatActivity) getActivity();
+        //noinspection ConstantConditions
         activity.setSupportActionBar(toolbar);
         //noinspection ConstantConditions
         activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mBinding.billEditFab.setOnClickListener(view -> {
+            int[] location = new int[2];
+            view.getLocationInWindow(location);
+            int x = (int) view.getX() + view.getWidth() / 2;
+            int y = (int) view.getY() + view.getHeight() / 2;
+            Intent intent = BillEditActivity.newIntent(getContext(), mBill, x, y);
+            //noinspection ConstantConditions,unchecked
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity());
+            startActivity(intent, options.toBundle());
+        });
         setToolbarChange();
-
-
         updateUI();
-
         // 启动动画
         enterViewAnimator(mBinding.getRoot());
         return mBinding.getRoot();
@@ -136,6 +151,7 @@ public class BillDetailFragment extends BaseFragment {
             public void onLayoutChange(View v, int left, int top, int right, int bottom,
                                        int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 v.removeOnLayoutChangeListener(this);
+                assert getArguments() != null;
                 int cx = getArguments().getInt(ARG_CX);
                 int cy = getArguments().getInt(ARG_CY);
                 int startColor = getArguments().getInt(ARG_START_COLOR);
@@ -149,8 +165,8 @@ public class BillDetailFragment extends BaseFragment {
                 reveal.setInterpolator(new DecelerateInterpolator());
                 // 颜色渐变动画
                 ObjectAnimator colorChange = new ObjectAnimator();
-                colorChange.setIntValues(getResources().getColor(startColor),
-                        getResources().getColor(R.color.transparent));
+                colorChange.setIntValues(ContextCompat.getColor(Objects.requireNonNull(getContext()), startColor),
+                        ContextCompat.getColor(Objects.requireNonNull(getContext()), R.color.transparent));
                 colorChange.setEvaluator(new ArgbEvaluator());
                 colorChange.addUpdateListener(valueAnimator -> view
                         .setBackgroundColor((Integer) valueAnimator.getAnimatedValue()));
@@ -234,7 +250,7 @@ public class BillDetailFragment extends BaseFragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_detail, menu);
     }
@@ -243,12 +259,12 @@ public class BillDetailFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
                 return true;
             case R.id.del:
                 DeleteBillAlertDialog dialog = DeleteBillAlertDialog.newInstance(mBill.getUUID());
                 dialog.setTargetFragment(this, REQUEST_DESTROY);
-                dialog.show(getFragmentManager(), "alertDialog");
+                dialog.show(Objects.requireNonNull(getFragmentManager()), "alertDialog");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -256,25 +272,26 @@ public class BillDetailFragment extends BaseFragment {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ViewModelFactory factory = ViewModelFactory.getInstance(Objects.requireNonNull(getActivity()).getApplication());
+        BillDetailViewModel viewModel = ViewModelProviders.of(this, factory).get(BillDetailViewModel.class);
+        viewModel.start(mBill);
+        mBinding.setDetail(viewModel);
+        mBinding.setLifecycleOwner(this);
+    }
+
+    @Override
     protected void updateUI() {
-        mBill = AppRepositry.getInstance(new AppExecutors(), getActivity()).getBill(mBill.getUUID());
-        mBinding.setDetail(new BillDetailViewModel(mBill, getActivity()));
+
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case REQUEST_DESTROY:
-                switch (resultCode) {
-                    case Activity.RESULT_OK:
-                        getActivity().finish();
-                        break;
-                    default:
-                        break;
-                }
-                break;
-            default:
-                break;
+        if (requestCode == REQUEST_DESTROY) {
+            if (resultCode == Activity.RESULT_OK) {
+                Objects.requireNonNull(getActivity()).finish();
+            }
         }
     }
 }

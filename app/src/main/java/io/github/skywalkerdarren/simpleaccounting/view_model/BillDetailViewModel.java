@@ -1,27 +1,17 @@
 package io.github.skywalkerdarren.simpleaccounting.view_model;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.util.Log;
-import android.view.View;
-
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.databinding.BaseObservable;
-import androidx.databinding.Bindable;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import org.joda.time.DateTime;
 
 import java.math.BigDecimal;
+import java.util.concurrent.CountDownLatch;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
-import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
-import io.github.skywalkerdarren.simpleaccounting.model.entity.AccountStats;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
-import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
-import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillEditActivity;
-import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
@@ -30,29 +20,101 @@ import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
  * @author darren
  * @date 2018/4/4
  */
-
-public class BillDetailViewModel extends BaseObservable {
-    private static final String TAG = "BillDetailViewModel";
+public class BillDetailViewModel extends ViewModel {
     private static int mode = 0;
     private Bill mBill;
-    private Type mType;
-    private Account mAccount;
-    private Activity mActivity;
     private AppRepositry mRepositry;
     private DateTime mStart;
     private DateTime mEnd;
+    private MutableLiveData<Integer> statsMode = new MutableLiveData<>(R.string.brvah_loading);
+    private MutableLiveData<String> typeImage = new MutableLiveData<>();
+    private MutableLiveData<String> typeName = new MutableLiveData<>();
+    private MutableLiveData<String> balance = new MutableLiveData<>();
+    private MutableLiveData<Integer> balanceColor = new MutableLiveData<>(R.color.black);
+    private MutableLiveData<String> accountName = new MutableLiveData<>();
+    private MutableLiveData<String> recorder = new MutableLiveData<>("TODO");
+    private MutableLiveData<String> time = new MutableLiveData<>();
+    private MutableLiveData<String> remark = new MutableLiveData<>();
+    private MutableLiveData<String> accountPercent = new MutableLiveData<>();
+    private MutableLiveData<String> typePercent = new MutableLiveData<>();
+    private MutableLiveData<String> thanAverage = new MutableLiveData<>();
+    private MutableLiveData<String> typeAverage = new MutableLiveData<>();
+    private MutableLiveData<Integer> thanAverageHint = new MutableLiveData<>(R.string.brvah_loading);
+    private MutableLiveData<Integer> expensePercentHint = new MutableLiveData<>(R.string.brvah_loading);
+    private MutableLiveData<String> expensePercent = new MutableLiveData<>();
+    private Type mType;
+    private CountDownLatch mCountDownLatch = new CountDownLatch(1);
 
-    public BillDetailViewModel(Bill bill, Activity activity) {
-        mActivity = activity;
-        mRepositry = AppRepositry.getInstance(new AppExecutors(), activity);
+    public BillDetailViewModel(AppRepositry repositry) {
+        mRepositry = repositry;
+    }
+
+    public void start(Bill bill) {
         mBill = bill;
-        mAccount = mRepositry.getAccount(mBill.getAccountId());
-        mType = mRepositry.getType(mBill.getTypeId());
         int month = mBill.getDate().getMonthOfYear();
         int year = mBill.getDate().getYear();
         // 默认为月度统计
         mStart = new DateTime(year, month, 1, 0, 0);
         mEnd = mStart.plusMonths(1);
+        mRepositry.getAccount(mBill.getAccountId(), account -> accountName.setValue(account.getName()));
+        mRepositry.getType(mBill.getTypeId(), type -> {
+            mType = type;
+            mCountDownLatch.countDown();
+            typeImage.setValue(Type.FOLDER + type.getAssetsName());
+            typeName.setValue(type.getName());
+            balanceColor.setValue(type.getIsExpense() ? R.color.deeporange800 : R.color.lightgreen700);
+            expensePercentHint.setValue(type.getIsExpense() ? R.string.expense_percent : R.string.income_percent);
+        });
+        balance.setValue(FormatUtil.getNumeric(mBill.getBalance()));
+        time.setValue(mBill.getDate().toString("yyyy-MM-dd hh:mm"));
+        remark.setValue(mBill.getRemark());
+        update();
+    }
+
+    private void update() {
+        mRepositry.getAccountStats(mBill.getAccountId(), mStart, mEnd, accountStats -> {
+            try {
+                mCountDownLatch.await();
+                accountPercent.setValue(mType.getIsExpense() ? getPercent(accountStats.getExpense()) : getPercent(accountStats.getIncome()));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        mRepositry.getTypeStats(mStart, mEnd, mBill.getTypeId(), typeStats -> typePercent.setValue(getPercent(typeStats.getBalance())));
+        mRepositry.getTypeAverage(mStart, mEnd, mBill.getTypeId(), typeStats -> {
+            BigDecimal sub = mBill.getBalance().subtract(typeStats.getBalance()).abs();
+            thanAverage.setValue(sub.multiply(BigDecimal.valueOf(100))
+                    .divide(typeStats.getBalance(), 2, BigDecimal.ROUND_HALF_UP) + "%");
+            typeAverage.setValue(FormatUtil.getNumeric(typeStats.getBalance()));
+            if (mBill.getBalance().compareTo(typeStats.getBalance()) >= 0) {
+                // 大于等于
+                thanAverageHint.setValue(R.string.higher_than_average);
+            } else {
+                thanAverageHint.setValue(R.string.less_than_average);
+            }
+        });
+        mRepositry.getBillStats(mStart, mEnd, billStats -> {
+            try {
+                mCountDownLatch.await();
+                expensePercent.setValue(mType.getIsExpense() ? getPercent(billStats.getExpense()) : getPercent(billStats.getIncome()));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        switch (mode %= 3) {
+            case 0:
+                statsMode.setValue(R.string.monthly_stats);
+                break;
+            case 1:
+                statsMode.setValue(R.string.annual_stats);
+                break;
+            case 2:
+                statsMode.setValue(R.string.day_stats);
+                break;
+            default:
+                break;
+        }
+        mode++;
     }
 
     /**
@@ -63,7 +125,6 @@ public class BillDetailViewModel extends BaseObservable {
         int month = mBill.getDate().getMonthOfYear();
         int year = mBill.getDate().getYear();
         mode %= 3;
-        Log.d(TAG, "setDate: " + mode);
         switch (mode) {
             case 0:
                 mStart = new DateTime(year, month, 1, 0, 0);
@@ -80,86 +141,68 @@ public class BillDetailViewModel extends BaseObservable {
             default:
                 break;
         }
-        notifyChange();
+        update();
     }
 
-    @Bindable
-    public String getMode() {
-        String str = null;
-        switch (mode %= 3) {
-            case 0:
-                str = mActivity.getString(R.string.monthly_stats);
-                break;
-            case 1:
-                str = mActivity.getString(R.string.annual_stats);
-                break;
-            case 2:
-                str = mActivity.getString(R.string.day_stats);
-                break;
-            default:
-                break;
-        }
-        mode++;
-        return str;
+    public MutableLiveData<Integer> getMode() {
+        return statsMode;
     }
 
     /**
      * @return 类型图id
      */
-    public String getTypeImage() {
-        return Type.FOLDER + mType.getAssetsName();
+    public MutableLiveData<String> getTypeImage() {
+        return typeImage;
     }
 
     /**
      * @return 类型名
      */
-    public String getTypeName() {
-        return mType.getName();
+    public MutableLiveData<String> getTypeName() {
+        return typeName;
     }
 
     /**
      * @return 账单收支
      */
-    public String getBalance() {
-        return FormatUtil.getNumeric(mBill.getBalance());
+    public MutableLiveData<String> getBalance() {
+        return balance;
     }
 
     /**
      * @return 收支颜色
      */
-    public int getBalanceColor() {
-        return mActivity.getResources().getColor(mType.getIsExpense() ?
-                R.color.deeporange800 :
-                R.color.lightgreen700);
+    public MutableLiveData<Integer> getBalanceColor() {
+        return balanceColor;
     }
 
     /**
      * @return 帐户名
      */
-    public String getAccountName() {
-        return mAccount.getName();
+    public MutableLiveData<String> getAccountName() {
+        return accountName;
     }
 
     /**
      * @return 账单记录者
      */
-    public String getRecorder() {
+    public MutableLiveData<String> getRecorder() {
         // TODO: 2018/4/4 记录人空缺
-        return "暂无";
+        return recorder;
     }
 
     /**
      * @return 账单日期
      */
-    public String getTime() {
-        return mBill.getDate().toString("yyyy-MM-dd hh:mm");
+    public MutableLiveData<String> getTime() {
+        return time;
     }
 
     /**
      * @return 账单备注
      */
-    public String getRemark() {
-        return mBill.getRemark();
+    public MutableLiveData<String> getRemark() {
+        return remark;
     }
 
     /**
@@ -180,68 +223,31 @@ public class BillDetailViewModel extends BaseObservable {
                 .divide(bigDecimal, 2, BigDecimal.ROUND_HALF_UP) + "%";
     }
 
-    @Bindable
-    public String getAccountPercent() {
-        // 当前支出/收入，在当前时间段内，占当前账户的支出/收入百分比
-        Log.d(TAG, "getAccountPercent: " + mStart.toString());
-        AccountStats stats = mRepositry.getAccountStats(mBill.getAccountId(), mStart, mEnd);
-        return mType.getIsExpense() ? getPercent(stats.getExpense()) : getPercent(stats.getIncome());
+    public MutableLiveData<String> getAccountPercent() {
+        return accountPercent;
     }
 
-    @Bindable
-    public String getTypePercent() {
-        BigDecimal sum = mRepositry.getTypeStats(mStart, mEnd, mBill.getTypeId());
-        return getPercent(sum);
+    public MutableLiveData<String> getTypePercent() {
+        return typePercent;
     }
 
-    @Bindable
-    public String getThanAverage() {
-        BigDecimal avg = mRepositry.getTypeAverage(mStart, mEnd, mBill.getTypeId());
-        BigDecimal sub = mBill.getBalance().subtract(avg).abs();
-        return sub.multiply(BigDecimal.valueOf(100))
-                .divide(avg, 2, BigDecimal.ROUND_HALF_UP) + "%";
+    public MutableLiveData<String> getThanAverage() {
+        return thanAverage;
     }
 
-    @Bindable
-    public String getTypeAverage() {
-        BigDecimal avg = mRepositry.getTypeAverage(mStart, mEnd, mBill.getTypeId());
-        return FormatUtil.getNumeric(avg);
+    public MutableLiveData<String> getTypeAverage() {
+        return typeAverage;
     }
 
-    @Bindable
-    public String getThanAverageHint() {
-        BigDecimal avg = mRepositry.getTypeAverage(mStart, mEnd, mBill.getTypeId());
-        if (mBill.getBalance().compareTo(avg) >= 0) {
-            // 大于等于
-            return mActivity.getString(R.string.higher_than_average);
-        } else {
-            return mActivity.getString(R.string.less_than_average);
-        }
+    public MutableLiveData<Integer> getThanAverageHint() {
+        return thanAverageHint;
     }
 
-    @Bindable
-    public String getExpensePercent() {
-        BillStats stats = mRepositry.getBillStats(mStart, mEnd);
-        return mType.getIsExpense() ? getPercent(stats.getExpense()) : getPercent(stats.getIncome());
+    public MutableLiveData<String> getExpensePercent() {
+        return expensePercent;
     }
 
-    @Bindable
-    public String getExpensePercentHint() {
-        return mType.getIsExpense() ? mActivity.getString(R.string.expense_percent) :
-                mActivity.getString(R.string.income_percent);
-    }
-
-    /**
-     * 编辑账单点击事件
-     */
-    @SuppressWarnings("unchecked")
-    public void onEditFabClick(View view) {
-        int[] location = new int[2];
-        view.getLocationInWindow(location);
-        int x = (int) view.getX() + view.getWidth() / 2;
-        int y = (int) view.getY() + view.getHeight() / 2;
-        Intent intent = BillEditActivity.newIntent(mActivity, mBill, x, y);
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity);
-        mActivity.startActivity(intent, options.toBundle());
+    public MutableLiveData<Integer> getExpensePercentHint() {
+        return expensePercentHint;
     }
 }

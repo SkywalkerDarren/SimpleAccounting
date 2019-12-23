@@ -6,6 +6,7 @@
 
     <data>
 
+        <import type="androidx.core.content.ContextCompat" />
         <variable
             name="detail"
             type="io.github.skywalkerdarren.simpleaccounting.view_model.BillDetailViewModel" />
@@ -138,7 +139,7 @@
                             android:fontFamily="@font/lalezar"
                             android:text="@{detail.balance}"
                             android:textAlignment="textEnd"
-                            android:textColor="@{detail.balanceColor}"
+                            android:textColor="@{ContextCompat.getColor(context, detail.balanceColor)}"
                             android:textSize="24sp"
                             android:transitionName="balance_text_view"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -268,7 +269,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="end"
-                                    android:text="@{detail.recorder}"
+                                    android:text="null"
                                     android:textColor="@android:color/black"
                                     android:textSize="16sp"
                                     tools:text="233" />
@@ -481,7 +482,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="start"
-                                    android:text="@{detail.thanAverageHint}"
+                                    android:text="@{context.getString(detail.thanAverageHint)}"
                                     android:textColor="@android:color/black"
                                     android:textSize="16sp" />
 
@@ -543,7 +544,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
                             android:onClick="@{() -> detail.setDate()}"
-                            android:text="@{detail.mode}"
+                            android:text="@{context.getString(detail.mode)}"
                             android:textAllCaps="false"
                             android:textColor="@color/colorPrimary"
                             tools:ignore="RtlHardcoded" />
@@ -628,7 +629,6 @@
             android:layout_margin="@dimen/fab_margin"
             android:clickable="true"
             android:focusable="true"
-            android:onClick="@{(view) -> detail.onEditFabClick(view)}"
             app:elevation="4dp"
             app:fabSize="normal"
             app:layout_anchor="@+id/appbar"

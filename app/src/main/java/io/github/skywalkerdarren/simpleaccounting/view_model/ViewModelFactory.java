@@ -42,7 +42,11 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(AccountViewModel.class)) {
+            //noinspection unchecked
             return (T) new AccountViewModel(mRepositry);
+        } else if (modelClass.isAssignableFrom(BillDetailViewModel.class)) {
+            //noinspection unchecked
+            return (T) new BillDetailViewModel(mRepositry);
         }
         throw new IllegalArgumentException("no this ViewModel");
     }
