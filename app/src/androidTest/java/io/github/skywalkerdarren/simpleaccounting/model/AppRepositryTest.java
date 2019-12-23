@@ -119,16 +119,33 @@ public class AppRepositryTest {
     }
 
     @Test
-    public void changePosition() {
-        Account a = mRepositry.getAccount(mBill.getAccountId());
-        Account b = mRepositry.getAccount(mBill2.getAccountId());
-        Integer i = a.getId();
-        Integer j = b.getId();
-        mRepositry.changePosition(a, b);
-        a = mRepositry.getAccount(mBill.getAccountId());
-        b = mRepositry.getAccount(mBill2.getAccountId());
-        assertEquals(a.getId(), j);
-        assertEquals(b.getId(), i);
+    public void changePosition() throws InterruptedException {
+        final Account[] acc = new Account[2];
+        CountDownLatch latch = new CountDownLatch(2);
+        mRepositry.getAccount(mBill.getAccountId(), account -> {
+            acc[0] = account;
+            latch.countDown();
+        });
+        mRepositry.getAccount(mBill2.getAccountId(), account -> {
+            acc[1] = account;
+            latch.countDown();
+        });
+        latch.await();
+        Integer i = acc[0].getId();
+        Integer j = acc[1].getId();
+        CountDownLatch latch1 = new CountDownLatch(2);
+        mRepositry.changePosition(acc[0], acc[1]);
+        mRepositry.getAccount(mBill.getAccountId(), account -> {
+            acc[0] = account;
+            latch1.countDown();
+        });
+        mRepositry.getAccount(mBill2.getAccountId(), account -> {
+            acc[1] = account;
+            latch1.countDown();
+        });
+        latch1.await();
+        assertEquals(acc[0].getId(), j);
+        assertEquals(acc[1].getId(), i);
     }
 
     @Test

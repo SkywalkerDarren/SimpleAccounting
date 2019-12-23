@@ -1,16 +1,12 @@
 package io.github.skywalkerdarren.simpleaccounting.view_model;
 
-import android.content.Context;
-
-import androidx.databinding.BaseObservable;
-import androidx.databinding.Bindable;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import org.joda.time.DateTime;
 
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
-import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
-import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
@@ -20,55 +16,52 @@ import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
  * @date 2018/4/4
  */
 
-public class AccountViewModel extends BaseObservable {
-    private BillStats mStats;
+public class AccountViewModel extends ViewModel {
     private AppRepositry mRepositry;
+    private MutableLiveData<String> nav = new MutableLiveData<>();
+    private MutableLiveData<String> liability = new MutableLiveData<>();
+    private MutableLiveData<String> totalAssets = new MutableLiveData<>();
+    private MutableLiveData<String> accountSize = new MutableLiveData<>();
 
-    /**
-     * 初始化lab 和列表stats
-     *
-     * @param context 上下文
-     */
-    public AccountViewModel(Context context) {
-        mRepositry = AppRepositry.getInstance(new AppExecutors(), context);
-        mStats = mRepositry.getBillStats(new DateTime(0), DateTime.now());
+    public AccountViewModel(AppRepositry repositry) {
+        mRepositry = repositry;
     }
 
-    public void setStats() {
-        mStats = mRepositry.getBillStats(new DateTime(0), DateTime.now());
-        notifyChange();
+    public void start() {
+        mRepositry.getAccounts(accounts -> accountSize.setValue(String.valueOf(accounts.size())));
+        mRepositry.getBillStats(new DateTime(0), DateTime.now(), billStats -> {
+            nav.setValue(FormatUtil.getNumeric(billStats.getSum()));
+            liability.setValue(FormatUtil.getNumeric(billStats.getExpense()));
+            totalAssets.setValue(FormatUtil.getNumeric(billStats.getIncome()));
+        });
     }
 
     /**
      * @return 净资产
      */
-    @Bindable
-    public String getNav() {
-        return FormatUtil.getNumeric(mStats.getSum());
+    public MutableLiveData<String> getNav() {
+        return nav;
     }
 
     /**
      * @return 负债
      */
-    @Bindable
-    public String getLiability() {
-        return FormatUtil.getNumeric(mStats.getExpense());
+    public MutableLiveData<String> getLiability() {
+        return liability;
     }
 
     /**
      * @return 总资产
      */
-    @Bindable
-    public String getTotalAssets() {
-        return FormatUtil.getNumeric(mStats.getIncome());
+    public MutableLiveData<String> getTotalAssets() {
+        return totalAssets;
     }
 
     /**
      * @return 账户数目
      */
-    @Bindable
-    public String getAccountSize() {
-        return mRepositry.getAccounts().size() + "";
+    public MutableLiveData<String> getAccountSize() {
+        return accountSize;
     }
 
     public void changePosition(Account a, Account b) {

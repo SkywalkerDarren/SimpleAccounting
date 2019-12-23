@@ -9,9 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,6 +34,7 @@ import io.github.skywalkerdarren.simpleaccounting.ui.activity.MainActivity;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.SettingsActivity;
 import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 import io.github.skywalkerdarren.simpleaccounting.view_model.AccountViewModel;
+import io.github.skywalkerdarren.simpleaccounting.view_model.ViewModelFactory;
 
 
 /**
@@ -76,7 +79,7 @@ public class AccountFragment extends BaseFragment {
         // Inflate the layout for this fragment
         mBinding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_account, container, false);
-        mViewModel = new AccountViewModel(getContext());
+        //mViewModel = new AccountViewModel(getContext())
         mAccountRecyclerView = mBinding.accountRecyclerView;
         mAccountRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mBinding.settingCardView.setOnClickListener(view -> toSettingActivity());
@@ -99,6 +102,15 @@ public class AccountFragment extends BaseFragment {
 
         });
         return mBinding.getRoot();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ViewModelFactory factory = ViewModelFactory.getInstance(getActivity().getApplication());
+        mViewModel = ViewModelProviders.of(getActivity(), factory).get(AccountViewModel.class);
+        mBinding.setAccount(mViewModel);
+        mBinding.setLifecycleOwner(this);
     }
 
     private void toSettingActivity() {
@@ -156,8 +168,7 @@ public class AccountFragment extends BaseFragment {
                 mViewModel.changePosition(accountA, accountB);
             }
         });
-        mViewModel.setStats();
-        mBinding.setAccount(mViewModel);
+        mViewModel.start();
         Log.d(TAG, "updateUI: ");
     }
 
