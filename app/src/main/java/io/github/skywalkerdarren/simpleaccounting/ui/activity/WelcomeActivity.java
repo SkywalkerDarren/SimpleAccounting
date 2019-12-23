@@ -5,13 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -27,8 +27,6 @@ import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 public class WelcomeActivity extends Activity {
     private static final String START_UP = "START_UP";
     private static final String RUN_COUNT = "RUN_COUNT";
-    private int mCount;
-    private SharedPreferences mPreferences;
     private ViewPager mViewPager;
     private LinearLayout mDotLayout;
     private List<ImageView> mImageViews;
@@ -38,20 +36,33 @@ public class WelcomeActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPreferences = getApplicationContext().getSharedPreferences(START_UP, Context.MODE_PRIVATE);
-        mCount = mPreferences.getInt(RUN_COUNT, 0);
-
+        SharedPreferences preferences = getApplicationContext().getSharedPreferences(START_UP, Context.MODE_PRIVATE);
+        int count = preferences.getInt(RUN_COUNT, 0);
+        SharedPreferences.Editor editor = preferences.edit();
+        try {
+            if (count == 0) {
+                AppRepositry.getInstance(new AppExecutors(), getApplicationContext()).initDb();
+            } else {
+                startMainActivity();
+            }
+        } finally {
+            count++;
+            editor.putInt(RUN_COUNT, count);
+            editor.apply();
+        }
         bind();
         setImage();
-        mButton.setOnClickListener(view -> new Handler().post(() -> {
-            Intent intent = MainActivity.newIntent(WelcomeActivity.this);
-            startActivity(intent);
-            WelcomeActivity.this.finish();
-        }));
+        mButton.setOnClickListener(view -> startMainActivity());
         mDotLayout.getChildAt(0).setEnabled(true);
         mViewPager.setAdapter(new WelcomeAdapter());
         mViewPager.addOnPageChangeListener(new WelcomeListener());
         mViewPager.setOffscreenPageLimit(2);
+    }
+
+    private void startMainActivity() {
+        Intent intent = MainActivity.newIntent(WelcomeActivity.this);
+        startActivity(intent);
+        WelcomeActivity.this.finish();
     }
 
     private void bind() {
@@ -80,15 +91,6 @@ public class WelcomeActivity extends Activity {
             }
             mDotLayout.addView(view, params);
         }
-        getWindow().getDecorView().post(() -> {
-            if (mCount == 0) {
-                mCount++;
-                SharedPreferences.Editor editor = mPreferences.edit();
-                editor.putInt(RUN_COUNT, mCount);
-                AppRepositry.getInstance(new AppExecutors(), getApplicationContext()).initDb();
-                editor.apply();
-            }
-        });
     }
 
     private class WelcomeListener implements ViewPager.OnPageChangeListener {
@@ -125,15 +127,16 @@ public class WelcomeActivity extends Activity {
         }
 
         @Override
-        public boolean isViewFromObject(View view, Object object) {
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
             return view == object;
         }
 
         @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
+        public void destroyItem(ViewGroup container, int position, @NonNull Object object) {
             container.removeView(mImageViews.get(position));
         }
 
+        @NonNull
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             container.addView(mImageViews.get(position));
