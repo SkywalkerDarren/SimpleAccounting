@@ -23,9 +23,6 @@ import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 public class BillDetailViewModel extends ViewModel implements BillDataSource.LoadBillCallBack {
     private static int mode = 0;
     private AppRepositry mRepositry;
-    private DateTime mStart;
-    private DateTime mEnd;
-    private volatile Bill mBill;
     private MutableLiveData<Integer> statsMode = new MutableLiveData<>(R.string.brvah_loading);
     private MutableLiveData<String> typeImage = new MutableLiveData<>();
     private MutableLiveData<String> typeName = new MutableLiveData<>();
@@ -42,6 +39,7 @@ public class BillDetailViewModel extends ViewModel implements BillDataSource.Loa
     private MutableLiveData<Integer> thanAverageHint = new MutableLiveData<>(R.string.brvah_loading);
     private MutableLiveData<Integer> expensePercentHint = new MutableLiveData<>(R.string.brvah_loading);
     private MutableLiveData<String> expensePercent = new MutableLiveData<>();
+    private MutableLiveData<Bill> bill = new MutableLiveData<>();
 
     public BillDetailViewModel(AppRepositry repositry) {
         mRepositry = repositry;
@@ -53,38 +51,38 @@ public class BillDetailViewModel extends ViewModel implements BillDataSource.Loa
 
     @Override
     public void onBillLoaded(Bill bill) {
-        mBill = bill;
-        int month = mBill.getDate().getMonthOfYear();
-        int year = mBill.getDate().getYear();
+        this.bill.setValue(bill);
+        int month = bill.getDate().getMonthOfYear();
+        int year = bill.getDate().getYear();
         // 默认为月度统计
-        mStart = new DateTime(year, month, 1, 0, 0);
-        mEnd = mStart.plusMonths(1);
-        update();
+        DateTime start = new DateTime(year, month, 1, 0, 0);
+        DateTime end = start.plusMonths(1);
+        update(bill, start, end);
     }
 
-    private void update() {
-        mRepositry.getAccount(mBill.getAccountId(), account ->
+    private void update(Bill bill, DateTime start, DateTime end) {
+        mRepositry.getAccount(bill.getAccountId(), account ->
                 accountName.setValue(account.getName()));
-        mRepositry.getType(mBill.getTypeId(), type -> {
+        mRepositry.getType(bill.getTypeId(), type -> {
             typeImage.setValue(Type.FOLDER + type.getAssetsName());
             typeName.setValue(type.getName());
             balanceColor.setValue(type.getIsExpense() ?
                     R.color.deeporange800 : R.color.lightgreen700);
             expensePercentHint.setValue(type.getIsExpense() ?
                     R.string.expense_percent : R.string.income_percent);
-            mRepositry.getAccountStats(mBill.getAccountId(), mStart, mEnd, accountStats ->
+            mRepositry.getAccountStats(bill.getAccountId(), start, end, accountStats ->
                     accountPercent.setValue(type.getIsExpense() ?
-                            getPercent(accountStats.getExpense()) :
-                            getPercent(accountStats.getIncome())));
-            mRepositry.getBillStats(mStart, mEnd, billStats ->
+                            getPercent(bill, accountStats.getExpense()) :
+                            getPercent(bill, accountStats.getIncome())));
+            mRepositry.getBillStats(start, end, billStats ->
                     expensePercent.setValue(type.getIsExpense() ?
-                            getPercent(billStats.getExpense()) :
-                            getPercent(billStats.getIncome())));
+                            getPercent(bill, billStats.getExpense()) :
+                            getPercent(bill, billStats.getIncome())));
         });
-        mRepositry.getTypeStats(mStart, mEnd, mBill.getTypeId(), typeStats ->
-                typePercent.setValue(getPercent(typeStats.getBalance())));
-        mRepositry.getTypeAverage(mStart, mEnd, mBill.getTypeId(), typeStats -> {
-            BigDecimal sub = mBill.getBalance().subtract(typeStats.getBalance()).abs();
+        mRepositry.getTypeStats(start, end, bill.getTypeId(), typeStats ->
+                typePercent.setValue(getPercent(bill, typeStats.getBalance())));
+        mRepositry.getTypeAverage(start, end, bill.getTypeId(), typeStats -> {
+            BigDecimal sub = bill.getBalance().subtract(typeStats.getBalance()).abs();
             try {
                 thanAverage.setValue(sub.multiply(BigDecimal.valueOf(100))
                         .divide(typeStats.getBalance(), 2, BigDecimal.ROUND_HALF_UP) + "%");
@@ -93,13 +91,13 @@ public class BillDetailViewModel extends ViewModel implements BillDataSource.Loa
             }
 
             typeAverage.setValue(FormatUtil.getNumeric(typeStats.getBalance()));
-            thanAverageHint.setValue(mBill.getBalance().compareTo(typeStats.getBalance()) >= 0 ?
+            thanAverageHint.setValue(bill.getBalance().compareTo(typeStats.getBalance()) >= 0 ?
                     R.string.higher_than_average : R.string.less_than_average);
         });
 
-        balance.setValue(FormatUtil.getNumeric(mBill.getBalance()));
-        time.setValue(mBill.getDate().toString("yyyy-MM-dd hh:mm"));
-        remark.setValue(mBill.getRemark());
+        balance.setValue(FormatUtil.getNumeric(bill.getBalance()));
+        time.setValue(bill.getDate().toString("yyyy-MM-dd hh:mm"));
+        remark.setValue(bill.getRemark());
 
         switch (mode %= 3) {
             case 0:
@@ -117,31 +115,39 @@ public class BillDetailViewModel extends ViewModel implements BillDataSource.Loa
         mode++;
     }
 
+    public MutableLiveData<Bill> getBill() {
+        return bill;
+    }
+
     /**
      * 选择日期区间 0：月 1：年 2：日
      */
     public void setDate() {
-        int day = mBill.getDate().getDayOfMonth();
-        int month = mBill.getDate().getMonthOfYear();
-        int year = mBill.getDate().getYear();
+        DateTime start;
+        DateTime end;
+        int day = bill.getValue().getDate().getDayOfMonth();
+        int month = bill.getValue().getDate().getMonthOfYear();
+        int year = bill.getValue().getDate().getYear();
         mode %= 3;
         switch (mode) {
             case 0:
-                mStart = new DateTime(year, month, 1, 0, 0);
-                mEnd = mStart.plusMonths(1);
+                start = new DateTime(year, month, 1, 0, 0);
+                end = start.plusMonths(1);
+                update(bill.getValue(), start, end);
                 break;
             case 1:
-                mStart = new DateTime(year, 1, 1, 0, 0);
-                mEnd = mStart.plusYears(1);
+                start = new DateTime(year, 1, 1, 0, 0);
+                end = start.plusYears(1);
+                update(bill.getValue(), start, end);
                 break;
             case 2:
-                mStart = new DateTime(year, month, day, 0, 0);
-                mEnd = mStart.plusDays(1);
+                start = new DateTime(year, month, day, 0, 0);
+                end = start.plusDays(1);
+                update(bill.getValue(), start, end);
                 break;
             default:
                 break;
         }
-        update();
     }
 
     public MutableLiveData<Integer> getMode() {
@@ -208,11 +214,12 @@ public class BillDetailViewModel extends ViewModel implements BillDataSource.Loa
     /**
      * 当前账单所占百分数
      *
+     * @param bill
      * @param bigDecimal 被除数
      * @return 百分数，带百分号
      */
-    private String getPercent(BigDecimal bigDecimal) {
-        BigDecimal balance = mBill.getBalance();
+    private String getPercent(Bill bill, BigDecimal bigDecimal) {
+        BigDecimal balance = bill.getBalance();
         // 确保balance小于bigDecimal
         if (balance.compareTo(bigDecimal) > 0) {
             BigDecimal t = balance;
