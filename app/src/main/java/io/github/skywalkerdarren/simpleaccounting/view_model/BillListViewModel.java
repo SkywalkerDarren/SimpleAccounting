@@ -3,15 +3,14 @@ package io.github.skywalkerdarren.simpleaccounting.view_model;
 import android.content.Context;
 import android.content.Intent;
 
-import androidx.databinding.BaseObservable;
-import androidx.databinding.Bindable;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import org.joda.time.DateTime;
 
-import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.StatsActivity;
-import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
@@ -21,21 +20,23 @@ import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
  * @date 2018/4/5
  */
 
-public class BillListViewModel extends BaseObservable {
-    private Context mContext;
-    private DateTime mDateTime;
-    private DateTime mMonth;
+public class BillListViewModel extends ViewModel {
     private AppRepositry mRepositry;
+    private MutableLiveData<String> income = new MutableLiveData<>();
+    private MutableLiveData<String> expense = new MutableLiveData<>();
+    private MutableLiveData<String> month = new MutableLiveData<>();
+    private MutableLiveData<String> budget = new MutableLiveData<>("TODO");
+    private MutableLiveData<String> budgetText = new MutableLiveData<>("TODO");
+    private MutableLiveData<DateTime> mDateTime = new MutableLiveData<>();
 
-    public BillListViewModel(Context context) {
-        mContext = context;
-        mRepositry = AppRepositry.getInstance(new AppExecutors(), context);
+    public BillListViewModel(AppRepositry repositry) {
+        mRepositry = repositry;
     }
 
     /**
      * @return 日期
      */
-    public DateTime getDate() {
+    public LiveData<DateTime> getDate() {
         return mDateTime;
     }
 
@@ -43,62 +44,59 @@ public class BillListViewModel extends BaseObservable {
      * 设置日期
      */
     public void setDate(DateTime date) {
-        mDateTime = date;
-        mMonth = new DateTime(date.getYear(), date.getMonthOfYear(),
+        mDateTime.setValue(date);
+        DateTime month = new DateTime(date.getYear(), date.getMonthOfYear(),
                 1, 0, 0);
-        notifyChange();
+        mRepositry.getBillStats(month, month.plusMonths(1), billStats ->
+                income.setValue(FormatUtil.getNumeric(billStats.getIncome())));
+        mRepositry.getBillStats(month, month.plusMonths(1), billStats ->
+                expense.setValue(FormatUtil.getNumeric(billStats.getExpense())));
+        this.month.setValue(String.valueOf(month.getMonthOfYear()));
     }
 
     /**
      * @return 收入
      */
-    @Bindable
-    public String getIncome() {
-        return FormatUtil.getNumeric(mRepositry.getBillStats(mMonth, mMonth.plusMonths(1)).getIncome());
+    public MutableLiveData<String> getIncome() {
+        return income;
     }
 
     /**
      * @return 支出
      */
-    @Bindable
-    public String getExpense() {
-        return FormatUtil.getNumeric(mRepositry.getBillStats(mMonth, mMonth.plusMonths(1)).getExpense());
+    public MutableLiveData<String> getExpense() {
+        return expense;
     }
 
     /**
      * @return 月份
      */
-    @Bindable
-    public String getMonth() {
-        return mMonth.getMonthOfYear() + "";
+    public MutableLiveData<String> getMonth() {
+        return month;
     }
 
     /**
      * @return 预算剩余
      */
-    @Bindable
-    public String getBudget() {
+    public MutableLiveData<String> getBudget() {
         // TODO: 2018/4/5 预算逻辑
-        if (mContext.getString(R.string.set_budget).equals(getBudgetText())) {
-            return "0";
-        }
-        return "0";
+        return budget;
     }
 
     /**
      * @return 当前预算
      */
-    @Bindable
-    public String getBudgetText() {
+    public MutableLiveData<String> getBudgetText() {
         // TODO: 2018/4/5 设置预算
-        return mContext.getString(R.string.set_budget);
+        return budgetText;
     }
 
     /**
      * 跳转到统计页
      */
-    public void toStats() {
-        Intent intent = StatsActivity.newIntent(mContext);
-        mContext.startActivity(intent);
+    public void toStats(Context context) {
+        Context context1 = context;
+        Intent intent = StatsActivity.newIntent(context);
+        context.startActivity(intent);
     }
 }

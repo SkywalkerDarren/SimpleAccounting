@@ -35,7 +35,7 @@
                 android:layout_marginTop="13dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:onClick="@{() -> billList.toStats()}"
+                android:onClick="@{() -> billList.toStats(context)}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/toolbar_stats" />

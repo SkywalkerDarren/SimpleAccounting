@@ -50,6 +50,9 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         } else if (modelClass.isAssignableFrom(BillEditViewModel.class)) {
             //noinspection unchecked
             return (T) new BillEditViewModel(mRepositry);
+        } else if (modelClass.isAssignableFrom(BillListViewModel.class)) {
+            //noinspection unchecked
+            return (T) new BillListViewModel(mRepositry);
         }
         throw new IllegalArgumentException("no this ViewModel");
     }

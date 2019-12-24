@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,6 +30,7 @@ import io.github.skywalkerdarren.simpleaccounting.databinding.EmptyLayoutBinding
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillListBinding;
 import io.github.skywalkerdarren.simpleaccounting.view_model.BillListViewModel;
 import io.github.skywalkerdarren.simpleaccounting.view_model.EmptyListViewModel;
+import io.github.skywalkerdarren.simpleaccounting.view_model.ViewModelFactory;
 
 import static io.github.skywalkerdarren.simpleaccounting.adapter.BillAdapter.HEADER;
 
@@ -75,19 +77,16 @@ public class BillListFragment extends BaseFragment {
         mBinding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_bill_list, container, false);
 
-        mViewModel = new BillListViewModel(getContext());
-        mBinding.setBillList(mViewModel);
-
         mBillListRecyclerView = mBinding.billRecycleView;
 
         mSharedPref = getContext().getSharedPreferences(SHARED_BUDGET, Context.MODE_PRIVATE);
-        mViewModel.setDate(DateTime.now());
 
-        mBinding.dateImageView.setOnClickListener(view1 -> {
-            MonthPickerDialog monthPickerDialog = MonthPickerDialog.newInstance(mViewModel.getDate());
-            monthPickerDialog.setTargetFragment(BillListFragment.this, REQUEST_DATE_TIME);
-            monthPickerDialog.show(getFragmentManager(), "month picker");
-        });
+        mBinding.dateImageView.setOnClickListener(view1 ->
+                mViewModel.getDate().observe(this, dateTime -> {
+                    MonthPickerDialog monthPickerDialog = MonthPickerDialog.newInstance(dateTime);
+                    monthPickerDialog.setTargetFragment(BillListFragment.this, REQUEST_DATE_TIME);
+                    monthPickerDialog.show(getFragmentManager(), "month picker");
+                }));
 
 
         mBillListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -100,18 +99,28 @@ public class BillListFragment extends BaseFragment {
         return mBinding.getRoot();
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ViewModelFactory factory = ViewModelFactory.getInstance(getActivity().getApplication());
+        mViewModel = ViewModelProviders.of(this, factory).get(BillListViewModel.class);
+        mBinding.setBillList(mViewModel);
+        mBinding.setLifecycleOwner(this);
+    }
+
     /**
      * UI刷新
      * 放置经常需要刷新的视图
      */
     @Override
     public void updateUI() {
-        mViewModel.notifyChange();
         mBinding.moneyBudgeTextView.setText(mSharedPref.getString(SHARED_BUDGET, "0"));
-        List<BillInfo> billInfoList = BillInfo
-                .getBillInfoList(mViewModel.getDate().getYear(),
-                        mViewModel.getDate().getMonthOfYear(), getActivity());
-        updateAdapter(billInfoList);
+        mViewModel.getDate().observe(this, dateTime -> {
+            List<BillInfo> billInfoList = BillInfo
+                    .getBillInfoList(dateTime.getYear(), dateTime.getMonthOfYear(), getActivity());
+            updateAdapter(billInfoList);
+        });
+        mViewModel.setDate(DateTime.now());
     }
 
     /**
