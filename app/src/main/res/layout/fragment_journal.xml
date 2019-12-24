@@ -25,48 +25,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <!--<co.ceryle.segmentedbutton.SegmentedButtonGroup-->
-            <!--android:id="@+id/date_sbg"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:layout_marginRight="8dp"-->
-            <!--app:sbg_animateSelector="fastOutSlowIn"-->
-            <!--app:sbg_animateSelectorDuration="200"-->
-            <!--app:sbg_backgroundColor="@color/white"-->
-            <!--app:sbg_borderColor="@color/amber700"-->
-            <!--app:sbg_borderSize="1dp"-->
-            <!--app:sbg_position="1"-->
-            <!--app:sbg_radius="5dp"-->
-            <!--app:sbg_rippleColor="@color/amber700"-->
-            <!--app:sbg_selectorColor="@color/amber700"-->
-            <!--tools:layout_editor_absoluteX="190dp"-->
-            <!--tools:layout_editor_absoluteY="12dp">-->
-
-            <!--<co.ceryle.segmentedbutton.SegmentedButton-->
-            <!--android:id="@+id/month_sb"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_weight="1"-->
-            <!--android:padding="1dp"-->
-            <!--app:sb_rippleColor="@color/white"-->
-            <!--app:sb_text="@string/month"-->
-            <!--app:sb_textColor="@color/amber700"-->
-            <!--app:sb_textColor_onSelection="@color/white" />-->
-
-            <!--<co.ceryle.segmentedbutton.SegmentedButton-->
-            <!--android:id="@+id/year_sb"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_weight="1"-->
-            <!--android:padding="1dp"-->
-            <!--app:sb_rippleColor="@color/white"-->
-            <!--app:sb_text="@string/year"-->
-            <!--app:sb_textColor="@color/amber700"-->
-            <!--app:sb_textColor_onSelection="@color/white" />-->
-
-            <!--</co.ceryle.segmentedbutton.SegmentedButtonGroup>-->
-
             <TextView
                 android:id="@+id/date_text_view"
                 android:layout_width="wrap_content"

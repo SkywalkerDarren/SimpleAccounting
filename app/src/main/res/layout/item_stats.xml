@@ -3,9 +3,10 @@
 
     <data>
 
+        <import type="io.github.skywalkerdarren.simpleaccounting.util.FormatUtil" />
         <variable
             name="stats"
-            type="io.github.skywalkerdarren.simpleaccounting.view_model.StatsItemViewModel" />
+            type="io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats" />
     </data>
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -36,7 +37,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/lalezar"
-                    android:text="@{stats.income}"
+                    android:text="@{FormatUtil.getNumeric(stats.income)}"
                     android:textAlignment="center"
                     android:textColor="@color/income"
                     android:textSize="18sp"
@@ -55,7 +56,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/lalezar"
-                    android:text="@{stats.expense}"
+                    android:text="@{FormatUtil.getNumeric(stats.expense)}"
                     android:textAlignment="center"
                     android:textColor="@color/expense"
                     android:textSize="18sp"
@@ -74,7 +75,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/lalezar"
-                    android:text="@{stats.balance}"
+                    android:text="@{FormatUtil.getNumeric(stats.sum)}"
                     android:textAlignment="center"
                     android:textColor="@color/balance"
                     android:textSize="18sp"
@@ -100,7 +101,6 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:fontFamily="@font/shrikhand"
-                        android:text="@{stats.month}"
                         android:textAlignment="center"
                         android:textColor="@color/white"
                         android:textSize="24sp"

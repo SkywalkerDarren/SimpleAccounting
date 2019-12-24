@@ -150,7 +150,8 @@ public class BillListFragment extends BaseFragment {
      */
     private View emptyView() {
         EmptyLayoutBinding binding = EmptyLayoutBinding.inflate(LayoutInflater.from(getContext()));
-        binding.setEmpty(new EmptyListViewModel(getContext()));
+        ViewModelFactory factory = ViewModelFactory.getInstance(getActivity().getApplication());
+        binding.setEmpty(ViewModelProviders.of(this, factory).get(EmptyListViewModel.class));
         binding.getRoot().setOnClickListener(view -> updateUI());
         return binding.getRoot();
     }

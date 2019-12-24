@@ -6,9 +6,20 @@
 
     <data>
 
+        <import type="java.math.BigDecimal" />
+
+        <import type="io.github.skywalkerdarren.simpleaccounting.util.FormatUtil" />
+
         <variable
-            name="classify"
-            type="io.github.skywalkerdarren.simpleaccounting.view_model.ClassifyItemViewModel" />
+            name="sum"
+            type="java.math.BigDecimal" />
+        <variable
+            name="type"
+            type="io.github.skywalkerdarren.simpleaccounting.model.entity.Type" />
+
+        <variable
+            name="stats"
+            type="io.github.skywalkerdarren.simpleaccounting.model.entity.TypeStats" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -34,7 +45,7 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:src="@{classify.img}"
+                android:src="@{type.FOLDER + type.assetsName}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -44,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="@{classify.name}"
+                android:text="@{type.name}"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 app:layout_constraintStart_toEndOf="@+id/type_image_view"
@@ -55,7 +66,8 @@
                 android:id="@+id/present_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{classify.present}"
+                android:text="@{stats.getBalance().multiply(BigDecimal.valueOf(100))
+                .divide(sum, 2, BigDecimal.ROUND_HALF_UP).toPlainString() + '%'}"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="@+id/type_text_view"
                 app:layout_constraintTop_toBottomOf="@+id/type_text_view"
@@ -67,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:fontFamily="@font/lalezar"
-                android:text="@{classify.balance}"
+                android:text="@{FormatUtil.getNumeric(stats.balance)}"
                 android:textColor="@color/black"
                 android:textSize="30sp"
                 app:layout_constraintBottom_toBottomOf="parent"

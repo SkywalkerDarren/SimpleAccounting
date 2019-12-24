@@ -9,7 +9,6 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseDataBindingAdapter;
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemStatsBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
-import io.github.skywalkerdarren.simpleaccounting.view_model.StatsItemViewModel;
 
 /**
  * 统计列表转换到recycler view的适配器
@@ -19,6 +18,7 @@ import io.github.skywalkerdarren.simpleaccounting.view_model.StatsItemViewModel;
  */
 
 public class StatsAdapter extends BaseDataBindingAdapter<BillStats, ItemStatsBinding> {
+
     /**
      * 统计适配器
      *
@@ -35,6 +35,7 @@ public class StatsAdapter extends BaseDataBindingAdapter<BillStats, ItemStatsBin
 
     @Override
     protected void convert(ItemStatsBinding binding, BillStats item) {
-        binding.setStats(new StatsItemViewModel(item, mData.indexOf(item) + 1));
+        binding.setStats(item);
+        binding.monthTextView.setText(String.valueOf(mData.indexOf(item) + 1));
     }
 }

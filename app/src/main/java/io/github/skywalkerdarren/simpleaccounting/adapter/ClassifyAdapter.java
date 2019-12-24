@@ -11,8 +11,9 @@ import java.util.List;
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseDataBindingAdapter;
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemClassifyBinding;
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.TypeStats;
-import io.github.skywalkerdarren.simpleaccounting.view_model.ClassifyItemViewModel;
+import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 
 /**
  * 分类页面的统计数据适配器
@@ -23,6 +24,7 @@ import io.github.skywalkerdarren.simpleaccounting.view_model.ClassifyItemViewMod
 
 public class ClassifyAdapter extends BaseDataBindingAdapter<TypeStats, ItemClassifyBinding> {
     private BigDecimal mSum = BigDecimal.ZERO;
+    private AppRepositry mRepositry = AppRepositry.getInstance(new AppExecutors(), mContext);
 
     public ClassifyAdapter(@Nullable List<TypeStats> data) {
         super(R.layout.item_classify, data);
@@ -55,6 +57,8 @@ public class ClassifyAdapter extends BaseDataBindingAdapter<TypeStats, ItemClass
 
     @Override
     protected void convert(ItemClassifyBinding binding, TypeStats item) {
-        binding.setClassify(new ClassifyItemViewModel(item, mSum, mContext));
+        binding.setStats(item);
+        binding.setSum(mSum);
+        mRepositry.getType(item.getTypeId(), binding::setType);
     }
 }
