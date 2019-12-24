@@ -147,11 +147,13 @@ public class AccountFragment extends BaseFragment {
         mAdapter.setOnItemDragListener(new OnItemDragListener() {
             private Account accountA;
             private Account accountB;
+            private int prevPos;
 
             @Override
             public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
                 float st = viewHolder.itemView.getElevation();
                 itemRaiseAnimator(viewHolder.itemView, st, true);
+                prevPos = pos;
                 accountA = mAdapter.getItem(pos);
             }
 
@@ -164,7 +166,7 @@ public class AccountFragment extends BaseFragment {
             public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {
                 float ed = viewHolder.itemView.getElevation();
                 itemRaiseAnimator(viewHolder.itemView, ed, false);
-                accountB = mAdapter.getItem(pos);
+                accountB = mAdapter.getItem(prevPos);
                 mViewModel.changePosition(accountA, accountB);
             }
         });

@@ -1,5 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.model;
 
+import android.os.Handler;
+
 import androidx.room.Room;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
@@ -124,24 +126,26 @@ public class AppRepositryTest {
         CountDownLatch latch = new CountDownLatch(2);
         mRepositry.getAccount(mBill.getAccountId(), account -> {
             acc[0] = account;
-            latch.countDown();
+            new Handler().post(latch::countDown);
         });
         mRepositry.getAccount(mBill2.getAccountId(), account -> {
             acc[1] = account;
-            latch.countDown();
+            new Handler().post(latch::countDown);
         });
         latch.await();
         Integer i = acc[0].getId();
         Integer j = acc[1].getId();
         CountDownLatch latch1 = new CountDownLatch(2);
+
         mRepositry.changePosition(acc[0], acc[1]);
+
         mRepositry.getAccount(mBill.getAccountId(), account -> {
             acc[0] = account;
-            latch1.countDown();
+            new Handler().post(latch1::countDown);
         });
         mRepositry.getAccount(mBill2.getAccountId(), account -> {
             acc[1] = account;
-            latch1.countDown();
+            new Handler().post(latch1::countDown);
         });
         latch1.await();
         assertEquals(acc[0].getId(), j);
@@ -149,6 +153,7 @@ public class AppRepositryTest {
     }
 
     CountDownLatch mCountDownLatch = new CountDownLatch(1);
+
     @Test
     public void getBill() {
         mRepositry.getBill(mBill.getUUID(), bill -> {
@@ -282,7 +287,7 @@ public class AppRepositryTest {
         DateTime start = dateTime.minusDays(1);
         DateTime end = dateTime.plusDays(1);
         AccountStats accountStats = mRepositry.getAccountStats(mBill.getAccountId(), start, end);
-        assertEquals(100,accountStats.getExpense().intValue());
+        assertEquals(100, accountStats.getExpense().intValue());
     }
 
     @Test

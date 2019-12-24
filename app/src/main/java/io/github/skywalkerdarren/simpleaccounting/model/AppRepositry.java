@@ -2,6 +2,7 @@ package io.github.skywalkerdarren.simpleaccounting.model;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
@@ -30,6 +31,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.TypeStats;
 import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 
 public class AppRepositry implements AppDataSource {
+    private static final String TAG = "AppRepositry";
     private AccountDao mAccountDao;
     private TypeDao mTypeDao;
     private BillDao mBillDao;
@@ -119,6 +121,7 @@ public class AppRepositry implements AppDataSource {
     @Override
     public void changePosition(Account a, Account b) {
         execute(() -> {
+            Log.d(TAG, "changePosition: before " + a.getId() + " " + b.getId());
             Integer i = a.getId();
             Integer j = b.getId();
             mAccountDao.updateAccountId(a.getUUID(), -1);
