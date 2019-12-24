@@ -137,21 +137,11 @@ public class BillEditFragment extends BaseFragment {
 
         // 配置适配器
         TypeAdapter adapter = new TypeAdapter(null, mBinding);
-        adapter.openLoadAnimation(view -> {
-                    Animator animator = AnimatorInflater.loadAnimator(getActivity(),
-                            R.animator.type_item_appear);
-                    animator.setTarget(view);
-                    return new Animator[]{animator};
-                }
-        );
         // 配置选择按钮
         mTypeSbg.setOnClickedButtonListener(position -> {
-            for (int i = 0; i < adapter.getItemCount(); i++) {
-                adapter.getViewByPosition(mBinding.typeListRecyclerView,
-                        i, R.id.type_item).setAlpha(0);
-            }
             mViewModel.getTypes(position == 1).observe(this, types -> {
                 adapter.setNewData(types);
+                adapter.isOpen = false;
                 mViewModel.setType(types.get(0));
             });
             typeImageAnimator();

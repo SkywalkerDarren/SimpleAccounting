@@ -1,6 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.adapter;
 
 import android.animation.Animator;
+import android.animation.AnimatorInflater;
 
 import androidx.annotation.Nullable;
 
@@ -11,7 +12,6 @@ import io.github.skywalkerdarren.simpleaccounting.base.BaseDataBindingAdapter;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillEditBinding;
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemTypeBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
-import io.github.skywalkerdarren.simpleaccounting.view_model.TypeItemViewModel;
 
 /**
  * 类型适配器
@@ -22,15 +22,36 @@ import io.github.skywalkerdarren.simpleaccounting.view_model.TypeItemViewModel;
 
 public class TypeAdapter extends BaseDataBindingAdapter<Type, ItemTypeBinding> {
     private FragmentBillEditBinding mBinding;
+    public boolean isOpen = false;
 
     public TypeAdapter(@Nullable List<Type> data, FragmentBillEditBinding binding) {
         super(R.layout.item_type, data);
         mBinding = binding;
+        openLoadAnimation(view -> {
+            if (isOpen) {
+                view.setAlpha(1);
+                return new Animator[]{};
+            }
+            Animator animator = AnimatorInflater.loadAnimator(mContext,
+                    R.animator.type_item_appear);
+            animator.setTarget(view);
+            return new Animator[]{animator};
+        });
     }
 
     @Override
     protected void convert(ItemTypeBinding binding, Type item) {
-        binding.setType(new TypeItemViewModel(item, mBinding, mContext));
+        binding.typeItem.setAlpha(0);
+        binding.setType(item);
+        binding.circle.setOnClickListener(v -> click(item));
+    }
+
+    private void click(Type item) {
+        isOpen = true;
+        mBinding.getEdit().setType(item);
+        Animator appear = AnimatorInflater.loadAnimator(mContext, R.animator.type_appear);
+        appear.setTarget(mBinding.typeImageView);
+        appear.start();
     }
 
     @Override

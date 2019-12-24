@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.view_model;
+package io.github.skywalkerdarren.simpleaccounting.util;
 
 import android.graphics.Bitmap;
 import android.widget.ImageView;
@@ -17,7 +17,7 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
  * @date 2018/4/8
  */
 
-public class BindAdapterViewModel extends BaseObservable {
+public class BindAdapterUtil extends BaseObservable {
     /**
      * 通过id设置图片
      */
