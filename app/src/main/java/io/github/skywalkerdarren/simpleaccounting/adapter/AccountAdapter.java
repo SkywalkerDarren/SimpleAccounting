@@ -1,12 +1,18 @@
 package io.github.skywalkerdarren.simpleaccounting.adapter;
 
+import android.app.Application;
+
+import org.joda.time.DateTime;
+
 import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseDraggableDataBindingAdapter;
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemAccountBinding;
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
-import io.github.skywalkerdarren.simpleaccounting.view_model.AccountItemViewModel;
+import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
+import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
  * @author darren
@@ -14,12 +20,17 @@ import io.github.skywalkerdarren.simpleaccounting.view_model.AccountItemViewMode
  */
 
 public class AccountAdapter extends BaseDraggableDataBindingAdapter<Account, ItemAccountBinding> {
-    public AccountAdapter(List<Account> data) {
+    private final AppRepositry mRepositry;
+
+    public AccountAdapter(List<Account> data, Application application) {
         super(R.layout.item_account, data);
+        mRepositry = AppRepositry.getInstance(new AppExecutors(), application);
     }
 
     @Override
     protected void convert(ItemAccountBinding binding, Account item) {
-        binding.setAccount(new AccountItemViewModel(item, mContext));
+        binding.setAccount(item);
+        mRepositry.getAccountStats(item.getUUID(), new DateTime(0), DateTime.now(), accountStats ->
+                binding.balanceTextView.setText(FormatUtil.getNumeric(accountStats.getSum())));
     }
 }

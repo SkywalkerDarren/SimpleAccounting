@@ -6,9 +6,12 @@
 
     <data>
 
+        <import type="androidx.core.content.ContextCompat" />
+
+        <import type="io.github.skywalkerdarren.simpleaccounting.util.FormatUtil" />
         <variable
             name="account"
-            type="io.github.skywalkerdarren.simpleaccounting.view_model.AccountItemViewModel" />
+            type="io.github.skywalkerdarren.simpleaccounting.model.entity.Account" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -34,7 +37,7 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="6dp"
                 android:padding="4dp"
-                app:cardBackgroundColor="@{account.color}"
+                app:cardBackgroundColor="@{ContextCompat.getColor(context, account.colorId)}"
                 app:cardCornerRadius="5dp"
                 app:cardElevation="0dp"
                 app:contentPadding="4dp"
@@ -48,7 +51,7 @@
                     android:id="@+id/account_type_image_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@{account.img}"/>
+                    android:src="@{account.FOLDER + account.bitmap}" />
             </androidx.cardview.widget.CardView>
 
             <TextView
@@ -70,7 +73,6 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="8dp"
                 android:fontFamily="@font/lalezar"
-                android:text="@{account.balance}"
                 android:textAlignment="textEnd"
                 android:textColor="@color/black"
                 android:textSize="22sp"

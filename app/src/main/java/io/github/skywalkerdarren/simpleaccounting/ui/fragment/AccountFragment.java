@@ -134,7 +134,7 @@ public class AccountFragment extends BaseFragment {
     protected void updateUI() {
         List<Account> accounts = AppRepositry.getInstance(new AppExecutors(), getContext()).getAccounts();
         if (mAdapter == null) {
-            mAdapter = new AccountAdapter(accounts);
+            mAdapter = new AccountAdapter(accounts, getActivity().getApplication());
         } else {
             mAdapter.setNewData(accounts);
             mAdapter.notifyDataSetChanged();
