@@ -5,9 +5,10 @@
 
     <data>
 
+        <import type="androidx.core.content.ContextCompat" />
         <variable
             name="account"
-            type="io.github.skywalkerdarren.simpleaccounting.view_model.AccountMenuItemViewModel" />
+            type="io.github.skywalkerdarren.simpleaccounting.model.entity.Account" />
     </data>
 
     <LinearLayout
@@ -27,7 +28,7 @@
             android:background="@color/green500"
             android:elevation="0dp"
             android:padding="4dp"
-            app:cardBackgroundColor="@{account.color}"
+            app:cardBackgroundColor="@{ContextCompat.getColor(context, account.colorId)}"
             app:cardCornerRadius="5dp"
             app:cardElevation="0dp"
             app:cardUseCompatPadding="true"
@@ -37,7 +38,7 @@
                 android:id="@+id/account_image_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@{account.img}"
+                android:src="@{account.FOLDER + account.bitmap}"
                 tools:ignore="ContentDescription" />
         </androidx.cardview.widget.CardView>
 
