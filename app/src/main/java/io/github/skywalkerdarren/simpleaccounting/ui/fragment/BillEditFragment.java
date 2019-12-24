@@ -11,7 +11,8 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -27,18 +28,18 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.databinding.DataBindingUtil;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import org.joda.time.DateTime;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.UUID;
+import java.util.Objects;
 
 import co.ceryle.segmentedbutton.SegmentedButtonGroup;
 import io.github.skywalkerdarren.simpleaccounting.R;
@@ -47,14 +48,13 @@ import io.github.skywalkerdarren.simpleaccounting.adapter.TypeAdapter;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillEditBinding;
 import io.github.skywalkerdarren.simpleaccounting.databinding.MenuAccountBinding;
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
-import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
+import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
 import io.github.skywalkerdarren.simpleaccounting.ui.NumPad;
-import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 import io.github.skywalkerdarren.simpleaccounting.util.DpConvertUtils;
 import io.github.skywalkerdarren.simpleaccounting.view_model.BillEditViewModel;
+import io.github.skywalkerdarren.simpleaccounting.view_model.ViewModelFactory;
 
 /**
  * 账单编辑或创建的fragment
@@ -69,6 +69,7 @@ public class BillEditFragment extends BaseFragment {
     private static final int REQUEST_DATE = 0;
     private static final String ARG_CX = "cx";
     private static final String ARG_CY = "cy";
+    private FragmentBillEditBinding mBinding;
     private Bill mBill;
 
     private BillEditViewModel mViewModel;
@@ -109,23 +110,33 @@ public class BillEditFragment extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        FragmentBillEditBinding binding = DataBindingUtil
+        mBinding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_bill_edit, container, false);
-        mRemarkEditText = binding.remarkEditText;
-        mBalanceEditText = binding.balanceEditText;
-        mNumPad = binding.numKeyView;
-        mTypeSbg = binding.typeSbg;
-        mTypeImageView = binding.typeImageView;
-        mViewModel = new BillEditViewModel(mBill, getContext());
-
+        mRemarkEditText = mBinding.remarkEditText;
+        mBalanceEditText = mBinding.balanceEditText;
+        mNumPad = mBinding.numKeyView;
+        mTypeSbg = mBinding.typeSbg;
+        mTypeImageView = mBinding.typeImageView;
         // 自定义导航栏
-        ActionBar actionBar = initToolbar(R.id.toolbar, binding.getRoot());
+        ActionBar actionBar = initToolbar(R.id.toolbar, mBinding.getRoot());
         actionBar.setTitle("");
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
+        mBinding.typeListRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
+        viewEnterAnimation(mBinding.getRoot());
+        return mBinding.getRoot();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ViewModelFactory factory = ViewModelFactory.getInstance(getActivity().getApplication());
+        mViewModel = ViewModelProviders.of(this, factory).get(BillEditViewModel.class);
+        mBinding.setEdit(mViewModel);
+        mBinding.setLifecycleOwner(this);
 
         // 配置适配器
-        TypeAdapter adapter = new TypeAdapter(null, binding);
+        TypeAdapter adapter = new TypeAdapter(null, mBinding);
         adapter.openLoadAnimation(view -> {
                     Animator animator = AnimatorInflater.loadAnimator(getActivity(),
                             R.animator.type_item_appear);
@@ -133,60 +144,67 @@ public class BillEditFragment extends BaseFragment {
                     return new Animator[]{animator};
                 }
         );
-        binding.typeListRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
-
         // 配置选择按钮
         mTypeSbg.setOnClickedButtonListener(position -> {
-            List<Type> types = AppRepositry
-                    .getInstance(new AppExecutors(), getContext()).getTypes(position == 1);
             for (int i = 0; i < adapter.getItemCount(); i++) {
-                adapter.getViewByPosition(binding.typeListRecyclerView,
+                adapter.getViewByPosition(mBinding.typeListRecyclerView,
                         i, R.id.type_item).setAlpha(0);
             }
-            adapter.setNewData(types);
-            mViewModel.setType(types.get(0));
+            mViewModel.getTypes(position == 1).observe(this, types -> {
+                adapter.setNewData(types);
+                mViewModel.setType(types.get(0));
+            });
             typeImageAnimator();
             adapter.notifyDataSetChanged();
         });
 
         // 配置账单信息
         configBill(adapter);
-        binding.typeListRecyclerView.setAdapter(adapter);
-
-        if (!TextUtils.isEmpty(mViewModel.getRemark())) {
-            mRemarkEditText.setText(mViewModel.getRemark());
-        }
+        mBinding.typeListRecyclerView.setAdapter(adapter);
 
         mNumPad.setStrReceiver(mBalanceEditText);
         setBalanceEditText();
 
         mRemarkEditText.setOnClickListener((view) -> mNumPad.hideKeyboard());
 
-        binding.dateImageView.setOnClickListener(view -> {
-            DatePickerFragment datePicker = DatePickerFragment.newInstance(mViewModel.getDate());
+        mBinding.dateImageView.setOnClickListener(view -> {
+            DatePickerFragment datePicker = DatePickerFragment.newInstance(mViewModel.getDate().getValue());
             datePicker.setTargetFragment(this, REQUEST_DATE);
             datePicker.show(getFragmentManager(), "datePicker");
         });
 
         // TODO: 2018/4/2 监听账户点击
-        binding.accountTypeImageView.setOnClickListener(view -> {
+        mBinding.accountTypeImageView.setOnClickListener(view -> {
             Log.d(TAG, "onCreateView: clickImage");
-            getPopupWindow(binding.accountTypeImageView);
+            getPopupWindow(mBinding.accountTypeImageView);
         });
 
-        binding.setEdit(mViewModel);
-        viewEnterAnimation(binding.getRoot());
-        return binding.getRoot();
     }
 
     private void setBalanceEditText() {
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mBalanceEditText.setSelection(mBalanceEditText.getText().length());
+            }
+        };
+        mBalanceEditText.addTextChangedListener(textWatcher);
         mBalanceEditText.setOnTouchListener((view, motionEvent) -> {
             mRemarkEditText.clearFocus();
             mNumPad.hideSysKeyboard();
             new Handler().postDelayed(() -> mNumPad.showKeyboard(), 200);
             return true;
         });
-        mBalanceEditText.setSelection(mBalanceEditText.getText().length());
         mBalanceEditText.setOnFocusChangeListener((view, b) -> {
             if (!b) {
                 mNumPad.hideKeyboard();
@@ -198,35 +216,19 @@ public class BillEditFragment extends BaseFragment {
      * 配置初始账单，将账单信息绑定到视图
      */
     private void configBill(TypeAdapter adapter) {
-        AppRepositry repositry = AppRepositry.getInstance(new AppExecutors(), getContext());
-        Account account;
-        if (mViewModel.getDate() == null) {
+        if (mViewModel.isNewBill()) {
             // 创建账单(日期不存在则一定是刚创建的)
-            mViewModel.setDate(DateTime.now());
-            adapter.setNewData(repositry.getTypes(true));
-            mViewModel.setType(adapter.getItem(0));
-            account = repositry.getAccounts().get(0);
+            mViewModel.getTypes(true).observe(this, adapter::setNewData);
         } else {
-            // 编辑账单
-            UUID typeId = mViewModel.getTypeId();
-            if (typeId == null) {
-                mViewModel.setType(repositry.getTypes(true).get(0));
-            } else {
-                mViewModel.setType(repositry.getType(typeId));
-            }
-            account = repositry.getAccount(mViewModel.getAccountId());
-            // 初始化账户到没当前账单时
-            if (mViewModel.getExpense()) {
-                adapter.setNewData(repositry.getTypes(true));
-                account.plusBalance(new BigDecimal(mViewModel.getBalance()));
-            } else {
-                mTypeSbg.setPosition(0);
-                adapter.setNewData(repositry.getTypes(false));
-                account.minusBalance(new BigDecimal(mViewModel.getBalance()));
-            }
-            mBalanceEditText.setText(mViewModel.getBalance());
+            mViewModel.getExpense().observe(this, b -> {
+                // 编辑账单
+                mViewModel.getTypes(b).observe(this, adapter::setNewData);
+                if (!b) {
+                    mTypeSbg.setPosition(0);
+                }
+            });
+
         }
-        mViewModel.setAccount(account);
     }
 
     /**
@@ -273,14 +275,14 @@ public class BillEditFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_save_item:
-                if (!mViewModel.saveBill(mBalanceEditText.getText().toString(),
-                        mRemarkEditText.getText().toString())) {
+                if (!mViewModel.saveBill()) {
+                    DesktopWidget.refresh(Objects.requireNonNull(getContext()));
                     // 保存失败直接返回
                     return true;
                 }
             case android.R.id.home:
                 mNumPad.setVisibility(View.INVISIBLE);
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -314,23 +316,43 @@ public class BillEditFragment extends BaseFragment {
 
     @Override
     protected void updateUI() {
+        if (mBill.getDate() == null) {
+            mViewModel.getAccounts().observe(this, accounts -> {
+                mBill.setAccountId(accounts.get(0).getUUID());
+                mViewModel.getTypes(true).observe(this, types -> {
+                    mBill.setTypeId(types.get(0).getUUID());
+                    mViewModel.setBill(mBill);
+                });
+            });
 
+        } else {
+            mViewModel.setBill(mBill);
+        }
+        //mBalanceEditText.setSelection(mBalanceEditText.getText().length());
     }
 
     private void getPopupWindow(View view) {
         MenuAccountBinding binding = MenuAccountBinding.inflate(LayoutInflater.from(getContext()));
         View menu = binding.getRoot();
-        AccountMenuAdapter adapter = new AccountMenuAdapter(AppRepositry.getInstance(new AppExecutors(), getContext()).getAccounts());
-        PopupWindow popupWindow = new PopupWindow(menu);
-        adapter.setOnItemClickListener((adapter1, view1, position) -> {
-            Account account = (Account) adapter1.getData().get(position);
-            mViewModel.setAccount(account);
-            popupWindow.dismiss();
-        });
         binding.accountRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.accountRecyclerView.setAdapter(adapter);
         binding.accountRecyclerView.addItemDecoration(
                 new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+
+        mViewModel.getAccounts().observe(this, accounts -> {
+            PopupWindow popupWindow = new PopupWindow(menu);
+            AccountMenuAdapter adapter = new AccountMenuAdapter(accounts);
+            adapter.setOnItemClickListener((adapter1, view1, position) -> {
+                Account account = (Account) adapter1.getData().get(position);
+                mViewModel.setAccount(account);
+                popupWindow.dismiss();
+            });
+            binding.accountRecyclerView.setAdapter(adapter);
+            setPopupWindow(popupWindow, view);
+
+        });
+    }
+
+    private void setPopupWindow(PopupWindow popupWindow, View view) {
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setElevation(DpConvertUtils.convertDpToPixel(2, getContext()));

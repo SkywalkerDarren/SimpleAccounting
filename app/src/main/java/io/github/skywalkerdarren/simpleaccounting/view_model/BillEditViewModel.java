@@ -1,26 +1,24 @@
 package io.github.skywalkerdarren.simpleaccounting.view_model;
 
-import android.content.Context;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.BaseObservable;
-import androidx.databinding.Bindable;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import org.joda.time.DateTime;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
+import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
-import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
-import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 
-import static androidx.core.util.Preconditions.checkNotNull;
 import static io.github.skywalkerdarren.simpleaccounting.model.entity.Account.FOLDER;
 
 /**
@@ -28,151 +26,177 @@ import static io.github.skywalkerdarren.simpleaccounting.model.entity.Account.FO
  * @date 2018/4/4
  */
 
-public class BillEditViewModel extends BaseObservable {
-    private Context mContext;
-    private Bill mBill;
-    private Type mType;
-    private Account mAccount;
+public class BillEditViewModel extends ViewModel {
     private AppRepositry mRepositry;
+    private MutableLiveData<String> typeName = new MutableLiveData<>();
+    private MutableLiveData<String> typeImg = new MutableLiveData<>();
+    private MutableLiveData<String> accountImg = new MutableLiveData<>();
+    private MutableLiveData<Integer> accountColor = new MutableLiveData<>(R.color.black);
+    private MutableLiveData<String> balance = new MutableLiveData<>();
+    private MutableLiveData<DateTime> date = new MutableLiveData<>();
+    private MutableLiveData<String> remark = new MutableLiveData<>();
+    private MutableLiveData<UUID> billId = new MutableLiveData<>();
+    private MutableLiveData<UUID> accountId = new MutableLiveData<>();
+    private MutableLiveData<UUID> typeId = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isExpense = new MutableLiveData<>();
 
-    public BillEditViewModel(Bill bill, Context context) {
-        mBill = bill;
-        mContext = context;
-        mRepositry = AppRepositry.getInstance(new AppExecutors(), context);
+    private MutableLiveData<List<Type>> expenseTypes = new MutableLiveData<>();
+    private MutableLiveData<List<Type>> incomeTypes = new MutableLiveData<>();
+    private MutableLiveData<List<Account>> accounts = new MutableLiveData<>();
+    private boolean isNewBill;
+
+
+    public BillEditViewModel(AppRepositry repositry) {
+        mRepositry = repositry;
+        mRepositry.getTypes(true, list -> expenseTypes.setValue(list));
+        mRepositry.getTypes(false, list -> incomeTypes.setValue(list));
+        mRepositry.getAccounts(accounts1 -> accounts.setValue(accounts1));
+    }
+
+    public void setBill(@NonNull Bill bill) {
+        if (bill.getDate() == null) {
+            isNewBill = true;
+            bill.setBalance(BigDecimal.ZERO);
+            bill.setRemark("");
+            bill.setDate(DateTime.now());
+        } else {
+            isNewBill = false;
+        }
+        mRepositry.getAccount(bill.getAccountId(), this::setAccount);
+        mRepositry.getType(bill.getTypeId(), this::setType);
+        balance.setValue(bill.getBalance() == null ? "0" : bill.getBalance().toString());
+        date.setValue(bill.getDate());
+        remark.setValue(bill.getRemark());
+        billId.setValue(bill.getUUID());
     }
 
     /**
      * @param account 设置的账户
      */
-    public void setAccount(Account account) {
-        mAccount = account;
-        notifyChange();
+    public void setAccount(@NonNull Account account) {
+        accountImg.setValue(FOLDER + account.getBitmap());
+        accountColor.setValue(account.getColorId());
+        accountId.setValue(account.getUUID());
     }
 
     /**
      * @param type 设置类型
      */
     public void setType(@NonNull Type type) {
-        checkNotNull(type);
-        mType = type;
-        notifyChange();
+        isExpense.setValue(type.getIsExpense());
+        typeName.setValue(type.getName());
+        typeImg.setValue(Type.FOLDER + type.getAssetsName());
+        typeId.setValue(type.getUUID());
+    }
+
+
+    public boolean isNewBill() {
+        return isNewBill;
     }
 
     /**
      * @return 类型名
      */
-    @Bindable
-    public String getTypeName() {
-        return mType.getName();
+    public MutableLiveData<String> getTypeName() {
+        return typeName;
     }
 
     /**
      * @return 类型图id
      */
-    @Bindable
-    public String getTypeImg() {
-        return Type.FOLDER + mType.getAssetsName();
-    }
-
-    /**
-     * @return 类型id
-     */
-    public UUID getTypeId() {
-        return mBill.getTypeId();
-    }
-
-    /**
-     * @return 账户id
-     */
-    public UUID getAccountId() {
-        return mBill.getAccountId();
+    public MutableLiveData<String> getTypeImg() {
+        return typeImg;
     }
 
     /**
      * @return 账户图id
      */
-    @Bindable
-    public String getAccountImg() {
-        return FOLDER + mAccount.getBitmap();
+    public MutableLiveData<String> getAccountImg() {
+        return accountImg;
     }
 
     /**
      * @return 账户背景色值
      */
-    @Bindable
-    public int getAccountColor() {
-        return mContext.getResources().getColor(mAccount.getColorId());
+    public MutableLiveData<Integer> getAccountColor() {
+        return accountColor;
     }
 
     /**
      * @return 账单收支
      */
-    @Bindable
-    public String getBalance() {
-        if (mBill.getBalance() == null) {
-            return "0";
-        }
-        return mBill.getBalance().toString();
+    public MutableLiveData<String> getBalance() {
+        return balance;
     }
 
     /**
      * @return 账单日期
      */
-    @Bindable
-    public DateTime getDate() {
-        return mBill.getDate();
+    public MutableLiveData<DateTime> getDate() {
+        return date;
     }
 
     /**
      * @param date 设置账单日期
      */
     public void setDate(DateTime date) {
-        mBill.setDate(date);
+        this.date.setValue(date);
     }
 
     /**
      * @return 账单备注
      */
-    public String getRemark() {
-        return mBill.getRemark();
+    public MutableLiveData<String> getRemark() {
+        return remark;
     }
 
     /**
      * 保存账单
      */
-    public boolean saveBill(String balance, String remark) {
-        if (TextUtils.isEmpty(balance)) {
+    public boolean saveBill() {
+        if (TextUtils.isEmpty(balance.getValue())) {
             return false;
         }
+        Bill bill = new Bill();
         try {
-            BigDecimal r = new BigDecimal(balance);
-            mBill.setBalance(r);
+            BigDecimal r = new BigDecimal(balance.getValue());
+            bill.setBalance(r);
+            bill.setName(getTypeName().getValue());
+            bill.setDate(getDate().getValue());
+            bill.setRemark(getRemark().getValue());
+            bill.setTypeId(typeId.getValue());
+            bill.setAccountId(accountId.getValue());
         } catch (Exception e) {
-            Toast.makeText(mContext, "表达式错误", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(mContext, "表达式错误", Toast.LENGTH_SHORT).show();
             return false;
         }
-
-        // 设定账单
-        mBill.setName(getTypeName());
-        mBill.setDate(getDate());
-        mBill.setRemark(remark);
-        mBill.setTypeId(mType.getUUID());
-        mBill.setAccountId(mAccount.getUUID());
-
         // 刷新账单数据库
-        if (mRepositry.getBill(mBill.getUUID()) == null) {
-            mRepositry.addBill(mBill);
-        } else {
-            mRepositry.updateBill(mBill);
-        }
-        DesktopWidget.refresh(mContext);
+        mRepositry.getBill(billId.getValue(), b -> {
+            if (b == null) {
+                mRepositry.addBill(bill);
+            } else {
+                bill.setId(b.getId());
+                bill.setUUID(b.getUUID());
+                mRepositry.updateBill(bill);
+            }
+        });
         return true;
     }
 
     /**
      * @return true为支出类型
      */
-    public boolean getExpense() {
-        return mType.getIsExpense();
+    public LiveData<Boolean> getExpense() {
+        return isExpense;
+    }
+
+    @NonNull
+    public LiveData<List<Type>> getTypes(boolean b) {
+        return b ? expenseTypes : incomeTypes;
+    }
+
+    @NonNull
+    public LiveData<List<Account>> getAccounts() {
+        return accounts;
     }
 }

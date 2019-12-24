@@ -4,6 +4,7 @@
 
     <data>
 
+        <import type="androidx.core.content.ContextCompat" />
         <variable
             name="edit"
             type="io.github.skywalkerdarren.simpleaccounting.view_model.BillEditViewModel" />
@@ -130,6 +131,7 @@
                     android:layout_marginStart="8dp"
                     android:fontFamily="@font/lalezar"
                     android:hint="@string/zero"
+                    android:text="@={edit.balance}"
                     android:inputType="text"
                     android:singleLine="true"
                     android:textAlignment="viewEnd"
@@ -191,6 +193,7 @@
                 android:layout_marginStart="8dp"
                 android:ems="10"
                 android:hint="@string/remark"
+                android:text="@={edit.remark}"
                 android:inputType="text"
                 android:singleLine="true"
                 android:textAlignment="center"
@@ -207,7 +210,7 @@
                 android:layout_marginBottom="3dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="3dp"
-                app:cardBackgroundColor="@{edit.accountColor}"
+                app:cardBackgroundColor="@{ContextCompat.getColor(context, edit.accountColor)}"
                 app:cardCornerRadius="5dp"
                 app:cardElevation="0dp"
                 app:cardUseCompatPadding="true"

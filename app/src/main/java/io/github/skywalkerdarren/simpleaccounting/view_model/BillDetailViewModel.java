@@ -85,8 +85,13 @@ public class BillDetailViewModel extends ViewModel implements BillDataSource.Loa
                 typePercent.setValue(getPercent(typeStats.getBalance())));
         mRepositry.getTypeAverage(mStart, mEnd, mBill.getTypeId(), typeStats -> {
             BigDecimal sub = mBill.getBalance().subtract(typeStats.getBalance()).abs();
-            thanAverage.setValue(sub.multiply(BigDecimal.valueOf(100))
-                    .divide(typeStats.getBalance(), 2, BigDecimal.ROUND_HALF_UP) + "%");
+            try {
+                thanAverage.setValue(sub.multiply(BigDecimal.valueOf(100))
+                        .divide(typeStats.getBalance(), 2, BigDecimal.ROUND_HALF_UP) + "%");
+            } catch (ArithmeticException e) {
+                thanAverage.setValue("ERROR");
+            }
+
             typeAverage.setValue(FormatUtil.getNumeric(typeStats.getBalance()));
             thanAverageHint.setValue(mBill.getBalance().compareTo(typeStats.getBalance()) >= 0 ?
                     R.string.higher_than_average : R.string.less_than_average);
@@ -214,8 +219,12 @@ public class BillDetailViewModel extends ViewModel implements BillDataSource.Loa
             balance = bigDecimal;
             bigDecimal = t;
         }
-        return balance.multiply(BigDecimal.valueOf(100))
-                .divide(bigDecimal, 2, BigDecimal.ROUND_HALF_UP) + "%";
+        try {
+            return balance.multiply(BigDecimal.valueOf(100))
+                    .divide(bigDecimal, 2, BigDecimal.ROUND_HALF_UP) + "%";
+        } catch (ArithmeticException e) {
+            return "ERROR";
+        }
     }
 
     public MutableLiveData<String> getAccountPercent() {
