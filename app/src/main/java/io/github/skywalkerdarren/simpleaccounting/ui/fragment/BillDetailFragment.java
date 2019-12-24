@@ -197,9 +197,6 @@ public class BillDetailFragment extends BaseFragment {
     }
 
     private void translationView(float offset) {
-        Log.d(TAG, "translationView() called with: offset = [" + offset + "]");
-        Log.d(TAG, "translationView: mTypePoint" + mTypePoint[0] + " " + mTypePoint[1]);
-        Log.d(TAG, "translationView: mSpacePoint" + mSpacePoint[0] + " " + mSpacePoint[1]);
         // 设定图像偏移
         float xOffset = -(mTypePoint[0] - mSpacePoint[0]) * offset;
         float yOffset = -(mTypePoint[1] - mSpacePoint[1]) * offset;
@@ -212,8 +209,6 @@ public class BillDetailFragment extends BaseFragment {
                 getContext());
         float newTextSize =
                 mTitleTextSize - (mTitleTextSize - mToolbarTextView.getTextSize()) * offset;
-        Log.d(TAG, "translationView: xOffset:" + xOffset + "yOffset:" + yOffset + "newSize:" + newSize);
-        Log.d(TAG, "translationView: xTitleOffset:" + xTitleOffset + "yTitleOffset:" + yTitleOffset + "newTextSize:" + newTextSize);
         mTypeImageView.getLayoutParams().width = newSize;
         mTypeImageView.getLayoutParams().height = newSize;
         mTypeImageView.setTranslationX(xOffset);
