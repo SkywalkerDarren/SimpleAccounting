@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.UUID;
 
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.BillInfo;
 
 public interface BillDataSource {
 
-    @Deprecated
-    List<Bill> getsBills(int year, int month);
+    void getBillInfoList(int year, int month, LoadBillsInfoCallBack callBack);
 
     void getBill(UUID id, LoadBillCallBack callBack);
 
@@ -28,5 +28,9 @@ public interface BillDataSource {
 
     interface LoadBillsCallBack {
         void onBillsLoaded(List<Bill> bills);
+    }
+
+    interface LoadBillsInfoCallBack {
+        void onBillsInfoLoaded(List<BillInfo> billsInfo);
     }
 }

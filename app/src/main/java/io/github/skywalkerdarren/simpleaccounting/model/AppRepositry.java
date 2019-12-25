@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
+import io.github.skywalkerdarren.simpleaccounting.adapter.DateHeaderDivider;
 import io.github.skywalkerdarren.simpleaccounting.model.dao.AccountDao;
 import io.github.skywalkerdarren.simpleaccounting.model.dao.BillDao;
 import io.github.skywalkerdarren.simpleaccounting.model.dao.StatsDao;
@@ -23,6 +24,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.database.AppDatabase;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.AccountStats;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.BillInfo;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Stats;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
@@ -30,7 +32,6 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.TypeStats;
 import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 
 public class AppRepositry implements AppDataSource {
-    private static final String TAG = "AppRepositry";
     private AccountDao mAccountDao;
     private TypeDao mTypeDao;
     private BillDao mBillDao;
@@ -79,13 +80,6 @@ public class AppRepositry implements AppDataSource {
         return INSTANCE;
     }
 
-
-    @Deprecated
-    @Override
-    public List<Account> getAccounts() {
-        return mAccountDao.getAccounts();
-    }
-
     @Override
     public void getAccount(UUID uuid, LoadAccountCallBack callBack) {
         execute(() -> {
@@ -99,6 +93,13 @@ public class AppRepositry implements AppDataSource {
         execute(() -> {
             List<Account> accounts = mAccountDao.getAccounts();
             mExecutors.mainThread().execute(() -> callBack.onAccountsLoaded(accounts));
+        });
+    }
+
+    void getAccountsOnBackground(LoadAccountsCallBack callBack) {
+        execute(() -> {
+            List<Account> accounts = mAccountDao.getAccounts();
+            callBack.onAccountsLoaded(accounts);
         });
     }
 
@@ -123,12 +124,36 @@ public class AppRepositry implements AppDataSource {
         });
     }
 
-    @Deprecated
     @Override
-    public List<Bill> getsBills(int year, int month) {
-        DateTime start = new DateTime(year, month, 1, 1, 0, 0);
-        DateTime end = start.plusMonths(1);
-        return mBillDao.getsBillsByDate(start, end);
+    public void getBillInfoList(int year, int month, LoadBillsInfoCallBack callBack) {
+        execute(() -> {
+            DateTime start = new DateTime(year, month, 1, 1, 0, 0);
+            DateTime end = start.plusMonths(1);
+            List<Bill> bills = mBillDao.getsBillsByDate(start, end);
+            List<BillInfo> billInfoList = new ArrayList<>();
+            // 上一个账单的年月日
+            DateTime date = null;
+            for (int i = 0; i < bills.size(); i++) {
+                Bill bill = bills.get(i);
+                Type type = mTypeDao.getType(bill.getTypeId());
+                DateTime dateTime = bill.getDate();
+                int y = dateTime.getYear();
+                int m = dateTime.getMonthOfYear();
+                int d = dateTime.getDayOfMonth();
+                // 当前账单的年月日
+                DateTime currentDate = new DateTime(y, m, d, 0, 0);
+                // 如果当前帐单与上一张单年月日不同，则添加账单
+                if (date == null || !date.equals(currentDate)) {
+                    date = currentDate;
+                    BigDecimal income = getBillStats(date, date.plusDays(1)).getIncome();
+                    BigDecimal expense = getBillStats(date, date.plusDays(1)).getExpense();
+                    billInfoList.add(new BillInfo(new DateHeaderDivider(date, income, expense)));
+                }
+                billInfoList.add(new BillInfo(bill, type));
+            }
+            mExecutors.mainThread().execute(() -> callBack.onBillsInfoLoaded(billInfoList));
+        });
+
     }
 
     @Override
@@ -169,18 +194,6 @@ public class AppRepositry implements AppDataSource {
         execute(() -> mBillDao.clearBill());
     }
 
-    @Deprecated
-    @Override
-    public Type getType(UUID uuid) {
-        return mTypeDao.getType(uuid);
-    }
-
-    @Deprecated
-    @Override
-    public List<Type> getTypes(boolean isExpense) {
-        return mTypeDao.getTypes(isExpense);
-    }
-
     @Override
     public void getType(UUID uuid, LoadTypeCallBack callBack) {
         execute(() -> {
@@ -197,20 +210,19 @@ public class AppRepositry implements AppDataSource {
         });
     }
 
+    void getTypesOnBackground(boolean isExpense, LoadTypesCallBack callBack) {
+        execute(() -> {
+            List<Type> types = mTypeDao.getTypes(isExpense);
+            callBack.onTypesLoaded(types);
+        });
+    }
+
     @Override
     public void delType(UUID uuid) {
         execute(() -> mTypeDao.delType(uuid));
     }
 
-    @Deprecated
-    @Override
-    public List<TypeStats> getTypesStats(DateTime start, DateTime end, boolean isExpense) {
-        return mStatsDao.getTypesStats(start, end, isExpense);
-    }
-
-    @Deprecated
-    @Override
-    public BillStats getBillStats(DateTime start, DateTime end) {
+    private BillStats getBillStats(DateTime start, DateTime end) {
         List<Stats> stats = mStatsDao.getBillsStats(start, end);
         BillStats billStats = new BillStats();
         for (Stats s : stats) {
@@ -230,7 +242,15 @@ public class AppRepositry implements AppDataSource {
             DateTime end = start.plusMonths(1);
             List<BillStats> billStatsList = new ArrayList<>(12);
             for (int i = 1; i <= 12; i++) {
-                BillStats billStats = getBillStats(start, end);
+                List<Stats> stats = mStatsDao.getBillsStats(start, end);
+                BillStats billStats = new BillStats();
+                for (Stats s : stats) {
+                    if (s.getExpense()) {
+                        billStats.setExpense(s.getBalance());
+                    } else {
+                        billStats.setIncome(s.getBalance());
+                    }
+                }
                 billStatsList.add(billStats);
                 start = start.plusMonths(1);
                 end = end.plusMonths(1);

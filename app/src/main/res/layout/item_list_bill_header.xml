@@ -7,7 +7,7 @@
 
         <variable
             name="billInfo"
-            type="io.github.skywalkerdarren.simpleaccounting.adapter.BillInfo" />
+            type="io.github.skywalkerdarren.simpleaccounting.model.entity.BillInfo" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

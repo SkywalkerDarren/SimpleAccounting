@@ -7,8 +7,6 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 
 public interface AccountDataSource {
 
-    @Deprecated
-    List<Account> getAccounts();
 
     void getAccount(UUID uuid, LoadAccountCallBack callBack);
 

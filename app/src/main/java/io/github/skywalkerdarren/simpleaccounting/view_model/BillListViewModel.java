@@ -9,7 +9,10 @@ import androidx.lifecycle.ViewModel;
 
 import org.joda.time.DateTime;
 
+import java.util.List;
+
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.BillInfo;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.StatsActivity;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
@@ -28,6 +31,7 @@ public class BillListViewModel extends ViewModel {
     private MutableLiveData<String> budget = new MutableLiveData<>("TODO");
     private MutableLiveData<String> budgetText = new MutableLiveData<>("TODO");
     private MutableLiveData<DateTime> mDateTime = new MutableLiveData<>();
+    private MutableLiveData<List<BillInfo>> billInfoList = new MutableLiveData<>();
 
     public BillListViewModel(AppRepositry repositry) {
         mRepositry = repositry;
@@ -51,6 +55,8 @@ public class BillListViewModel extends ViewModel {
                 income.setValue(FormatUtil.getNumeric(billStats.getIncome())));
         mRepositry.getBillStats(month, month.plusMonths(1), billStats ->
                 expense.setValue(FormatUtil.getNumeric(billStats.getExpense())));
+        mRepositry.getBillInfoList(date.getYear(), date.getMonthOfYear(), billsInfo ->
+                billInfoList.setValue(billsInfo));
         this.month.setValue(String.valueOf(month.getMonthOfYear()));
     }
 
@@ -95,8 +101,11 @@ public class BillListViewModel extends ViewModel {
      * 跳转到统计页
      */
     public void toStats(Context context) {
-        Context context1 = context;
         Intent intent = StatsActivity.newIntent(context);
         context.startActivity(intent);
+    }
+
+    public LiveData<List<BillInfo>> getBillInfoList() {
+        return billInfoList;
     }
 }

@@ -11,7 +11,7 @@
 
         <variable
             name="billInfo"
-            type="io.github.skywalkerdarren.simpleaccounting.adapter.BillInfo" />
+            type="io.github.skywalkerdarren.simpleaccounting.model.entity.BillInfo" />
     </data>
 
     <FrameLayout

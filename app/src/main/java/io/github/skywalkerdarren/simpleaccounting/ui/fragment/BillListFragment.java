@@ -24,10 +24,10 @@ import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.BillAdapter;
-import io.github.skywalkerdarren.simpleaccounting.adapter.BillInfo;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.EmptyLayoutBinding;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillListBinding;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.BillInfo;
 import io.github.skywalkerdarren.simpleaccounting.view_model.BillListViewModel;
 import io.github.skywalkerdarren.simpleaccounting.view_model.EmptyListViewModel;
 import io.github.skywalkerdarren.simpleaccounting.view_model.ViewModelFactory;
@@ -115,11 +115,8 @@ public class BillListFragment extends BaseFragment {
     @Override
     public void updateUI() {
         mBinding.moneyBudgeTextView.setText(mSharedPref.getString(SHARED_BUDGET, "0"));
-        mViewModel.getDate().observe(this, dateTime -> {
-            List<BillInfo> billInfoList = BillInfo
-                    .getBillInfoList(dateTime.getYear(), dateTime.getMonthOfYear(), getActivity());
-            updateAdapter(billInfoList);
-        });
+        mViewModel.getDate().observe(this, dateTime ->
+                mViewModel.getBillInfoList().observe(this, this::updateAdapter));
         mViewModel.setDate(DateTime.now());
     }
 

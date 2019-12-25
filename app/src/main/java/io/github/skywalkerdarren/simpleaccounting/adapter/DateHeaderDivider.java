@@ -13,7 +13,7 @@ import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
  * @date 2018/2/16
  */
 
-class DateHeaderDivider implements HeaderDivider {
+public class DateHeaderDivider implements HeaderDivider {
     private DateTime mDateTime;
     private int y;
     private int m;
@@ -21,7 +21,7 @@ class DateHeaderDivider implements HeaderDivider {
     private BigDecimal mIncome;
     private BigDecimal mExpense;
 
-    DateHeaderDivider(DateTime dateTime, BigDecimal income, BigDecimal expense) {
+    public DateHeaderDivider(DateTime dateTime, BigDecimal income, BigDecimal expense) {
         y = dateTime.getYear();
         m = dateTime.getMonthOfYear();
         d = dateTime.getDayOfMonth();
@@ -35,7 +35,7 @@ class DateHeaderDivider implements HeaderDivider {
      *
      * @return 日期
      */
-    DateTime getDate() {
+    public DateTime getDate() {
         return mDateTime;
     }
 

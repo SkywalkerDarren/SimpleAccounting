@@ -20,12 +20,6 @@ public interface StatsDataSource {
 
     void getTypeAverage(DateTime start, DateTime end, UUID typeId, LoadTypeStatsCallBack callBack);
 
-    @Deprecated
-    List<TypeStats> getTypesStats(DateTime start, DateTime end, boolean isExpense);
-
-    @Deprecated
-    BillStats getBillStats(DateTime start, DateTime end);
-
     void getAccountStats(UUID accountId, DateTime start, DateTime end, LoadAccountStatsCallBack callBack);
 
     interface LoadBillStatsCallBack {

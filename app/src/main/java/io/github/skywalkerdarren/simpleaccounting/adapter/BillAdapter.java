@@ -16,6 +16,7 @@ import io.github.skywalkerdarren.simpleaccounting.databinding.ItemListBillBindin
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemListBillHeaderBinding;
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemListBillWithoutRemarkBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.BillInfo;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillDetailActivity;
 import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 
@@ -39,11 +40,11 @@ public class BillAdapter extends BaseMultiItemDataBindingAdapter<BillInfo, ViewD
     /**
      * 不带备注的账单
      */
-    static final int WITHOUT_REMARK = 0;
+    public static final int WITHOUT_REMARK = 0;
     /**
      * 带备注的账单
      */
-    static final int WITH_REMARK = 1;
+    public static final int WITH_REMARK = 1;
     private Activity mActivity;
 
     /**

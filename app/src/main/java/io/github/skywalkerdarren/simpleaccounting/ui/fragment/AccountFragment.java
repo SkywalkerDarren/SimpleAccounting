@@ -20,8 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
 import com.chad.library.adapter.base.listener.OnItemDragListener;
 
-import java.util.List;
-
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.AccountAdapter;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
@@ -119,13 +117,13 @@ public class AccountFragment extends BaseFragment {
 
     @Override
     protected void updateUI() {
-        List<Account> accounts = AppRepositry.getInstance(new AppExecutors(), getContext()).getAccounts();
         if (mAdapter == null) {
-            mAdapter = new AccountAdapter(accounts, getActivity().getApplication());
-        } else {
+            mAdapter = new AccountAdapter(null, requireActivity().getApplication());
+        }
+        mViewModel.getAccounts().observe(this, accounts -> {
             mAdapter.setNewData(accounts);
             mAdapter.notifyDataSetChanged();
-        }
+        });
         mAccountRecyclerView.setAdapter(mAdapter);
         ItemDragAndSwipeCallback itemDragAndSwipeCallback = new ItemDragAndSwipeCallback(mAdapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemDragAndSwipeCallback);

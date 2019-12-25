@@ -1,6 +1,5 @@
-package io.github.skywalkerdarren.simpleaccounting.adapter;
+package io.github.skywalkerdarren.simpleaccounting.model.entity;
 
-import android.content.Context;
 import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
@@ -9,15 +8,9 @@ import com.chad.library.adapter.base.entity.MultiItemEntity;
 
 import org.joda.time.DateTime;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
-import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
-import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
-import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
+import io.github.skywalkerdarren.simpleaccounting.adapter.DateHeaderDivider;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 import static io.github.skywalkerdarren.simpleaccounting.adapter.BillAdapter.HEADER;
@@ -53,7 +46,7 @@ public class BillInfo implements MultiItemEntity {
      * @param bill 账单
      * @param type 类型
      */
-    private BillInfo(Bill bill, Type type) {
+    public BillInfo(Bill bill, Type type) {
         mType = TextUtils.isEmpty(bill.getRemark()) ? WITHOUT_REMARK : WITH_REMARK;
         mUUID = bill.getUUID();
         mTitle = bill.getName();
@@ -69,46 +62,11 @@ public class BillInfo implements MultiItemEntity {
      *
      * @param header 分隔符
      */
-    private BillInfo(DateHeaderDivider header) {
+    public BillInfo(DateHeaderDivider header) {
         mType = HEADER;
         mDateTime = header.getDate();
         mExpense = header.getExpense();
         mIncome = header.getIncome();
-    }
-
-    /**
-     * 获得一个月的账单摘要列表
-     *
-     * @param year  账单年份
-     * @param month 账单月份
-     * @return 账单摘要列表
-     */
-    public static List<BillInfo> getBillInfoList(int year, int month, Context context) {
-        AppRepositry repositry = AppRepositry.getInstance(new AppExecutors(), context);
-        List<Bill> bills = repositry.getsBills(year, month);
-        List<BillInfo> billInfoList = new ArrayList<>();
-        // 上一个账单的年月日
-        DateTime date = null;
-        for (int i = 0; i < bills.size(); i++) {
-            Bill bill = bills.get(i);
-            Type type = repositry.getType(bill.getTypeId());
-            DateTime dateTime = bill.getDate();
-            int y = dateTime.getYear();
-            int m = dateTime.getMonthOfYear();
-            int d = dateTime.getDayOfMonth();
-            // 当前账单的年月日
-            DateTime currentDate = new DateTime(y, m, d, 0, 0);
-            // 如果当前帐单与上一张单年月日不同，则添加账单
-            if (date == null || !date.equals(currentDate)) {
-                date = currentDate;
-                BigDecimal income = repositry.getBillStats(date, date.plusDays(1)).getIncome();
-                BigDecimal expense = repositry.getBillStats(date, date.plusDays(1)).getExpense();
-                billInfoList.add(new BillInfo(new DateHeaderDivider(date, income, expense)));
-            }
-            billInfoList.add(new BillInfo(bill, type));
-
-        }
-        return billInfoList;
     }
 
     @Override

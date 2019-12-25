@@ -1,6 +1,5 @@
 package io.github.skywalkerdarren.simpleaccounting.ui.fragment;
 
-import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -11,34 +10,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
 
 import org.joda.time.DateTime;
-
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentChartBinding;
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
-import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
-import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
-import io.github.skywalkerdarren.simpleaccounting.model.entity.TypeStats;
-import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 import io.github.skywalkerdarren.simpleaccounting.util.CustomTypefaceSpan;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
+import io.github.skywalkerdarren.simpleaccounting.view_model.ChartViewModel;
+import io.github.skywalkerdarren.simpleaccounting.view_model.ViewModelFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,11 +40,12 @@ public class PieChartFragment extends BaseFragment {
     private static final String ARG_START = "start";
     private static final String ARG_END = "end";
     private static final String ARG_IS_EXPENSE = "isExpense";
-    private static final String TAG = "PieChartFragment";
     private DateTime mStartDateTime;
     private DateTime mEndDateTime;
     private PieChart mPieChart;
     private boolean mIsExpense;
+    private ChartViewModel mViewModel;
+    private FragmentChartBinding mBinding;
 
     /**
      * Use this factory method to create a new instance of
@@ -74,8 +65,18 @@ public class PieChartFragment extends BaseFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        mBinding = DataBindingUtil.inflate(inflater,
+                R.layout.fragment_chart, container, false);
+        mPieChart = mBinding.pieChart;
+        return mBinding.getRoot();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         if (getArguments() != null) {
             mStartDateTime = (DateTime) getArguments().getSerializable(ARG_START);
             mEndDateTime = (DateTime) getArguments().getSerializable(ARG_END);
@@ -85,31 +86,25 @@ public class PieChartFragment extends BaseFragment {
             mEndDateTime = DateTime.now();
             mIsExpense = true;
         }
-    }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        FragmentChartBinding binding = DataBindingUtil.inflate(inflater,
-                R.layout.fragment_chart, container, false);
-        mPieChart = binding.pieChart;
+        ViewModelFactory factory = ViewModelFactory.getInstance(requireActivity().getApplication());
+        mViewModel = ViewModelProviders.of(this, factory).get(ChartViewModel.class);
+        mBinding.setChart(mViewModel);
+        mBinding.setLifecycleOwner(this);
+
         configChartStyle();
-        return binding.getRoot();
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     private void configChartStyle() {
         // 关闭描述
         Description description = new Description();
         description.setEnabled(false);
         mPieChart.setDescription(description);
 
-        BillStats stats = AppRepositry.getInstance(new AppExecutors(), getContext())
-                .getBillStats(mStartDateTime, mEndDateTime);
-        String s = FormatUtil.getNumeric(mIsExpense ? stats.getExpense() : stats.getIncome());
-        mPieChart.setCenterText(generateCenterText(s));
-
+        mViewModel.getBillStats().observe(this, billStats -> {
+            String s = FormatUtil.getNumeric(mIsExpense ? billStats.getExpense() : billStats.getIncome());
+            mPieChart.setCenterText(generateCenterText(s));
+        });
         mPieChart.setCenterTextSize(24);
         mPieChart.setEntryLabelColor(Color.BLACK);
         mPieChart.setHoleRadius(70f);
@@ -136,46 +131,13 @@ public class PieChartFragment extends BaseFragment {
 
     @Override
     protected void updateUI() {
-        AppRepositry repositry = AppRepositry.getInstance(new AppExecutors(), getContext());
-        List<TypeStats> typeStats = repositry.getTypesStats(mStartDateTime, mEndDateTime, mIsExpense);
+        mViewModel.start(mStartDateTime, mEndDateTime, mIsExpense);
 
-        List<PieEntry> pieEntries = new ArrayList<>(10);
-        List<Integer> colorList = new ArrayList<>(10);
-        if (typeStats != null) {
-            for (TypeStats stats : typeStats) {
-                Type type = repositry.getType(stats.getTypeId());
-                PieEntry entry = new PieEntry(stats.getBalance().floatValue(), type.getName());
-                colorList.add(type.getColorId());
-                pieEntries.add(entry);
-            }
-        }
-        PieDataSet pieDataSet = getPieDataSet(pieEntries, colorList);
-        pieDataSet.notifyDataSetChanged();
-
-        PieData pieData = new PieData();
-        pieData.addDataSet(pieDataSet);
-        mPieChart.setData(pieData);
-
-        mPieChart.invalidate();
-    }
-
-    @NonNull
-    private PieDataSet getPieDataSet(List<PieEntry> pieEntries, List<Integer> colorList) {
-        PieDataSet pieDataSet = new PieDataSet(pieEntries, "");
-        pieDataSet.setColors(colorList);
-        pieDataSet.setValueTextColors(colorList);
-        pieDataSet.setValueLineColor(Color.rgb(0xf5, 0x7f, 0x17));
-        pieDataSet.setValueFormatter((value, entry, dataSetIndex, viewPortHandler) -> {
-            DecimalFormat format = new DecimalFormat("##0.00");
-            return format.format(value) + " %";
+        mViewModel.getPieData().observe(this, pieData -> {
+            mPieChart.setData(pieData);
+            mPieChart.invalidate();
         });
-        pieDataSet.setValueLinePart1OffsetPercentage(55f);
-        pieDataSet.setValueLinePart1Length(0.1f);
-        pieDataSet.setValueLinePart2Length(0.5f);
-        pieDataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
-        pieDataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
-        pieDataSet.setValueTextSize(12f);
-
-        return pieDataSet;
     }
+
+
 }

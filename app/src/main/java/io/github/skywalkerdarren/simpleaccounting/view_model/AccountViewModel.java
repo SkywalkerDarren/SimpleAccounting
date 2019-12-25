@@ -1,9 +1,13 @@
 package io.github.skywalkerdarren.simpleaccounting.view_model;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import org.joda.time.DateTime;
+
+import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
@@ -21,14 +25,15 @@ public class AccountViewModel extends ViewModel {
     private MutableLiveData<String> nav = new MutableLiveData<>();
     private MutableLiveData<String> liability = new MutableLiveData<>();
     private MutableLiveData<String> totalAssets = new MutableLiveData<>();
-    private MutableLiveData<String> accountSize = new MutableLiveData<>();
+    private MutableLiveData<List<Account>> accounts = new MutableLiveData<>();
+    private LiveData<String> accountSize = Transformations.map(accounts, input -> String.valueOf(input.size()));
 
     public AccountViewModel(AppRepositry repositry) {
         mRepositry = repositry;
     }
 
     public void start() {
-        mRepositry.getAccounts(accounts -> accountSize.setValue(String.valueOf(accounts.size())));
+        mRepositry.getAccounts((accounts -> this.accounts.setValue(accounts)));
         mRepositry.getBillStats(new DateTime(0), DateTime.now(), billStats -> {
             nav.setValue(FormatUtil.getNumeric(billStats.getSum()));
             liability.setValue(FormatUtil.getNumeric(billStats.getExpense()));
@@ -60,11 +65,15 @@ public class AccountViewModel extends ViewModel {
     /**
      * @return 账户数目
      */
-    public MutableLiveData<String> getAccountSize() {
+    public LiveData<String> getAccountSize() {
         return accountSize;
     }
 
     public void changePosition(Account a, Account b) {
         mRepositry.changePosition(a, b);
+    }
+
+    public LiveData<List<Account>> getAccounts() {
+        return accounts;
     }
 }

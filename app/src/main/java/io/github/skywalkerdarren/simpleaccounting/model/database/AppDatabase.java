@@ -5,7 +5,6 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import androidx.room.TypeConverter;
 import androidx.room.TypeConverters;
 
 import io.github.skywalkerdarren.simpleaccounting.model.dao.AccountDao;
@@ -35,8 +34,6 @@ public abstract class AppDatabase extends RoomDatabase {
             if (INSTANCE == null) {
                 INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                         AppDatabase.class, "app.db")
-                        //TODO remove this
-                        .allowMainThreadQueries()
                         .build();
             }
             return INSTANCE;

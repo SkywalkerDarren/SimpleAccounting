@@ -8,6 +8,7 @@ import org.joda.time.DateTime;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CountDownLatch;
 
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
@@ -26,12 +27,27 @@ public class Demo {
     private List<Account> mAccounts;
     private AppRepositry mRepositry;
     private static final String TAG = "Demo";
+    private final CountDownLatch mLatch = new CountDownLatch(3);
 
     public Demo(Context context) {
         mRepositry = AppRepositry.getInstance(new AppExecutors(), context);
-        mExpense = mRepositry.getTypes(true);
-        mIncome = mRepositry.getTypes(false);
-        mAccounts = mRepositry.getAccounts();
+        mRepositry.getTypesOnBackground(true, types -> {
+            mExpense = types;
+            mLatch.countDown();
+        });
+        mRepositry.getTypesOnBackground(false, types -> {
+            mIncome = types;
+            mLatch.countDown();
+        });
+        mRepositry.getAccountsOnBackground(accounts -> {
+            mAccounts = accounts;
+            mLatch.countDown();
+        });
+        try {
+            mLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         mRandom = new Random(DateTime.now().getMillis());
     }
 
@@ -39,7 +55,7 @@ public class Demo {
         return mRandom.nextInt(bound);
     }
 
-    public void createRandomBill(DateTime start, DateTime end) {
+    private void createRandomBill(DateTime start, DateTime end) {
         Bill bill = new Bill();
 
         // 1/10 income
