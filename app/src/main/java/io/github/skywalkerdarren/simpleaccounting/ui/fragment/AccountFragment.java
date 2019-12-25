@@ -4,7 +4,6 @@ package io.github.skywalkerdarren.simpleaccounting.ui.fragment;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,18 +118,6 @@ public class AccountFragment extends BaseFragment {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause() called");
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        Log.d(TAG, "onDetach() called");
-    }
-
-    @Override
     protected void updateUI() {
         List<Account> accounts = AppRepositry.getInstance(new AppExecutors(), getContext()).getAccounts();
         if (mAdapter == null) {
@@ -171,7 +158,6 @@ public class AccountFragment extends BaseFragment {
             }
         });
         mViewModel.start();
-        Log.d(TAG, "updateUI: ");
     }
 
     private void itemRaiseAnimator(View view, final float start, boolean raise) {

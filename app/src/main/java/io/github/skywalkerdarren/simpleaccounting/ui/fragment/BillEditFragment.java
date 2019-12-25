@@ -266,10 +266,10 @@ public class BillEditFragment extends BaseFragment {
         switch (item.getItemId()) {
             case R.id.menu_save_item:
                 if (!mViewModel.saveBill()) {
-                    DesktopWidget.refresh(Objects.requireNonNull(getContext()));
                     // 保存失败直接返回
                     return true;
                 }
+                DesktopWidget.refresh(requireContext());
             case android.R.id.home:
                 mNumPad.setVisibility(View.INVISIBLE);
                 Objects.requireNonNull(getActivity()).onBackPressed();

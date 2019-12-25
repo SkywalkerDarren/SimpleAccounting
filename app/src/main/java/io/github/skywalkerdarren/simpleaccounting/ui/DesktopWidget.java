@@ -10,8 +10,11 @@ import android.widget.RemoteViews;
 
 import org.joda.time.DateTime;
 
+import java.util.List;
+
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
+import io.github.skywalkerdarren.simpleaccounting.model.database.StatsDataSource;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillEditActivity;
@@ -26,13 +29,12 @@ import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
  * @date 2018/3/16
  */
 
-public class DesktopWidget extends AppWidgetProvider {
+public class DesktopWidget extends AppWidgetProvider implements StatsDataSource.LoadBillsStatsCallBack {
     public static final String EXTRA_ACTION_UP = "android.appwidget.action.APPWIDGET_UPDATE";
     private static final int REQUEST_BILL = 0;
+    private Context mContext;
 
-    public DesktopWidget() {
-        super();
-    }
+    private RemoteViews mRemoteViews;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -47,32 +49,38 @@ public class DesktopWidget extends AppWidgetProvider {
     }
 
     public static void refresh(Context context) {
-        Intent intent = new Intent(DesktopWidget.EXTRA_ACTION_UP);
+        Intent intent = new Intent(EXTRA_ACTION_UP);
         context.sendBroadcast(intent);
     }
 
     private void refreshData(Context context) {
-        BillStats stats = AppRepositry.getInstance(new AppExecutors(), context)
-                .getAnnualStats(DateTime.now().getYear())
-                .get(DateTime.now().getMonthOfYear() - 1);
-
-        Intent addIntent = BillEditActivity.newIntent(context, new Bill(), 0, 0);
-        PendingIntent pendingAddIntent = PendingIntent.getActivity(context, REQUEST_BILL,
+        mContext = context;
+        AppRepositry repositry = AppRepositry.getInstance(new AppExecutors(), context);
+        Intent addIntent = BillEditActivity.newIntent(mContext, new Bill(), 0, 0);
+        PendingIntent pendingAddIntent = PendingIntent.getActivity(mContext, REQUEST_BILL,
                 addIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Intent iconIntent = MainActivity.newIntent(context);
-        PendingIntent pendingIconIntent = PendingIntent.getActivity(context, REQUEST_BILL,
+        Intent iconIntent = MainActivity.newIntent(mContext);
+        PendingIntent pendingIconIntent = PendingIntent.getActivity(mContext, REQUEST_BILL,
                 iconIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_bill);
-        views.setOnClickPendingIntent(R.id.add_bill_text_view, pendingAddIntent);
-        views.setOnClickPendingIntent(R.id.icon, pendingIconIntent);
-        views.setTextViewText(R.id.income_text_view, FormatUtil.getNumeric(stats.getIncome()));
-        views.setTextViewText(R.id.expense_text_view, FormatUtil.getNumeric(stats.getExpense()));
-        views.setTextViewText(R.id.total_text_view, FormatUtil.getNumeric(stats.getSum()));
+        mRemoteViews = new RemoteViews(mContext.getPackageName(), R.layout.widget_bill);
+        mRemoteViews.setOnClickPendingIntent(R.id.add_bill_text_view, pendingAddIntent);
+        mRemoteViews.setOnClickPendingIntent(R.id.icon, pendingIconIntent);
 
-        ComponentName name = new ComponentName(context, DesktopWidget.class);
-        AppWidgetManager.getInstance(context).updateAppWidget(name, views);
+        repositry.getBillsAnnualStats(DateTime.now().getYear(), this);
+
+        ComponentName name = new ComponentName(mContext, DesktopWidget.class);
+        AppWidgetManager.getInstance(mContext).updateAppWidget(name, mRemoteViews);
     }
 
+    @Override
+    public void onBillStatsLoaded(List<BillStats> billsStats) {
+        BillStats billStats = billsStats.get(DateTime.now().getMonthOfYear() - 1);
+        mRemoteViews.setTextViewText(R.id.income_text_view, FormatUtil.getNumeric(billStats.getIncome()));
+        mRemoteViews.setTextViewText(R.id.expense_text_view, FormatUtil.getNumeric(billStats.getExpense()));
+        mRemoteViews.setTextViewText(R.id.total_text_view, FormatUtil.getNumeric(billStats.getSum()));
+        ComponentName name = new ComponentName(mContext, DesktopWidget.class);
+        AppWidgetManager.getInstance(mContext).updateAppWidget(name, mRemoteViews);
+    }
 }

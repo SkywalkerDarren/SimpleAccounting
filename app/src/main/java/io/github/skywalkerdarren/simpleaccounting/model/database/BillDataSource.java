@@ -6,8 +6,8 @@ import java.util.UUID;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 
 public interface BillDataSource {
-    Bill getBill(UUID id);
 
+    @Deprecated
     List<Bill> getsBills(int year, int month);
 
     void getBill(UUID id, LoadBillCallBack callBack);

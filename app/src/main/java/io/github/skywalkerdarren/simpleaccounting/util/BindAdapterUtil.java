@@ -1,6 +1,8 @@
 package io.github.skywalkerdarren.simpleaccounting.util;
 
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -8,9 +10,7 @@ import androidx.cardview.widget.CardView;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.BindingAdapter;
 
-import com.bumptech.glide.Glide;
-
-import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
+import java.io.IOException;
 
 /**
  * @author darren
@@ -33,10 +33,19 @@ public class BindAdapterUtil extends BaseObservable {
 
     @BindingAdapter("android:src")
     public static void setTypeImage(ImageView view, String res) {
-        Glide.with(view)
-                .load("file:///android_asset/" + res)
-                .transition(withCrossFade())
-                .into(view);
+        try {
+            AssetManager assets = view.getContext().getAssets();
+            Bitmap bitmap = BitmapFactory.decodeStream(assets.open(res));
+            view.setImageBitmap(bitmap);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NullPointerException ignore) {
+
+        }
+        //Glide.with(view)
+        //        .load("file:///android_asset/" + res)
+        //        .transition(withCrossFade())
+        //        .into(view);
     }
 
     /**

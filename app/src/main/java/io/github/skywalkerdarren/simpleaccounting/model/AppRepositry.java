@@ -79,11 +79,6 @@ public class AppRepositry implements AppDataSource {
         return INSTANCE;
     }
 
-    @Deprecated
-    @Override
-    public Account getAccount(UUID uuid) {
-        return mAccountDao.getAccount(uuid);
-    }
 
     @Deprecated
     @Override
@@ -126,12 +121,6 @@ public class AppRepositry implements AppDataSource {
             mAccountDao.updateAccountId(b.getUUID(), i);
             mAccountDao.updateAccountId(a.getUUID(), j);
         });
-    }
-
-    @Deprecated
-    @Override
-    public Bill getBill(UUID id) {
-        return mBillDao.getBill(id);
     }
 
     @Deprecated
@@ -215,75 +204,8 @@ public class AppRepositry implements AppDataSource {
 
     @Deprecated
     @Override
-    public List<BillStats> getAnnualStats(int year) {
-        DateTime start = new DateTime(year, 1, 1, 0, 0, 0);
-        DateTime end = start.plusMonths(1);
-        List<BillStats> billStatsList = new ArrayList<>(12);
-        for (int i = 1; i <= 12; i++) {
-            BillStats billStats = getBillStats(start, end);
-            billStatsList.add(billStats);
-            start = start.plusMonths(1);
-            end = end.plusMonths(1);
-        }
-        return billStatsList;
-    }
-
-    @Deprecated
-    @Override
-    public List<BillStats> getMonthStats(int year, int month) {
-        List<BillStats> statsList = new ArrayList<>(31);
-        DateTime start = new DateTime(year, month, 1, 0, 0);
-        DateTime end = start.plusDays(1);
-        int days = start.plusMonths(1).minus(1L).getDayOfMonth();
-        for (int i = 1; i <= days; i++) {
-            BillStats billStats = getBillStats(start, end);
-            statsList.add(billStats);
-            start = start.plusDays(1);
-            end = end.plusDays(1);
-        }
-        return statsList;
-    }
-
-    @Deprecated
-    @Override
     public List<TypeStats> getTypesStats(DateTime start, DateTime end, boolean isExpense) {
         return mStatsDao.getTypesStats(start, end, isExpense);
-    }
-
-    @Deprecated
-    @Override
-    public BigDecimal getTypeStats(DateTime start, DateTime end, UUID typeId) {
-        return mStatsDao.getTypeStats(start, end, typeId).getBalance();
-    }
-
-    @Deprecated
-    @Override
-    public List<AccountStats> getAccountStats(UUID accountId, int year) {
-        DateTime start = new DateTime(year, 1, 1, 0, 0, 0);
-        DateTime end = start.plusMonths(1);
-        List<AccountStats> accountStatsList = new ArrayList<>(12);
-        for (int i = 1; i <= 12; i++) {
-            AccountStats accountStats = getAccountStats(accountId, start, end);
-            accountStatsList.add(accountStats);
-            start = start.plusMonths(1);
-            end = end.plusMonths(1);
-        }
-        return accountStatsList;
-    }
-
-    @Deprecated
-    @Override
-    public AccountStats getAccountStats(UUID accountId, DateTime start, DateTime end) {
-        List<Stats> stats = mStatsDao.getAccountStats(accountId, start, end);
-        AccountStats accountStats = new AccountStats();
-        for (Stats s : stats) {
-            if (s.getExpense()) {
-                accountStats.setExpense(s.getBalance());
-            } else {
-                accountStats.setIncome(s.getBalance());
-            }
-        }
-        return accountStats;
     }
 
     @Deprecated
@@ -301,12 +223,6 @@ public class AppRepositry implements AppDataSource {
         return billStats;
     }
 
-    @Deprecated
-    @Override
-    public BigDecimal getTypeAverage(DateTime start, DateTime end, UUID typeId) {
-        return mStatsDao.getTypeAverageStats(start, end, typeId).getBalance();
-    }
-
     @Override
     public void getBillsAnnualStats(int year, LoadBillsStatsCallBack callBack) {
         execute(() -> {
@@ -320,23 +236,6 @@ public class AppRepositry implements AppDataSource {
                 end = end.plusMonths(1);
             }
             mExecutors.mainThread().execute(() -> callBack.onBillStatsLoaded(billStatsList));
-        });
-    }
-
-    @Override
-    public void getBillsMonthStats(int year, int month, LoadBillsStatsCallBack callBack) {
-        execute(() -> {
-            List<BillStats> statsList = new ArrayList<>(31);
-            DateTime start = new DateTime(year, month, 1, 0, 0);
-            DateTime end = start.plusDays(1);
-            int days = start.plusMonths(1).minus(1L).getDayOfMonth();
-            for (int i = 1; i <= days; i++) {
-                BillStats billStats = getBillStats(start, end);
-                statsList.add(billStats);
-                start = start.plusDays(1);
-                end = end.plusDays(1);
-            }
-            mExecutors.mainThread().execute(() -> callBack.onBillStatsLoaded(statsList));
         });
     }
 
@@ -377,22 +276,6 @@ public class AppRepositry implements AppDataSource {
         execute(() -> {
             TypeStats typeStats = mStatsDao.getTypeAverageStats(start, end, typeId);
             mExecutors.mainThread().execute(() -> callBack.onTypeStatsLoaded(typeStats));
-        });
-    }
-
-    @Override
-    public void getAccountsStats(UUID accountId, int year, LoadAccountsStatsCallBack callBack) {
-        execute(() -> {
-            DateTime start = new DateTime(year, 1, 1, 0, 0, 0);
-            DateTime end = start.plusMonths(1);
-            List<AccountStats> accountStatsList = new ArrayList<>(12);
-            for (int i = 1; i <= 12; i++) {
-                AccountStats accountStats = getAccountStats(accountId, start, end);
-                accountStatsList.add(accountStats);
-                start = start.plusMonths(1);
-                end = end.plusMonths(1);
-            }
-            mExecutors.mainThread().execute(() -> callBack.onAccountsStatsLoaded(accountStatsList));
         });
     }
 

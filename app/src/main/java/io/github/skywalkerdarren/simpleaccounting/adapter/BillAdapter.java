@@ -95,13 +95,9 @@ public class BillAdapter extends BaseMultiItemDataBindingAdapter<BillInfo, ViewD
     }
 
     private void touch(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                mX = (int) event.getRawX();
-                mY = (int) event.getRawY();
-                break;
-            default:
-                break;
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            mX = (int) event.getRawX();
+            mY = (int) event.getRawY();
         }
     }
 
