@@ -9,8 +9,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.ColorRes;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.github.mikephil.charting.animation.Easing;
@@ -37,6 +39,7 @@ import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentJournalBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
 import io.github.skywalkerdarren.simpleaccounting.view_model.JournalViewModel;
+import io.github.skywalkerdarren.simpleaccounting.view_model.ViewModelFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -76,18 +79,21 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
         // Inflate the layout for this fragment
         FragmentJournalBinding binding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_journal, container, false);
-        mViewModel = new JournalViewModel(getContext());
+        ViewModelFactory factory = ViewModelFactory.getInstance(getActivity().getApplication());
+        mViewModel = ViewModelProviders.of(this, factory).get(JournalViewModel.class);
         binding.setJournal(mViewModel);
+        binding.setLifecycleOwner(this);
+
         mLineChart = binding.statsLineChart;
 
         binding.statsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.expenseCardView.setOnClickListener(this);
         binding.incomeCardView.setOnClickListener(this);
         binding.balanceCardView.setOnClickListener(this);
-        mStatsAdapter = new StatsAdapter(mViewModel.getStats());
+        mStatsAdapter = new StatsAdapter(null);
         binding.statsRecyclerView.setAdapter(mStatsAdapter);
         // TODO 动态年份
-        configChartStyle();
+        configChartStyle(mLineChart);
         return binding.getRoot();
     }
 
@@ -128,10 +134,11 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
      */
     @Override
     public void updateUI() {
-        List<BillStats> statsList = mViewModel.getStats();
-        mStatsAdapter.setNewData(statsList);
-        mStatsAdapter.notifyDataSetChanged();
-        updateLineDataSets(statsList, true, true, true);
+        mViewModel.getStats().observe(this, billStats -> {
+            mStatsAdapter.setNewData(billStats);
+            mStatsAdapter.notifyDataSetChanged();
+            updateLineDataSets(billStats, true, true, true);
+        });
     }
 
 
@@ -151,32 +158,33 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
             default:
                 break;
         }
-        updateLineDataSets(mViewModel.getStats(), mShowIncome, mShowExpense, mShowBalance);
+        mViewModel.getStats().observe(this, billStats ->
+                updateLineDataSets(billStats, mShowIncome, mShowExpense, mShowBalance));
     }
 
     /**
      * 配置图表样式
      */
-    private void configChartStyle() {
+    private void configChartStyle(LineChart lineChart) {
         Description description = new Description();
         description.setEnabled(false);
-        mLineChart.setDescription(description);
-        mLineChart.setScaleEnabled(false);
-        mLineChart.getAxisRight().setEnabled(false);
-        mLineChart.setMarker(new TopHighLight(getActivity()));
+        lineChart.setDescription(description);
+        lineChart.setScaleEnabled(false);
+        lineChart.getAxisRight().setEnabled(false);
+        lineChart.setMarker(new TopHighLight(getActivity()));
 
-        Legend legend = mLineChart.getLegend();
+        Legend legend = lineChart.getLegend();
         legend.setEnabled(false);
 
-        XAxis xAxis = mLineChart.getXAxis();
+        XAxis xAxis = lineChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
         xAxis.setLabelCount(12, true);
         xAxis.setValueFormatter((value, axis) -> (int) (value + 1) + "月");
 
-        YAxis yAxis = mLineChart.getAxisLeft();
-        yAxis.setGridColor(getResources().getColor(R.color.grey300));
-        yAxis.setAxisLineColor(getResources().getColor(R.color.transparent));
+        YAxis yAxis = lineChart.getAxisLeft();
+        yAxis.setGridColor(ContextCompat.getColor(requireContext(), R.color.grey300));
+        yAxis.setAxisLineColor(ContextCompat.getColor(requireContext(), R.color.transparent));
         yAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
         yAxis.setLabelCount(5, false);
     }
@@ -187,7 +195,7 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
      * @param colorId 颜色
      */
     private void configDataSet(LineDataSet set, @ColorRes int colorId) {
-        int color = getResources().getColor(colorId);
+        int color = ContextCompat.getColor(requireContext(), colorId);
         set.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
         set.setDrawFilled(true);
         set.setDrawValues(false);
@@ -218,7 +226,7 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
         @Override
         public void refreshContent(Entry e, Highlight highlight) {
             mMarkerTextView.setText(mFormat.format(e.getY()));
-            mMarkerTextView.setTextColor(getResources().getColor(R.color.orange800));
+            mMarkerTextView.setTextColor(ContextCompat.getColor(requireContext(), R.color.orange800));
             super.refreshContent(e, highlight);
         }
 

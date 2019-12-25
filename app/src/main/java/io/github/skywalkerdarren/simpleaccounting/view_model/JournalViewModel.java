@@ -1,20 +1,16 @@
 package io.github.skywalkerdarren.simpleaccounting.view_model;
 
-import android.content.Context;
-import android.widget.Toast;
-
-import androidx.databinding.BaseObservable;
-import androidx.databinding.Bindable;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import org.joda.time.DateTime;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
-import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
-import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
  * 流水vm
@@ -23,77 +19,78 @@ import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
  * @date 2018/4/6
  */
 
-public class JournalViewModel extends BaseObservable {
-    private Context mContext;
-    private BigDecimal mIncome;
-    private BigDecimal mExpense;
-    private BigDecimal mSum;
-    private int mYear;
-    private List<BillStats> mStats;
+public class JournalViewModel extends ViewModel {
+    private MutableLiveData<BigDecimal> mIncome = new MutableLiveData<>(BigDecimal.ZERO);
+    private MutableLiveData<BigDecimal> mExpense = new MutableLiveData<>(BigDecimal.ZERO);
+    private MutableLiveData<BigDecimal> mSum = new MutableLiveData<>(BigDecimal.ZERO);
+    private MutableLiveData<String> mYear = new MutableLiveData<>();
+    private MutableLiveData<List<BillStats>> mStats = new MutableLiveData<>();
     private AppRepositry mRepositry;
 
-    public JournalViewModel(Context context) {
-        mContext = context;
-        mRepositry = AppRepositry.getInstance(new AppExecutors(), context);
-        mYear = DateTime.now().getYear();
-        mStats = mRepositry.getAnnualStats(DateTime.now().getYear());
-        mIncome = BigDecimal.ZERO;
-        mExpense = BigDecimal.ZERO;
-        mSum = BigDecimal.ZERO;
-        // 初始化求和
-        for (int i = 0; i < mStats.size(); i++) {
-            BillStats stats = mStats.get(i);
-            mExpense = mExpense.add(stats.getExpense());
-            mIncome = mIncome.add(stats.getIncome());
-            mSum = mSum.add(stats.getSum());
-        }
+    public JournalViewModel(AppRepositry repositry) {
+        mRepositry = repositry;
+        mYear.setValue(String.valueOf(DateTime.now().getYear()));
+        setStats(Integer.valueOf(Objects.requireNonNull(mYear.getValue())));
     }
 
     /**
      * @return 统计列表
      */
-    public List<BillStats> getStats() {
+    public MutableLiveData<List<BillStats>> getStats() {
         return mStats;
+    }
+
+    private void setStats(int year) {
+        mRepositry.getBillsAnnualStats(year, billsStats -> {
+            BigDecimal expense = BigDecimal.ZERO;
+            BigDecimal income = BigDecimal.ZERO;
+            BigDecimal sum = BigDecimal.ZERO;
+            for (int i = 0; i < billsStats.size(); i++) {
+                BillStats stats = billsStats.get(i);
+                expense = expense.add(stats.getExpense());
+                income = income.add(stats.getIncome());
+                sum = sum.add(stats.getSum());
+            }
+            mExpense.setValue(expense);
+            mIncome.setValue(income);
+            mSum.setValue(sum);
+            mStats.setValue(billsStats);
+        });
     }
 
     /**
      * @return 收入
      */
-    @Bindable
-    public String getIncome() {
-        return FormatUtil.getNumeric(mIncome);
+    public MutableLiveData<BigDecimal> getIncome() {
+        return mIncome;
     }
 
     /**
      * @return 支出
      */
-    @Bindable
-    public String getExpense() {
-        return FormatUtil.getNumeric(mExpense);
+    public MutableLiveData<BigDecimal> getExpense() {
+        return mExpense;
     }
 
     /**
      * @return 盈余
      */
-    @Bindable
-    public String getSum() {
-        return FormatUtil.getNumeric(mSum);
+    public MutableLiveData<BigDecimal> getSum() {
+        return mSum;
     }
 
     /**
      * @return 年份
      */
-    @Bindable
-    public String getDate() {
-        return mYear + "";
+    public MutableLiveData<String> getDate() {
+        return mYear;
     }
 
     /**
      * @param year 设置年份
      */
     public void setDate(int year) {
-        mYear = year;
-        notifyChange();
+        mYear.setValue(String.valueOf(year));
     }
 
     /**
@@ -101,7 +98,6 @@ public class JournalViewModel extends BaseObservable {
      */
     public void changeDate() {
         // TODO: 2018/4/6 改变日期
-        Toast.makeText(mContext, "点击", Toast.LENGTH_SHORT).show();
     }
 }
 

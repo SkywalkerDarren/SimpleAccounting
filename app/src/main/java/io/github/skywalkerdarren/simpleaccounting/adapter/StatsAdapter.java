@@ -1,6 +1,5 @@
 package io.github.skywalkerdarren.simpleaccounting.adapter;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.List;
@@ -24,7 +23,7 @@ public class StatsAdapter extends BaseDataBindingAdapter<BillStats, ItemStatsBin
      *
      * @param data 统计类列表
      */
-    public StatsAdapter(@NonNull List<BillStats> data) {
+    public StatsAdapter(List<BillStats> data) {
         super(R.layout.item_stats, data);
     }
 
