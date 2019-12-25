@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager.widget.ViewPager;
 
@@ -22,15 +23,13 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import org.joda.time.DateTime;
 
-import java.util.List;
-
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.ClassifyAdapter;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.EmptyStatsBinding;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentClassifyBinding;
-import io.github.skywalkerdarren.simpleaccounting.model.entity.TypeStats;
 import io.github.skywalkerdarren.simpleaccounting.view_model.ClassifyViewModel;
+import io.github.skywalkerdarren.simpleaccounting.view_model.ViewModelFactory;
 
 
 /**
@@ -71,8 +70,10 @@ public class ClassifyFragment extends BaseFragment {
         // Inflate the layout for this fragment
         FragmentClassifyBinding binding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_classify, container, false);
-        mViewModel = new ClassifyViewModel(DateTime.now(), getContext());
+        ViewModelFactory factory = ViewModelFactory.getInstance(getActivity().getApplication());
+        mViewModel = ViewModelProviders.of(this, factory).get(ClassifyViewModel.class);
         mViewModel.setExpense(true);
+        binding.setLifecycleOwner(this);
 
         mViewPager = binding.classifyViewPager;
         mToIncomeImageView = binding.toIncomeImageView;
@@ -81,35 +82,34 @@ public class ClassifyFragment extends BaseFragment {
         mToExpenseImageView.setVisibility(View.VISIBLE);
 
 
-        mToIncomeImageView.setOnClickListener(view -> {
-            mViewPager.setCurrentItem(0);
-        });
+        mToIncomeImageView.setOnClickListener(view -> mViewPager.setCurrentItem(0));
 
-        mToExpenseImageView.setOnClickListener(view -> {
-            mViewPager.setCurrentItem(1);
-        });
+        mToExpenseImageView.setOnClickListener(view -> mViewPager.setCurrentItem(1));
 
         binding.backImageView.setOnClickListener(view -> {
             mViewModel.back();
             setStatsData(mViewPager.getCurrentItem() == 1, mClassifyAdapter);
             updateUI();
+            mViewModel.start();
         });
         binding.moreImageView.setOnClickListener(view -> {
             mViewModel.more();
             setStatsData(mViewPager.getCurrentItem() == 1, mClassifyAdapter);
             updateUI();
+            mViewModel.start();
         });
         binding.customImageView.setOnClickListener(view -> customDialog());
         binding.dateTextView.setOnClickListener(view -> customDialog());
 
         binding.classifyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        mClassifyAdapter = new ClassifyAdapter(mViewModel.getStatsList());
+        mClassifyAdapter = new ClassifyAdapter(null);
+        mViewModel.getStatsList().observe(this, typeStats -> mClassifyAdapter.setNewData(typeStats));
         mClassifyAdapter.setDuration(100);
         mClassifyAdapter.setEmptyView(emptyView());
         binding.classifyRecyclerView.setAdapter(mClassifyAdapter);
         binding.setClassify(mViewModel);
-
+        mViewModel.start();
         return binding.getRoot();
     }
 
@@ -189,8 +189,7 @@ public class ClassifyFragment extends BaseFragment {
     private void setStatsData(boolean t, ClassifyAdapter adapter) {
         changeImageView(t);
         mViewModel.setExpense(t);
-        List<TypeStats> list = mViewModel.getStatsList();
-        adapter.setNewData(list);
+        mViewModel.getStatsList().observe(this, adapter::setNewData);
         adapter.openLoadAnimation(t ?
                 BaseQuickAdapter.SLIDEIN_RIGHT : BaseQuickAdapter.SLIDEIN_LEFT);
     }

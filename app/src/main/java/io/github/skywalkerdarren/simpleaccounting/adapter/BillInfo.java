@@ -157,7 +157,7 @@ public class BillInfo implements MultiItemEntity {
      *
      * @return true为支出
      */
-    public boolean isExpense() {
+    public boolean getIsExpense() {
         return mIsExpense;
     }
 

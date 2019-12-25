@@ -3,9 +3,11 @@
 
     <data>
 
+        <import type="io.github.skywalkerdarren.simpleaccounting.util.FormatUtil" />
+
         <variable
-            name="header"
-            type="io.github.skywalkerdarren.simpleaccounting.view_model.BillInfoViewModel" />
+            name="billInfo"
+            type="io.github.skywalkerdarren.simpleaccounting.adapter.BillInfo" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -21,10 +23,10 @@
             android:id="@+id/bills_date_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:layout_marginStart="14dp"
             android:layout_marginTop="8dp"
-            android:text="@{header.date}"
+            android:layout_marginBottom="8dp"
+            android:text="@{billInfo.dateTime.toString(`yyyy-MM-dd`)}"
             tools:text="2018-2-2" />
 
         <Space
@@ -45,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:fontFamily="@font/concert_one"
-            android:text="@{header.expense}"
+            android:text="@{billInfo.expense}"
             android:textColor="@android:color/holo_red_light"
             tools:text="1000" />
 
@@ -61,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="23dp"
             android:fontFamily="@font/concert_one"
-            android:text="@{header.income}"
+            android:text="@{billInfo.income}"
             android:textAlignment="center"
             android:textColor="@android:color/holo_green_light"
             tools:text="10000" />

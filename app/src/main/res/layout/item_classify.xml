@@ -66,8 +66,7 @@
                 android:id="@+id/present_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{stats.getBalance().multiply(BigDecimal.valueOf(100))
-                .divide(sum, 2, BigDecimal.ROUND_HALF_UP).toPlainString() + '%'}"
+                android:text="@{stats.getBalance().multiply(BigDecimal.valueOf(100)).divide(sum, 2, BigDecimal.ROUND_HALF_UP).toPlainString() + `%`}"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="@+id/type_text_view"
                 app:layout_constraintTop_toBottomOf="@+id/type_text_view"

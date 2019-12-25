@@ -1,9 +1,8 @@
 package io.github.skywalkerdarren.simpleaccounting.view_model;
 
-import android.content.Context;
-
-import androidx.databinding.BaseObservable;
-import androidx.databinding.Bindable;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import org.joda.time.DateTime;
 import org.joda.time.Period;
@@ -12,7 +11,6 @@ import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.TypeStats;
-import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 
 
 /**
@@ -22,42 +20,52 @@ import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
  * @date 2018/4/6
  */
 
-public class ClassifyViewModel extends BaseObservable {
+public class ClassifyViewModel extends ViewModel {
     private DateTime mStart;
     private DateTime mEnd;
     private Period mPeriod;
     private boolean mIsExpense;
-    private Context mContext;
     private AppRepositry mRepositry;
+    private final String PATTERN = "yyyy年MM月dd日";
 
-    public ClassifyViewModel(DateTime dateTime, Context context) {
-        mContext = context;
-        mStart = new DateTime(dateTime.getYear(), dateTime.getMonthOfYear(), 1, 0, 0);
-        mEnd = mStart.plusMonths(1);
+    private MutableLiveData<String> date = new MutableLiveData<>();
+    private MutableLiveData<List<TypeStats>> statsList = new MutableLiveData<>();
+
+    public ClassifyViewModel(AppRepositry repositry) {
+        mRepositry = repositry;
         mIsExpense = true;
+        DateTime now = DateTime.now();
+        mStart = new DateTime(now.getYear(), now.getMonthOfYear(), 1, 0, 0);
+        mEnd = mStart.plusMonths(1);
         mPeriod = new Period(mStart, mEnd);
-        mRepositry = AppRepositry.getInstance(new AppExecutors(), context);
     }
 
     /**
      * 设置日期
      *
-     * @param start 起始日期
-     * @param end   结束日期
+     * @param end 结束日期
      */
     public void setDate(DateTime start, DateTime end) {
         mEnd = end;
         mStart = start;
         mPeriod = new Period(mStart, mEnd);
-        notifyChange();
+        setStatsList(mStart, mEnd, mIsExpense);
+    }
+
+    public void start() {
+        setStatsList(mStart, mEnd, mIsExpense);
+    }
+
+    private void setStatsList(DateTime start, DateTime end, boolean isExpense) {
+        date.setValue(mStart.toString(PATTERN) + " - " + mEnd.toString(PATTERN));
+        mRepositry.getTypesStats(start, end, isExpense, typesStats -> statsList.setValue(typesStats));
     }
 
     /**
      * @return 时间区间
      */
-    @Bindable
-    public String getDate() {
-        return mStart.toString("yyyy年MM月dd日") + " - " + mEnd.toString("yyyy年MM月dd日");
+    public MutableLiveData<String> getDate() {
+        return date;
     }
 
     /**
@@ -80,7 +88,6 @@ public class ClassifyViewModel extends BaseObservable {
     public void back() {
         mEnd = mEnd.minus(mPeriod);
         mStart = mStart.minus(mPeriod);
-        notifyChange();
     }
 
     /**
@@ -89,7 +96,6 @@ public class ClassifyViewModel extends BaseObservable {
     public void more() {
         mEnd = mEnd.plus(mPeriod);
         mStart = mStart.plus(mPeriod);
-        notifyChange();
     }
 
     /**
@@ -106,14 +112,12 @@ public class ClassifyViewModel extends BaseObservable {
      */
     public void setExpense(boolean expense) {
         mIsExpense = expense;
-        notifyChange();
     }
 
     /**
      * @return 统计列表
      */
-    @Bindable
-    public List<TypeStats> getStatsList() {
-        return mRepositry.getTypesStats(mStart, mEnd, mIsExpense);
+    public LiveData<List<TypeStats>> getStatsList() {
+        return statsList;
     }
 }

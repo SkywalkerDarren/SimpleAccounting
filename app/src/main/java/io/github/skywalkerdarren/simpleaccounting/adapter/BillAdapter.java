@@ -1,7 +1,11 @@
 package io.github.skywalkerdarren.simpleaccounting.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.view.MotionEvent;
+import android.widget.ImageView;
 
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.databinding.ViewDataBinding;
 
 import java.util.List;
@@ -11,7 +15,9 @@ import io.github.skywalkerdarren.simpleaccounting.base.BaseMultiItemDataBindingA
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemListBillBinding;
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemListBillHeaderBinding;
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemListBillWithoutRemarkBinding;
-import io.github.skywalkerdarren.simpleaccounting.view_model.BillInfoViewModel;
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
+import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillDetailActivity;
+import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 
 /**
  * 账单适配器
@@ -22,6 +28,9 @@ import io.github.skywalkerdarren.simpleaccounting.view_model.BillInfoViewModel;
  */
 
 public class BillAdapter extends BaseMultiItemDataBindingAdapter<BillInfo, ViewDataBinding> {
+
+    private final AppRepositry mRepositry = AppRepositry.getInstance(new AppExecutors(), mContext);
+    private int mX, mY;
 
     /**
      * 分隔符
@@ -61,15 +70,49 @@ public class BillAdapter extends BaseMultiItemDataBindingAdapter<BillInfo, ViewD
 
     @Override
     protected void convert(ViewDataBinding binding, BillInfo item) {
-        BillInfoViewModel viewModel = new BillInfoViewModel(item, mActivity);
         if (binding instanceof ItemListBillBinding) {
-            ((ItemListBillBinding) binding).setBill(viewModel);
-            viewModel.setImagePair(((ItemListBillBinding) binding).typeImageView);
+            ItemListBillBinding itemListBillBinding = ((ItemListBillBinding) binding);
+            itemListBillBinding.setBillInfo(item);
+            ImageView imageView = itemListBillBinding.typeImageView;
+            itemListBillBinding.contentCardView.setOnClickListener(v -> click(item, imageView));
+            itemListBillBinding.contentCardView.setOnTouchListener((v, event) -> {
+                touch(event);
+                return false;
+            });
+
         } else if (binding instanceof ItemListBillWithoutRemarkBinding) {
-            ((ItemListBillWithoutRemarkBinding) binding).setBill(viewModel);
-            viewModel.setImagePair(((ItemListBillWithoutRemarkBinding) binding).typeImageView);
+            ItemListBillWithoutRemarkBinding itemListBillWithoutRemarkBinding = (ItemListBillWithoutRemarkBinding) binding;
+            itemListBillWithoutRemarkBinding.setBillInfo(item);
+            ImageView imageView = itemListBillWithoutRemarkBinding.typeImageView;
+            itemListBillWithoutRemarkBinding.contentCardView.setOnClickListener(v -> click(item, imageView));
+            itemListBillWithoutRemarkBinding.contentCardView.setOnTouchListener((v, event) -> {
+                touch(event);
+                return false;
+            });
         } else if (binding instanceof ItemListBillHeaderBinding) {
-            ((ItemListBillHeaderBinding) binding).setHeader(viewModel);
+            ((ItemListBillHeaderBinding) binding).setBillInfo(item);
         }
+    }
+
+    private void touch(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mX = (int) event.getRawX();
+                mY = (int) event.getRawY();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void click(BillInfo item, ImageView imageView) {
+        mRepositry.getBill(item.getUUID(), bill -> {
+            Intent intent = BillDetailActivity.newIntent(mContext,
+                    bill, mX, mY, R.color.orangea200);
+            intent.putExtra(BillDetailActivity.EXTRA_START_COLOR, R.color.orangea200);
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    mActivity, imageView, "type_image_view");
+            mContext.startActivity(intent, options.toBundle());
+        });
     }
 }

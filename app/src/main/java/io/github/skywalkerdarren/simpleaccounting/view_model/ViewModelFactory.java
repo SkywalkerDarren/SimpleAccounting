@@ -53,6 +53,9 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         } else if (modelClass.isAssignableFrom(BillListViewModel.class)) {
             //noinspection unchecked
             return (T) new BillListViewModel(mRepositry);
+        } else if (modelClass.isAssignableFrom(ClassifyViewModel.class)) {
+            //noinspection unchecked
+            return (T) new ClassifyViewModel(mRepositry);
         } else if (modelClass.isAssignableFrom(EmptyListViewModel.class)) {
             //noinspection unchecked
             return (T) new EmptyListViewModel();
