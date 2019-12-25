@@ -36,8 +36,6 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.appbar.AppBarLayout;
 
-import java.util.Objects;
-
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseAppBarStateChangeListener;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
@@ -45,8 +43,8 @@ import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillDetail
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillEditActivity;
 import io.github.skywalkerdarren.simpleaccounting.util.DpConvertUtils;
+import io.github.skywalkerdarren.simpleaccounting.util.ViewModelFactory;
 import io.github.skywalkerdarren.simpleaccounting.view_model.BillDetailViewModel;
-import io.github.skywalkerdarren.simpleaccounting.view_model.ViewModelFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -120,8 +118,7 @@ public class BillDetailFragment extends BaseFragment {
         mToolbarTextView = mBinding.toolbarTitle;
         mAppBarLayout = mBinding.appbar;
         Toolbar toolbar = mBinding.toolbar;
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-        //noinspection ConstantConditions
+        AppCompatActivity activity = (AppCompatActivity) requireActivity();
         activity.setSupportActionBar(toolbar);
         //noinspection ConstantConditions
         activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -131,9 +128,9 @@ public class BillDetailFragment extends BaseFragment {
             view.getLocationInWindow(location);
             int x = (int) view.getX() + view.getWidth() / 2;
             int y = (int) view.getY() + view.getHeight() / 2;
-            Intent intent = BillEditActivity.newIntent(getContext(), mBill, x, y);
-            //noinspection ConstantConditions,unchecked
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity());
+            Intent intent = BillEditActivity.newIntent(requireContext(), mBill, x, y);
+            //noinspection unchecked
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(requireActivity());
             startActivity(intent, options.toBundle());
         });
         setToolbarChange();
@@ -165,8 +162,8 @@ public class BillDetailFragment extends BaseFragment {
                 reveal.setInterpolator(new DecelerateInterpolator());
                 // 颜色渐变动画
                 ObjectAnimator colorChange = new ObjectAnimator();
-                colorChange.setIntValues(ContextCompat.getColor(Objects.requireNonNull(getContext()), startColor),
-                        ContextCompat.getColor(Objects.requireNonNull(getContext()), R.color.transparent));
+                colorChange.setIntValues(ContextCompat.getColor(requireContext(), startColor),
+                        ContextCompat.getColor(requireContext(), R.color.transparent));
                 colorChange.setEvaluator(new ArgbEvaluator());
                 colorChange.addUpdateListener(valueAnimator -> view
                         .setBackgroundColor((Integer) valueAnimator.getAnimatedValue()));
@@ -206,7 +203,7 @@ public class BillDetailFragment extends BaseFragment {
         // 设定新大小
         int newSize = DpConvertUtils.convertDpToPixelSize(
                 EXPAND_TYPE_SIZE_DP - (EXPAND_TYPE_SIZE_DP - COLLAPSED_TYPE_SIZE_DP) * offset,
-                getContext());
+                requireContext());
         float newTextSize =
                 mTitleTextSize - (mTitleTextSize - mToolbarTextView.getTextSize()) * offset;
         mTypeImageView.getLayoutParams().width = newSize;
@@ -229,7 +226,7 @@ public class BillDetailFragment extends BaseFragment {
     public void resetPoints() {
         clearAnim();
 
-        int avatarSize = DpConvertUtils.convertDpToPixelSize(EXPAND_TYPE_SIZE_DP, getContext());
+        int avatarSize = DpConvertUtils.convertDpToPixelSize(EXPAND_TYPE_SIZE_DP, requireContext());
         mTypeImageView.getLocationOnScreen(mTypePoint);
         Log.d(TAG, "resetPoints: mTypePoint" + mTypePoint[0] + " " + mTypePoint[1]);
         mTypePoint[0] -= (avatarSize - mTypeImageView.getWidth()) / 2;
@@ -237,7 +234,7 @@ public class BillDetailFragment extends BaseFragment {
         Log.d(TAG, "resetPoints: mSpacePoint" + mSpacePoint[0] + " " + mSpacePoint[1]);
         mToolbarTextView.getLocationOnScreen(mToolbarTextPoint);
         Log.d(TAG, "resetPoints: mToolbarTextPoint" + mToolbarTextPoint[0] + " " + mToolbarTextPoint[1]);
-        mToolbarTextPoint[0] += DpConvertUtils.convertDpToPixelSize(16, getContext());
+        mToolbarTextPoint[0] += DpConvertUtils.convertDpToPixelSize(16, requireContext());
         mTypeTitleTextView.post(() -> {
             mTypeTitleTextView.getLocationOnScreen(mTitleTextViewPoint);
             translationView(mAppBarStateChangeListener.getCurrentOffset());
@@ -254,12 +251,12 @@ public class BillDetailFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Objects.requireNonNull(getActivity()).onBackPressed();
+                requireActivity().onBackPressed();
                 return true;
             case R.id.del:
                 DeleteBillAlertDialog dialog = DeleteBillAlertDialog.newInstance(mBill.getUUID());
                 dialog.setTargetFragment(this, REQUEST_DESTROY);
-                dialog.show(Objects.requireNonNull(getFragmentManager()), "alertDialog");
+                dialog.show(requireFragmentManager(), "alertDialog");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -269,7 +266,7 @@ public class BillDetailFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ViewModelFactory factory = ViewModelFactory.getInstance(Objects.requireNonNull(getActivity()).getApplication());
+        ViewModelFactory factory = ViewModelFactory.getInstance(requireActivity().getApplication());
         mViewModel = ViewModelProviders.of(this, factory).get(BillDetailViewModel.class);
         mBinding.setDetail(mViewModel);
         mBinding.setLifecycleOwner(this);
@@ -284,7 +281,7 @@ public class BillDetailFragment extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_DESTROY) {
             if (resultCode == Activity.RESULT_OK) {
-                Objects.requireNonNull(getActivity()).finish();
+                requireActivity().finish();
             }
         }
     }

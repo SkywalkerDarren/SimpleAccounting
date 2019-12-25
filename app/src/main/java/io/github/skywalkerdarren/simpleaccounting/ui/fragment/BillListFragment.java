@@ -1,6 +1,5 @@
 package io.github.skywalkerdarren.simpleaccounting.ui.fragment;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
@@ -28,9 +28,9 @@ import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.EmptyLayoutBinding;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillListBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillInfo;
+import io.github.skywalkerdarren.simpleaccounting.util.ViewModelFactory;
 import io.github.skywalkerdarren.simpleaccounting.view_model.BillListViewModel;
 import io.github.skywalkerdarren.simpleaccounting.view_model.EmptyListViewModel;
-import io.github.skywalkerdarren.simpleaccounting.view_model.ViewModelFactory;
 
 import static io.github.skywalkerdarren.simpleaccounting.adapter.BillAdapter.HEADER;
 
@@ -47,7 +47,7 @@ public class BillListFragment extends BaseFragment {
     private FragmentBillListBinding mBinding;
     private BillListViewModel mViewModel;
     private RecyclerView mBillListRecyclerView;
-    public BillAdapter mBillAdapter;
+    private BillAdapter mBillAdapter;
     private SharedPreferences mSharedPref;
 
     /**
@@ -70,26 +70,25 @@ public class BillListFragment extends BaseFragment {
         setHasOptionsMenu(true);
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_bill_list, container, false);
 
         mBillListRecyclerView = mBinding.billRecycleView;
 
-        mSharedPref = getContext().getSharedPreferences(SHARED_BUDGET, Context.MODE_PRIVATE);
+        mSharedPref = requireContext().getSharedPreferences(SHARED_BUDGET, Context.MODE_PRIVATE);
 
         mBinding.dateImageView.setOnClickListener(view1 ->
                 mViewModel.getDate().observe(this, dateTime -> {
                     MonthPickerDialog monthPickerDialog = MonthPickerDialog.newInstance(dateTime);
                     monthPickerDialog.setTargetFragment(BillListFragment.this, REQUEST_DATE_TIME);
-                    monthPickerDialog.show(getFragmentManager(), "month picker");
+                    monthPickerDialog.show(requireFragmentManager(), "month picker");
                 }));
 
 
-        mBillListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mBillListRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
         // TODO: 2018/3/25 预算选择逻辑 新小窗口
         mBinding.setBudgeTextView.setOnClickListener(view -> {
@@ -102,7 +101,7 @@ public class BillListFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ViewModelFactory factory = ViewModelFactory.getInstance(getActivity().getApplication());
+        ViewModelFactory factory = ViewModelFactory.getInstance(requireActivity().getApplication());
         mViewModel = ViewModelProviders.of(this, factory).get(BillListViewModel.class);
         mBinding.setBillList(mViewModel);
         mBinding.setLifecycleOwner(this);
@@ -127,7 +126,7 @@ public class BillListFragment extends BaseFragment {
      */
     private void updateAdapter(List<BillInfo> billInfoList) {
         if (mBillAdapter == null) {
-            mBillAdapter = new BillAdapter(billInfoList, getActivity());
+            mBillAdapter = new BillAdapter(billInfoList, requireActivity());
             configAdapter();
             mBillListRecyclerView.setAdapter(mBillAdapter);
             mBillListRecyclerView.addItemDecoration(new PinnedHeaderItemDecoration
@@ -146,8 +145,8 @@ public class BillListFragment extends BaseFragment {
      * @return 空视图
      */
     private View emptyView() {
-        EmptyLayoutBinding binding = EmptyLayoutBinding.inflate(LayoutInflater.from(getContext()));
-        ViewModelFactory factory = ViewModelFactory.getInstance(getActivity().getApplication());
+        EmptyLayoutBinding binding = EmptyLayoutBinding.inflate(LayoutInflater.from(requireContext()));
+        ViewModelFactory factory = ViewModelFactory.getInstance(requireActivity().getApplication());
         binding.setEmpty(ViewModelProviders.of(this, factory).get(EmptyListViewModel.class));
         binding.getRoot().setOnClickListener(view -> updateUI());
         return binding.getRoot();

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.ColorRes;
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -38,8 +39,8 @@ import io.github.skywalkerdarren.simpleaccounting.adapter.StatsAdapter;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentJournalBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
+import io.github.skywalkerdarren.simpleaccounting.util.ViewModelFactory;
 import io.github.skywalkerdarren.simpleaccounting.view_model.JournalViewModel;
-import io.github.skywalkerdarren.simpleaccounting.view_model.ViewModelFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -74,19 +75,19 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         FragmentJournalBinding binding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_journal, container, false);
-        ViewModelFactory factory = ViewModelFactory.getInstance(getActivity().getApplication());
+        ViewModelFactory factory = ViewModelFactory.getInstance(requireActivity().getApplication());
         mViewModel = ViewModelProviders.of(this, factory).get(JournalViewModel.class);
         binding.setJournal(mViewModel);
         binding.setLifecycleOwner(this);
 
         mLineChart = binding.statsLineChart;
 
-        binding.statsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        binding.statsRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
         binding.expenseCardView.setOnClickListener(this);
         binding.incomeCardView.setOnClickListener(this);
         binding.balanceCardView.setOnClickListener(this);
@@ -171,7 +172,7 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
         lineChart.setDescription(description);
         lineChart.setScaleEnabled(false);
         lineChart.getAxisRight().setEnabled(false);
-        lineChart.setMarker(new TopHighLight(getActivity()));
+        lineChart.setMarker(new TopHighLight(requireActivity()));
 
         Legend legend = lineChart.getLegend();
         legend.setEnabled(false);

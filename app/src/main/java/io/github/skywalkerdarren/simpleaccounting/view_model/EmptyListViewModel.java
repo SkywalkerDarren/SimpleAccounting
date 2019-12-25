@@ -30,13 +30,9 @@ public class EmptyListViewModel extends ViewModel {
     @BindingAdapter("onTouch")
     public static void setTouchListener(View view, boolean b) {
         view.setOnTouchListener((view1, motionEvent) -> {
-            switch (motionEvent.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    mX = (int) motionEvent.getRawX();
-                    mY = (int) motionEvent.getRawY();
-                    break;
-                default:
-                    break;
+            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                mX = (int) motionEvent.getRawX();
+                mY = (int) motionEvent.getRawY();
             }
             return b;
         });

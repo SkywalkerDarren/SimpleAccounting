@@ -10,8 +10,7 @@ import io.github.skywalkerdarren.simpleaccounting.ui.fragment.StatsFragment;
 
 public class StatsActivity extends BaseFragmentActivity {
     public static Intent newIntent(Context context) {
-        Intent intent = new Intent(context, StatsActivity.class);
-        return intent;
+        return new Intent(context, StatsActivity.class);
     }
 
     @Override

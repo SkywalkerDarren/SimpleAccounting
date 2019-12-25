@@ -25,7 +25,7 @@ import io.github.skywalkerdarren.simpleaccounting.R;
  */
 
 public class MonthPickerDialog extends DialogFragment {
-    public static final String EXTRA_DATE = "io.github.skywalkerdarren.simpleaccounting.datetime";
+    static final String EXTRA_DATE = "io.github.skywalkerdarren.simpleaccounting.datetime";
     private final static String ARG_DATE_TIME = "datetime";
     private NumberPicker mYearPicker;
     private NumberPicker mMonthPicker;
@@ -47,9 +47,9 @@ public class MonthPickerDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        DateTime dateTime = (DateTime) getArguments().getSerializable(ARG_DATE_TIME);
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.month_picker, null);
+        DateTime dateTime = (DateTime) requireArguments().getSerializable(ARG_DATE_TIME);
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        View view = LayoutInflater.from(requireActivity()).inflate(R.layout.month_picker, null);
 
         mMonthPicker = view.findViewById(R.id.month_picker);
         mYearPicker = view.findViewById(R.id.year_picker);
@@ -75,8 +75,7 @@ public class MonthPickerDialog extends DialogFragment {
                 })
                 .setNegativeButton("取消", (dialogInterface, i) -> dialogInterface.cancel())
                 .setView(view);
-        Dialog dialog = builder.create();
-        return dialog;
+        return builder.create();
     }
 
     /**
@@ -84,7 +83,7 @@ public class MonthPickerDialog extends DialogFragment {
      *
      * @param year 年份
      */
-    public void setYearPicker(@IntRange(from = 1900, to = 2100) int year) {
+    private void setYearPicker(@IntRange(from = 1900, to = 2100) int year) {
         mYearPicker.setValue(year);
     }
 
@@ -93,7 +92,7 @@ public class MonthPickerDialog extends DialogFragment {
      *
      * @param month 月份
      */
-    public void setMonthPicker(@IntRange(from = 1, to = 12) int month) {
+    private void setMonthPicker(@IntRange(from = 1, to = 12) int month) {
         mMonthPicker.setValue(month);
     }
 

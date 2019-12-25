@@ -55,9 +55,8 @@ public class ChartViewModel extends ViewModel {
                 });
             }
         });
-        mRepositry.getBillStats(startDateTime, endDateTime, billStats -> {
-            mBillStats.setValue(billStats);
-        });
+        mRepositry.getBillStats(startDateTime, endDateTime, billStats ->
+                mBillStats.setValue(billStats));
     }
 
     @NonNull

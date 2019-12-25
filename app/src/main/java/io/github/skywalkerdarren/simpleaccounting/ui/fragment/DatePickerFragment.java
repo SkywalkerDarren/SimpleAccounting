@@ -24,7 +24,7 @@ import io.github.skywalkerdarren.simpleaccounting.databinding.DialogDateBinding;
  */
 
 public class DatePickerFragment extends DialogFragment {
-    public static final String EXTRA_DATE =
+    static final String EXTRA_DATE =
             "io.github.skywalkerdarren.simpleaccounting.date";
 
     private static final String ARG_DATE = "date";
@@ -66,16 +66,16 @@ public class DatePickerFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // 从args中获取消息
-        DateTime date = (DateTime) getArguments().getSerializable(ARG_DATE);
+        DateTime date = (DateTime) requireArguments().getSerializable(ARG_DATE);
         int year = date != null ? date.getYear() : DateTime.now().getYear();
         int month = date != null ? date.getMonthOfYear() - 1 : DateTime.now().getMonthOfYear();
         int day = date != null ? date.getDayOfMonth() : DateTime.now().getDayOfMonth();
 
-        DialogDateBinding binding = DialogDateBinding.inflate(LayoutInflater.from(getActivity()));
+        DialogDateBinding binding = DialogDateBinding.inflate(LayoutInflater.from(requireActivity()));
         mDatePicker = binding.dialogDatePicker;
         mDatePicker.init(year, month, day, null);
 
-        return new AlertDialog.Builder(getActivity())
+        return new AlertDialog.Builder(requireActivity())
                 // 设定布局
                 .setView(binding.getRoot())
                 .setTitle(R.string.date_picker_title)

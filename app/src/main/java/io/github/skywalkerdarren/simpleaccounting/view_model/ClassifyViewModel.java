@@ -26,7 +26,6 @@ public class ClassifyViewModel extends ViewModel {
     private Period mPeriod;
     private boolean mIsExpense;
     private AppRepositry mRepositry;
-    private final String PATTERN = "yyyy年MM月dd日";
 
     private MutableLiveData<String> date = new MutableLiveData<>();
     private MutableLiveData<List<TypeStats>> statsList = new MutableLiveData<>();
@@ -57,7 +56,8 @@ public class ClassifyViewModel extends ViewModel {
     }
 
     private void setStatsList(DateTime start, DateTime end, boolean isExpense) {
-        date.setValue(mStart.toString(PATTERN) + " - " + mEnd.toString(PATTERN));
+        String pattern = "yyyy年MM月dd日";
+        date.setValue(mStart.toString(pattern) + " - " + mEnd.toString(pattern));
         mRepositry.getTypesStats(start, end, isExpense, typesStats -> statsList.setValue(typesStats));
     }
 

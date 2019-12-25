@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.PagerAdapter;
@@ -28,7 +29,6 @@ import io.github.skywalkerdarren.simpleaccounting.ui.activity.MyAccountActivity;
 public class DiscoveryFragment extends BaseFragment {
     private LinearLayout mDotLayout;
     private ArrayList<ImageView> mImageViews;
-    private static final String TAG = "DiscoveryFragment";
     private FragmentDiscoveryBinding mBinding;
 
     /**
@@ -51,12 +51,12 @@ public class DiscoveryFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater,
                 R.layout.fragment_discovery, container, false);
         mBinding.myAccount.setOnClickListener(view -> {
-            Intent intent = MyAccountActivity.newIntent(getContext());
+            Intent intent = MyAccountActivity.newIntent(requireContext());
             startActivity(intent);
         });
 
@@ -75,12 +75,12 @@ public class DiscoveryFragment extends BaseFragment {
                 R.drawable.bg3, R.drawable.bg2};
         mImageViews = new ArrayList<>(productPhotos.length);
         for (int i : productPhotos) {
-            ImageView imageView = new ImageView(getContext());
+            ImageView imageView = new ImageView(requireContext());
             imageView.setImageResource(i);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             mImageViews.add(imageView);
 
-            View view = new View(getContext());
+            View view = new View(requireContext());
             view.setBackgroundResource(R.drawable.indicator);
             view.setEnabled(false);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(15, 15);

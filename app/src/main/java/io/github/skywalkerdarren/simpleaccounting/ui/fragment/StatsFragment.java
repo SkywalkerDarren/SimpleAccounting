@@ -58,7 +58,7 @@ public class StatsFragment extends Fragment {
         mStatsSbg = binding.statsSbg;
         mViewPager = binding.fragmentContainer;
         mToolbar = binding.toolbar;
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        AppCompatActivity activity = (AppCompatActivity) requireActivity();
         activity.setSupportActionBar(mToolbar);
         //noinspection ConstantConditions
         activity.getSupportActionBar()
@@ -110,7 +110,7 @@ public class StatsFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                getActivity().onBackPressed();
+                requireActivity().onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

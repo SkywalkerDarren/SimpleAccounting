@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -28,8 +29,8 @@ import io.github.skywalkerdarren.simpleaccounting.adapter.ClassifyAdapter;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.EmptyStatsBinding;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentClassifyBinding;
+import io.github.skywalkerdarren.simpleaccounting.util.ViewModelFactory;
 import io.github.skywalkerdarren.simpleaccounting.view_model.ClassifyViewModel;
-import io.github.skywalkerdarren.simpleaccounting.view_model.ViewModelFactory;
 
 
 /**
@@ -40,7 +41,7 @@ import io.github.skywalkerdarren.simpleaccounting.view_model.ViewModelFactory;
 public class ClassifyFragment extends BaseFragment {
 
     private static final int REQUEST_PERIOD = 0;
-    ClassifyViewModel mViewModel;
+    private ClassifyViewModel mViewModel;
     private ViewPager mViewPager;
     private ClassifyAdapter mClassifyAdapter;
     private ImageView mToIncomeImageView;
@@ -65,12 +66,12 @@ public class ClassifyFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         FragmentClassifyBinding binding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_classify, container, false);
-        ViewModelFactory factory = ViewModelFactory.getInstance(getActivity().getApplication());
+        ViewModelFactory factory = ViewModelFactory.getInstance(requireActivity().getApplication());
         mViewModel = ViewModelProviders.of(this, factory).get(ClassifyViewModel.class);
         mViewModel.setExpense(true);
         binding.setLifecycleOwner(this);
@@ -101,7 +102,7 @@ public class ClassifyFragment extends BaseFragment {
         binding.customImageView.setOnClickListener(view -> customDialog());
         binding.dateTextView.setOnClickListener(view -> customDialog());
 
-        binding.classifyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.classifyRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         mClassifyAdapter = new ClassifyAdapter(null);
         mViewModel.getStatsList().observe(this, typeStats -> mClassifyAdapter.setNewData(typeStats));
@@ -117,12 +118,13 @@ public class ClassifyFragment extends BaseFragment {
         PeriodDialogFragment periodDialog = PeriodDialogFragment
                 .newInstance(mViewModel.getStart(), mViewModel.getEnd());
         periodDialog.setTargetFragment(this, REQUEST_PERIOD);
-        periodDialog.show(getFragmentManager(), "periodDialog");
+        periodDialog.show(requireFragmentManager(), "periodDialog");
     }
 
     @Override
     protected void updateUI() {
         mViewPager.setAdapter(new FragmentStatePagerAdapter(getChildFragmentManager()) {
+            @NonNull
             @Override
             public Fragment getItem(int position) {
                 switch (position) {
@@ -133,7 +135,7 @@ public class ClassifyFragment extends BaseFragment {
                         return PieChartFragment.newInstance(
                                 mViewModel.getStart(), mViewModel.getEnd(), true);
                     default:
-                        return null;
+                        throw new IllegalArgumentException("no this item");
                 }
             }
 
@@ -176,8 +178,8 @@ public class ClassifyFragment extends BaseFragment {
      * @param toIncome true则转到收入页，当前为支出页
      */
     private void changeImageView(boolean toIncome) {
-        Animator disappear = AnimatorInflater.loadAnimator(getContext(), toIncome ? R.animator.to_left_disappear : R.animator.to_right_disappear);
-        Animator appear = AnimatorInflater.loadAnimator(getContext(), toIncome ? R.animator.to_left_appear : R.animator.to_right_appear);
+        Animator disappear = AnimatorInflater.loadAnimator(requireContext(), toIncome ? R.animator.to_left_disappear : R.animator.to_right_disappear);
+        Animator appear = AnimatorInflater.loadAnimator(requireContext(), toIncome ? R.animator.to_left_appear : R.animator.to_right_appear);
         disappear.setTarget(toIncome ? mToExpenseImageView : mToIncomeImageView);
         appear.setTarget(toIncome ? mToIncomeImageView : mToExpenseImageView);
 
@@ -195,7 +197,7 @@ public class ClassifyFragment extends BaseFragment {
     }
 
     private View emptyView() {
-        return EmptyStatsBinding.inflate(LayoutInflater.from(getContext())).getRoot();
+        return EmptyStatsBinding.inflate(LayoutInflater.from(requireContext())).getRoot();
     }
 
 

@@ -6,6 +6,7 @@ import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -39,8 +40,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import org.joda.time.DateTime;
 
-import java.util.Objects;
-
 import co.ceryle.segmentedbutton.SegmentedButtonGroup;
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.AccountMenuAdapter;
@@ -53,8 +52,8 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
 import io.github.skywalkerdarren.simpleaccounting.ui.NumPad;
 import io.github.skywalkerdarren.simpleaccounting.util.DpConvertUtils;
+import io.github.skywalkerdarren.simpleaccounting.util.ViewModelFactory;
 import io.github.skywalkerdarren.simpleaccounting.view_model.BillEditViewModel;
-import io.github.skywalkerdarren.simpleaccounting.view_model.ViewModelFactory;
 
 /**
  * 账单编辑或创建的fragment
@@ -122,7 +121,7 @@ public class BillEditFragment extends BaseFragment {
         actionBar.setTitle("");
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
-        mBinding.typeListRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
+        mBinding.typeListRecyclerView.setLayoutManager(new GridLayoutManager(requireActivity(), 4));
         viewEnterAnimation(mBinding.getRoot());
         return mBinding.getRoot();
     }
@@ -130,7 +129,7 @@ public class BillEditFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ViewModelFactory factory = ViewModelFactory.getInstance(getActivity().getApplication());
+        ViewModelFactory factory = ViewModelFactory.getInstance(requireActivity().getApplication());
         mViewModel = ViewModelProviders.of(this, factory).get(BillEditViewModel.class);
         mBinding.setEdit(mViewModel);
         mBinding.setLifecycleOwner(this);
@@ -160,7 +159,7 @@ public class BillEditFragment extends BaseFragment {
         mBinding.dateImageView.setOnClickListener(view -> {
             DatePickerFragment datePicker = DatePickerFragment.newInstance(mViewModel.getDate().getValue());
             datePicker.setTargetFragment(this, REQUEST_DATE);
-            datePicker.show(getFragmentManager(), "datePicker");
+            datePicker.show(requireFragmentManager(), "datePicker");
         });
 
         // TODO: 2018/4/2 监听账户点击
@@ -171,6 +170,7 @@ public class BillEditFragment extends BaseFragment {
 
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setBalanceEditText() {
         TextWatcher textWatcher = new TextWatcher() {
             @Override
@@ -230,8 +230,8 @@ public class BillEditFragment extends BaseFragment {
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop,
                                        int oldRight, int oldBottom) {
                 v.removeOnLayoutChangeListener(this);
-                int cx = getArguments().getInt(ARG_CX);
-                int cy = getArguments().getInt(ARG_CY);
+                int cx = requireArguments().getInt(ARG_CX);
+                int cy = requireArguments().getInt(ARG_CY);
                 // get the hypothenuse so the radius is from one corner to the other
                 int w = v.getWidth();
                 int h = v.getHeight();
@@ -256,7 +256,7 @@ public class BillEditFragment extends BaseFragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_edit, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -272,7 +272,7 @@ public class BillEditFragment extends BaseFragment {
                 DesktopWidget.refresh(requireContext());
             case android.R.id.home:
                 mNumPad.setVisibility(View.INVISIBLE);
-                Objects.requireNonNull(getActivity()).onBackPressed();
+                requireActivity().onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -284,7 +284,7 @@ public class BillEditFragment extends BaseFragment {
      */
     private void typeImageAnimator() {
         // 放大显示动画
-        Animator appear = AnimatorInflater.loadAnimator(getActivity(), R.animator.type_appear);
+        Animator appear = AnimatorInflater.loadAnimator(requireActivity(), R.animator.type_appear);
         appear.setTarget(mTypeImageView);
         appear.start();
     }
@@ -294,13 +294,9 @@ public class BillEditFragment extends BaseFragment {
         if (resultCode != Activity.RESULT_OK) {
             return;
         }
-        switch (requestCode) {
-            case REQUEST_DATE:
-                mViewModel.setDate((DateTime) data
-                        .getSerializableExtra(DatePickerFragment.EXTRA_DATE));
-                break;
-            default:
-                break;
+        if (requestCode == REQUEST_DATE) {
+            mViewModel.setDate((DateTime) data
+                    .getSerializableExtra(DatePickerFragment.EXTRA_DATE));
         }
     }
 
@@ -322,11 +318,11 @@ public class BillEditFragment extends BaseFragment {
     }
 
     private void getPopupWindow(View view) {
-        MenuAccountBinding binding = MenuAccountBinding.inflate(LayoutInflater.from(getContext()));
+        MenuAccountBinding binding = MenuAccountBinding.inflate(LayoutInflater.from(requireContext()));
         View menu = binding.getRoot();
-        binding.accountRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.accountRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.accountRecyclerView.addItemDecoration(
-                new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+                new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
 
         mViewModel.getAccounts().observe(this, accounts -> {
             PopupWindow popupWindow = new PopupWindow(menu);
@@ -345,7 +341,7 @@ public class BillEditFragment extends BaseFragment {
     private void setPopupWindow(PopupWindow popupWindow, View view) {
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-        popupWindow.setElevation(DpConvertUtils.convertDpToPixel(2, getContext()));
+        popupWindow.setElevation(DpConvertUtils.convertDpToPixel(2, requireContext()));
         popupWindow.getContentView().measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         popupWindow.setOutsideTouchable(true);
         popupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));

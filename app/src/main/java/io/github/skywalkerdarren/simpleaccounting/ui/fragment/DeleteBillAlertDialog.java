@@ -24,7 +24,6 @@ import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 public class DeleteBillAlertDialog extends DialogFragment {
     private final static String ARG_BILL_ID = "id";
     private UUID mBillId;
-    private static final String TAG = "DeleteBillAlertDialog";
 
     public static DeleteBillAlertDialog newInstance(UUID billId) {
         Bundle args = new Bundle();
@@ -46,9 +45,9 @@ public class DeleteBillAlertDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AppRepositry repositry = AppRepositry.getInstance(new AppExecutors(), getContext());
-        mBillId = (UUID) getArguments().getSerializable(ARG_BILL_ID);
-        return new AlertDialog.Builder(getActivity())
+        AppRepositry repositry = AppRepositry.getInstance(new AppExecutors(), requireContext());
+        mBillId = (UUID) requireArguments().getSerializable(ARG_BILL_ID);
+        return new AlertDialog.Builder(requireActivity())
                 .setTitle("确认删除")
                 .setMessage("确定永久删除此账单？")
                 .setNegativeButton(android.R.string.cancel, (dialogInterface, i) ->
@@ -56,7 +55,7 @@ public class DeleteBillAlertDialog extends DialogFragment {
                 .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
                     // 删除帐单
                     repositry.delBill(mBillId);
-                    DesktopWidget.refresh(getContext());
+                    DesktopWidget.refresh(requireContext());
                     sendResult(Activity.RESULT_OK);
                 })
                 .create();

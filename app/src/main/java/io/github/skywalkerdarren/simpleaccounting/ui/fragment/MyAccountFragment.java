@@ -44,14 +44,14 @@ public class MyAccountFragment extends BaseFragment {
         FragmentMyAccountBinding binding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_my_account, container, false);
         binding.aboutUs.setOnClickListener(view -> {
-            Intent intent = AboutActivity.newIntent(getContext());
+            Intent intent = AboutActivity.newIntent(requireContext());
             startActivity(intent);
         });
         binding.setting.setOnClickListener(view -> {
-            Intent intent = SettingsActivity.newIntent(getContext());
+            Intent intent = SettingsActivity.newIntent(requireContext());
             startActivity(intent);
         });
-        binding.back.setOnClickListener(view -> getActivity().finish());
+        binding.back.setOnClickListener(view -> requireActivity().finish());
         return binding.getRoot();
     }
 

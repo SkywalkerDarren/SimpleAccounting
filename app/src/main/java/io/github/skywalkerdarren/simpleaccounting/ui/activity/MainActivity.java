@@ -94,7 +94,8 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(intent, REQUEST_UPDATE_BILL);
         });
         FragmentManager fragmentManager = getSupportFragmentManager();
-        mViewPager.setAdapter(new FragmentPagerAdapter(fragmentManager) {
+        mViewPager.setAdapter(new FragmentPagerAdapter(fragmentManager,
+                FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
             /**
              * 导航栏一共3个页面 固定
              * @return 3
@@ -104,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 return 3;
             }
 
+            @NonNull
             @Override
             public Fragment getItem(int position) {
                 switch (position) {
@@ -114,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
                     case 2:
                         return mDiscoveryFragment;
                     default:
-                        return null;
+                        throw new IllegalArgumentException("no this item");
                 }
             }
         });

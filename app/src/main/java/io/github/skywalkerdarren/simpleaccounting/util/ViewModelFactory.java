@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.view_model;
+package io.github.skywalkerdarren.simpleaccounting.util;
 
 import android.app.Application;
 
@@ -8,7 +8,14 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
-import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
+import io.github.skywalkerdarren.simpleaccounting.view_model.AccountViewModel;
+import io.github.skywalkerdarren.simpleaccounting.view_model.BillDetailViewModel;
+import io.github.skywalkerdarren.simpleaccounting.view_model.BillEditViewModel;
+import io.github.skywalkerdarren.simpleaccounting.view_model.BillListViewModel;
+import io.github.skywalkerdarren.simpleaccounting.view_model.ChartViewModel;
+import io.github.skywalkerdarren.simpleaccounting.view_model.ClassifyViewModel;
+import io.github.skywalkerdarren.simpleaccounting.view_model.EmptyListViewModel;
+import io.github.skywalkerdarren.simpleaccounting.view_model.JournalViewModel;
 
 public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     private static volatile ViewModelFactory INSTANCE;

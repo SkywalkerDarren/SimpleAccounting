@@ -24,8 +24,8 @@ import io.github.skywalkerdarren.simpleaccounting.databinding.PeriodDialogFragme
 
 public class PeriodDialogFragment extends DialogFragment {
 
-    public static final String EXTRA_END_DATE = "io.github.skywalkerdarren.simpleaccounting.ui.fragment.PeriodDialogFragment.EXTRA_END_DATE";
-    public static final String EXTRA_START_DATE = "io.github.skywalkerdarren.simpleaccounting.ui.fragment.PeriodDialogFragment.EXTRA_START_DATE";
+    static final String EXTRA_END_DATE = "io.github.skywalkerdarren.simpleaccounting.ui.fragment.PeriodDialogFragment.EXTRA_END_DATE";
+    static final String EXTRA_START_DATE = "io.github.skywalkerdarren.simpleaccounting.ui.fragment.PeriodDialogFragment.EXTRA_START_DATE";
     private static final String ARG_START = "start";
     private static final String ARG_END = "end";
     private DatePicker mStartDatePicker;
@@ -63,12 +63,12 @@ public class PeriodDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        DateTime startDateTime = (DateTime) getArguments().getSerializable(ARG_START);
-        DateTime endDateTime = (DateTime) getArguments().getSerializable(ARG_END);
+        DateTime startDateTime = (DateTime) requireArguments().getSerializable(ARG_START);
+        DateTime endDateTime = (DateTime) requireArguments().getSerializable(ARG_END);
         DateTime now = DateTime.now();
 
         PeriodDialogFragmentBinding binding = DataBindingUtil.inflate(
-                LayoutInflater.from(getContext()),
+                LayoutInflater.from(requireContext()),
                 R.layout.period_dialog_fragment, null, false);
         mStartDatePicker = binding.startDatePicker;
         mEndDatePicker = binding.endDatePicker;
@@ -82,7 +82,7 @@ public class PeriodDialogFragment extends DialogFragment {
                 endDateTime != null ? endDateTime.getDayOfMonth() : now.getDayOfMonth(),
                 null);
 
-        return new AlertDialog.Builder(getContext())
+        return new AlertDialog.Builder(requireContext())
                 .setView(binding.getRoot())
                 .setTitle(getString(R.string.set_date))
                 .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {

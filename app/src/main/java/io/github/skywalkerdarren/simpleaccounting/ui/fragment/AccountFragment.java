@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
@@ -30,8 +31,8 @@ import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.MainActivity;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.SettingsActivity;
 import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
+import io.github.skywalkerdarren.simpleaccounting.util.ViewModelFactory;
 import io.github.skywalkerdarren.simpleaccounting.view_model.AccountViewModel;
-import io.github.skywalkerdarren.simpleaccounting.view_model.ViewModelFactory;
 
 
 /**
@@ -42,7 +43,6 @@ import io.github.skywalkerdarren.simpleaccounting.view_model.ViewModelFactory;
  * @author darren
  */
 public class AccountFragment extends BaseFragment {
-    private static final String TAG = "AccountFragment";
     private RecyclerView mAccountRecyclerView;
     private AccountAdapter mAdapter;
     private FragmentAccountBinding mBinding;
@@ -71,47 +71,42 @@ public class AccountFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mBinding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_account, container, false);
-        //mViewModel = new AccountViewModel(getContext())
         mAccountRecyclerView = mBinding.accountRecyclerView;
-        mAccountRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mAccountRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
         mBinding.settingCardView.setOnClickListener(view -> toSettingActivity());
-        // TODO toVM
-        mBinding.deleteAllCardView.setOnClickListener(view -> {
-            new AlertDialog.Builder(getContext())
-                    .setCancelable(true)
-                    .setMessage("是否删除所有账单，删除后的账单将无法恢复！")
-                    .setTitle("警告")
-                    .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
-                        AppRepositry.getInstance(new AppExecutors(), getContext()).clearBill();
-                            DesktopWidget.refresh(getContext());
-                            onResume();
-                            MainActivity activity = (MainActivity) getActivity();
-                            BillListFragment fragment = activity.mBillListFragment;
-                            fragment.onResume();
-                    })
-                    .create()
-                    .show();
-
-        });
+        mBinding.deleteAllCardView.setOnClickListener(view -> new AlertDialog.Builder(requireContext())
+                .setCancelable(true)
+                .setMessage("是否删除所有账单，删除后的账单将无法恢复！")
+                .setTitle("警告")
+                .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
+                    AppRepositry.getInstance(new AppExecutors(), requireContext()).clearBill();
+                    DesktopWidget.refresh(requireContext());
+                    onResume();
+                    MainActivity activity = (MainActivity) requireActivity();
+                    BillListFragment fragment = activity.mBillListFragment;
+                    fragment.onResume();
+                })
+                .create()
+                .show());
         return mBinding.getRoot();
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ViewModelFactory factory = ViewModelFactory.getInstance(getActivity().getApplication());
-        mViewModel = ViewModelProviders.of(getActivity(), factory).get(AccountViewModel.class);
+        ViewModelFactory factory = ViewModelFactory.getInstance(requireActivity().getApplication());
+        mViewModel = ViewModelProviders.of(requireActivity(), factory).get(AccountViewModel.class);
         mBinding.setAccount(mViewModel);
         mBinding.setLifecycleOwner(this);
     }
 
     private void toSettingActivity() {
-        Intent intent = SettingsActivity.newIntent(getContext());
+        Intent intent = SettingsActivity.newIntent(requireContext());
         startActivity(intent);
     }
 

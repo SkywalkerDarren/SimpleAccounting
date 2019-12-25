@@ -33,7 +33,7 @@ public abstract class BaseFragment extends Fragment {
      * @return 工具栏
      */
     protected ActionBar initToolbar(@IdRes int id, View view) {
-        AppCompatActivity mAppCompatActivity = (AppCompatActivity) getActivity();
+        AppCompatActivity mAppCompatActivity = (AppCompatActivity) requireActivity();
         Toolbar toolbar = view.findViewById(id);
         toolbar.setTitleTextColor(Color.WHITE);
         mAppCompatActivity.setSupportActionBar(toolbar);

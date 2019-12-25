@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 import org.joda.time.DateTime;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
@@ -125,7 +126,7 @@ public class BillDetailViewModel extends ViewModel implements BillDataSource.Loa
     public void setDate() {
         DateTime start;
         DateTime end;
-        int day = bill.getValue().getDate().getDayOfMonth();
+        int day = Objects.requireNonNull(bill.getValue()).getDate().getDayOfMonth();
         int month = bill.getValue().getDate().getMonthOfYear();
         int year = bill.getValue().getDate().getYear();
         mode %= 3;
@@ -214,7 +215,6 @@ public class BillDetailViewModel extends ViewModel implements BillDataSource.Loa
     /**
      * 当前账单所占百分数
      *
-     * @param bill
      * @param bigDecimal 被除数
      * @return 百分数，带百分号
      */
