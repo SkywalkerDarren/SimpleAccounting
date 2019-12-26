@@ -11,7 +11,9 @@ import org.joda.time.DateTime;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.DateHeaderDivider;
@@ -80,21 +82,11 @@ public class AppRepositry implements AppDataSource {
         return INSTANCE;
     }
 
-    @Override
-    public void getAccount(UUID uuid, LoadAccountCallBack callBack) {
-        execute(() -> {
-            Account account = mAccountDao.getAccount(uuid);
-            mExecutors.mainThread().execute(() -> callBack.onAccountLoaded(account));
-        });
-    }
-
-    @Override
-    public void getAccounts(LoadAccountsCallBack callBack) {
-        execute(() -> {
-            List<Account> accounts = mAccountDao.getAccounts();
-            mExecutors.mainThread().execute(() -> callBack.onAccountsLoaded(accounts));
-        });
-    }
+    private static final String ACCOUNTS = "ACCOUNTS";
+    private static final String INCOME_TYPES = "INCOME_TYPES";
+    private static final String EXPENSE_TYPES = "EXPENSE_TYPES";
+    private static Map<UUID, Account> sAccountCache = new ConcurrentHashMap<>();
+    private static Map<String, List<Account>> sAccountsCache = new ConcurrentHashMap<>();
 
     void getAccountsOnBackground(LoadAccountsCallBack callBack) {
         execute(() -> {
@@ -103,26 +95,8 @@ public class AppRepositry implements AppDataSource {
         });
     }
 
-    @Override
-    public void updateAccountId(UUID uuid, Integer id) {
-        execute(() -> mAccountDao.updateAccountId(uuid, id));
-    }
-
-    @Override
-    public void delAccount(UUID uuid) {
-        execute(() -> mAccountDao.delAccount(uuid));
-    }
-
-    @Override
-    public void changePosition(Account a, Account b) {
-        execute(() -> {
-            Integer i = a.getId();
-            Integer j = b.getId();
-            mAccountDao.updateAccountId(a.getUUID(), -1);
-            mAccountDao.updateAccountId(b.getUUID(), i);
-            mAccountDao.updateAccountId(a.getUUID(), j);
-        });
-    }
+    private static Map<UUID, Bill> sBillCache = new ConcurrentHashMap<>();
+    private static Map<UUID, Type> sTypeCache = new ConcurrentHashMap<>();
 
     @Override
     public void getBillInfoList(int year, int month, LoadBillsInfoCallBack callBack) {
@@ -156,11 +130,17 @@ public class AppRepositry implements AppDataSource {
 
     }
 
+    private static Map<String, List<Type>> sTypesCache = new ConcurrentHashMap<>();
+
     @Override
-    public void getBill(UUID id, LoadBillCallBack callBack) {
+    public void getAccount(UUID uuid, LoadAccountCallBack callBack) {
         execute(() -> {
-            Bill bill = mBillDao.getBill(id);
-            mExecutors.mainThread().execute(() -> callBack.onBillLoaded(bill));
+            Account account = sAccountCache.get(uuid);
+            if (account == null) {
+                account = mAccountDao.getAccount(uuid);
+                sAccountCache.put(uuid, account);
+            }
+            mExecutors.mainThread().execute(() -> callBack.onAccountLoaded(sAccountCache.get(uuid)));
         });
     }
 
@@ -175,38 +155,109 @@ public class AppRepositry implements AppDataSource {
     }
 
     @Override
+    public void getAccounts(LoadAccountsCallBack callBack) {
+        execute(() -> {
+            List<Account> accounts = sAccountsCache.get(ACCOUNTS);
+            if (accounts == null) {
+                accounts = mAccountDao.getAccounts();
+                sAccountsCache.put(ACCOUNTS, accounts);
+            }
+            mExecutors.mainThread().execute(() -> callBack.onAccountsLoaded(sAccountsCache.get(ACCOUNTS)));
+        });
+    }
+
+    @Override
+    public void delAccount(UUID uuid) {
+        execute(() -> {
+            mAccountDao.delAccount(uuid);
+            sAccountsCache.clear();
+            sAccountCache.remove(uuid);
+        });
+    }
+
+    @Override
+    public void changePosition(Account a, Account b) {
+        execute(() -> {
+            Integer i = a.getId();
+            Integer j = b.getId();
+            a.setId(j);
+            b.setId(i);
+            mAccountDao.updateAccountId(a.getUUID(), -1);
+            mAccountDao.updateAccountId(b.getUUID(), i);
+            mAccountDao.updateAccountId(a.getUUID(), j);
+            sAccountCache.put(a.getUUID(), a);
+            sAccountCache.put(b.getUUID(), b);
+            sAccountsCache.clear();
+
+        });
+    }
+
+    @Override
+    public void getBill(UUID id, LoadBillCallBack callBack) {
+        execute(() -> {
+            Bill bill = sBillCache.get(id);
+            if (bill == null) {
+                bill = mBillDao.getBill(id);
+                sBillCache.put(id, bill);
+            }
+            mExecutors.mainThread().execute(() -> callBack.onBillLoaded(sBillCache.get(id)));
+        });
+    }
+
+    @Override
     public void addBill(Bill bill) {
-        execute(() -> mBillDao.addBill(bill));
+        execute(() -> {
+            mBillDao.addBill(bill);
+            sBillCache.put(bill.getUUID(), bill);
+        });
     }
 
     @Override
     public void delBill(UUID id) {
-        execute(() -> mBillDao.delBill(id));
+        execute(() -> {
+            mBillDao.delBill(id);
+            sBillCache.remove(id);
+        });
     }
 
     @Override
     public void updateBill(Bill bill) {
-        execute(() -> mBillDao.updateBill(bill));
+        execute(() -> {
+            mBillDao.updateBill(bill);
+            sBillCache.put(bill.getUUID(), bill);
+        });
     }
 
     @Override
     public void clearBill() {
-        execute(() -> mBillDao.clearBill());
+        execute(() -> {
+            mBillDao.clearBill();
+            sBillCache.clear();
+        });
     }
 
     @Override
     public void getType(UUID uuid, LoadTypeCallBack callBack) {
         execute(() -> {
-            Type type = mTypeDao.getType(uuid);
-            mExecutors.mainThread().execute(() -> callBack.onTypeLoaded(type));
+            Type type = sTypeCache.get(uuid);
+            if (type == null) {
+                type = mTypeDao.getType(uuid);
+                sTypeCache.put(uuid, type);
+            }
+            mExecutors.mainThread().execute(() -> callBack.onTypeLoaded(sTypeCache.get(uuid)));
         });
     }
 
     @Override
     public void getTypes(boolean isExpense, LoadTypesCallBack callBack) {
         execute(() -> {
-            List<Type> types = mTypeDao.getTypes(isExpense);
-            mExecutors.mainThread().execute(() -> callBack.onTypesLoaded(types));
+            final String flag = isExpense ? EXPENSE_TYPES : INCOME_TYPES;
+            List<Type> types = sTypesCache.get(flag);
+            if (types == null) {
+                types = mTypeDao.getTypes(isExpense);
+                sTypesCache.put(flag, types);
+            }
+            mExecutors.mainThread().execute(() -> callBack.onTypesLoaded(sTypesCache.get(flag)));
         });
     }
 
@@ -219,7 +270,11 @@ public class AppRepositry implements AppDataSource {
 
     @Override
     public void delType(UUID uuid) {
-        execute(() -> mTypeDao.delType(uuid));
+        execute(() -> {
+            mTypeDao.delType(uuid);
+            sTypeCache.remove(uuid);
+            sTypesCache.clear();
+        });
     }
 
     private BillStats getBillStats(DateTime start, DateTime end) {

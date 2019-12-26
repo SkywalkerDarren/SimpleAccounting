@@ -33,12 +33,10 @@ public class MonthPickerDialog extends DialogFragment {
     /**
      * 构造对话框构造
      *
-     * @param dateTime 初始日期
      * @return 对话框
      */
-    public static MonthPickerDialog newInstance(DateTime dateTime) {
+    public static MonthPickerDialog newInstance() {
         Bundle args = new Bundle();
-        args.putSerializable(ARG_DATE_TIME, dateTime);
         MonthPickerDialog fragment = new MonthPickerDialog();
         fragment.setArguments(args);
         return fragment;
@@ -47,7 +45,7 @@ public class MonthPickerDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        DateTime dateTime = (DateTime) requireArguments().getSerializable(ARG_DATE_TIME);
+        DateTime dateTime = DateTime.now();
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         View view = LayoutInflater.from(requireActivity()).inflate(R.layout.month_picker, null);
 
@@ -58,13 +56,8 @@ public class MonthPickerDialog extends DialogFragment {
         mYearPicker.setMaxValue(2100);
         mMonthPicker.setMaxValue(12);
         mMonthPicker.setMinValue(1);
-        if (dateTime != null) {
-            setYearPicker(dateTime.getYear());
-            setMonthPicker(dateTime.getMonthOfYear());
-        } else {
-            setYearPicker(DateTime.now().getYear());
-            setMonthPicker(DateTime.now().getMonthOfYear());
-        }
+        setYearPicker(dateTime.getYear());
+        setMonthPicker(dateTime.getMonthOfYear());
 
         builder.setTitle("选择日期")
                 .setPositiveButton("确认", (dialogInterface, i) -> {
@@ -73,7 +66,10 @@ public class MonthPickerDialog extends DialogFragment {
                     newDate.plusMonths(1);
                     sendResult(Activity.RESULT_OK, newDate);
                 })
-                .setNegativeButton("取消", (dialogInterface, i) -> dialogInterface.cancel())
+                .setNegativeButton("取消", (dialogInterface, i) -> {
+                    sendResult(Activity.RESULT_CANCELED, dateTime);
+                    dialogInterface.cancel();
+                })
                 .setView(view);
         return builder.create();
     }
@@ -83,7 +79,10 @@ public class MonthPickerDialog extends DialogFragment {
      *
      * @param year 年份
      */
-    private void setYearPicker(@IntRange(from = 1900, to = 2100) int year) {
+    public void setYearPicker(@IntRange(from = 1900, to = 2100) int year) {
+        if (mYearPicker == null) {
+            return;
+        }
         mYearPicker.setValue(year);
     }
 
@@ -92,7 +91,10 @@ public class MonthPickerDialog extends DialogFragment {
      *
      * @param month 月份
      */
-    private void setMonthPicker(@IntRange(from = 1, to = 12) int month) {
+    public void setMonthPicker(@IntRange(from = 1, to = 12) int month) {
+        if (mMonthPicker == null) {
+            return;
+        }
         mMonthPicker.setValue(month);
     }
 

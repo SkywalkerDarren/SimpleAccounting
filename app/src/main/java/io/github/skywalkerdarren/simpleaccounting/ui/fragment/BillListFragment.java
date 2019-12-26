@@ -49,6 +49,7 @@ public class BillListFragment extends BaseFragment {
     private RecyclerView mBillListRecyclerView;
     private BillAdapter mBillAdapter;
     private SharedPreferences mSharedPref;
+    private DateTime mDateTime;
 
     /**
      * 账单示例构造
@@ -80,12 +81,16 @@ public class BillListFragment extends BaseFragment {
 
         mSharedPref = requireContext().getSharedPreferences(SHARED_BUDGET, Context.MODE_PRIVATE);
 
-        mBinding.dateImageView.setOnClickListener(view1 ->
-                mViewModel.getDate().observe(this, dateTime -> {
-                    MonthPickerDialog monthPickerDialog = MonthPickerDialog.newInstance(dateTime);
-                    monthPickerDialog.setTargetFragment(BillListFragment.this, REQUEST_DATE_TIME);
-                    monthPickerDialog.show(requireFragmentManager(), "month picker");
-                }));
+        mBinding.dateImageView.setOnClickListener(view1 -> {
+            MonthPickerDialog monthPickerDialog = MonthPickerDialog.newInstance();
+            monthPickerDialog.setTargetFragment(BillListFragment.this, REQUEST_DATE_TIME);
+            monthPickerDialog.show(requireFragmentManager(), "month picker");
+            mViewModel.getDate().observe(this, dateTime -> {
+                monthPickerDialog.setYearPicker(dateTime.getYear());
+                monthPickerDialog.setMonthPicker(dateTime.getMonthOfYear());
+            });
+
+        });
 
 
         mBillListRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
@@ -116,7 +121,10 @@ public class BillListFragment extends BaseFragment {
         mBinding.moneyBudgeTextView.setText(mSharedPref.getString(SHARED_BUDGET, "0"));
         mViewModel.getDate().observe(this, dateTime ->
                 mViewModel.getBillInfoList().observe(this, this::updateAdapter));
-        mViewModel.setDate(DateTime.now());
+        if (mDateTime == null) {
+            mDateTime = DateTime.now();
+        }
+        mViewModel.setDate(mDateTime);
     }
 
     /**
@@ -168,7 +176,10 @@ public class BillListFragment extends BaseFragment {
             case REQUEST_DATE_TIME:
                 mViewModel.setDate((DateTime) data
                         .getSerializableExtra(MonthPickerDialog.EXTRA_DATE));
-                updateUI();
+                mViewModel.getDate().observe(this, dateTime -> {
+                    mDateTime = dateTime;
+                    mViewModel.getBillInfoList().observe(this, this::updateAdapter);
+                });
                 break;
             default:
                 break;

@@ -12,8 +12,6 @@ public interface AccountDataSource {
 
     void getAccounts(LoadAccountsCallBack callBack);
 
-    void updateAccountId(UUID uuid, Integer id);
-
     void delAccount(UUID uuid);
 
     void changePosition(Account a, Account b);
