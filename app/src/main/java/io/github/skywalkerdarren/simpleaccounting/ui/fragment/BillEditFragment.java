@@ -164,7 +164,6 @@ public class BillEditFragment extends BaseFragment {
 
         // TODO: 2018/4/2 监听账户点击
         mBinding.accountTypeImageView.setOnClickListener(view -> {
-            Log.d(TAG, "onCreateView: clickImage");
             getPopupWindow(mBinding.accountTypeImageView);
         });
 
@@ -347,7 +346,6 @@ public class BillEditFragment extends BaseFragment {
         popupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
         popupWindow.setAnimationStyle(R.style.anim_menu_account);
         int height = popupWindow.getContentView().getMeasuredHeight();
-        Log.d(TAG, "getPopupWindow() called with: view = [" + height + "]");
         popupWindow.showAsDropDown(view, 0,
                 (int) -(height + view.getHeight() * 1.3), Gravity.TOP);
     }

@@ -23,8 +23,6 @@ public class ExampleInstrumentedTest {
 
         // Context of the app under test.
         Context appContext = ApplicationProvider.getApplicationContext();
-        Log.d(TAG, "useAppContext: test");
-        System.out.println(TAG);
         Assert.assertEquals(1,2);
     }
 }

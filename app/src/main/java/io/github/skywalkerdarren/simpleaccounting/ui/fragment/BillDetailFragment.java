@@ -228,12 +228,9 @@ public class BillDetailFragment extends BaseFragment {
 
         int avatarSize = DpConvertUtils.convertDpToPixelSize(EXPAND_TYPE_SIZE_DP, requireContext());
         mTypeImageView.getLocationOnScreen(mTypePoint);
-        Log.d(TAG, "resetPoints: mTypePoint" + mTypePoint[0] + " " + mTypePoint[1]);
         mTypePoint[0] -= (avatarSize - mTypeImageView.getWidth()) / 2;
         mSpace.getLocationOnScreen(mSpacePoint);
-        Log.d(TAG, "resetPoints: mSpacePoint" + mSpacePoint[0] + " " + mSpacePoint[1]);
         mToolbarTextView.getLocationOnScreen(mToolbarTextPoint);
-        Log.d(TAG, "resetPoints: mToolbarTextPoint" + mToolbarTextPoint[0] + " " + mToolbarTextPoint[1]);
         mToolbarTextPoint[0] += DpConvertUtils.convertDpToPixelSize(16, requireContext());
         mTypeTitleTextView.post(() -> {
             mTypeTitleTextView.getLocationOnScreen(mTitleTextViewPoint);

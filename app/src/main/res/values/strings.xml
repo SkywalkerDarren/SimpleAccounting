@@ -161,4 +161,5 @@
     <string name="lend_hint">应还款</string>
     <string name="author">Made By 杨弘 B15041212\nhttps://github.com/SkywalkerDarren</string>
     <string name="version">v0.2.0</string>
+    <string name="loading">loading...</string>
 </resources>

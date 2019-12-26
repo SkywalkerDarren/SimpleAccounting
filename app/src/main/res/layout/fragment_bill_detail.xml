@@ -82,7 +82,7 @@
                         android:ellipsize="end"
                         android:gravity="center"
                         android:maxLines="1"
-                        android:text="@{detail.typeName}"
+                        android:text="@{detail.typeName, default=@string/loading}"
                         android:textColor="#FFF"
                         android:textSize="24sp"
                         tools:ignore="HardcodedText" />
@@ -137,7 +137,7 @@
                             android:layout_marginEnd="8dp"
                             android:layout_marginStart="8dp"
                             android:fontFamily="@font/lalezar"
-                            android:text="@{detail.balance}"
+                            android:text="@{detail.balance, default=@string/loading}"
                             android:textAlignment="textEnd"
                             android:textColor="@{ContextCompat.getColor(context, detail.balanceColor)}"
                             android:textSize="24sp"
@@ -153,7 +153,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:text="@{detail.typeName}"
+                            android:text="@{detail.typeName, default=@string/loading}"
                             android:textColor="@android:color/black"
                             android:textSize="18sp"
                             android:textStyle="bold"
@@ -229,10 +229,10 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="end"
-                                    android:text="@{detail.accountName}"
+                                    android:text="@{detail.accountName, default=@string/loading}"
                                     android:textColor="@android:color/black"
                                     android:textSize="16sp"
-                                    tools:text="Acc" />
+                                    tools:text="@string/loading" />
                             </FrameLayout>
 
                         </LinearLayout>
@@ -308,7 +308,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="end"
-                                    android:text="@{detail.time}"
+                                    android:text="@{detail.time, default=@string/loading}"
                                     android:textColor="@android:color/black"
                                     android:textSize="16sp" />
                             </FrameLayout>
@@ -360,7 +360,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="start"
-                                    android:text="@{detail.expensePercentHint}"
+                                    android:text="@{detail.expensePercentHint, default=@string/loading}"
                                     android:textColor="@android:color/black"
                                     android:textSize="16sp" />
 
@@ -369,10 +369,9 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="end"
-                                    android:text="@{detail.expensePercent}"
+                                    android:text="@{detail.expensePercent, default=@string/loading}"
                                     android:textColor="@android:color/black"
-                                    android:textSize="16sp"
-                                    tools:text="50%" />
+                                    android:textSize="16sp"/>
                             </FrameLayout>
                         </LinearLayout>
 
@@ -408,7 +407,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="end"
-                                    android:text="@{detail.typePercent}"
+                                    android:text="@{detail.typePercent, default=@string/loading}"
                                     android:textColor="@android:color/black"
                                     android:textSize="16sp"
                                     tools:text="50%" />
@@ -448,7 +447,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="8dp"
                                     android:layout_weight="1"
-                                    android:text="@{detail.typeAverage}"
+                                    android:text="@{detail.typeAverage, default=@string/loading}"
                                     android:textAlignment="textEnd"
                                     android:textColor="@android:color/black"
                                     android:textSize="16sp"
@@ -482,7 +481,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="start"
-                                    android:text="@{context.getString(detail.thanAverageHint)}"
+                                    android:text="@{context.getString(detail.thanAverageHint), default=@string/loading}"
                                     android:textColor="@android:color/black"
                                     android:textSize="16sp" />
 
@@ -491,7 +490,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="end"
-                                    android:text="@{detail.thanAverage}"
+                                    android:text="@{detail.thanAverage, default=@string/loading}"
                                     android:textColor="@android:color/black"
                                     android:textSize="16sp"
                                     tools:text="50%" />
@@ -530,7 +529,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="end"
-                                    android:text="@{detail.accountPercent}"
+                                    android:text="@{detail.accountPercent, default=@string/loading}"
                                     android:textColor="@android:color/black"
                                     android:textSize="16sp"
                                     tools:text="50%" />
@@ -609,7 +608,7 @@
                             android:layout_weight="1"
                             android:ellipsize="end"
                             android:singleLine="false"
-                            android:text="@{detail.remark}"
+                            android:text="@{detail.remark, default=@string/loading}"
                             android:textAlignment="viewEnd"
                             android:textColor="@android:color/black"
                             android:textSize="18sp"

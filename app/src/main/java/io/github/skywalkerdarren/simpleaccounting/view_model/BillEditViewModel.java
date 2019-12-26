@@ -56,15 +56,13 @@ public class BillEditViewModel extends ViewModel {
     public void setBill(@NonNull Bill bill) {
         if (bill.getDate() == null) {
             isNewBill = true;
-            bill.setBalance(BigDecimal.ZERO);
-            bill.setRemark("");
             bill.setDate(DateTime.now());
         } else {
             isNewBill = false;
         }
         mRepositry.getAccount(bill.getAccountId(), this::setAccount);
         mRepositry.getType(bill.getTypeId(), this::setType);
-        balance.setValue(bill.getBalance() == null ? "0" : bill.getBalance().toString());
+        balance.setValue(bill.getBalance() == null ? null : bill.getBalance().toString());
         date.setValue(bill.getDate());
         remark.setValue(bill.getRemark());
         billId.setValue(bill.getUUID());

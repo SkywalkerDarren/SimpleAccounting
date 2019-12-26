@@ -24,22 +24,22 @@ import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 public class BillDetailViewModel extends ViewModel implements BillDataSource.LoadBillCallBack {
     private static int mode = 0;
     private AppRepositry mRepositry;
-    private MutableLiveData<Integer> statsMode = new MutableLiveData<>(R.string.brvah_loading);
+    private MutableLiveData<Integer> statsMode = new MutableLiveData<>(R.string.loading);
     private MutableLiveData<String> typeImage = new MutableLiveData<>();
-    private MutableLiveData<String> typeName = new MutableLiveData<>();
-    private MutableLiveData<String> balance = new MutableLiveData<>();
-    private MutableLiveData<Integer> balanceColor = new MutableLiveData<>(R.color.black);
-    private MutableLiveData<String> accountName = new MutableLiveData<>();
+    private MutableLiveData<String> typeName = new MutableLiveData<>("加载中...");
+    private MutableLiveData<String> balance = new MutableLiveData<>("加载中...");
+    private MutableLiveData<Integer> balanceColor = new MutableLiveData<>(R.color.white);
+    private MutableLiveData<String> accountName = new MutableLiveData<>("加载中...");
     private MutableLiveData<String> recorder = new MutableLiveData<>("TODO");
-    private MutableLiveData<String> time = new MutableLiveData<>();
-    private MutableLiveData<String> remark = new MutableLiveData<>();
-    private MutableLiveData<String> accountPercent = new MutableLiveData<>();
-    private MutableLiveData<String> typePercent = new MutableLiveData<>();
-    private MutableLiveData<String> thanAverage = new MutableLiveData<>();
-    private MutableLiveData<String> typeAverage = new MutableLiveData<>();
+    private MutableLiveData<String> time = new MutableLiveData<>("加载中...");
+    private MutableLiveData<String> remark = new MutableLiveData<>("加载中...");
+    private MutableLiveData<String> accountPercent = new MutableLiveData<>("加载中...");
+    private MutableLiveData<String> typePercent = new MutableLiveData<>("加载中...");
+    private MutableLiveData<String> thanAverage = new MutableLiveData<>("加载中...");
+    private MutableLiveData<String> typeAverage = new MutableLiveData<>("加载中...");
     private MutableLiveData<Integer> thanAverageHint = new MutableLiveData<>(R.string.brvah_loading);
     private MutableLiveData<Integer> expensePercentHint = new MutableLiveData<>(R.string.brvah_loading);
-    private MutableLiveData<String> expensePercent = new MutableLiveData<>();
+    private MutableLiveData<String> expensePercent = new MutableLiveData<>("加载中...");
     private MutableLiveData<Bill> bill = new MutableLiveData<>();
 
     public BillDetailViewModel(AppRepositry repositry) {
@@ -48,6 +48,16 @@ public class BillDetailViewModel extends ViewModel implements BillDataSource.Loa
 
     public void start(Bill b) {
         mRepositry.getBill(b.getUUID(), this);
+    }
+
+    private void setLoading() {
+        accountPercent.setValue("加载中...");
+        typePercent.setValue("加载中...");
+        thanAverageHint.setValue(R.string.brvah_loading);
+        thanAverage.setValue("加载中...");
+        typeAverage.setValue("加载中...");
+        expensePercent.setValue("加载中...");
+        expensePercentHint.setValue(R.string.brvah_loading);
     }
 
     @Override
@@ -124,6 +134,7 @@ public class BillDetailViewModel extends ViewModel implements BillDataSource.Loa
      * 选择日期区间 0：月 1：年 2：日
      */
     public void setDate() {
+        setLoading();
         DateTime start;
         DateTime end;
         int day = Objects.requireNonNull(bill.getValue()).getDate().getDayOfMonth();

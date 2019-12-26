@@ -76,11 +76,12 @@
                 android:textAlignment="textEnd"
                 android:textColor="@color/black"
                 android:textSize="22sp"
+                android:text="@string/loading"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/lend_hint_text_view"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="0" />
+                tools:text="loading..." />
 
             <TextView
                 android:id="@+id/lend_hint_text_view"
