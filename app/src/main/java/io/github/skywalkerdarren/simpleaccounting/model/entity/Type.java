@@ -109,4 +109,16 @@ public class Type {
     public void setAssetsName(String assetsName) {
         mAssetsName = assetsName;
     }
+
+    @Override
+    public String toString() {
+        return "Type{" +
+                "mId=" + mId +
+                ", mUUID=" + mUUID +
+                ", mName='" + mName + '\'' +
+                ", mColorId=" + mColorId +
+                ", mIsExpense=" + mIsExpense +
+                ", mAssetsName='" + mAssetsName + '\'' +
+                '}';
+    }
 }

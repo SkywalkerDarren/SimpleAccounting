@@ -1,7 +1,5 @@
 package io.github.skywalkerdarren.simpleaccounting.model.entity;
 
-import androidx.room.Entity;
-
 import java.math.BigDecimal;
 
 public class BillStats {
@@ -33,5 +31,14 @@ public class BillStats {
 
     public void setSum(BigDecimal sum) {
         this.sum = sum;
+    }
+
+    @Override
+    public String toString() {
+        return "BillStats{" +
+                "income=" + income +
+                ", expense=" + expense +
+                ", sum=" + sum +
+                '}';
     }
 }

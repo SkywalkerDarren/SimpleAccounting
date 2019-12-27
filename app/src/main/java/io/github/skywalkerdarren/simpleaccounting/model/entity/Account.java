@@ -125,4 +125,17 @@ public class Account {
     public void setColorId(Integer colorId) {
         mColorId = colorId;
     }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "mId=" + mId +
+                ", mUUID=" + mUUID +
+                ", mName='" + mName + '\'' +
+                ", mBalanceHint='" + mBalanceHint + '\'' +
+                ", mBalance=" + mBalance +
+                ", mBitmap='" + mBitmap + '\'' +
+                ", mColorId=" + mColorId +
+                '}';
+    }
 }

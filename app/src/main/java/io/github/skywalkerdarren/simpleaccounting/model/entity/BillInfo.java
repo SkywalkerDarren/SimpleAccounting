@@ -146,4 +146,19 @@ public class BillInfo implements MultiItemEntity {
         return mDateTime;
     }
 
+    @Override
+    public String toString() {
+        return "BillInfo{" +
+                "mType=" + mType +
+                ", mUUID=" + mUUID +
+                ", mTitle='" + mTitle + '\'' +
+                ", mRemark='" + mRemark + '\'' +
+                ", mBalance='" + mBalance + '\'' +
+                ", mIsExpense=" + mIsExpense +
+                ", mBillTypeRes='" + mBillTypeRes + '\'' +
+                ", mIncome='" + mIncome + '\'' +
+                ", mExpense='" + mExpense + '\'' +
+                ", mDateTime=" + mDateTime +
+                '}';
+    }
 }

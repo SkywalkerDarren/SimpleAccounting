@@ -32,4 +32,13 @@ public class AccountStats {
     public void setSum(BigDecimal sum) {
         this.sum = sum;
     }
+
+    @Override
+    public String toString() {
+        return "AccountStats{" +
+                "income=" + income +
+                ", expense=" + expense +
+                ", sum=" + sum +
+                '}';
+    }
 }

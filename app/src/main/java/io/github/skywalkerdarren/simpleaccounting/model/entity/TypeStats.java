@@ -25,4 +25,12 @@ public class TypeStats {
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
+
+    @Override
+    public String toString() {
+        return "TypeStats{" +
+                "typeId=" + typeId +
+                ", balance=" + balance +
+                '}';
+    }
 }

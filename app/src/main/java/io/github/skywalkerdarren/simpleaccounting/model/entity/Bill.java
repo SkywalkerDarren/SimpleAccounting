@@ -167,4 +167,18 @@ public class Bill implements Serializable {
     public void setRemark(String remark) {
         mRemark = remark;
     }
+
+    @Override
+    public String toString() {
+        return "Bill{" +
+                "mId=" + mId +
+                ", UUID=" + mUUID +
+                ", TypeId=" + mTypeId +
+                ", AccountId=" + mAccountId +
+                ", Date=" + mDate +
+                ", Name='" + mName + '\'' +
+                ", Balance=" + mBalance +
+                ", Remark='" + mRemark + '\'' +
+                '}';
+    }
 }
