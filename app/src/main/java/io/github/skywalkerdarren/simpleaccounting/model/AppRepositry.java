@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.DateHeaderDivider;
@@ -43,6 +44,8 @@ public class AppRepositry implements AppDataSource {
     private TypeDao mTypeDao;
     private BillDao mBillDao;
     private StatsDao mStatsDao;
+
+    private final ReentrantReadWriteLock dbLock = new ReentrantReadWriteLock(true);
 
     private static final boolean DEBUG = false;
 
@@ -88,6 +91,7 @@ public class AppRepositry implements AppDataSource {
         return INSTANCE;
     }
 
+    @VisibleForTesting
     public static AppRepositry getInstance(@NonNull AppExecutors executors, AppDatabase database) {
         if (INSTANCE == null) {
             synchronized (AppRepositry.class) {
@@ -105,16 +109,35 @@ public class AppRepositry implements AppDataSource {
     private static Map<UUID, Account> sAccountCache = new ConcurrentHashMap<>();
     private static Map<String, List<Account>> sAccountsCache = new ConcurrentHashMap<>();
 
-    void getAccountsOnBackground(LoadAccountsCallBack callBack) {
-        execute(() -> {
-            Log.d(TAG, "getAccountsOnBackground: in " + currentThread().getName());
-            List<Account> accounts = mAccountDao.getAccounts();
-            callBack.onAccountsLoaded(accounts);
-        });
+    @VisibleForTesting
+    static void clearInstance() {
+        INSTANCE = null;
+        sTypesCache.clear();
+        sAccountsCache.clear();
+        sBillCache.clear();
+        sTypeCache.clear();
+        sAccountCache.clear();
     }
 
     private static Map<UUID, Bill> sBillCache = new ConcurrentHashMap<>();
     private static Map<UUID, Type> sTypeCache = new ConcurrentHashMap<>();
+
+    void getAccountsOnBackground(LoadAccountsCallBack callBack) {
+        execute(() -> {
+            Log.d(TAG, "getAccountsOnBackground: in " + currentThread().getName());
+            dbLock.readLock().lock();
+            List<Account> accounts = sAccountsCache.get(ACCOUNTS);
+            if (accounts == null) {
+                accounts = mAccountDao.getAccounts();
+                sAccountsCache.put(ACCOUNTS, accounts);
+            }
+            dbLock.readLock().unlock();
+
+            callBack.onAccountsLoaded(accounts);
+        });
+    }
+
+    private static Map<String, List<Type>> sTypesCache = new ConcurrentHashMap<>();
 
     @Override
     public void getBillInfoList(int year, int month, LoadBillsInfoCallBack callBack) {
@@ -122,6 +145,8 @@ public class AppRepositry implements AppDataSource {
             Log.d(TAG, "getBillInfoList: in " + currentThread().getName());
             DateTime start = new DateTime(year, month, 1, 1, 0, 0);
             DateTime end = start.plusMonths(1);
+
+            dbLock.readLock().lock();
             List<Bill> bills = mBillDao.getsBillsByDate(start, end);
             List<BillInfo> billInfoList = new ArrayList<>();
             // 上一个账单的年月日
@@ -144,22 +169,26 @@ public class AppRepositry implements AppDataSource {
                 }
                 billInfoList.add(new BillInfo(bill, type));
             }
+            dbLock.readLock().unlock();
+
             mExecutors.mainThread().execute(() -> callBack.onBillsInfoLoaded(billInfoList));
         });
 
     }
 
-    private static Map<String, List<Type>> sTypesCache = new ConcurrentHashMap<>();
-
     @Override
     public void getAccount(UUID uuid, LoadAccountCallBack callBack) {
         execute(() -> {
             Log.d(TAG, "getAccount: in " + currentThread().getName());
+
+            dbLock.readLock().lock();
             Account account = sAccountCache.get(uuid);
             if (account == null) {
                 account = mAccountDao.getAccount(uuid);
                 sAccountCache.put(uuid, account);
             }
+            dbLock.readLock().unlock();
+
             mExecutors.mainThread().execute(() -> callBack.onAccountLoaded(sAccountCache.get(uuid)));
         });
     }
@@ -170,7 +199,11 @@ public class AppRepositry implements AppDataSource {
             Log.d(TAG, "getsBills: in " + currentThread().getName());
             DateTime start = new DateTime(year, month, 1, 1, 0, 0);
             DateTime end = start.plusMonths(1);
+
+            dbLock.readLock().lock();
             List<Bill> bills = mBillDao.getsBillsByDate(start, end);
+            dbLock.readLock().unlock();
+
             mExecutors.mainThread().execute(() -> callBack.onBillsLoaded(bills));
         });
     }
@@ -179,11 +212,14 @@ public class AppRepositry implements AppDataSource {
     public void getAccounts(LoadAccountsCallBack callBack) {
         execute(() -> {
             Log.d(TAG, "getAccounts: in " + currentThread().getName());
+            dbLock.readLock().lock();
             List<Account> accounts = sAccountsCache.get(ACCOUNTS);
             if (accounts == null) {
                 accounts = mAccountDao.getAccounts();
                 sAccountsCache.put(ACCOUNTS, accounts);
             }
+            dbLock.readLock().unlock();
+
             mExecutors.mainThread().execute(() -> callBack.onAccountsLoaded(sAccountsCache.get(ACCOUNTS)));
         });
     }
@@ -192,15 +228,18 @@ public class AppRepositry implements AppDataSource {
     public void delAccount(UUID uuid) {
         execute(() -> {
             Log.d(TAG, "delAccount: in " + currentThread().getName());
+            dbLock.writeLock().lock();
             mAccountDao.delAccount(uuid);
             sAccountsCache.clear();
             sAccountCache.remove(uuid);
+            dbLock.writeLock().unlock();
         });
     }
 
     @Override
     public void changePosition(Account a, Account b) {
         execute(() -> {
+            dbLock.writeLock().lock();
             Log.d(TAG, "changePosition: in " + currentThread().getName());
             Integer i = a.getId();
             Integer j = b.getId();
@@ -212,7 +251,7 @@ public class AppRepositry implements AppDataSource {
             sAccountCache.put(a.getUUID(), a);
             sAccountCache.put(b.getUUID(), b);
             sAccountsCache.clear();
-
+            dbLock.writeLock().unlock();
         });
     }
 
@@ -220,6 +259,8 @@ public class AppRepositry implements AppDataSource {
     public void getBill(UUID id, LoadBillCallBack callBack) {
         execute(() -> {
             Log.d(TAG, "getBill: in " + currentThread().getName());
+
+            dbLock.readLock().lock();
             Bill bill = sBillCache.get(id);
             if (bill == null) {
                 bill = mBillDao.getBill(id);
@@ -229,6 +270,8 @@ public class AppRepositry implements AppDataSource {
 
                 }
             }
+            dbLock.readLock().unlock();
+
             mExecutors.mainThread().execute(() -> callBack.onBillLoaded(sBillCache.get(id)));
         });
     }
@@ -237,8 +280,11 @@ public class AppRepositry implements AppDataSource {
     public void addBill(Bill bill) {
         execute(() -> {
             Log.d(TAG, "addBill: in " + currentThread().getName());
+            dbLock.writeLock().lock();
             mBillDao.addBill(bill);
             sBillCache.put(bill.getUUID(), bill);
+            dbLock.writeLock().unlock();
+
         });
     }
 
@@ -246,8 +292,11 @@ public class AppRepositry implements AppDataSource {
     public void delBill(UUID id) {
         execute(() -> {
             Log.d(TAG, "delBill: in " + currentThread().getName());
+            dbLock.writeLock().lock();
             mBillDao.delBill(id);
             sBillCache.remove(id);
+            dbLock.writeLock().unlock();
+
         });
     }
 
@@ -255,8 +304,11 @@ public class AppRepositry implements AppDataSource {
     public void updateBill(Bill bill) {
         execute(() -> {
             Log.d(TAG, "updateBill: in " + currentThread().getName());
+            dbLock.writeLock().lock();
             mBillDao.updateBill(bill);
             sBillCache.put(bill.getUUID(), bill);
+            dbLock.writeLock().unlock();
+
         });
     }
 
@@ -264,8 +316,10 @@ public class AppRepositry implements AppDataSource {
     public void clearBill() {
         execute(() -> {
             Log.d(TAG, "clearBill: in " + currentThread().getName());
+            dbLock.writeLock().lock();
             mBillDao.clearBill();
             sBillCache.clear();
+            dbLock.writeLock().unlock();
         });
     }
 
@@ -273,11 +327,14 @@ public class AppRepositry implements AppDataSource {
     public void getType(UUID uuid, LoadTypeCallBack callBack) {
         execute(() -> {
             Log.d(TAG, "getType: in " + currentThread().getName());
+            dbLock.readLock().lock();
             Type type = sTypeCache.get(uuid);
             if (type == null) {
                 type = mTypeDao.getType(uuid);
                 sTypeCache.put(uuid, type);
             }
+            dbLock.readLock().unlock();
+
             mExecutors.mainThread().execute(() -> callBack.onTypeLoaded(sTypeCache.get(uuid)));
         });
     }
@@ -287,11 +344,14 @@ public class AppRepositry implements AppDataSource {
         execute(() -> {
             Log.d(TAG, "getTypes: in " + currentThread().getName());
             final String flag = isExpense ? EXPENSE_TYPES : INCOME_TYPES;
+            dbLock.readLock().lock();
             List<Type> types = sTypesCache.get(flag);
             if (types == null) {
                 types = mTypeDao.getTypes(isExpense);
                 sTypesCache.put(flag, types);
             }
+            dbLock.readLock().unlock();
+
             mExecutors.mainThread().execute(() -> callBack.onTypesLoaded(sTypesCache.get(flag)));
         });
     }
@@ -299,7 +359,15 @@ public class AppRepositry implements AppDataSource {
     void getTypesOnBackground(boolean isExpense, LoadTypesCallBack callBack) {
         execute(() -> {
             Log.d(TAG, "getTypesOnBackground: in " + currentThread().getName());
-            List<Type> types = mTypeDao.getTypes(isExpense);
+            final String flag = isExpense ? EXPENSE_TYPES : INCOME_TYPES;
+            dbLock.readLock().lock();
+            List<Type> types = sTypesCache.get(flag);
+            if (types == null) {
+                types = mTypeDao.getTypes(isExpense);
+                sTypesCache.put(flag, types);
+            }
+            dbLock.readLock().unlock();
+
             callBack.onTypesLoaded(types);
         });
     }
@@ -308,14 +376,19 @@ public class AppRepositry implements AppDataSource {
     public void delType(UUID uuid) {
         execute(() -> {
             Log.d(TAG, "delType: in " + currentThread().getName());
+            dbLock.writeLock().lock();
             mTypeDao.delType(uuid);
             sTypeCache.remove(uuid);
             sTypesCache.clear();
+            dbLock.writeLock().unlock();
         });
     }
 
     private BillStats getBillStats(DateTime start, DateTime end) {
+        dbLock.readLock().lock();
         List<Stats> stats = mStatsDao.getBillsStats(start, end);
+        dbLock.readLock().unlock();
+
         BillStats billStats = new BillStats();
         for (Stats s : stats) {
             if (s.getExpense()) {
@@ -334,6 +407,8 @@ public class AppRepositry implements AppDataSource {
             DateTime start = new DateTime(year, 1, 1, 0, 0, 0);
             DateTime end = start.plusMonths(1);
             List<BillStats> billStatsList = new ArrayList<>(12);
+
+            dbLock.readLock().lock();
             for (int i = 1; i <= 12; i++) {
                 List<Stats> stats = mStatsDao.getBillsStats(start, end);
                 BillStats billStats = new BillStats();
@@ -348,6 +423,8 @@ public class AppRepositry implements AppDataSource {
                 start = start.plusMonths(1);
                 end = end.plusMonths(1);
             }
+            dbLock.readLock().unlock();
+
             mExecutors.mainThread().execute(() -> callBack.onBillStatsLoaded(billStatsList));
         });
     }
@@ -356,7 +433,10 @@ public class AppRepositry implements AppDataSource {
     public void getBillStats(DateTime start, DateTime end, LoadBillStatsCallBack callBack) {
         execute(() -> {
             Log.d(TAG, "getBillStats: in " + currentThread().getName());
+            dbLock.readLock().lock();
             List<Stats> stats = mStatsDao.getBillsStats(start, end);
+            dbLock.readLock().unlock();
+
             BillStats billStats = new BillStats();
             for (Stats s : stats) {
                 if (s.getExpense()) {
@@ -373,8 +453,10 @@ public class AppRepositry implements AppDataSource {
     public void getTypesStats(DateTime start, DateTime end, boolean isExpense, LoadTypesStatsCallBack callBack) {
         execute(() -> {
             Log.d(TAG, "getTypesStats: in " + currentThread().getName());
+            dbLock.readLock().lock();
             List<TypeStats> typesStats = mStatsDao.getTypesStats(start, end, isExpense);
             mExecutors.mainThread().execute(() -> callBack.onTypesStatsLoaded(typesStats));
+            dbLock.readLock().unlock();
         });
     }
 
@@ -382,7 +464,10 @@ public class AppRepositry implements AppDataSource {
     public void getTypeStats(DateTime start, DateTime end, UUID typeId, LoadTypeStatsCallBack callBack) {
         execute(() -> {
             Log.d(TAG, "getTypeStats: in " + currentThread().getName());
+            dbLock.readLock().lock();
             TypeStats typeStats = mStatsDao.getTypeStats(start, end, typeId);
+            dbLock.readLock().unlock();
+
             mExecutors.mainThread().execute(() -> callBack.onTypeStatsLoaded(typeStats));
         });
     }
@@ -391,7 +476,10 @@ public class AppRepositry implements AppDataSource {
     public void getTypeAverage(DateTime start, DateTime end, UUID typeId, LoadTypeStatsCallBack callBack) {
         execute(() -> {
             Log.d(TAG, "getTypeAverage: in " + currentThread().getName());
+            dbLock.readLock().lock();
             TypeStats typeStats = mStatsDao.getTypeAverageStats(start, end, typeId);
+            dbLock.readLock().unlock();
+
             mExecutors.mainThread().execute(() -> callBack.onTypeStatsLoaded(typeStats));
         });
     }
@@ -400,7 +488,10 @@ public class AppRepositry implements AppDataSource {
     public void getAccountStats(UUID accountId, DateTime start, DateTime end, LoadAccountStatsCallBack callBack) {
         execute(() -> {
             Log.d(TAG, "getAccountStats: in " + currentThread().getName());
+            dbLock.readLock().lock();
             List<Stats> stats = mStatsDao.getAccountStats(accountId, start, end);
+            dbLock.readLock().unlock();
+
             AccountStats accountStats = new AccountStats();
             for (Stats s : stats) {
                 if (s.getExpense()) {
@@ -413,14 +504,10 @@ public class AppRepositry implements AppDataSource {
         });
     }
 
-    @VisibleForTesting
-    static void clearInstance() {
-        INSTANCE = null;
-    }
-
     public void initDb() {
         execute(() -> {
             Log.d(TAG, "initDb: in " + currentThread().getName());
+            dbLock.writeLock().lock();
             mAccountDao.newAccount(new Account("现金", "现金金额",
                     BigDecimal.ZERO, "cash.png", R.color.amber500));
             mAccountDao.newAccount(new Account("支付宝", "在线支付余额",
@@ -459,6 +546,7 @@ public class AppRepositry implements AppDataSource {
                     false, "red_package.png"));
             mTypeDao.newType(new Type("其他", Color.rgb(0xcd, 0x53, 0x3b),
                     false, "other.png"));
+            dbLock.writeLock().unlock();
         });
     }
 
