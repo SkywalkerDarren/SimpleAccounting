@@ -19,6 +19,7 @@ android {
     }
     buildTypes {
         debug {
+            manifestPlaceholders = [currencylayer_token: CURRENCY_TOKEN]
             buildConfigField("boolean", "LOG", "true")
             applicationIdSuffix ".debug"
         }
