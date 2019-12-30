@@ -41,7 +41,9 @@ public class WelcomeActivity extends Activity {
         SharedPreferences.Editor editor = preferences.edit();
         try {
             if (count == 0) {
-                AppRepositry.getInstance(new AppExecutors(), getApplicationContext()).initDb();
+                AppRepositry repositry = AppRepositry.getInstance(new AppExecutors(), getApplicationContext());
+                repositry.initDb();
+                repositry.initCurrenciesAndInfos(getApplicationContext());
             } else {
                 startMainActivity();
             }

@@ -732,6 +732,18 @@ public class AppRepositry implements AppDataSource {
                 e.printStackTrace();
             }
 
+            updateCurrencies(context, new UpdateCallback() {
+                @Override
+                public void connectFailed(String msg) {
+                    Log.e(TAG, "connectFailed: " + msg);
+                }
+
+                @Override
+                public void updated() {
+
+                }
+            });
+
             try {
                 InputStream nameIs = context.getResources().getAssets().open("currency/name.json");
                 InputStream translationCnIs = context.getResources().getAssets().open("currency/translation_cn.json");
