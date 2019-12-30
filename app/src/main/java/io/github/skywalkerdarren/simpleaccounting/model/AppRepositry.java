@@ -1,6 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.model;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.util.Log;
 
@@ -9,8 +10,13 @@ import androidx.annotation.VisibleForTesting;
 
 import org.joda.time.DateTime;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -21,6 +27,8 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.DateHeaderDivider;
 import io.github.skywalkerdarren.simpleaccounting.model.dao.AccountDao;
 import io.github.skywalkerdarren.simpleaccounting.model.dao.BillDao;
+import io.github.skywalkerdarren.simpleaccounting.model.dao.CurrencyInfoDao;
+import io.github.skywalkerdarren.simpleaccounting.model.dao.CurrencyRateDao;
 import io.github.skywalkerdarren.simpleaccounting.model.dao.StatsDao;
 import io.github.skywalkerdarren.simpleaccounting.model.dao.TypeDao;
 import io.github.skywalkerdarren.simpleaccounting.model.database.AppDataSource;
@@ -30,10 +38,15 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.AccountStats;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillInfo;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrenciesInfo;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Currency;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrencyInfo;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Stats;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.TypeStats;
 import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
+import io.github.skywalkerdarren.simpleaccounting.util.CurrencyRequest;
+import io.github.skywalkerdarren.simpleaccounting.util.JsonConvertor;
 
 import static java.lang.Thread.currentThread;
 import static java.lang.Thread.sleep;
@@ -44,6 +57,15 @@ public class AppRepositry implements AppDataSource {
     private TypeDao mTypeDao;
     private BillDao mBillDao;
     private StatsDao mStatsDao;
+    private static final String ACCOUNTS = "ACCOUNTS";
+    private static final String INCOME_TYPES = "INCOME_TYPES";
+    private static final String EXPENSE_TYPES = "EXPENSE_TYPES";
+    private static Map<UUID, Account> sAccountCache = new ConcurrentHashMap<>();
+    private static Map<String, List<Account>> sAccountsCache = new ConcurrentHashMap<>();
+    private static Map<UUID, Bill> sBillCache = new ConcurrentHashMap<>();
+    private static Map<UUID, Type> sTypeCache = new ConcurrentHashMap<>();
+    private CurrencyInfoDao mCurrencyInfoDao;
+    private CurrencyRateDao mCurrencyRateDao;
 
     private final ReentrantReadWriteLock dbLock = new ReentrantReadWriteLock(true);
 
@@ -66,17 +88,11 @@ public class AppRepositry implements AppDataSource {
     private AppRepositry(@NonNull AppExecutors executors, @NonNull Context context) {
         mExecutors = executors;
         AppDatabase database = AppDatabase.getInstance(context);
-        mAccountDao = database.accountDao();
-        mTypeDao = database.typeDao();
-        mBillDao = database.billDao();
-        mStatsDao = database.statsDao();
+        initDao(database);
     }
 
     private AppRepositry(@NonNull AppExecutors executors, AppDatabase database) {
-        mAccountDao = database.accountDao();
-        mTypeDao = database.typeDao();
-        mBillDao = database.billDao();
-        mStatsDao = database.statsDao();
+        initDao(database);
         mExecutors = executors;
     }
 
@@ -91,6 +107,15 @@ public class AppRepositry implements AppDataSource {
         return INSTANCE;
     }
 
+    private void initDao(AppDatabase database) {
+        mAccountDao = database.accountDao();
+        mTypeDao = database.typeDao();
+        mBillDao = database.billDao();
+        mStatsDao = database.statsDao();
+        mCurrencyInfoDao = database.currencyInfoDao();
+        mCurrencyRateDao = database.currencyRateDao();
+    }
+
     @VisibleForTesting
     public static AppRepositry getInstance(@NonNull AppExecutors executors, AppDatabase database) {
         if (INSTANCE == null) {
@@ -103,12 +128,6 @@ public class AppRepositry implements AppDataSource {
         return INSTANCE;
     }
 
-    private static final String ACCOUNTS = "ACCOUNTS";
-    private static final String INCOME_TYPES = "INCOME_TYPES";
-    private static final String EXPENSE_TYPES = "EXPENSE_TYPES";
-    private static Map<UUID, Account> sAccountCache = new ConcurrentHashMap<>();
-    private static Map<String, List<Account>> sAccountsCache = new ConcurrentHashMap<>();
-
     @VisibleForTesting
     static void clearInstance() {
         INSTANCE = null;
@@ -118,9 +137,6 @@ public class AppRepositry implements AppDataSource {
         sTypeCache.clear();
         sAccountCache.clear();
     }
-
-    private static Map<UUID, Bill> sBillCache = new ConcurrentHashMap<>();
-    private static Map<UUID, Type> sTypeCache = new ConcurrentHashMap<>();
 
     void getAccountsOnBackground(LoadAccountsCallBack callBack) {
         execute(() -> {
@@ -504,6 +520,141 @@ public class AppRepositry implements AppDataSource {
         });
     }
 
+    @Override
+    public void updateCurrencies(Context context, UpdateCallback callback) {
+        mExecutors.networkIO().execute(() -> {
+            CurrencyRequest request = new CurrencyRequest(context);
+            if (request.checkConnection()) {
+
+                SharedPreferences preferences = context.getSharedPreferences("dbPref", Context.MODE_PRIVATE);
+                String timestamp = preferences.getString("timestamp", "0");
+                DateTime before = new DateTime(Long.valueOf(timestamp));
+                DateTime after = DateTime.now();
+
+                if (!after.minusDays(1).isAfter(before)) {
+                    mExecutors.mainThread().execute(() -> callback.connectFailed("update date too close"));
+                    return;
+                }
+
+                CurrenciesInfo currenciesInfo = request.getCurrenciesInfo();
+                if ("false".equals(currenciesInfo.getSuccess())) {
+                    mExecutors.mainThread().execute(() -> callback.connectFailed(currenciesInfo.getError().toString()));
+                    return;
+                }
+
+                preferences.edit().putString("timestamp", currenciesInfo.getTimestamp()).apply();
+
+                List<Currency> currencies = currenciesInfo.getQuotes();
+                for (Currency currency : currencies) {
+                    Currency rawCurrency = mCurrencyRateDao.getCurrency(currency.getName());
+                    if (rawCurrency != null) {
+                        rawCurrency.setExchangeRate(currency.getExchangeRate());
+                        mCurrencyRateDao.updateCurrency(rawCurrency);
+                    } else {
+                        currency.setFavourite(false);
+                        mCurrencyRateDao.addCurrency(currency);
+                    }
+                }
+
+                mExecutors.mainThread().execute(callback::updated);
+            } else {
+                mExecutors.mainThread().execute(() -> callback.connectFailed("connect failed"));
+            }
+        });
+    }
+
+    @Override
+    public void getCurrencyInfo(String name, LoadCurrencyInfoCallback callback) {
+        execute(() -> {
+            CurrencyInfo info = mCurrencyInfoDao.getInfo(name);
+            if (info != null) {
+                mExecutors.mainThread().execute(() -> callback.onCurrencyInfoLoaded(info));
+            } else {
+                mExecutors.mainThread().execute(callback::onDataUnavailable);
+            }
+        });
+    }
+
+    @Override
+    public void getFavouriteCurrenciesInfo(LoadCurrenciesInfoCallback callback) {
+        execute(() -> {
+            List<Currency> favouriteCurrencies = mCurrencyRateDao.getFavouriteCurrencies(true);
+            List<CurrencyInfo> infos = new ArrayList<>();
+            for (Currency currency : favouriteCurrencies) {
+                CurrencyInfo info = mCurrencyInfoDao.getInfo(currency.getName());
+                infos.add(info);
+            }
+            if (infos.isEmpty()) {
+                mExecutors.mainThread().execute(callback::onDataUnavailable);
+            } else {
+                mExecutors.mainThread().execute(() -> callback.onCurrenciesInfoLoaded(infos));
+            }
+        });
+    }
+
+    @Override
+    public void getFavouriteCurrenciesExchangeRate(String from, LoadExchangeRatesCallback callback) {
+        execute(() -> {
+            Currency currencyFrom = mCurrencyRateDao.getCurrency(from);
+            List<Currency> favouriteCurrencies = mCurrencyRateDao.getFavouriteCurrencies(true);
+            if (currencyFrom != null && favouriteCurrencies != null && !favouriteCurrencies.isEmpty()) {
+                for (Currency currencyTo : favouriteCurrencies) {
+                    Double rate = currencyTo.getExchangeRate() / currencyFrom.getExchangeRate();
+                    currencyTo.setExchangeRate(rate);
+                    currencyTo.setSource(from);
+                }
+                mExecutors.mainThread().execute(() -> callback.onExchangeRatesLoaded(favouriteCurrencies));
+            } else {
+                mExecutors.mainThread().execute(callback::onDataUnavailable);
+            }
+        });
+    }
+
+    @Override
+    public void getCurrenciesExchangeRate(String from, LoadExchangeRatesCallback callback) {
+        execute(() -> {
+            Currency currencyFrom = mCurrencyRateDao.getCurrency(from);
+            List<Currency> currencies = mCurrencyRateDao.getCurrencies();
+            if (currencyFrom != null && currencies != null && !currencies.isEmpty()) {
+                for (Currency currencyTo : currencies) {
+                    Double rate = currencyTo.getExchangeRate() / currencyFrom.getExchangeRate();
+                    currencyTo.setExchangeRate(rate);
+                    currencyTo.setSource(from);
+                }
+                mExecutors.mainThread().execute(() -> callback.onExchangeRatesLoaded(currencies));
+            } else {
+                mExecutors.mainThread().execute(callback::onDataUnavailable);
+            }
+        });
+    }
+
+    @Override
+    public void getCurrencyExchangeRate(String from, String to, LoadExchangeRateCallback callback) {
+        execute(() -> {
+            Currency currencyFrom = mCurrencyRateDao.getCurrency(from);
+            Currency currencyTo = mCurrencyRateDao.getCurrency(to);
+            if (currencyFrom != null && currencyTo != null) {
+                Double rate = currencyTo.getExchangeRate() / currencyFrom.getExchangeRate();
+                Currency currency = new Currency(from, to, rate);
+                mExecutors.mainThread().execute(() -> callback.onExchangeRateLoaded(currency));
+            } else {
+                mExecutors.mainThread().execute(callback::onDataUnavailable);
+            }
+        });
+    }
+
+    @Override
+    public void getCurrency(String name, LoadExchangeRateCallback callback) {
+        execute(() -> {
+            Currency currency = mCurrencyRateDao.getCurrency(name);
+            if (currency == null) {
+                mExecutors.mainThread().execute(callback::onDataUnavailable);
+            } else {
+                mExecutors.mainThread().execute(() -> callback.onExchangeRateLoaded(currency));
+            }
+        });
+    }
+
     public void initDb() {
         execute(() -> {
             Log.d(TAG, "initDb: in " + currentThread().getName());
@@ -547,6 +698,72 @@ public class AppRepositry implements AppDataSource {
             mTypeDao.newType(new Type("其他", Color.rgb(0xcd, 0x53, 0x3b),
                     false, "other.png"));
             dbLock.writeLock().unlock();
+        });
+    }
+
+    @Override
+    public void initCurrenciesAndInfos(Context context) {
+        execute(() -> {
+            try (InputStream inputStream = context.getResources().getAssets().open("currency/default_rate.json")) {
+                Reader reader = new InputStreamReader(inputStream);
+                CurrenciesInfo currenciesInfo = JsonConvertor.toCurrenciesInfo(reader);
+                SharedPreferences preferences = context.getSharedPreferences("dbPref", Context.MODE_PRIVATE);
+                preferences.edit().putString("timestamp", currenciesInfo.getTimestamp()).apply();
+                for (Currency currency : currenciesInfo.getQuotes()) {
+                    switch (currency.getName()) {
+                        case "CNY":
+                        case "USD":
+                        case "HKD":
+                        case "JPY":
+                        case "MOP":
+                        case "TWD":
+                        case "CAD":
+                        case "EUR":
+                        case "GBP":
+                        case "AUD":
+                            currency.setFavourite(Boolean.TRUE);
+                            break;
+                        default:
+                            currency.setFavourite(Boolean.FALSE);
+                    }
+                    mCurrencyRateDao.addCurrency(currency);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                InputStream nameIs = context.getResources().getAssets().open("currency/name.json");
+                InputStream translationCnIs = context.getResources().getAssets().open("currency/translation_cn.json");
+                String flagPath = "currency/flag";
+                String[] flags = context.getResources().getAssets().list(flagPath);
+                Reader nameReader = new InputStreamReader(nameIs);
+                Reader translationCnReader = new InputStreamReader(translationCnIs);
+                Map<String, String> codeMap = JsonConvertor.toCurrencyCodeMap(nameReader);
+                Map<String, String> translationCnCodeMap = JsonConvertor.toCurrencyCodeMap(translationCnReader);
+                Map<String, String> flagsMap = new HashMap<>(flags.length);
+
+                for (String s : flags) {
+                    String key = s.replace(".png", "");
+                    flagsMap.put(key, flagPath + "/" + s);
+                }
+
+                for (String key : codeMap.keySet()) {
+                    CurrencyInfo info = new CurrencyInfo();
+                    info.setName(key);
+                    info.setFlagLocation(flagsMap.get(key));
+                    info.setFullName(codeMap.get(key));
+                    info.setFullNameCN(translationCnCodeMap.get(key));
+                    mCurrencyInfoDao.addInfo(info);
+                }
+
+                nameIs.close();
+                translationCnIs.close();
+                nameReader.close();
+                translationCnReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
     }
 

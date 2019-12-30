@@ -9,14 +9,20 @@ import androidx.room.TypeConverters;
 
 import io.github.skywalkerdarren.simpleaccounting.model.dao.AccountDao;
 import io.github.skywalkerdarren.simpleaccounting.model.dao.BillDao;
+import io.github.skywalkerdarren.simpleaccounting.model.dao.CurrencyInfoDao;
+import io.github.skywalkerdarren.simpleaccounting.model.dao.CurrencyRateDao;
 import io.github.skywalkerdarren.simpleaccounting.model.dao.StatsDao;
 import io.github.skywalkerdarren.simpleaccounting.model.dao.TypeDao;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Currency;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrencyInfo;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 import io.github.skywalkerdarren.simpleaccounting.util.TypeConvertUtil;
 
-@Database(entities = {Type.class, Account.class, Bill.class}, version = 1)
+import static io.github.skywalkerdarren.simpleaccounting.model.database.MigrationDb.MIGRATION_1_2;
+
+@Database(entities = {Type.class, Account.class, Bill.class, Currency.class, CurrencyInfo.class}, version = 2)
 @TypeConverters(TypeConvertUtil.class)
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase INSTANCE;
@@ -25,19 +31,21 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract TypeDao typeDao();
     public abstract BillDao billDao();
     public abstract StatsDao statsDao();
-
-
-    private static final Object sLock = new Object();
-
     public static AppDatabase getInstance(Context context) {
         synchronized (sLock) {
             if (INSTANCE == null) {
                 INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                         AppDatabase.class, "app.db")
+                        .addMigrations(MIGRATION_1_2)
                         .build();
             }
             return INSTANCE;
         }
     }
 
+    public abstract CurrencyRateDao currencyRateDao();
+
+    private static final Object sLock = new Object();
+
+    public abstract CurrencyInfoDao currencyInfoDao();
 }

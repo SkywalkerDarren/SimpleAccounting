@@ -17,6 +17,9 @@ android {
             }
         }
     }
+    sourceSets {
+        androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
+    }
     buildTypes {
         debug {
             manifestPlaceholders = [currencylayer_token: CURRENCY_TOKEN]
@@ -72,4 +75,5 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
     implementation 'com.squareup.okhttp3:okhttp:4.2.2'
     implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'androidx.room:room-testing:2.2.3'
 }

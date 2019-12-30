@@ -1,8 +1,10 @@
 package io.github.skywalkerdarren.simpleaccounting.model;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.room.Room;
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 
@@ -13,20 +15,27 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.database.AppDatabase;
+import io.github.skywalkerdarren.simpleaccounting.model.database.CurrencyDataSource;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillInfo;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Currency;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrencyInfo;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 import io.github.skywalkerdarren.simpleaccounting.util.SingleExecutors;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -80,6 +89,9 @@ public class AppRepositryTest {
         mDatabase.typeDao().newType(TYPE);
         mDatabase.billDao().addBill(mBill1);
         mDatabase.billDao().addBill(mBill2);
+
+        Context context = getApplicationContext();
+        mRepositry.initCurrenciesAndInfos(context);
     }
 
     @After
@@ -235,5 +247,129 @@ public class AppRepositryTest {
     public void getAccountStats() {
         mRepositry.getAccountStats(mBill1.getAccountId(), now.minusDays(2), now.plusDays(2), accountStats ->
                 assertEquals(-100, accountStats.getSum().intValue()));
+    }
+
+    @Test
+    public void getCurrency() {
+        String name = "CNY";
+        mRepositry.getCurrency(name, new CurrencyDataSource.LoadExchangeRateCallback() {
+            @Override
+            public void onExchangeRateLoaded(Currency currency) {
+                Log.d(TAG, "onCurrencyLoaded: " + currency);
+                assertEquals(name, currency.getName());
+            }
+
+            @Override
+            public void onDataUnavailable() {
+
+            }
+        });
+    }
+
+    @Test
+    public void getCurrencyExchangeRate() {
+        String from = "HKD";
+        String to = "CNY";
+        mRepositry.getCurrencyExchangeRate(from, to, new CurrencyDataSource.LoadExchangeRateCallback() {
+            @Override
+            public void onExchangeRateLoaded(Currency currency) {
+                Log.d(TAG, "onExchangeRateLoaded: " + currency);
+                assertEquals(from, currency.getSource());
+                assertEquals(to, currency.getName());
+            }
+
+            @Override
+            public void onDataUnavailable() {
+
+            }
+        });
+    }
+
+    @Test
+    public void getCurrenciesExchangeRate() {
+        String from = "CNY";
+        mRepositry.getCurrenciesExchangeRate(from, new CurrencyDataSource.LoadExchangeRatesCallback() {
+            @Override
+            public void onExchangeRatesLoaded(List<Currency> currencies) {
+                for (Currency currency : currencies) {
+                    assertEquals(from, currency.getSource());
+                    Log.d(TAG, "onExchangeRatesLoaded: " + currency);
+                }
+            }
+
+            @Override
+            public void onDataUnavailable() {
+
+            }
+        });
+    }
+
+    @Test
+    public void getFavouriteCurrenciesExchangeRate() {
+        String from = "CNY";
+        mRepositry.getFavouriteCurrenciesExchangeRate(from, new CurrencyDataSource.LoadExchangeRatesCallback() {
+            @Override
+            public void onExchangeRatesLoaded(List<Currency> currencies) {
+                for (Currency currency : currencies) {
+                    assertEquals(from, currency.getSource());
+                    assertTrue(currency.getFavourite());
+                    Log.d(TAG, "onExchangeRatesLoaded: " + currency);
+                }
+            }
+
+            @Override
+            public void onDataUnavailable() {
+
+            }
+        });
+    }
+
+    @Test
+    public void getCurrencyInfo() {
+        String name = "CNY";
+        mRepositry.getCurrencyInfo(name, new CurrencyDataSource.LoadCurrencyInfoCallback() {
+            @Override
+            public void onCurrencyInfoLoaded(CurrencyInfo info) {
+                assertEquals(name, info.getName());
+                Log.d(TAG, "onCurrencyInfoLoaded: " + info);
+            }
+
+            @Override
+            public void onDataUnavailable() {
+
+            }
+        });
+    }
+
+    @Test
+    public void getFavouriteCurrenciesInfo() {
+        mRepositry.getFavouriteCurrenciesInfo(new CurrencyDataSource.LoadCurrenciesInfoCallback() {
+            @Override
+            public void onCurrenciesInfoLoaded(List<CurrencyInfo> infos) {
+                assertFalse(infos.isEmpty());
+                Log.d(TAG, "onCurrenciesInfoLoaded: " + infos);
+            }
+
+            @Override
+            public void onDataUnavailable() {
+
+            }
+        });
+    }
+
+    @Test
+    public void updateCurrencies() {
+        mRepositry.updateCurrencies(ApplicationProvider.getApplicationContext(), new CurrencyDataSource.UpdateCallback() {
+            @Override
+            public void connectFailed(String msg) {
+                Log.e(TAG, "connectFailed: " + msg);
+                fail();
+            }
+
+            @Override
+            public void updated() {
+                assertTrue(true);
+            }
+        });
     }
 }
