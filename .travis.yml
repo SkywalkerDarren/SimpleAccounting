@@ -32,9 +32,9 @@ android:
 before_install:
   - touch $HOME/.android/repositories.cfg
   - yes | sdkmanager "platforms;android-29"
-  - yes | sdkmanager "platforms;android-24"
+  - yes | sdkmanager "platforms;android-22"
   - yes | sdkmanager "build-tools;29.0.2"
-  - yes | sdkmanager "system-images;android-24;default;armeabi-v7a"
+  - yes | sdkmanager "system-images;android-22;default;armeabi-v7a"
   # - echo "y"| android update sdk -a --no-ui --filter sys-img-armeabi-v7a-android-24
 # Emulator Management: Create, Start and Wait
 before_script:
