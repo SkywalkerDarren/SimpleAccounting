@@ -11,8 +11,8 @@ import androidx.annotation.VisibleForTesting;
 import java.io.IOException;
 import java.util.List;
 
+import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrenciesInfo;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Currency;
-import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrencyInfo;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Request.Builder;
@@ -33,7 +33,6 @@ public class CurrencyRequest {
             if (TOKEN == null) {
                 throw new NullPointerException("Can't find your currencylayer token");
             }
-            Log.d(TAG, "CurrencyRequest: " + TOKEN);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
             throw new IllegalArgumentException("Can't find your PackageManager");
@@ -63,6 +62,33 @@ public class CurrencyRequest {
         return isConnected;
     }
 
+    public CurrenciesInfo getCurrenciesInfo() {
+        if (!checkConnection()) {
+            Log.e(TAG, "getCurrenciesInfo: checkConnection failed", new NetworkErrorException("Can't connect"));
+            return null;
+        }
+
+        OkHttpClient client = new OkHttpClient();
+        String url = "http://apilayer.net/api/live?access_key=" + TOKEN;
+        Request request = new Builder()
+                .url(url)
+                .build();
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new NetworkErrorException("Can't connect");
+            }
+            ResponseBody body = response.body();
+            checkNotNull(body);
+            String json = body.string();
+            CurrenciesInfo info = JsonConvertor.toCurrenciesInfo(json);
+            return info;
+        } catch (IOException | NetworkErrorException e) {
+            e.printStackTrace();
+            Log.e(TAG, "getCurrenciesInfo: ", e);
+            return null;
+        }
+    }
+
     public List<Currency> getCurrencies() {
         if (!checkConnection()) {
             return null;
@@ -80,8 +106,7 @@ public class CurrencyRequest {
             ResponseBody body = response.body();
             checkNotNull(body);
             String json = body.string();
-            JsonConvertor convertor = new JsonConvertor();
-            CurrencyInfo info = convertor.toCurrencyInfo(json);
+            CurrenciesInfo info = JsonConvertor.toCurrenciesInfo(json);
             if ("true".equals(info.getSuccess())) {
                 return info.getQuotes();
             } else {
