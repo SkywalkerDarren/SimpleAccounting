@@ -29,6 +29,7 @@ android:
     # if you need to run emulator(s) during your tests
     # - sys-img-x86-android-29
     # - sys-img-armeabi-v7a-android-22
+	- sys-img-armeabi-v7a-google_apis-25
 before_install:
   - touch $HOME/.android/repositories.cfg
   - yes | sdkmanager "platforms;android-29"
