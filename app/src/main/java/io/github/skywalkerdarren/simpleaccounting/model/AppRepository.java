@@ -51,8 +51,8 @@ import io.github.skywalkerdarren.simpleaccounting.util.JsonConvertor;
 import static java.lang.Thread.currentThread;
 import static java.lang.Thread.sleep;
 
-public class AppRepositry implements AppDataSource {
-    private static final String TAG = "AppRepositry";
+public class AppRepository implements AppDataSource {
+    private static final String TAG = "AppRepository";
     private AccountDao mAccountDao;
     private TypeDao mTypeDao;
     private BillDao mBillDao;
@@ -71,7 +71,7 @@ public class AppRepositry implements AppDataSource {
 
     private static final boolean DEBUG = false;
 
-    private static volatile AppRepositry INSTANCE;
+    private static volatile AppRepository INSTANCE;
 
     private AppExecutors mExecutors;
 
@@ -85,22 +85,22 @@ public class AppRepositry implements AppDataSource {
         }
     }
 
-    private AppRepositry(@NonNull AppExecutors executors, @NonNull Context context) {
+    private AppRepository(@NonNull AppExecutors executors, @NonNull Context context) {
         mExecutors = executors;
         AppDatabase database = AppDatabase.getInstance(context);
         initDao(database);
     }
 
-    private AppRepositry(@NonNull AppExecutors executors, AppDatabase database) {
+    private AppRepository(@NonNull AppExecutors executors, AppDatabase database) {
         initDao(database);
         mExecutors = executors;
     }
 
-    public static AppRepositry getInstance(@NonNull AppExecutors executors, @NonNull Context context) {
+    public static AppRepository getInstance(@NonNull AppExecutors executors, @NonNull Context context) {
         if (INSTANCE == null) {
-            synchronized (AppRepositry.class) {
+            synchronized (AppRepository.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new AppRepositry(executors, context);
+                    INSTANCE = new AppRepository(executors, context);
                 }
             }
         }
@@ -117,11 +117,11 @@ public class AppRepositry implements AppDataSource {
     }
 
     @VisibleForTesting
-    public static AppRepositry getInstance(@NonNull AppExecutors executors, AppDatabase database) {
+    public static AppRepository getInstance(@NonNull AppExecutors executors, AppDatabase database) {
         if (INSTANCE == null) {
-            synchronized (AppRepositry.class) {
+            synchronized (AppRepository.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new AppRepositry(executors, database);
+                    INSTANCE = new AppRepository(executors, database);
                 }
             }
         }

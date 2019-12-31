@@ -21,7 +21,7 @@ import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.databinding.ActivityWelcomeBinding;
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 
 public class WelcomeActivity extends Activity {
@@ -41,9 +41,9 @@ public class WelcomeActivity extends Activity {
         SharedPreferences.Editor editor = preferences.edit();
         try {
             if (count == 0) {
-                AppRepositry repositry = AppRepositry.getInstance(new AppExecutors(), getApplicationContext());
-                repositry.initDb();
-                repositry.initCurrenciesAndInfos(getApplicationContext());
+                AppRepository repository = AppRepository.getInstance(new AppExecutors(), getApplicationContext());
+                repository.initDb();
+                repository.initCurrenciesAndInfos(getApplicationContext());
             } else {
                 startMainActivity();
             }

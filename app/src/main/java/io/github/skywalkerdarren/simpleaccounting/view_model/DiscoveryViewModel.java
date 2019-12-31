@@ -1,9 +1,13 @@
 package io.github.skywalkerdarren.simpleaccounting.view_model;
 
-import androidx.databinding.BaseObservable;
+import androidx.lifecycle.ViewModel;
 
-public class DiscoveryViewModel extends BaseObservable {
-    public void test() {
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 
+public class DiscoveryViewModel extends ViewModel {
+    private AppRepository mRepository;
+
+    public DiscoveryViewModel(AppRepository repository) {
+        mRepository = repository;
     }
 }

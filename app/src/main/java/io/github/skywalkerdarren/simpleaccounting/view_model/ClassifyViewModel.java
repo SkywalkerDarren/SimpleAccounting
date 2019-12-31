@@ -9,7 +9,7 @@ import org.joda.time.Period;
 
 import java.util.List;
 
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.TypeStats;
 
 
@@ -25,13 +25,13 @@ public class ClassifyViewModel extends ViewModel {
     private DateTime mEnd;
     private Period mPeriod;
     private boolean mIsExpense;
-    private AppRepositry mRepositry;
+    private AppRepository mRepository;
 
     private MutableLiveData<String> date = new MutableLiveData<>();
     private MutableLiveData<List<TypeStats>> statsList = new MutableLiveData<>();
 
-    public ClassifyViewModel(AppRepositry repositry) {
-        mRepositry = repositry;
+    public ClassifyViewModel(AppRepository repository) {
+        mRepository = repository;
         mIsExpense = true;
         DateTime now = DateTime.now();
         mStart = new DateTime(now.getYear(), now.getMonthOfYear(), 1, 0, 0);
@@ -58,7 +58,7 @@ public class ClassifyViewModel extends ViewModel {
     private void setStatsList(DateTime start, DateTime end, boolean isExpense) {
         String pattern = "yyyy年MM月dd日";
         date.setValue(mStart.toString(pattern) + " - " + mEnd.toString(pattern));
-        mRepositry.getTypesStats(start, end, isExpense, typesStats -> statsList.setValue(typesStats));
+        mRepository.getTypesStats(start, end, isExpense, typesStats -> statsList.setValue(typesStats));
     }
 
     /**

@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.model.database.BillDataSource;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
@@ -23,7 +23,7 @@ import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
  */
 public class BillDetailViewModel extends ViewModel implements BillDataSource.LoadBillCallBack {
     private static int mode = 0;
-    private AppRepositry mRepositry;
+    private AppRepository mRepository;
     private MutableLiveData<Integer> statsMode = new MutableLiveData<>(R.string.loading);
     private MutableLiveData<String> typeImage = new MutableLiveData<>();
     private MutableLiveData<String> typeName = new MutableLiveData<>("加载中...");
@@ -42,12 +42,12 @@ public class BillDetailViewModel extends ViewModel implements BillDataSource.Loa
     private MutableLiveData<String> expensePercent = new MutableLiveData<>("加载中...");
     private MutableLiveData<Bill> bill = new MutableLiveData<>();
 
-    public BillDetailViewModel(AppRepositry repositry) {
-        mRepositry = repositry;
+    public BillDetailViewModel(AppRepository repository) {
+        mRepository = repository;
     }
 
     public void start(Bill b) {
-        mRepositry.getBill(b.getUUID(), this);
+        mRepository.getBill(b.getUUID(), this);
     }
 
     private void setLoading() {
@@ -72,27 +72,27 @@ public class BillDetailViewModel extends ViewModel implements BillDataSource.Loa
     }
 
     private void update(Bill bill, DateTime start, DateTime end) {
-        mRepositry.getAccount(bill.getAccountId(), account ->
+        mRepository.getAccount(bill.getAccountId(), account ->
                 accountName.setValue(account.getName()));
-        mRepositry.getType(bill.getTypeId(), type -> {
+        mRepository.getType(bill.getTypeId(), type -> {
             typeImage.setValue(Type.FOLDER + type.getAssetsName());
             typeName.setValue(type.getName());
             balanceColor.setValue(type.getIsExpense() ?
                     R.color.deeporange800 : R.color.lightgreen700);
             expensePercentHint.setValue(type.getIsExpense() ?
                     R.string.expense_percent : R.string.income_percent);
-            mRepositry.getAccountStats(bill.getAccountId(), start, end, accountStats ->
+            mRepository.getAccountStats(bill.getAccountId(), start, end, accountStats ->
                     accountPercent.setValue(type.getIsExpense() ?
                             getPercent(bill, accountStats.getExpense()) :
                             getPercent(bill, accountStats.getIncome())));
-            mRepositry.getBillStats(start, end, billStats ->
+            mRepository.getBillStats(start, end, billStats ->
                     expensePercent.setValue(type.getIsExpense() ?
                             getPercent(bill, billStats.getExpense()) :
                             getPercent(bill, billStats.getIncome())));
         });
-        mRepositry.getTypeStats(start, end, bill.getTypeId(), typeStats ->
+        mRepository.getTypeStats(start, end, bill.getTypeId(), typeStats ->
                 typePercent.setValue(getPercent(bill, typeStats.getBalance())));
-        mRepositry.getTypeAverage(start, end, bill.getTypeId(), typeStats -> {
+        mRepository.getTypeAverage(start, end, bill.getTypeId(), typeStats -> {
             BigDecimal sub = bill.getBalance().subtract(typeStats.getBalance()).abs();
             try {
                 thanAverage.setValue(sub.multiply(BigDecimal.valueOf(100))

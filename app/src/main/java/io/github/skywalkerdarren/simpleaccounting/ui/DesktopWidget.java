@@ -13,7 +13,7 @@ import org.joda.time.DateTime;
 import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.model.database.StatsDataSource;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
@@ -55,7 +55,7 @@ public class DesktopWidget extends AppWidgetProvider implements StatsDataSource.
 
     private void refreshData(Context context) {
         mContext = context;
-        AppRepositry repositry = AppRepositry.getInstance(new AppExecutors(), context);
+        AppRepository repository = AppRepository.getInstance(new AppExecutors(), context);
         Intent addIntent = BillEditActivity.newIntent(mContext, new Bill(), 0, 0);
         PendingIntent pendingAddIntent = PendingIntent.getActivity(mContext, REQUEST_BILL,
                 addIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -68,7 +68,7 @@ public class DesktopWidget extends AppWidgetProvider implements StatsDataSource.
         mRemoteViews.setOnClickPendingIntent(R.id.add_bill_text_view, pendingAddIntent);
         mRemoteViews.setOnClickPendingIntent(R.id.icon, pendingIconIntent);
 
-        repositry.getBillsAnnualStats(DateTime.now().getYear(), this);
+        repository.getBillsAnnualStats(DateTime.now().getYear(), this);
 
         ComponentName name = new ComponentName(mContext, DesktopWidget.class);
         AppWidgetManager.getInstance(mContext).updateAppWidget(name, mRemoteViews);

@@ -25,7 +25,7 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.AccountAdapter;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentAccountBinding;
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.MainActivity;
@@ -84,7 +84,7 @@ public class AccountFragment extends BaseFragment {
                 .setMessage("是否删除所有账单，删除后的账单将无法恢复！")
                 .setTitle("警告")
                 .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
-                    AppRepositry.getInstance(new AppExecutors(), requireContext()).clearBill();
+                    AppRepository.getInstance(new AppExecutors(), requireContext()).clearBill();
                     DesktopWidget.refresh(requireContext());
                     onResume();
                     MainActivity activity = (MainActivity) requireActivity();

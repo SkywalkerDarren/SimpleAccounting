@@ -9,7 +9,7 @@ import org.joda.time.DateTime;
 
 import java.util.List;
 
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
@@ -21,20 +21,20 @@ import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
  */
 
 public class AccountViewModel extends ViewModel {
-    private AppRepositry mRepositry;
+    private AppRepository mRepository;
     private MutableLiveData<String> nav = new MutableLiveData<>();
     private MutableLiveData<String> liability = new MutableLiveData<>();
     private MutableLiveData<String> totalAssets = new MutableLiveData<>();
     private MutableLiveData<List<Account>> accounts = new MutableLiveData<>();
     private LiveData<String> accountSize = Transformations.map(accounts, input -> String.valueOf(input.size()));
 
-    public AccountViewModel(AppRepositry repositry) {
-        mRepositry = repositry;
+    public AccountViewModel(AppRepository repository) {
+        mRepository = repository;
     }
 
     public void start() {
-        mRepositry.getAccounts((accounts -> this.accounts.setValue(accounts)));
-        mRepositry.getBillStats(new DateTime(0), DateTime.now(), billStats -> {
+        mRepository.getAccounts((accounts -> this.accounts.setValue(accounts)));
+        mRepository.getBillStats(new DateTime(0), DateTime.now(), billStats -> {
             nav.setValue(FormatUtil.getNumeric(billStats.getSum()));
             liability.setValue(FormatUtil.getNumeric(billStats.getExpense()));
             totalAssets.setValue(FormatUtil.getNumeric(billStats.getIncome()));
@@ -70,7 +70,7 @@ public class AccountViewModel extends ViewModel {
     }
 
     public void changePosition(Account a, Account b) {
-        mRepositry.changePosition(a, b);
+        mRepository.changePosition(a, b);
     }
 
     public LiveData<List<Account>> getAccounts() {

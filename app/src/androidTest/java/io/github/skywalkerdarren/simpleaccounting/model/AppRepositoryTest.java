@@ -39,9 +39,9 @@ import static org.junit.Assert.fail;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class AppRepositryTest {
-    private static final String TAG = "AppRepositryTest";
-    private AppRepositry mRepositry;
+public class AppRepositoryTest {
+    private static final String TAG = "AppRepositoryTest";
+    private AppRepository mRepository;
     private static final Account ACCOUNT = new Account("name", "balanceHint", BigDecimal.ZERO, "image", R.color.black);
     private static final Type TYPE = new Type("TYPE", R.color.darkorchid, true, "assetsName");
     private final DateTime now = DateTime.now();
@@ -79,8 +79,8 @@ public class AppRepositryTest {
         mBill1 = new Bill(type1.getUUID(), account1.getUUID(), now, "name1", new BigDecimal(100), "remark");
         mBill2 = new Bill(type2.getUUID(), account2.getUUID(), now.minusDays(1), "name2", new BigDecimal(200), "remark");
 
-        AppRepositry.clearInstance();
-        mRepositry = AppRepositry.getInstance(new SingleExecutors(), mDatabase);
+        AppRepository.clearInstance();
+        mRepository = AppRepository.getInstance(new SingleExecutors(), mDatabase);
         mDatabase.accountDao().newAccount(account1);
         mDatabase.accountDao().newAccount(account2);
         mDatabase.accountDao().newAccount(ACCOUNT);
@@ -91,18 +91,18 @@ public class AppRepositryTest {
         mDatabase.billDao().addBill(mBill2);
 
         Context context = getApplicationContext();
-        mRepositry.initCurrenciesAndInfos(context);
+        mRepository.initCurrenciesAndInfos(context);
     }
 
     @After
     public void tearDown() {
         mDatabase.close();
-        AppRepositry.clearInstance();
+        AppRepository.clearInstance();
     }
 
     @Test
     public void getBillInfoList() {
-        mRepositry.getBillInfoList(now.getYear(), now.getMonthOfYear(), billsInfo -> {
+        mRepository.getBillInfoList(now.getYear(), now.getMonthOfYear(), billsInfo -> {
             assertEquals(4, billsInfo.size());
             for (BillInfo billInfo : billsInfo) {
                 Log.d(TAG, "getBillInfoList: " + billInfo);
@@ -112,37 +112,37 @@ public class AppRepositryTest {
 
     @Test
     public void getAccount() {
-        mRepositry.getAccount(mBill1.getAccountId(), this::assertAccount1);
+        mRepository.getAccount(mBill1.getAccountId(), this::assertAccount1);
     }
 
     @Test
     public void getsBills() {
-        mRepositry.getsBills(now.getYear(), now.getMonthOfYear(), bills ->
+        mRepository.getsBills(now.getYear(), now.getMonthOfYear(), bills ->
                 assertEquals(2, bills.size()));
     }
 
     @Test
     public void getAccounts() {
-        mRepositry.getAccounts(accounts -> assertEquals(3, accounts.size()));
+        mRepository.getAccounts(accounts -> assertEquals(3, accounts.size()));
     }
 
     @Test
     public void delAccount() {
-        mRepositry.delAccount(mBill1.getAccountId());
-        mRepositry.getAccounts(accounts -> assertEquals(2, accounts.size()));
+        mRepository.delAccount(mBill1.getAccountId());
+        mRepository.getAccounts(accounts -> assertEquals(2, accounts.size()));
     }
 
     @Test
     public void changePosition() {
         int[] id = new int[2];
-        mRepositry.getAccount(mBill1.getAccountId(), a ->
-                mRepositry.getAccount(mBill2.getAccountId(), b -> {
+        mRepository.getAccount(mBill1.getAccountId(), a ->
+                mRepository.getAccount(mBill2.getAccountId(), b -> {
                     id[0] = a.getId();
                     id[1] = b.getId();
-                    mRepositry.changePosition(a, b);
+                    mRepository.changePosition(a, b);
                 }));
-        mRepositry.getAccount(mBill1.getAccountId(), a ->
-                mRepositry.getAccount(mBill2.getAccountId(), b -> {
+        mRepository.getAccount(mBill1.getAccountId(), a ->
+                mRepository.getAccount(mBill2.getAccountId(), b -> {
                     assertEquals(id[1], a.getId().intValue());
                     assertEquals(id[0], b.getId().intValue());
                 }));
@@ -150,21 +150,21 @@ public class AppRepositryTest {
 
     @Test
     public void getBill() {
-        mRepositry.getBill(mBill1.getUUID(), bill -> assertBill(mBill1, bill));
-        mRepositry.getBill(mBill2.getUUID(), bill -> assertBill(mBill2, bill));
+        mRepository.getBill(mBill1.getUUID(), bill -> assertBill(mBill1, bill));
+        mRepository.getBill(mBill2.getUUID(), bill -> assertBill(mBill2, bill));
     }
 
     @Test
     public void addBill() {
         Bill bill = new Bill(TYPE.getUUID(), ACCOUNT.getUUID(), now, "name", BigDecimal.ZERO, "remark");
-        mRepositry.addBill(bill);
-        mRepositry.getBill(bill.getUUID(), b -> assertBill(bill, b));
+        mRepository.addBill(bill);
+        mRepository.getBill(bill.getUUID(), b -> assertBill(bill, b));
     }
 
     @Test
     public void delBill() {
-        mRepositry.delBill(mBill2.getUUID());
-        mRepositry.getsBills(now.getYear(), now.getMonthOfYear(), bills ->
+        mRepository.delBill(mBill2.getUUID());
+        mRepository.getsBills(now.getYear(), now.getMonthOfYear(), bills ->
                 assertEquals(1, bills.size()));
     }
 
@@ -176,37 +176,37 @@ public class AppRepositryTest {
         mBill1.setName("name");
         mBill1.setDate(now.plusDays(1));
         mBill1.setRemark("update");
-        mRepositry.updateBill(mBill1);
-        mRepositry.getBill(mBill1.getUUID(), bill -> assertBill(mBill1, bill));
+        mRepository.updateBill(mBill1);
+        mRepository.getBill(mBill1.getUUID(), bill -> assertBill(mBill1, bill));
     }
 
     @Test
     public void clearBill() {
-        mRepositry.clearBill();
-        mRepositry.getsBills(now.getYear(), now.getMonthOfYear(), bills ->
+        mRepository.clearBill();
+        mRepository.getsBills(now.getYear(), now.getMonthOfYear(), bills ->
                 assertEquals(0, bills.size()));
     }
 
     @Test
     public void getType() {
-        mRepositry.getType(mBill1.getTypeId(), this::assertType);
+        mRepository.getType(mBill1.getTypeId(), this::assertType);
     }
 
     @Test
     public void getTypes() {
-        mRepositry.getTypes(true, types -> assertEquals(2, types.size()));
+        mRepository.getTypes(true, types -> assertEquals(2, types.size()));
     }
 
     @Test
     public void delType() {
-        mRepositry.delType(mBill1.getTypeId());
-        mRepositry.getTypes(true, types ->
+        mRepository.delType(mBill1.getTypeId());
+        mRepository.getTypes(true, types ->
                 assertEquals(1, types.size()));
     }
 
     @Test
     public void getBillsAnnualStats() {
-        mRepositry.getBillsAnnualStats(now.getYear(), billsStats -> {
+        mRepository.getBillsAnnualStats(now.getYear(), billsStats -> {
             assertEquals(12, billsStats.size());
             for (BillStats billStats : billsStats) {
                 Log.d(TAG, "getBillsAnnualStats: " + billStats);
@@ -216,7 +216,7 @@ public class AppRepositryTest {
 
     @Test
     public void getBillStats() {
-        mRepositry.getBillStats(now.minusDays(2), now.plusDays(2), billStats -> {
+        mRepository.getBillStats(now.minusDays(2), now.plusDays(2), billStats -> {
             assertEquals(100, billStats.getSum().intValue());
             assertEquals(200, billStats.getIncome().intValue());
             assertEquals(100, billStats.getExpense().intValue());
@@ -225,34 +225,34 @@ public class AppRepositryTest {
 
     @Test
     public void getTypesStats() {
-        mRepositry.getTypesStats(now.minusDays(2), now.plusDays(2), true, typesStats ->
+        mRepository.getTypesStats(now.minusDays(2), now.plusDays(2), true, typesStats ->
                 assertEquals(1, typesStats.size()));
-        mRepositry.getTypesStats(now.minusDays(2), now.plusDays(2), false, typesStats ->
+        mRepository.getTypesStats(now.minusDays(2), now.plusDays(2), false, typesStats ->
                 assertEquals(1, typesStats.size()));
     }
 
     @Test
     public void getTypeStats() {
-        mRepositry.getTypeStats(now.minusDays(2), now.plusDays(2), mBill1.getTypeId(), typeStats ->
+        mRepository.getTypeStats(now.minusDays(2), now.plusDays(2), mBill1.getTypeId(), typeStats ->
                 assertEquals(100, typeStats.getBalance().intValue()));
     }
 
     @Test
     public void getTypeAverage() {
-        mRepositry.getTypeStats(now.minusDays(2), now.plusDays(2), mBill1.getTypeId(), typeStats ->
+        mRepository.getTypeStats(now.minusDays(2), now.plusDays(2), mBill1.getTypeId(), typeStats ->
                 assertEquals(100, typeStats.getBalance().intValue()));
     }
 
     @Test
     public void getAccountStats() {
-        mRepositry.getAccountStats(mBill1.getAccountId(), now.minusDays(2), now.plusDays(2), accountStats ->
+        mRepository.getAccountStats(mBill1.getAccountId(), now.minusDays(2), now.plusDays(2), accountStats ->
                 assertEquals(-100, accountStats.getSum().intValue()));
     }
 
     @Test
     public void getCurrency() {
         String name = "CNY";
-        mRepositry.getCurrency(name, new CurrencyDataSource.LoadExchangeRateCallback() {
+        mRepository.getCurrency(name, new CurrencyDataSource.LoadExchangeRateCallback() {
             @Override
             public void onExchangeRateLoaded(Currency currency) {
                 Log.d(TAG, "onCurrencyLoaded: " + currency);
@@ -270,7 +270,7 @@ public class AppRepositryTest {
     public void getCurrencyExchangeRate() {
         String from = "HKD";
         String to = "CNY";
-        mRepositry.getCurrencyExchangeRate(from, to, new CurrencyDataSource.LoadExchangeRateCallback() {
+        mRepository.getCurrencyExchangeRate(from, to, new CurrencyDataSource.LoadExchangeRateCallback() {
             @Override
             public void onExchangeRateLoaded(Currency currency) {
                 Log.d(TAG, "onExchangeRateLoaded: " + currency);
@@ -288,7 +288,7 @@ public class AppRepositryTest {
     @Test
     public void getCurrenciesExchangeRate() {
         String from = "CNY";
-        mRepositry.getCurrenciesExchangeRate(from, new CurrencyDataSource.LoadExchangeRatesCallback() {
+        mRepository.getCurrenciesExchangeRate(from, new CurrencyDataSource.LoadExchangeRatesCallback() {
             @Override
             public void onExchangeRatesLoaded(List<Currency> currencies) {
                 for (Currency currency : currencies) {
@@ -307,7 +307,7 @@ public class AppRepositryTest {
     @Test
     public void getFavouriteCurrenciesExchangeRate() {
         String from = "CNY";
-        mRepositry.getFavouriteCurrenciesExchangeRate(from, new CurrencyDataSource.LoadExchangeRatesCallback() {
+        mRepository.getFavouriteCurrenciesExchangeRate(from, new CurrencyDataSource.LoadExchangeRatesCallback() {
             @Override
             public void onExchangeRatesLoaded(List<Currency> currencies) {
                 for (Currency currency : currencies) {
@@ -327,7 +327,7 @@ public class AppRepositryTest {
     @Test
     public void getCurrencyInfo() {
         String name = "CNY";
-        mRepositry.getCurrencyInfo(name, new CurrencyDataSource.LoadCurrencyInfoCallback() {
+        mRepository.getCurrencyInfo(name, new CurrencyDataSource.LoadCurrencyInfoCallback() {
             @Override
             public void onCurrencyInfoLoaded(CurrencyInfo info) {
                 assertEquals(name, info.getName());
@@ -343,7 +343,7 @@ public class AppRepositryTest {
 
     @Test
     public void getFavouriteCurrenciesInfo() {
-        mRepositry.getFavouriteCurrenciesInfo(new CurrencyDataSource.LoadCurrenciesInfoCallback() {
+        mRepository.getFavouriteCurrenciesInfo(new CurrencyDataSource.LoadCurrenciesInfoCallback() {
             @Override
             public void onCurrenciesInfoLoaded(List<CurrencyInfo> infos) {
                 assertFalse(infos.isEmpty());
@@ -359,7 +359,7 @@ public class AppRepositryTest {
 
     @Test
     public void updateCurrencies() {
-        mRepositry.updateCurrencies(ApplicationProvider.getApplicationContext(), new CurrencyDataSource.UpdateCallback() {
+        mRepository.updateCurrencies(ApplicationProvider.getApplicationContext(), new CurrencyDataSource.UpdateCallback() {
             @Override
             public void connectFailed(String msg) {
                 Log.e(TAG, "connectFailed: " + msg);

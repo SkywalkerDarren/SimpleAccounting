@@ -25,21 +25,21 @@ public class Demo {
     private List<Type> mExpense;
     private List<Type> mIncome;
     private List<Account> mAccounts;
-    private AppRepositry mRepositry;
+    private AppRepository mRepository;
     private static final String TAG = "Demo";
     private final CountDownLatch mLatch = new CountDownLatch(3);
 
     public Demo(Context context) {
-        mRepositry = AppRepositry.getInstance(new AppExecutors(), context);
-        mRepositry.getTypesOnBackground(true, types -> {
+        mRepository = AppRepository.getInstance(new AppExecutors(), context);
+        mRepository.getTypesOnBackground(true, types -> {
             mExpense = types;
             mLatch.countDown();
         });
-        mRepositry.getTypesOnBackground(false, types -> {
+        mRepository.getTypesOnBackground(false, types -> {
             mIncome = types;
             mLatch.countDown();
         });
-        mRepositry.getAccountsOnBackground(accounts -> {
+        mRepository.getAccountsOnBackground(accounts -> {
             mAccounts = accounts;
             mLatch.countDown();
         });
@@ -87,7 +87,7 @@ public class Demo {
         }
 
         Log.d(TAG, "createRandomBill: " + p);
-        mRepositry.addBill(bill);
+        mRepository.addBill(bill);
     }
 
     private float getRandomFloat(int range, int base) {

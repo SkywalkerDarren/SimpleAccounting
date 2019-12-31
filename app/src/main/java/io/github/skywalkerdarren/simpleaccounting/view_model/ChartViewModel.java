@@ -17,17 +17,17 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.TypeStats;
 
 public class ChartViewModel extends ViewModel {
-    private AppRepositry mRepositry;
+    private AppRepository mRepository;
     private MutableLiveData<BillStats> mBillStats = new MutableLiveData<>();
     private MutableLiveData<PieData> mPieData = new MutableLiveData<>();
 
-    public ChartViewModel(AppRepositry repositry) {
-        mRepositry = repositry;
+    public ChartViewModel(AppRepository repository) {
+        mRepository = repository;
     }
 
     public LiveData<BillStats> getBillStats() {
@@ -41,9 +41,9 @@ public class ChartViewModel extends ViewModel {
     public void start(DateTime startDateTime, DateTime endDateTime, boolean isExpense) {
         List<PieEntry> pieEntries = new ArrayList<>(10);
         List<Integer> colorList = new ArrayList<>(10);
-        mRepositry.getTypesStats(startDateTime, endDateTime, isExpense, typesStats -> {
+        mRepository.getTypesStats(startDateTime, endDateTime, isExpense, typesStats -> {
             for (TypeStats stats : typesStats) {
-                mRepositry.getType(stats.getTypeId(), type -> {
+                mRepository.getType(stats.getTypeId(), type -> {
                     PieEntry entry = new PieEntry(stats.getBalance().floatValue(), type.getName());
                     colorList.add(type.getColorId());
                     pieEntries.add(entry);
@@ -55,7 +55,7 @@ public class ChartViewModel extends ViewModel {
                 });
             }
         });
-        mRepositry.getBillStats(startDateTime, endDateTime, billStats ->
+        mRepository.getBillStats(startDateTime, endDateTime, billStats ->
                 mBillStats.setValue(billStats));
     }
 

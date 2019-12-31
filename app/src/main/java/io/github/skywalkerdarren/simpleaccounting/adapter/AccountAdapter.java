@@ -9,7 +9,7 @@ import java.util.List;
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseDraggableDataBindingAdapter;
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemAccountBinding;
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
@@ -20,17 +20,17 @@ import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
  */
 
 public class AccountAdapter extends BaseDraggableDataBindingAdapter<Account, ItemAccountBinding> {
-    private final AppRepositry mRepositry;
+    private final AppRepository mRepository;
 
     public AccountAdapter(List<Account> data, Application application) {
         super(R.layout.item_account, data);
-        mRepositry = AppRepositry.getInstance(new AppExecutors(), application);
+        mRepository = AppRepository.getInstance(new AppExecutors(), application);
     }
 
     @Override
     protected void convert(ItemAccountBinding binding, Account item) {
         binding.setAccount(item);
-        mRepositry.getAccountStats(item.getUUID(), new DateTime(0), DateTime.now(), accountStats ->
+        mRepository.getAccountStats(item.getUUID(), new DateTime(0), DateTime.now(), accountStats ->
                 binding.balanceTextView.setText(FormatUtil.getNumeric(accountStats.getSum())));
     }
 }

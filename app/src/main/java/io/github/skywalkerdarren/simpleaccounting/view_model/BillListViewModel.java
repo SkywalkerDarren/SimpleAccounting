@@ -11,7 +11,7 @@ import org.joda.time.DateTime;
 
 import java.util.List;
 
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillInfo;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.StatsActivity;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
@@ -24,7 +24,7 @@ import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
  */
 
 public class BillListViewModel extends ViewModel {
-    private AppRepositry mRepositry;
+    private AppRepository mRepository;
     private MutableLiveData<String> income = new MutableLiveData<>();
     private MutableLiveData<String> expense = new MutableLiveData<>();
     private MutableLiveData<String> month = new MutableLiveData<>();
@@ -33,8 +33,8 @@ public class BillListViewModel extends ViewModel {
     private MutableLiveData<DateTime> mDateTime = new MutableLiveData<>();
     private MutableLiveData<List<BillInfo>> billInfoList = new MutableLiveData<>();
 
-    public BillListViewModel(AppRepositry repositry) {
-        mRepositry = repositry;
+    public BillListViewModel(AppRepository repository) {
+        mRepository = repository;
     }
 
     /**
@@ -51,11 +51,11 @@ public class BillListViewModel extends ViewModel {
         mDateTime.setValue(date);
         DateTime month = new DateTime(date.getYear(), date.getMonthOfYear(),
                 1, 0, 0);
-        mRepositry.getBillStats(month, month.plusMonths(1), billStats ->
+        mRepository.getBillStats(month, month.plusMonths(1), billStats ->
                 income.setValue(FormatUtil.getNumeric(billStats.getIncome())));
-        mRepositry.getBillStats(month, month.plusMonths(1), billStats ->
+        mRepository.getBillStats(month, month.plusMonths(1), billStats ->
                 expense.setValue(FormatUtil.getNumeric(billStats.getExpense())));
-        mRepositry.getBillInfoList(date.getYear(), date.getMonthOfYear(), billsInfo ->
+        mRepository.getBillInfoList(date.getYear(), date.getMonthOfYear(), billsInfo ->
                 billInfoList.setValue(billsInfo));
         this.month.setValue(String.valueOf(month.getMonthOfYear()));
     }

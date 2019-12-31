@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
@@ -27,7 +27,7 @@ import static io.github.skywalkerdarren.simpleaccounting.model.entity.Account.FO
  */
 
 public class BillEditViewModel extends ViewModel {
-    private AppRepositry mRepositry;
+    private AppRepository mRepository;
     private MutableLiveData<String> typeName = new MutableLiveData<>();
     private MutableLiveData<String> typeImg = new MutableLiveData<>();
     private MutableLiveData<String> accountImg = new MutableLiveData<>();
@@ -46,11 +46,11 @@ public class BillEditViewModel extends ViewModel {
     private boolean isNewBill;
 
 
-    public BillEditViewModel(AppRepositry repositry) {
-        mRepositry = repositry;
-        mRepositry.getTypes(true, list -> expenseTypes.setValue(list));
-        mRepositry.getTypes(false, list -> incomeTypes.setValue(list));
-        mRepositry.getAccounts(accounts1 -> accounts.setValue(accounts1));
+    public BillEditViewModel(AppRepository repository) {
+        mRepository = repository;
+        mRepository.getTypes(true, list -> expenseTypes.setValue(list));
+        mRepository.getTypes(false, list -> incomeTypes.setValue(list));
+        mRepository.getAccounts(accounts1 -> accounts.setValue(accounts1));
     }
 
     public void setBill(@NonNull Bill bill) {
@@ -60,8 +60,8 @@ public class BillEditViewModel extends ViewModel {
         } else {
             isNewBill = false;
         }
-        mRepositry.getAccount(bill.getAccountId(), this::setAccount);
-        mRepositry.getType(bill.getTypeId(), this::setType);
+        mRepository.getAccount(bill.getAccountId(), this::setAccount);
+        mRepository.getType(bill.getTypeId(), this::setType);
         balance.setValue(bill.getBalance() == null ? null : bill.getBalance().toString());
         date.setValue(bill.getDate());
         remark.setValue(bill.getRemark());
@@ -169,13 +169,13 @@ public class BillEditViewModel extends ViewModel {
             return false;
         }
         // 刷新账单数据库
-        mRepositry.getBill(billId.getValue(), b -> {
+        mRepository.getBill(billId.getValue(), b -> {
             if (b == null) {
-                mRepositry.addBill(bill);
+                mRepository.addBill(bill);
             } else {
                 bill.setId(b.getId());
                 bill.setUUID(b.getUUID());
-                mRepositry.updateBill(bill);
+                mRepository.updateBill(bill);
             }
         });
         return true;

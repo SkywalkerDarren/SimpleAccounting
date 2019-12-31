@@ -15,7 +15,7 @@ import io.github.skywalkerdarren.simpleaccounting.base.BaseMultiItemDataBindingA
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemListBillBinding;
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemListBillHeaderBinding;
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemListBillWithoutRemarkBinding;
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillInfo;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillDetailActivity;
 import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
@@ -30,7 +30,7 @@ import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 
 public class BillAdapter extends BaseMultiItemDataBindingAdapter<BillInfo, ViewDataBinding> {
 
-    private final AppRepositry mRepositry = AppRepositry.getInstance(new AppExecutors(), mContext);
+    private final AppRepository mRepository = AppRepository.getInstance(new AppExecutors(), mContext);
     private int mX, mY;
 
     /**
@@ -103,7 +103,7 @@ public class BillAdapter extends BaseMultiItemDataBindingAdapter<BillInfo, ViewD
     }
 
     private void click(BillInfo item, ImageView imageView) {
-        mRepositry.getBill(item.getUUID(), bill -> {
+        mRepository.getBill(item.getUUID(), bill -> {
             Intent intent = BillDetailActivity.newIntent(mContext,
                     bill, mX, mY, R.color.orangea200);
             intent.putExtra(BillDetailActivity.EXTRA_START_COLOR, R.color.orangea200);

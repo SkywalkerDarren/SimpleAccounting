@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepositry;
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
 
 /**
@@ -25,10 +25,10 @@ public class JournalViewModel extends ViewModel {
     private MutableLiveData<BigDecimal> mSum = new MutableLiveData<>(BigDecimal.ZERO);
     private MutableLiveData<String> mYear = new MutableLiveData<>();
     private MutableLiveData<List<BillStats>> mStats = new MutableLiveData<>();
-    private AppRepositry mRepositry;
+    private AppRepository mRepository;
 
-    public JournalViewModel(AppRepositry repositry) {
-        mRepositry = repositry;
+    public JournalViewModel(AppRepository repository) {
+        mRepository = repository;
         mYear.setValue(String.valueOf(DateTime.now().getYear()));
         setStats(Integer.valueOf(Objects.requireNonNull(mYear.getValue())));
     }
@@ -41,7 +41,7 @@ public class JournalViewModel extends ViewModel {
     }
 
     private void setStats(int year) {
-        mRepositry.getBillsAnnualStats(year, billsStats -> {
+        mRepository.getBillsAnnualStats(year, billsStats -> {
             BigDecimal expense = BigDecimal.ZERO;
             BigDecimal income = BigDecimal.ZERO;
             BigDecimal sum = BigDecimal.ZERO;
