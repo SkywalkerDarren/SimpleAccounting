@@ -1,4 +1,6 @@
 # 基于MVVM架构的记账本
+[![Build Status](https://travis-ci.com/SkywalkerDarren/SimpleAccounting.svg?branch=master)](https://travis-ci.com/SkywalkerDarren/SimpleAccounting)
+[![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=21)
 
 ## 一、需求分析及主要功能描述
 
