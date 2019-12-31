@@ -2,6 +2,7 @@ package io.github.skywalkerdarren.simpleaccounting.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -28,6 +29,14 @@ public class AboutActivity extends AppCompatActivity {
                 .setContentView(this, R.layout.activity_about);
         binding.back.setOnClickListener(view -> finish());
         binding.iv1.setLongClickable(true);
+        String versionName;
+        try {
+            versionName = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_CONFIGURATIONS).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            versionName = getString(R.string.version);
+        }
+        binding.version.setText(versionName);
         binding.iv1.setOnLongClickListener(view -> {
             Demo demo = new Demo(AboutActivity.this);
             int cnt = 400;
