@@ -27,6 +27,7 @@ android {
             applicationIdSuffix ".debug"
         }
         release {
+            manifestPlaceholders = [currencylayer_token: CURRENCY_TOKEN]
             minifyEnabled false
             buildConfigField("boolean", "LOG", "false")
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
