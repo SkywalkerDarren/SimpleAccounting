@@ -52,5 +52,6 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 script:
+  - ./gradlew clean
   - ./gradlew assembleDebug --stacktrace
 
