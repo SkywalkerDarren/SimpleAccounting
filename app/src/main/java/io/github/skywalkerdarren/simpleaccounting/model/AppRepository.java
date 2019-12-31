@@ -1,7 +1,6 @@
 package io.github.skywalkerdarren.simpleaccounting.model;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.util.Log;
 
@@ -47,7 +46,9 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.TypeStats;
 import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 import io.github.skywalkerdarren.simpleaccounting.util.CurrencyRequest;
 import io.github.skywalkerdarren.simpleaccounting.util.JsonConvertor;
+import io.github.skywalkerdarren.simpleaccounting.util.PreferenceUtil;
 
+import static io.github.skywalkerdarren.simpleaccounting.util.PreferenceUtil.LAST_UPDATE_TIMESTAMP;
 import static java.lang.Thread.currentThread;
 import static java.lang.Thread.sleep;
 
@@ -526,8 +527,7 @@ public class AppRepository implements AppDataSource {
             CurrencyRequest request = new CurrencyRequest(context);
             if (request.checkConnection()) {
 
-                SharedPreferences preferences = context.getSharedPreferences("dbPref", Context.MODE_PRIVATE);
-                String timestamp = preferences.getString("timestamp", "0");
+                String timestamp = PreferenceUtil.getString(context, LAST_UPDATE_TIMESTAMP, "0");
                 DateTime before = new DateTime(Long.valueOf(timestamp));
                 DateTime after = DateTime.now();
 
@@ -542,7 +542,7 @@ public class AppRepository implements AppDataSource {
                     return;
                 }
 
-                preferences.edit().putString("timestamp", currenciesInfo.getTimestamp()).apply();
+                PreferenceUtil.setString(context, LAST_UPDATE_TIMESTAMP, currenciesInfo.getTimestamp());
 
                 List<Currency> currencies = currenciesInfo.getQuotes();
                 for (Currency currency : currencies) {
@@ -707,8 +707,7 @@ public class AppRepository implements AppDataSource {
             try (InputStream inputStream = context.getResources().getAssets().open("currency/default_rate.json")) {
                 Reader reader = new InputStreamReader(inputStream);
                 CurrenciesInfo currenciesInfo = JsonConvertor.toCurrenciesInfo(reader);
-                SharedPreferences preferences = context.getSharedPreferences("dbPref", Context.MODE_PRIVATE);
-                preferences.edit().putString("timestamp", currenciesInfo.getTimestamp()).apply();
+                PreferenceUtil.setString(context, LAST_UPDATE_TIMESTAMP, currenciesInfo.getTimestamp());
                 for (Currency currency : currenciesInfo.getQuotes()) {
                     switch (currency.getName()) {
                         case "CNY":

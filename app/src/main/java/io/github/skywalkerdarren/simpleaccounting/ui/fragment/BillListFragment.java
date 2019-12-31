@@ -1,9 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.ui.fragment;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +26,7 @@ import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.EmptyLayoutBinding;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillListBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillInfo;
+import io.github.skywalkerdarren.simpleaccounting.util.PreferenceUtil;
 import io.github.skywalkerdarren.simpleaccounting.util.ViewModelFactory;
 import io.github.skywalkerdarren.simpleaccounting.view_model.BillListViewModel;
 import io.github.skywalkerdarren.simpleaccounting.view_model.EmptyListViewModel;
@@ -43,12 +42,10 @@ import static io.github.skywalkerdarren.simpleaccounting.adapter.BillAdapter.HEA
 
 public class BillListFragment extends BaseFragment {
     private static final int REQUEST_DATE_TIME = 0;
-    private static final String SHARED_BUDGET = "budget";
     private FragmentBillListBinding mBinding;
     private BillListViewModel mViewModel;
     private RecyclerView mBillListRecyclerView;
     private BillAdapter mBillAdapter;
-    private SharedPreferences mSharedPref;
     private DateTime mDateTime;
 
     /**
@@ -78,8 +75,6 @@ public class BillListFragment extends BaseFragment {
                 .inflate(inflater, R.layout.fragment_bill_list, container, false);
 
         mBillListRecyclerView = mBinding.billRecycleView;
-
-        mSharedPref = requireContext().getSharedPreferences(SHARED_BUDGET, Context.MODE_PRIVATE);
 
         mBinding.dateImageView.setOnClickListener(view1 -> {
             MonthPickerDialog monthPickerDialog = MonthPickerDialog.newInstance();
@@ -118,7 +113,8 @@ public class BillListFragment extends BaseFragment {
      */
     @Override
     public void updateUI() {
-        mBinding.moneyBudgeTextView.setText(mSharedPref.getString(SHARED_BUDGET, "0"));
+        String budget = PreferenceUtil.getString(requireContext(), PreferenceUtil.BUDGET, "0");
+        mBinding.moneyBudgeTextView.setText(budget);
         mViewModel.getDate().observe(this, dateTime ->
                 mViewModel.getBillInfoList().observe(this, this::updateAdapter));
         if (mDateTime == null) {

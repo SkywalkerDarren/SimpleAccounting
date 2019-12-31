@@ -1,9 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.ui.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +21,11 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.databinding.ActivityWelcomeBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
+import io.github.skywalkerdarren.simpleaccounting.util.PreferenceUtil;
+
+import static io.github.skywalkerdarren.simpleaccounting.util.PreferenceUtil.RUN_APP_TIMES;
 
 public class WelcomeActivity extends Activity {
-    private static final String START_UP = "START_UP";
-    private static final String RUN_COUNT = "RUN_COUNT";
     private ViewPager mViewPager;
     private LinearLayout mDotLayout;
     private List<ImageView> mImageViews;
@@ -36,9 +35,7 @@ public class WelcomeActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences preferences = getApplicationContext().getSharedPreferences(START_UP, Context.MODE_PRIVATE);
-        int count = preferences.getInt(RUN_COUNT, 0);
-        SharedPreferences.Editor editor = preferences.edit();
+        int count = Integer.parseInt(PreferenceUtil.getString(this, RUN_APP_TIMES, "0"));
         try {
             if (count == 0) {
                 AppRepository repository = AppRepository.getInstance(new AppExecutors(), getApplicationContext());
@@ -49,8 +46,7 @@ public class WelcomeActivity extends Activity {
             }
         } finally {
             count++;
-            editor.putInt(RUN_COUNT, count);
-            editor.apply();
+            PreferenceUtil.setString(this, RUN_APP_TIMES, String.valueOf(count));
         }
         bind();
         setImage();

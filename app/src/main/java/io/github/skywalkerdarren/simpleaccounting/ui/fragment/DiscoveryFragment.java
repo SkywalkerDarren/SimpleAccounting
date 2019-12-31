@@ -9,10 +9,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 
@@ -20,6 +24,12 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentDiscoveryBinding;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.MyAccountActivity;
+import io.github.skywalkerdarren.simpleaccounting.util.PreferenceUtil;
+import io.github.skywalkerdarren.simpleaccounting.util.ViewModelFactory;
+import io.github.skywalkerdarren.simpleaccounting.view_model.DiscoveryViewModel;
+
+import static io.github.skywalkerdarren.simpleaccounting.util.PreferenceUtil.CUMULATIVE_DAYS;
+import static io.github.skywalkerdarren.simpleaccounting.util.PreferenceUtil.LAST_RUN_DATE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +40,7 @@ public class DiscoveryFragment extends BaseFragment {
     private LinearLayout mDotLayout;
     private ArrayList<ImageView> mImageViews;
     private FragmentDiscoveryBinding mBinding;
+    private DiscoveryViewModel mViewModel;
 
     /**
      * Use this factory method to create a new instance of
@@ -89,6 +100,35 @@ public class DiscoveryFragment extends BaseFragment {
             }
             mDotLayout.addView(view, params);
         }
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ViewModelFactory factory = ViewModelFactory.getInstance(requireActivity().getApplication());
+        mViewModel = ViewModelProviders.of(this, factory).get(DiscoveryViewModel.class);
+        mBinding.setDiscovery(mViewModel);
+        mBinding.setLifecycleOwner(this);
+
+        int days = Integer.parseInt(PreferenceUtil.getString(requireContext(), CUMULATIVE_DAYS, "1"));
+        String lastRunDate = PreferenceUtil.getString(requireContext(), LAST_RUN_DATE);
+        DateTime now = DateTime.now();
+        DateTime today = new DateTime(now.getYear(), now.getMonthOfYear(), now.getDayOfMonth(), 0, 0);
+        if (lastRunDate == null) {
+            PreferenceUtil.setString(requireContext(), LAST_RUN_DATE, today.toString());
+            PreferenceUtil.setString(requireContext(), CUMULATIVE_DAYS, "1");
+        } else {
+            DateTime lastDate = new DateTime(lastRunDate);
+            if (today.isAfter(lastDate) &&
+                    lastDate.getYear() != today.getYear() ||
+                    lastDate.getMonthOfYear() != today.getMonthOfYear() ||
+                    lastDate.getDayOfMonth() != today.getDayOfMonth()) {
+                days++;
+                PreferenceUtil.setString(requireContext(), LAST_RUN_DATE, today.toString());
+                PreferenceUtil.setString(requireContext(), CUMULATIVE_DAYS, String.valueOf(days));
+            }
+        }
+        mViewModel.setCumulativeDays(days + getString(R.string.day));
     }
 
     @Override
