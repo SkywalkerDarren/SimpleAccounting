@@ -29,6 +29,7 @@ cache:
     - "$HOME/.gradle/wrapper/"
     - "$HOME/.android/build-cache"
 script:
+  - "./gradlew clean"
   - "./gradlew assembleDebug --stacktrace"
   - "./gradlew assembleRelease --stacktrace"
 deploy:
