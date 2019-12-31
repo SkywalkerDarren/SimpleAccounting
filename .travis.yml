@@ -27,6 +27,18 @@ cache:
   directories:
     - "$HOME/.gradle/caches/"
     - "$HOME/.gradle/wrapper/"
+    - "$HOME/.android/build-cache"
 script:
-  - "./gradlew clean"
   - "./gradlew assembleDebug --stacktrace"
+  - "./gradlew assembleRelease --stacktrace"
+deploy:
+  provider: releases
+  api_key:
+    secure: cJqxrCf+nuYhHv6R3kKPlQ/rSDGU7j1WNzDcTZ4P/xA/SzfX6Q/aWx77sMbS46Tmq1wX0dJfvMVAEKnilc5dcyfDkH6zTgVqRO6rzFyPl+YBro2UIa4cAtGzLtlsLw/6BrwnKzfV6NDP/jzdeZ+gw9Ott80QgLBTpvPMGUnXKrdBmHy1qqDXmTHt+Ban68IxLZziYhPIVHx1oAmBca0sJsU1qycspTHpJ1LugRLIEfF2ajpl7FnK++ZQE71cBzzqLjWJUpu4hkM8C8auUhD0D7dYJAtXb/XXDYCgpOW/qbBONYPRYlleevBWRIz2jZdwbFagCn/ubY4EekQrXEGKZSguN2ZDPWSJqezvcIF6YbovwaT3/fdnXvRWDjmWNKnKoNN0EXUDZChPE9aC1AX2r7tRPuQkw583kV+UkzfE8TwMoKFghi2Axo+SlD+JBj+d1/O6IIkjj17Rg7dPqQFL5q+87bOUy+gUKr3D491vTZkHbeC4UQUvQm6TICvyJ0cH+3jD9OD/k/QWQ0BuOHwhQE5MA3yw2F7vROKsN0Om7MqRjnVdwGp2K8sXlsfobwn4sV1bxMrYPrHGdEeNifxgVPG7AM9Hsrf2tseOLL47WNDbeUgmnoEbXeNfXsROi0XZi8znEX7V2PGWOHmUmt662UaF7kFp/jtHm2OhOt/F5eM=
+  file:
+    - app/build/outputs/apk/release/app-release.apk
+    - app/build/outputs/apk/debug/app-debug.apk
+  skip_cleanup: true
+  on:
+    repo: SkywalkerDarren/SimpleAccounting
+  tags: true
