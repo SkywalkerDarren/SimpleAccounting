@@ -4,41 +4,41 @@ sudo: required
 jdk: oraclejdk8
 env:
   global:
-    - ANDROID_API_LEVEL=29
-    - ANDROID_BUILD_TOOLS_VERSION=29.0.2
-    - ANDROID_ABI=armeabi-v7a
+  - ANDROID_API_LEVEL=29
+  - ANDROID_BUILD_TOOLS_VERSION=29.0.2
+  - ANDROID_ABI=armeabi-v7a
 android:
   components:
-    - tools
-    - platform-tools
-    - extra-google-google_play_services
-    - extra-google-m2repository
-    - extra-android-m2repository
+  - tools
+  - platform-tools
+  - extra-google-google_play_services
+  - extra-google-m2repository
+  - extra-android-m2repository
 before_install:
-  - openssl aes-256-cbc -K $encrypted_70420890a0c4_key -iv $encrypted_70420890a0c4_iv
-    -in keys.jks.enc -out keys.jks -d
-  - yes | sdkmanager "platforms;android-29"
-  - yes | sdkmanager "build-tools;29.0.2"
+- openssl aes-256-cbc -K $encrypted_70420890a0c4_key -iv $encrypted_70420890a0c4_iv
+  -in keys.jks.enc -out keys.jks -d
+- yes | sdkmanager "platforms;android-29"
+- yes | sdkmanager "build-tools;29.0.2"
 before_script:
-  - chmod +x gradlew
+- chmod +x gradlew
 before_cache:
-  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
 cache:
   directories:
-    - "$HOME/.gradle/caches/"
-    - "$HOME/.gradle/wrapper/"
-    - "$HOME/.android/build-cache"
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
+  - "$HOME/.android/build-cache"
 script:
-  - "./gradlew clean"
-  - "./gradlew assembleDebug --stacktrace"
-  - "./gradlew assembleRelease --stacktrace"
+- "./gradlew clean"
+- "./gradlew assembleDebug --stacktrace"
+- "./gradlew assembleRelease --stacktrace"
 deploy:
   provider: releases
   api_key:
-    secure: cJqxrCf+nuYhHv6R3kKPlQ/rSDGU7j1WNzDcTZ4P/xA/SzfX6Q/aWx77sMbS46Tmq1wX0dJfvMVAEKnilc5dcyfDkH6zTgVqRO6rzFyPl+YBro2UIa4cAtGzLtlsLw/6BrwnKzfV6NDP/jzdeZ+gw9Ott80QgLBTpvPMGUnXKrdBmHy1qqDXmTHt+Ban68IxLZziYhPIVHx1oAmBca0sJsU1qycspTHpJ1LugRLIEfF2ajpl7FnK++ZQE71cBzzqLjWJUpu4hkM8C8auUhD0D7dYJAtXb/XXDYCgpOW/qbBONYPRYlleevBWRIz2jZdwbFagCn/ubY4EekQrXEGKZSguN2ZDPWSJqezvcIF6YbovwaT3/fdnXvRWDjmWNKnKoNN0EXUDZChPE9aC1AX2r7tRPuQkw583kV+UkzfE8TwMoKFghi2Axo+SlD+JBj+d1/O6IIkjj17Rg7dPqQFL5q+87bOUy+gUKr3D491vTZkHbeC4UQUvQm6TICvyJ0cH+3jD9OD/k/QWQ0BuOHwhQE5MA3yw2F7vROKsN0Om7MqRjnVdwGp2K8sXlsfobwn4sV1bxMrYPrHGdEeNifxgVPG7AM9Hsrf2tseOLL47WNDbeUgmnoEbXeNfXsROi0XZi8znEX7V2PGWOHmUmt662UaF7kFp/jtHm2OhOt/F5eM=
-  file:
-    - app/build/outputs/apk/release/app-release.apk
-    - app/build/outputs/apk/debug/app-debug.apk
+    secure: mEm5Zg3s/OAgMrWrsPD3f+FjkCQ23cMHSpi7uFlkXNQYNFf9yRT1K6DRQn6htmHJ+IiiP34DPNO/viGfsCpXIrmtegQbW5hHA8W9pnpF73P8fU4A0vSeqLxrBqRaQDHVxY3UbrUGCQw7NlHCGcAqKUVNkcHmvqnlXcsA8mNRTCEqogkLjQegOlCzzRk4WYmaW4ZftjLtajr065JVnWGlsa9dX36sqPQVgPVCgZUcfj7T2kwVrn5jTOzquhVvNyVZu/11MdcLQp0BnRNrhBal1tnemLH8NPvNPQn7daBqKYt2+YxsnWF440V8PMbg8soZXLyVzpNsQlyA8YVZsBlC5BnH5lM0HuT9H57X++gWfMK4BM5NdSt9dz6yqSr0tev+oreF3k/ZuTt2S8POMAWtQB+OsHE7i9/5zcLE8SS5E6YKcr5uhKwTLFlw/zCHDsJHLXhBTb8MlUi2moTaBu6p8Z+8UcxVXqbghwKc9tYWVEUJdZ58vSIx0CWcDR1ffu4MPc0tzmvmg/o/lgczPK5PiIb4XGXIAYLbMJeV4alqhaN3jqM72059159RHkMPjdF9binMm6RfLekV1+eEx6x3uFcTCBSIliUK3im7nMDiq4Y0B2bepainbJ8juM4JRBFxvXmgJIQKcJXEuNI1kmRRCy2e5gvDpoLN2BR3j3KjtyQ=
+  file: 
+  - app/build/outputs/apk/release/app-release.apk
+  - app/build/outputs/apk/debug/app-debug.apk
   skip_cleanup: true
   on:
     repo: SkywalkerDarren/SimpleAccounting
