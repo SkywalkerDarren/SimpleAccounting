@@ -42,4 +42,4 @@ deploy:
   skip_cleanup: true
   on:
     repo: SkywalkerDarren/SimpleAccounting
-  tags: true
+    tags: true
