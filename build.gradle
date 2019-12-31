@@ -30,5 +30,38 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
+ext{
+    // sdk
+    compileSdkVersion = 29
+    minSdkVersion = 21
+    targetSdkVersion = 29
+
+    // androidx
+    legacyVersion = '1.0.0'
+    cardviewVersion = '1.0.0'
+    roomVersion = '2.2.3'
+    lifecycleVersion  = '2.1.0'
+    androidxVersion = '1.1.0'
+    constraintlayoutVersion = '1.1.3'
+    materialVersion = '1.0.0'
+
+    // custom
+    csvVersion = '1.7'
+    rxandroidVersion = '2.1.1'
+    gsonVersion = '2.8.6'
+    okhttpVersion = '4.2.2'
+    glideVersion = '4.10.0'
+    jodaTimeVersion = '2.10.5'
+    MPAndroidChartVersion = 'v3.0.3'
+    segmentedButtonVersion = 'v2.0.2'
+    brvahVersion = '2.9.45-androidx'
+    pinnedSectionItemDecorationVersion = '1.3.2-androidx'
+
+    // test
+    junitVersion = '4.12'
+    espressoVersion = '3.2.0'
+    androidJunitVersion = '1.1.1'
+}
+
 dependencies {
 }
