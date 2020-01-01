@@ -41,10 +41,10 @@ import static org.junit.Assert.fail;
 @LargeTest
 public class AppRepositoryTest {
     private static final String TAG = "AppRepositoryTest";
-    private AppRepository mRepository;
     private static final Account ACCOUNT = new Account("name", "balanceHint", BigDecimal.ZERO, "image", R.color.black);
     private static final Type TYPE = new Type("TYPE", R.color.darkorchid, true, "assetsName");
     private final DateTime now = DateTime.now();
+    private AppRepository mRepository;
     private Bill mBill2;
     private AppDatabase mDatabase = Room.inMemoryDatabaseBuilder(getApplicationContext(),
             AppDatabase.class)

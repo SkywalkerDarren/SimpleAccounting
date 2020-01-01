@@ -21,6 +21,7 @@ public class JsonConvertorTest {
                     "    \"USDZWL\":322.000001\n" +
                     "  }\n" +
                     "}\n";
+
     @Test
     public void toCurrencyInfo() {
         CurrenciesInfo info = JsonConvertor.toCurrenciesInfo(data);

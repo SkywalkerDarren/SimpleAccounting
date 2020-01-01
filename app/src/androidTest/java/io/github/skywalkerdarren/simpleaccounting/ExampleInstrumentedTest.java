@@ -1,7 +1,6 @@
 package io.github.skywalkerdarren.simpleaccounting;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -18,11 +17,12 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
     private static final String TAG = "ExampleInstrumentedTest";
+
     @Test
     public void useAppContext() throws Exception {
 
         // Context of the app under test.
         Context appContext = ApplicationProvider.getApplicationContext();
-        Assert.assertEquals(1,2);
+        Assert.assertEquals(1, 2);
     }
 }
