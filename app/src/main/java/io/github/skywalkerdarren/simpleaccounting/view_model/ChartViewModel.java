@@ -22,9 +22,9 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.TypeStats;
 
 public class ChartViewModel extends ViewModel {
-    private AppRepository mRepository;
-    private MutableLiveData<BillStats> mBillStats = new MutableLiveData<>();
-    private MutableLiveData<PieData> mPieData = new MutableLiveData<>();
+    private final AppRepository mRepository;
+    private final MutableLiveData<BillStats> mBillStats = new MutableLiveData<>();
+    private final MutableLiveData<PieData> mPieData = new MutableLiveData<>();
 
     public ChartViewModel(AppRepository repository) {
         mRepository = repository;

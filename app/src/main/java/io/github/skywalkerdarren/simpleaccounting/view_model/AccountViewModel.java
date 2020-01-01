@@ -21,12 +21,12 @@ import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
  */
 
 public class AccountViewModel extends ViewModel {
-    private AppRepository mRepository;
-    private MutableLiveData<String> nav = new MutableLiveData<>();
-    private MutableLiveData<String> liability = new MutableLiveData<>();
-    private MutableLiveData<String> totalAssets = new MutableLiveData<>();
-    private MutableLiveData<List<Account>> accounts = new MutableLiveData<>();
-    private LiveData<String> accountSize = Transformations.map(accounts, input -> String.valueOf(input.size()));
+    private final AppRepository mRepository;
+    private final MutableLiveData<String> nav = new MutableLiveData<>();
+    private final MutableLiveData<String> liability = new MutableLiveData<>();
+    private final MutableLiveData<String> totalAssets = new MutableLiveData<>();
+    private final MutableLiveData<List<Account>> accounts = new MutableLiveData<>();
+    private final LiveData<String> accountSize = Transformations.map(accounts, input -> String.valueOf(input.size()));
 
     public AccountViewModel(AppRepository repository) {
         mRepository = repository;

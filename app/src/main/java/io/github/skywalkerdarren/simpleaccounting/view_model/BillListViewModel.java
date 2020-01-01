@@ -24,14 +24,14 @@ import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
  */
 
 public class BillListViewModel extends ViewModel {
-    private AppRepository mRepository;
-    private MutableLiveData<String> income = new MutableLiveData<>();
-    private MutableLiveData<String> expense = new MutableLiveData<>();
-    private MutableLiveData<String> month = new MutableLiveData<>();
-    private MutableLiveData<String> budget = new MutableLiveData<>("TODO");
-    private MutableLiveData<String> budgetText = new MutableLiveData<>("TODO");
-    private MutableLiveData<DateTime> mDateTime = new MutableLiveData<>();
-    private MutableLiveData<List<BillInfo>> billInfoList = new MutableLiveData<>();
+    private final AppRepository mRepository;
+    private final MutableLiveData<String> income = new MutableLiveData<>();
+    private final MutableLiveData<String> expense = new MutableLiveData<>();
+    private final MutableLiveData<String> month = new MutableLiveData<>();
+    private final MutableLiveData<String> budget = new MutableLiveData<>("TODO");
+    private final MutableLiveData<String> budgetText = new MutableLiveData<>("TODO");
+    private final MutableLiveData<DateTime> mDateTime = new MutableLiveData<>();
+    private final MutableLiveData<List<BillInfo>> billInfoList = new MutableLiveData<>();
 
     public BillListViewModel(AppRepository repository) {
         mRepository = repository;

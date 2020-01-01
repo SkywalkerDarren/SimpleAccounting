@@ -14,16 +14,16 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.Currency;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrencyInfo;
 
 public class DiscoveryViewModel extends ViewModel {
-    private AppRepository mRepository;
-    private MutableLiveData<String> cumulativeDays = new MutableLiveData<>();
-    private MutableLiveData<String> monthOfAccountingCounts = new MutableLiveData<>();
-    private MutableLiveData<String> sumOfAccountingCounts = new MutableLiveData<>();
-    private MutableLiveData<String> monthReport = new MutableLiveData<>();
-    private MutableLiveData<String> yearReport = new MutableLiveData<>();
-    private MutableLiveData<String> weekReport = new MutableLiveData<>();
-    private MutableLiveData<String> currentCurrency = new MutableLiveData<>();
-    private MutableLiveData<String> currentCurrencyPic = new MutableLiveData<>();
-    private MutableLiveData<List<Currency>> favoriteCurrencies = new MutableLiveData<>();
+    private final AppRepository mRepository;
+    private final MutableLiveData<String> cumulativeDays = new MutableLiveData<>();
+    private final MutableLiveData<String> monthOfAccountingCounts = new MutableLiveData<>();
+    private final MutableLiveData<String> sumOfAccountingCounts = new MutableLiveData<>();
+    private final MutableLiveData<String> monthReport = new MutableLiveData<>();
+    private final MutableLiveData<String> yearReport = new MutableLiveData<>();
+    private final MutableLiveData<String> weekReport = new MutableLiveData<>();
+    private final MutableLiveData<String> currentCurrency = new MutableLiveData<>();
+    private final MutableLiveData<String> currentCurrencyPic = new MutableLiveData<>();
+    private final MutableLiveData<List<Currency>> favoriteCurrencies = new MutableLiveData<>();
 
     public DiscoveryViewModel(AppRepository repository) {
         String defCurrency = "CNY";

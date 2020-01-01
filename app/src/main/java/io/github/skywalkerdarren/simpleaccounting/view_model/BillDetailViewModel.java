@@ -23,24 +23,24 @@ import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
  */
 public class BillDetailViewModel extends ViewModel implements BillDataSource.LoadBillCallBack {
     private static int mode = 0;
-    private AppRepository mRepository;
-    private MutableLiveData<Integer> statsMode = new MutableLiveData<>(R.string.loading);
-    private MutableLiveData<String> typeImage = new MutableLiveData<>();
-    private MutableLiveData<String> typeName = new MutableLiveData<>("加载中...");
-    private MutableLiveData<String> balance = new MutableLiveData<>("加载中...");
-    private MutableLiveData<Integer> balanceColor = new MutableLiveData<>(R.color.white);
-    private MutableLiveData<String> accountName = new MutableLiveData<>("加载中...");
-    private MutableLiveData<String> recorder = new MutableLiveData<>("TODO");
-    private MutableLiveData<String> time = new MutableLiveData<>("加载中...");
-    private MutableLiveData<String> remark = new MutableLiveData<>("加载中...");
-    private MutableLiveData<String> accountPercent = new MutableLiveData<>("加载中...");
-    private MutableLiveData<String> typePercent = new MutableLiveData<>("加载中...");
-    private MutableLiveData<String> thanAverage = new MutableLiveData<>("加载中...");
-    private MutableLiveData<String> typeAverage = new MutableLiveData<>("加载中...");
-    private MutableLiveData<Integer> thanAverageHint = new MutableLiveData<>(R.string.brvah_loading);
-    private MutableLiveData<Integer> expensePercentHint = new MutableLiveData<>(R.string.brvah_loading);
-    private MutableLiveData<String> expensePercent = new MutableLiveData<>("加载中...");
-    private MutableLiveData<Bill> bill = new MutableLiveData<>();
+    private final AppRepository mRepository;
+    private final MutableLiveData<Integer> statsMode = new MutableLiveData<>(R.string.loading);
+    private final MutableLiveData<String> typeImage = new MutableLiveData<>();
+    private final MutableLiveData<String> typeName = new MutableLiveData<>("加载中...");
+    private final MutableLiveData<String> balance = new MutableLiveData<>("加载中...");
+    private final MutableLiveData<Integer> balanceColor = new MutableLiveData<>(R.color.white);
+    private final MutableLiveData<String> accountName = new MutableLiveData<>("加载中...");
+    private final MutableLiveData<String> recorder = new MutableLiveData<>("TODO");
+    private final MutableLiveData<String> time = new MutableLiveData<>("加载中...");
+    private final MutableLiveData<String> remark = new MutableLiveData<>("加载中...");
+    private final MutableLiveData<String> accountPercent = new MutableLiveData<>("加载中...");
+    private final MutableLiveData<String> typePercent = new MutableLiveData<>("加载中...");
+    private final MutableLiveData<String> thanAverage = new MutableLiveData<>("加载中...");
+    private final MutableLiveData<String> typeAverage = new MutableLiveData<>("加载中...");
+    private final MutableLiveData<Integer> thanAverageHint = new MutableLiveData<>(R.string.brvah_loading);
+    private final MutableLiveData<Integer> expensePercentHint = new MutableLiveData<>(R.string.brvah_loading);
+    private final MutableLiveData<String> expensePercent = new MutableLiveData<>("加载中...");
+    private final MutableLiveData<Bill> bill = new MutableLiveData<>();
 
     public BillDetailViewModel(AppRepository repository) {
         mRepository = repository;

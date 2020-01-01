@@ -20,12 +20,12 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
  */
 
 public class JournalViewModel extends ViewModel {
-    private MutableLiveData<BigDecimal> mIncome = new MutableLiveData<>(BigDecimal.ZERO);
-    private MutableLiveData<BigDecimal> mExpense = new MutableLiveData<>(BigDecimal.ZERO);
-    private MutableLiveData<BigDecimal> mSum = new MutableLiveData<>(BigDecimal.ZERO);
-    private MutableLiveData<String> mYear = new MutableLiveData<>();
-    private MutableLiveData<List<BillStats>> mStats = new MutableLiveData<>();
-    private AppRepository mRepository;
+    private final MutableLiveData<BigDecimal> mIncome = new MutableLiveData<>(BigDecimal.ZERO);
+    private final MutableLiveData<BigDecimal> mExpense = new MutableLiveData<>(BigDecimal.ZERO);
+    private final MutableLiveData<BigDecimal> mSum = new MutableLiveData<>(BigDecimal.ZERO);
+    private final MutableLiveData<String> mYear = new MutableLiveData<>();
+    private final MutableLiveData<List<BillStats>> mStats = new MutableLiveData<>();
+    private final AppRepository mRepository;
 
     public JournalViewModel(AppRepository repository) {
         mRepository = repository;

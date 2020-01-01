@@ -27,22 +27,21 @@ import static io.github.skywalkerdarren.simpleaccounting.model.entity.Account.FO
  */
 
 public class BillEditViewModel extends ViewModel {
-    private AppRepository mRepository;
-    private MutableLiveData<String> typeName = new MutableLiveData<>();
-    private MutableLiveData<String> typeImg = new MutableLiveData<>();
-    private MutableLiveData<String> accountImg = new MutableLiveData<>();
-    private MutableLiveData<Integer> accountColor = new MutableLiveData<>(R.color.black);
-    private MutableLiveData<String> balance = new MutableLiveData<>();
-    private MutableLiveData<DateTime> date = new MutableLiveData<>();
-    private MutableLiveData<String> remark = new MutableLiveData<>();
-    private MutableLiveData<UUID> billId = new MutableLiveData<>();
-    private MutableLiveData<UUID> accountId = new MutableLiveData<>();
-    private MutableLiveData<UUID> typeId = new MutableLiveData<>();
-    private MutableLiveData<Boolean> isExpense = new MutableLiveData<>();
-
-    private MutableLiveData<List<Type>> expenseTypes = new MutableLiveData<>();
-    private MutableLiveData<List<Type>> incomeTypes = new MutableLiveData<>();
-    private MutableLiveData<List<Account>> accounts = new MutableLiveData<>();
+    private final AppRepository mRepository;
+    private final MutableLiveData<String> typeName = new MutableLiveData<>();
+    private final MutableLiveData<String> typeImg = new MutableLiveData<>();
+    private final MutableLiveData<String> accountImg = new MutableLiveData<>();
+    private final MutableLiveData<Integer> accountColor = new MutableLiveData<>(R.color.black);
+    private final MutableLiveData<String> balance = new MutableLiveData<>();
+    private final MutableLiveData<DateTime> date = new MutableLiveData<>();
+    private final MutableLiveData<String> remark = new MutableLiveData<>();
+    private final MutableLiveData<UUID> billId = new MutableLiveData<>();
+    private final MutableLiveData<UUID> accountId = new MutableLiveData<>();
+    private final MutableLiveData<UUID> typeId = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isExpense = new MutableLiveData<>();
+    private final MutableLiveData<List<Type>> expenseTypes = new MutableLiveData<>();
+    private final MutableLiveData<List<Type>> incomeTypes = new MutableLiveData<>();
+    private final MutableLiveData<List<Account>> accounts = new MutableLiveData<>();
     private boolean isNewBill;
 
 

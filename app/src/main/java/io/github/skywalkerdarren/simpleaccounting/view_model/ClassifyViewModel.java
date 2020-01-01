@@ -25,10 +25,10 @@ public class ClassifyViewModel extends ViewModel {
     private DateTime mEnd;
     private Period mPeriod;
     private boolean mIsExpense;
-    private AppRepository mRepository;
 
-    private MutableLiveData<String> date = new MutableLiveData<>();
-    private MutableLiveData<List<TypeStats>> statsList = new MutableLiveData<>();
+    private final AppRepository mRepository;
+    private final MutableLiveData<String> date = new MutableLiveData<>();
+    private final MutableLiveData<List<TypeStats>> statsList = new MutableLiveData<>();
 
     public ClassifyViewModel(AppRepository repository) {
         mRepository = repository;
