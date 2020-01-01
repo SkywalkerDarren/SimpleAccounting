@@ -48,7 +48,8 @@
                 android:src="@{type.FOLDER + type.assetsName}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/award" />
 
             <TextView
                 android:id="@+id/type_text_view"

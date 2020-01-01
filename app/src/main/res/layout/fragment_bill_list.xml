@@ -160,7 +160,8 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/head_constraint_layout" />
+            app:layout_constraintTop_toBottomOf="@+id/head_constraint_layout"
+            tools:listitem="@layout/item_list_bill" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

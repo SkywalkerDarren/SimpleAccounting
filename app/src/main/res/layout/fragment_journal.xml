@@ -260,7 +260,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linear_layout1" />
+            app:layout_constraintTop_toBottomOf="@+id/linear_layout1"
+            tools:listitem="@layout/item_stats" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

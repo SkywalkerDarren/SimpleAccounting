@@ -51,7 +51,8 @@
                     android:id="@+id/account_type_image_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@{account.FOLDER + account.bitmap}" />
+                    android:src="@{account.FOLDER + account.bitmap}"
+                    tools:src="@drawable/award" />
             </androidx.cardview.widget.CardView>
 
             <TextView

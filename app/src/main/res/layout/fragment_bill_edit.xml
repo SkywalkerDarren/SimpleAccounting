@@ -109,7 +109,8 @@
                     android:src="@{edit.typeImg}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:background="@color/black" />
 
                 <TextView
                     android:id="@+id/title_text_view"
@@ -149,7 +150,8 @@
                 android:layout_height="match_parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/head_constraint_layout" />
+                app:layout_constraintTop_toTopOf="@+id/head_constraint_layout"
+                tools:listitem="@layout/item_type" />
 
         </LinearLayout>
 
@@ -223,7 +225,8 @@
                     android:id="@+id/account_type_image_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@{edit.accountImg}" />
+                    android:src="@{edit.accountImg}"
+                    tools:src="@drawable/account" />
             </androidx.cardview.widget.CardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -235,6 +238,7 @@
             android:elevation="2dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="gone" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
