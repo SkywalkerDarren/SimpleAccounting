@@ -9,6 +9,7 @@
         <import type="androidx.core.content.ContextCompat" />
 
         <import type="io.github.skywalkerdarren.simpleaccounting.util.FormatUtil" />
+
         <variable
             name="account"
             type="io.github.skywalkerdarren.simpleaccounting.model.entity.Account" />
@@ -17,10 +18,10 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="4dp"
         android:foreground="?android:attr/selectableItemBackground"
         app:cardCornerRadius="5dp"
         app:cardElevation="0.5dp">
@@ -33,9 +34,9 @@
                 android:id="@+id/lend_bg_card_view"
                 android:layout_width="33dp"
                 android:layout_height="33dp"
-                android:layout_marginBottom="6dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
                 android:padding="4dp"
                 app:cardBackgroundColor="@{ContextCompat.getColor(context, account.colorId)}"
                 app:cardCornerRadius="5dp"
@@ -71,13 +72,13 @@
                 android:id="@+id/balance_text_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"
                 android:fontFamily="@font/lalezar"
+                android:text="@string/loading"
                 android:textAlignment="textEnd"
                 android:textColor="@color/black"
                 android:textSize="22sp"
-                android:text="@string/loading"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/lend_hint_text_view"

@@ -6,6 +6,7 @@
     <data>
 
         <import type="java.math.BigDecimal" />
+
         <variable
             name="info"
             type="io.github.skywalkerdarren.simpleaccounting.model.entity.CurrencyInfo" />

@@ -9,6 +9,7 @@
         <import type="android.graphics.Color" />
 
         <import type="io.github.skywalkerdarren.simpleaccounting.model.entity.Type" />
+
         <variable
             name="billInfo"
             type="io.github.skywalkerdarren.simpleaccounting.model.entity.BillInfo" />
@@ -18,10 +19,10 @@
         android:id="@+id/bill_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="4dp"
-        android:paddingEnd="13dp"
         android:paddingStart="13dp"
-        android:paddingTop="4dp">
+        android:paddingTop="4dp"
+        android:paddingEnd="13dp"
+        android:paddingBottom="4dp">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/content_card_view"
@@ -44,9 +45,9 @@
                     android:id="@+id/image_card_view"
                     android:layout_width="35dp"
                     android:layout_height="0dp"
-                    android:layout_marginBottom="4dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
                     android:longClickable="true"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintDimensionRatio="1:1"
@@ -90,10 +91,10 @@
                         android:id="@+id/balance_edit_text"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="0dp"
-                        android:layout_marginEnd="16dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="0dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="0dp"
                         android:fontFamily="@font/lalezar"
                         android:text="@{billInfo.balance}"
                         android:textAlignment="textEnd"

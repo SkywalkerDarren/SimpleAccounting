@@ -13,6 +13,7 @@
         <variable
             name="sum"
             type="java.math.BigDecimal" />
+
         <variable
             name="type"
             type="io.github.skywalkerdarren.simpleaccounting.model.entity.Type" />
@@ -25,10 +26,10 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="4dp"
         app:cardCornerRadius="5dp"
         app:cardElevation="0dp"
         app:cardUseCompatPadding="true">
@@ -42,9 +43,9 @@
                 android:id="@+id/type_image_view"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_marginBottom="8dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:src="@{type.FOLDER + type.assetsName}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

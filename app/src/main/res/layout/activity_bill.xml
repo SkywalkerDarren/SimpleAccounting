@@ -42,13 +42,13 @@
             android:layout_marginBottom="2dp"
             android:clickable="true"
             android:focusable="true"
+            android:src="@drawable/ic_add_menu"
             android:visibility="visible"
             app:backgroundTint="@color/colorPrimary"
             app:elevation="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            android:src="@drawable/ic_add_menu" />
+            app:layout_constraintRight_toRightOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

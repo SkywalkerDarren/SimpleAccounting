@@ -60,8 +60,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@{Type.FOLDER + billInfo.billTypeRes}"
-                        tools:src="@drawable/award"
-                        android:transitionName="type_image_view" />
+                        android:transitionName="type_image_view"
+                        tools:src="@drawable/award" />
                 </FrameLayout>
 
                 <LinearLayout

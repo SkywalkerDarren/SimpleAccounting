@@ -6,6 +6,7 @@
     <data>
 
         <import type="androidx.core.content.ContextCompat" />
+
         <variable
             name="account"
             type="io.github.skywalkerdarren.simpleaccounting.model.entity.Account" />
@@ -16,10 +17,10 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingBottom="2dp"
-        android:paddingEnd="8dp"
         android:paddingStart="8dp"
-        android:paddingTop="2dp">
+        android:paddingTop="2dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="2dp">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/account_card_view"

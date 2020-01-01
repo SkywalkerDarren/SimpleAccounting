@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
     android:horizontalGap="1dp"
-    android:keyHeight="50dp"
     android:keyWidth="25%p"
+    android:keyHeight="50dp"
     android:verticalGap="1dp">
     <Row>
         <Key
@@ -49,8 +49,8 @@
             android:keyLabel="6" />
         <Key
             android:codes="43"
-            android:keyEdgeFlags="right"
             android:keyHeight="101dp"
+            android:keyEdgeFlags="right"
             android:keyLabel="@string/plus_sign" />
     </Row>
     <Row>
@@ -66,8 +66,8 @@
             android:keyLabel="3" />
         <Key
             android:codes="-99"
-            android:keyEdgeFlags="right"
-            android:keyHeight="0dp" />
+            android:keyHeight="0dp"
+            android:keyEdgeFlags="right" />
     </Row>
     <Row>
         <Key
@@ -79,9 +79,9 @@
             android:keyLabel="0" />
         <Key
             android:codes="-4"
+            android:keyWidth="50%p"
             android:keyEdgeFlags="right"
-            android:keyLabel="@string/equal_sign"
-            android:keyWidth="50%p" />
+            android:keyLabel="@string/equal_sign" />
     </Row>
 
 </Keyboard>

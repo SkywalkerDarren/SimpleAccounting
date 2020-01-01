@@ -70,8 +70,8 @@
             android:layout_marginTop="28dp"
             android:background="@color/grey200"
             android:orientation="vertical"
-            android:paddingBottom="1dp"
             android:paddingTop="1dp"
+            android:paddingBottom="1dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -83,11 +83,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="1dp"
                 android:background="@color/grey50"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:foreground="?attr/selectableItemBackground"
-                android:focusable="true"
-                android:clickable="true"
                 android:padding="8dp"
                 android:paddingStart="16dp">
 
@@ -96,7 +96,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="加入我们"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/black" />
 
                 <ImageView
                     android:layout_width="24dp"
@@ -108,9 +108,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/grey50"
-                android:foreground="?attr/selectableItemBackground"
-                android:focusable="true"
                 android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="8dp"
@@ -121,7 +121,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="交流反馈"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/black" />
 
                 <ImageView
                     android:layout_width="24dp"

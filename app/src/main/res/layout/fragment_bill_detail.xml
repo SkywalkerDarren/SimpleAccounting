@@ -7,6 +7,7 @@
     <data>
 
         <import type="androidx.core.content.ContextCompat" />
+
         <variable
             name="detail"
             type="io.github.skywalkerdarren.simpleaccounting.view_model.BillDetailViewModel" />
@@ -77,8 +78,8 @@
                         android:layout_height="?attr/actionBarSize"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginLeft="56dp"
-                        android:layout_marginRight="56dp"
                         android:layout_marginTop="130dp"
+                        android:layout_marginRight="56dp"
                         android:ellipsize="end"
                         android:gravity="center"
                         android:maxLines="1"
@@ -115,9 +116,9 @@
                     android:id="@+id/title_card_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="32dp"
+                    android:layout_marginEnd="8dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
@@ -134,8 +135,8 @@
                             android:id="@+id/balance_edit_text"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
                             android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
                             android:fontFamily="@font/lalezar"
                             android:text="@{detail.balance, default=@string/loading}"
                             android:textAlignment="textEnd"
@@ -167,9 +168,9 @@
                             android:id="@+id/type_image_view"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:layout_marginBottom="8dp"
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
                             android:src="@{detail.typeImage}"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -181,9 +182,9 @@
                     android:id="@+id/detail_card_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
@@ -203,8 +204,8 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:orientation="horizontal"
-                            android:paddingBottom="8dp"
-                            android:paddingTop="8dp">
+                            android:paddingTop="8dp"
+                            android:paddingBottom="8dp">
 
                             <ImageView
                                 android:layout_width="18dp"
@@ -243,8 +244,8 @@
                             android:layout_marginTop="8dp"
                             android:gravity="center"
                             android:orientation="horizontal"
-                            android:paddingBottom="8dp"
-                            android:paddingTop="8dp">
+                            android:paddingTop="8dp"
+                            android:paddingBottom="8dp">
 
                             <ImageView
                                 android:layout_width="18dp"
@@ -282,8 +283,8 @@
                             android:layout_marginTop="8dp"
                             android:gravity="center"
                             android:orientation="horizontal"
-                            android:paddingBottom="8dp"
-                            android:paddingTop="8dp">
+                            android:paddingTop="8dp"
+                            android:paddingBottom="8dp">
 
                             <ImageView
                                 android:layout_width="18dp"
@@ -320,9 +321,9 @@
                     android:id="@+id/stats_card_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
@@ -343,8 +344,8 @@
                             android:layout_marginTop="8dp"
                             android:gravity="center"
                             android:orientation="horizontal"
-                            android:paddingBottom="8dp"
-                            android:paddingTop="8dp">
+                            android:paddingTop="8dp"
+                            android:paddingBottom="8dp">
 
                             <ImageView
                                 android:layout_width="18dp"
@@ -371,7 +372,7 @@
                                     android:layout_gravity="end"
                                     android:text="@{detail.expensePercent, default=@string/loading}"
                                     android:textColor="@android:color/black"
-                                    android:textSize="16sp"/>
+                                    android:textSize="16sp" />
                             </FrameLayout>
                         </LinearLayout>
 
@@ -381,8 +382,8 @@
                             android:layout_marginTop="8dp"
                             android:gravity="center"
                             android:orientation="horizontal"
-                            android:paddingBottom="8dp"
-                            android:paddingTop="8dp">
+                            android:paddingTop="8dp"
+                            android:paddingBottom="8dp">
 
                             <ImageView
                                 android:layout_width="18dp"
@@ -420,8 +421,8 @@
                             android:layout_marginTop="8dp"
                             android:gravity="center"
                             android:orientation="horizontal"
-                            android:paddingBottom="8dp"
-                            android:paddingTop="8dp">
+                            android:paddingTop="8dp"
+                            android:paddingBottom="8dp">
 
                             <ImageView
                                 android:layout_width="18dp"
@@ -463,8 +464,8 @@
                             android:layout_marginTop="8dp"
                             android:gravity="center"
                             android:orientation="horizontal"
-                            android:paddingBottom="8dp"
-                            android:paddingTop="8dp">
+                            android:paddingTop="8dp"
+                            android:paddingBottom="8dp">
 
                             <ImageView
                                 android:layout_width="18dp"
@@ -503,8 +504,8 @@
                             android:layout_marginTop="8dp"
                             android:gravity="center"
                             android:orientation="horizontal"
-                            android:paddingBottom="8dp"
-                            android:paddingTop="8dp">
+                            android:paddingTop="8dp"
+                            android:paddingBottom="8dp">
 
                             <ImageView
                                 android:layout_width="18dp"
@@ -555,10 +556,10 @@
                     android:id="@+id/remark_card_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
@@ -572,8 +573,8 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="horizontal"
-                        android:paddingBottom="8dp"
-                        android:paddingTop="8dp">
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp">
 
                         <ImageView
                             android:layout_width="18dp"

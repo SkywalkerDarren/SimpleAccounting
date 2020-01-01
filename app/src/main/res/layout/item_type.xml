@@ -4,6 +4,7 @@
     <data>
 
         <import type="androidx.core.content.ContextCompat" />
+
         <variable
             name="type"
             type="io.github.skywalkerdarren.simpleaccounting.model.entity.Type" />
@@ -50,8 +51,8 @@
             android:id="@+id/type_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
             android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
             android:text="@{type.name}"
             android:textAlignment="center"
             app:layout_constraintBottom_toBottomOf="parent"
