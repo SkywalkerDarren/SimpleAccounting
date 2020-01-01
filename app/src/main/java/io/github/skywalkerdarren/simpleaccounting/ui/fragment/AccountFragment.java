@@ -1,7 +1,6 @@
 package io.github.skywalkerdarren.simpleaccounting.ui.fragment;
 
 
-import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,14 +18,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
-import com.chad.library.adapter.base.listener.OnItemDragListener;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.AccountAdapter;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentAccountBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
-import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.MainActivity;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.SettingsActivity;
@@ -124,40 +121,6 @@ public class AccountFragment extends BaseFragment {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemDragAndSwipeCallback);
         itemTouchHelper.attachToRecyclerView(mAccountRecyclerView);
         mAdapter.enableDragItem(itemTouchHelper);
-        mAdapter.setOnItemDragListener(new OnItemDragListener() {
-            private Account accountA;
-            private Account accountB;
-            private int prevPos;
-
-            @Override
-            public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
-                float st = viewHolder.itemView.getElevation();
-                itemRaiseAnimator(viewHolder.itemView, st, true);
-                prevPos = pos;
-                accountA = mAdapter.getItem(pos);
-            }
-
-            @Override
-            public void onItemDragMoving(RecyclerView.ViewHolder source, int from, RecyclerView.ViewHolder target, int to) {
-
-            }
-
-            @Override
-            public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {
-                float ed = viewHolder.itemView.getElevation();
-                itemRaiseAnimator(viewHolder.itemView, ed, false);
-                accountB = mAdapter.getItem(prevPos);
-                mViewModel.changePosition(accountA, accountB);
-            }
-        });
         mViewModel.start();
-    }
-
-    private void itemRaiseAnimator(View view, final float start, boolean raise) {
-        final float end = start * 2;
-        ObjectAnimator animator = ObjectAnimator.ofFloat(view, "elevation",
-                raise ? start : end, raise ? end : start);
-        animator.setDuration(50);
-        animator.start();
     }
 }
