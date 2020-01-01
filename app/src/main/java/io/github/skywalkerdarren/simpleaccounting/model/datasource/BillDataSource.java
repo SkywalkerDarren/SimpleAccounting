@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.model.database;
+package io.github.skywalkerdarren.simpleaccounting.model.datasource;
 
 import java.util.List;
 import java.util.UUID;
@@ -7,6 +7,10 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillInfo;
 
 public interface BillDataSource {
+
+    void getBillsCount(LoadBillCountCallBack callBack);
+
+    void getBillsCount(int year, int month, LoadBillCountCallBack callBack);
 
     void getBillInfoList(int year, int month, LoadBillsInfoCallBack callBack);
 
@@ -21,6 +25,10 @@ public interface BillDataSource {
     void updateBill(Bill bill);
 
     void clearBill();
+
+    interface LoadBillCountCallBack {
+        void onBillCountLoaded(Integer count);
+    }
 
     interface LoadBillCallBack {
         void onBillLoaded(Bill bill);

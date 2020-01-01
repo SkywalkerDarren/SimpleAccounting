@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.model.database;
+package io.github.skywalkerdarren.simpleaccounting.model.datasource;
 
 import org.joda.time.DateTime;
 

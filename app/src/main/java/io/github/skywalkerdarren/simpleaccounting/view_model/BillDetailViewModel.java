@@ -10,7 +10,7 @@ import java.util.Objects;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
-import io.github.skywalkerdarren.simpleaccounting.model.database.BillDataSource;
+import io.github.skywalkerdarren.simpleaccounting.model.datasource.BillDataSource;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;

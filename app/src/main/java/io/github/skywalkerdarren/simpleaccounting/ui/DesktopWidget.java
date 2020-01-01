@@ -14,7 +14,7 @@ import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
-import io.github.skywalkerdarren.simpleaccounting.model.database.StatsDataSource;
+import io.github.skywalkerdarren.simpleaccounting.model.datasource.StatsDataSource;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillEditActivity;

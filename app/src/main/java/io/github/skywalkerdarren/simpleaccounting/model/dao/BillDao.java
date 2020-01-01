@@ -15,6 +15,11 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 
 @Dao
 public interface BillDao {
+    @Query("SELECT count(id) FROM bill")
+    Integer getBillsCount();
+
+    @Query("SELECT count(id) FROM bill WHERE date BETWEEN :start AND :end")
+    Integer getBillsCount(DateTime start, DateTime end);
     @Query("SELECT * FROM bill WHERE uuid == :id")
     Bill getBill(UUID id);
     @Query("SELECT * FROM bill WHERE date BETWEEN :start AND :end ORDER BY date DESC")

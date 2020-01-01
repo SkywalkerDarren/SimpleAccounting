@@ -19,7 +19,7 @@ import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.database.AppDatabase;
-import io.github.skywalkerdarren.simpleaccounting.model.database.CurrencyDataSource;
+import io.github.skywalkerdarren.simpleaccounting.model.datasource.CurrencyDataSource;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillInfo;

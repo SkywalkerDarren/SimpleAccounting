@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.model.database;
+package io.github.skywalkerdarren.simpleaccounting.model.datasource;
 
 import android.content.Context;
 

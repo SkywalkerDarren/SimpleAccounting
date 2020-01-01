@@ -30,8 +30,8 @@ import io.github.skywalkerdarren.simpleaccounting.model.dao.CurrencyInfoDao;
 import io.github.skywalkerdarren.simpleaccounting.model.dao.CurrencyRateDao;
 import io.github.skywalkerdarren.simpleaccounting.model.dao.StatsDao;
 import io.github.skywalkerdarren.simpleaccounting.model.dao.TypeDao;
-import io.github.skywalkerdarren.simpleaccounting.model.database.AppDataSource;
 import io.github.skywalkerdarren.simpleaccounting.model.database.AppDatabase;
+import io.github.skywalkerdarren.simpleaccounting.model.datasource.AppDataSource;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.AccountStats;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
@@ -269,6 +269,32 @@ public class AppRepository implements AppDataSource {
             sAccountCache.put(b.getUUID(), b);
             sAccountsCache.clear();
             dbLock.writeLock().unlock();
+        });
+    }
+
+    @Override
+    public void getBillsCount(LoadBillCountCallBack callBack) {
+        execute(() -> {
+            dbLock.readLock().lock();
+            Log.d(TAG, "getBillsCount: in " + currentThread().getName());
+            Integer count = mBillDao.getBillsCount();
+            dbLock.readLock().unlock();
+
+            mExecutors.mainThread().execute(() -> callBack.onBillCountLoaded(count));
+        });
+    }
+
+    @Override
+    public void getBillsCount(int year, int month, LoadBillCountCallBack callBack) {
+        execute(() -> {
+            dbLock.readLock().lock();
+            Log.d(TAG, "getBillsCount: in " + currentThread().getName());
+            DateTime start = new DateTime(year, month, 1, 0, 0);
+            DateTime end = start.plusMonths(1);
+            Integer count = mBillDao.getBillsCount(start, end);
+            dbLock.readLock().unlock();
+
+            mExecutors.mainThread().execute(() -> callBack.onBillCountLoaded(count));
         });
     }
 
