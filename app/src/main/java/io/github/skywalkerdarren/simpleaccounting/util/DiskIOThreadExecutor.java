@@ -1,7 +1,5 @@
 package io.github.skywalkerdarren.simpleaccounting.util;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import java.util.concurrent.Executor;
@@ -18,6 +16,11 @@ public class DiskIOThreadExecutor implements Executor {
 
     public DiskIOThreadExecutor() {
         mDiskIO = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors(), new DiskThreadFactory());
+    }
+
+    @Override
+    public void execute(@NonNull Runnable command) {
+        mDiskIO.execute(command);
     }
 
     private class DiskThreadFactory implements ThreadFactory {
@@ -38,10 +41,5 @@ public class DiskIOThreadExecutor implements Executor {
             threadId.getAndIncrement();
             setName("disk thread NO." + threadId);
         }
-    }
-
-    @Override
-    public void execute(@NonNull Runnable command) {
-        mDiskIO.execute(command);
     }
 }

@@ -21,14 +21,13 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.TypeStats;
  */
 
 public class ClassifyViewModel extends ViewModel {
+    private final AppRepository mRepository;
+    private final MutableLiveData<String> date = new MutableLiveData<>();
+    private final MutableLiveData<List<TypeStats>> statsList = new MutableLiveData<>();
     private DateTime mStart;
     private DateTime mEnd;
     private Period mPeriod;
     private boolean mIsExpense;
-
-    private final AppRepository mRepository;
-    private final MutableLiveData<String> date = new MutableLiveData<>();
-    private final MutableLiveData<List<TypeStats>> statsList = new MutableLiveData<>();
 
     public ClassifyViewModel(AppRepository repository) {
         mRepository = repository;

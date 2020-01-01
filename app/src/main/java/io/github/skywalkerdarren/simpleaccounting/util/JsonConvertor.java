@@ -20,7 +20,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.Currency;
 
 public class JsonConvertor {
     private static final GsonBuilder mBuilder = new GsonBuilder()
-                .excludeFieldsWithoutExposeAnnotation();
+            .excludeFieldsWithoutExposeAnnotation();
 
     private JsonConvertor() {
 

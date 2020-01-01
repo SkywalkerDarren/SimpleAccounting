@@ -30,9 +30,6 @@ import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 
 public class BillAdapter extends BaseMultiItemDataBindingAdapter<BillInfo, ViewDataBinding> {
 
-    private final AppRepository mRepository = AppRepository.getInstance(new AppExecutors(), mContext);
-    private int mX, mY;
-
     /**
      * 分隔符
      */
@@ -45,6 +42,8 @@ public class BillAdapter extends BaseMultiItemDataBindingAdapter<BillInfo, ViewD
      * 带备注的账单
      */
     public static final int WITH_REMARK = 1;
+    private final AppRepository mRepository = AppRepository.getInstance(new AppExecutors(), mContext);
+    private int mX, mY;
     private Activity mActivity;
 
     /**

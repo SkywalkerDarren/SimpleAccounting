@@ -17,9 +17,11 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 
 public class CSVToData {
     private File mCSV;
-    public CSVToData(File csv){
+
+    public CSVToData(File csv) {
         mCSV = csv;
     }
+
     public List<Bill> getData(UUID accountId) throws IOException {
         FileReader reader = new FileReader(mCSV);
         CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT);

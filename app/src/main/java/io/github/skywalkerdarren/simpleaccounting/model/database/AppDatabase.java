@@ -25,12 +25,9 @@ import static io.github.skywalkerdarren.simpleaccounting.model.database.Migratio
 @Database(entities = {Type.class, Account.class, Bill.class, Currency.class, CurrencyInfo.class}, version = 2)
 @TypeConverters(TypeConvertUtil.class)
 public abstract class AppDatabase extends RoomDatabase {
+    private static final Object sLock = new Object();
     private static AppDatabase INSTANCE;
 
-    public abstract AccountDao accountDao();
-    public abstract TypeDao typeDao();
-    public abstract BillDao billDao();
-    public abstract StatsDao statsDao();
     public static AppDatabase getInstance(Context context) {
         synchronized (sLock) {
             if (INSTANCE == null) {
@@ -43,9 +40,15 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     }
 
-    public abstract CurrencyRateDao currencyRateDao();
+    public abstract AccountDao accountDao();
 
-    private static final Object sLock = new Object();
+    public abstract TypeDao typeDao();
+
+    public abstract BillDao billDao();
+
+    public abstract StatsDao statsDao();
+
+    public abstract CurrencyRateDao currencyRateDao();
 
     public abstract CurrencyInfoDao currencyInfoDao();
 }

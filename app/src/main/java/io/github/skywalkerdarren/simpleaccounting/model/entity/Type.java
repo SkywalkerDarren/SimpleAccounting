@@ -38,6 +38,7 @@ public class Type {
     private boolean mIsExpense;
     @ColumnInfo(name = "assets_name")
     private String mAssetsName;
+
     /**
      * 根据id创建类型
      */

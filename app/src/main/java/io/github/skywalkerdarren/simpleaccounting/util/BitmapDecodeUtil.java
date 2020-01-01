@@ -53,7 +53,7 @@ public class BitmapDecodeUtil {
         return BitmapFactory.decodeStream(is, null, getBitmapOptions(context));
     }
 
-    public static Bitmap compressBitmap(Context context,int resId, int maxWidth, int maxHeight) {
+    public static Bitmap compressBitmap(Context context, int resId, int maxWidth, int maxHeight) {
         checkParam(context);
         final TypedValue value = new TypedValue();
         InputStream is = null;
@@ -120,8 +120,9 @@ public class BitmapDecodeUtil {
         }
         return inSampleSize <= 1 ? 1 : inSampleSize;
     }
-    private static <T> void checkParam(T param){
-        if(param == null) {
+
+    private static <T> void checkParam(T param) {
+        if (param == null) {
             throw new NullPointerException();
         }
     }

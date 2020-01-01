@@ -17,8 +17,8 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
  */
 
 public class TypeAdapter extends BaseDataBindingAdapter<Type, ItemTypeBinding> {
-    private FragmentBillEditBinding mBinding;
     public boolean isOpen = false;
+    private FragmentBillEditBinding mBinding;
 
     public TypeAdapter(FragmentBillEditBinding binding) {
         super(R.layout.item_type, null);

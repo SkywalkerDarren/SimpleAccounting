@@ -36,6 +36,11 @@ public class DesktopWidget extends AppWidgetProvider implements StatsDataSource.
 
     private RemoteViews mRemoteViews;
 
+    public static void refresh(Context context) {
+        Intent intent = new Intent(EXTRA_ACTION_UP);
+        context.sendBroadcast(intent);
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
@@ -46,11 +51,6 @@ public class DesktopWidget extends AppWidgetProvider implements StatsDataSource.
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
         refreshData(context);
-    }
-
-    public static void refresh(Context context) {
-        Intent intent = new Intent(EXTRA_ACTION_UP);
-        context.sendBroadcast(intent);
     }
 
     private void refreshData(Context context) {

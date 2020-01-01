@@ -39,11 +39,10 @@ import io.github.skywalkerdarren.simpleaccounting.ui.fragment.DiscoveryFragment;
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_UPDATE_BILL = 0;
+    public BillListFragment mBillListFragment;
     private ViewPager mViewPager;
-
     private FloatingActionButton mAddBillButton;
     private AccountFragment mAccountFragment;
-    public BillListFragment mBillListFragment;
     private DiscoveryFragment mDiscoveryFragment;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener

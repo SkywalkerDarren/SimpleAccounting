@@ -13,10 +13,13 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 public interface TypeDao {
     @Query("SELECT * FROM type WHERE uuid == :uuid")
     Type getType(UUID uuid);
+
     @Query("SELECT * FROM type WHERE is_expense == :isExpense")
     List<Type> getTypes(Boolean isExpense);
+
     @Query("DELETE FROM type WHERE uuid = :uuid")
     void delType(UUID uuid);
+
     @Insert
     void newType(Type type);
 }

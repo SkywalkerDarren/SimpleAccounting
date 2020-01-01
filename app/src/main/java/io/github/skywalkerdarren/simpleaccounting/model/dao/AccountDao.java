@@ -16,10 +16,13 @@ public interface AccountDao {
 
     @Query("SELECT * FROM account ORDER BY id")
     List<Account> getAccounts();
+
     @Query("UPDATE OR REPLACE account SET id = :id WHERE uuid = :uuid")
     void updateAccountId(UUID uuid, Integer id);
+
     @Query("DELETE FROM account WHERE uuid = :uuid")
     void delAccount(UUID uuid);
+
     @Insert
     void newAccount(Account account);
 }

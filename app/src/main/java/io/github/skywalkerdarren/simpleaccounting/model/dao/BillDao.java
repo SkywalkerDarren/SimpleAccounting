@@ -20,16 +20,22 @@ public interface BillDao {
 
     @Query("SELECT count(id) FROM bill WHERE date BETWEEN :start AND :end")
     Integer getBillsCount(DateTime start, DateTime end);
+
     @Query("SELECT * FROM bill WHERE uuid == :id")
     Bill getBill(UUID id);
+
     @Query("SELECT * FROM bill WHERE date BETWEEN :start AND :end ORDER BY date DESC")
     List<Bill> getsBillsByDate(DateTime start, DateTime end);
+
     @Insert
     void addBill(Bill bill);
+
     @Query("DELETE FROM bill WHERE uuid = :uuid")
     void delBill(UUID uuid);
+
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateBill(Bill bill);
+
     @Query("DELETE FROM bill")
     void clearBill();
 }

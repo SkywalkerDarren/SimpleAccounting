@@ -42,12 +42,11 @@ import static io.github.skywalkerdarren.simpleaccounting.util.PreferenceUtil.LAS
  * create an instance of this fragment.
  */
 public class DiscoveryFragment extends BaseFragment {
+    ExchangeRateAdapter mAdapter;
     private LinearLayout mDotLayout;
     private ArrayList<ImageView> mImageViews;
     private FragmentDiscoveryBinding mBinding;
     private DiscoveryViewModel mViewModel;
-    ExchangeRateAdapter mAdapter;
-
 
     public static DiscoveryFragment newInstance() {
         Bundle args = new Bundle();

@@ -20,7 +20,6 @@ public class StatsAdapter extends BaseDataBindingAdapter<BillStats, ItemStatsBin
 
     /**
      * 统计适配器
-     *
      */
     public StatsAdapter() {
         super(R.layout.item_stats, null);

@@ -21,13 +21,13 @@ import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
  */
 
 public class Demo {
+    private static final String TAG = "Demo";
     private final Random mRandom;
+    private final CountDownLatch mLatch = new CountDownLatch(3);
     private List<Type> mExpense;
     private List<Type> mIncome;
     private List<Account> mAccounts;
     private AppRepository mRepository;
-    private static final String TAG = "Demo";
-    private final CountDownLatch mLatch = new CountDownLatch(3);
 
     public Demo(Context context) {
         mRepository = AppRepository.getInstance(new AppExecutors(), context);

@@ -54,37 +54,24 @@ import static java.lang.Thread.sleep;
 
 public class AppRepository implements AppDataSource {
     private static final String TAG = "AppRepository";
-    private AccountDao mAccountDao;
-    private TypeDao mTypeDao;
-    private BillDao mBillDao;
-    private StatsDao mStatsDao;
     private static final String ACCOUNTS = "ACCOUNTS";
     private static final String INCOME_TYPES = "INCOME_TYPES";
     private static final String EXPENSE_TYPES = "EXPENSE_TYPES";
+    private static final boolean DEBUG = false;
     private static Map<UUID, Account> sAccountCache = new ConcurrentHashMap<>();
     private static Map<String, List<Account>> sAccountsCache = new ConcurrentHashMap<>();
     private static Map<UUID, Bill> sBillCache = new ConcurrentHashMap<>();
     private static Map<UUID, Type> sTypeCache = new ConcurrentHashMap<>();
+    private static volatile AppRepository INSTANCE;
+    private static Map<String, List<Type>> sTypesCache = new ConcurrentHashMap<>();
+    private final ReentrantReadWriteLock dbLock = new ReentrantReadWriteLock(true);
+    private AccountDao mAccountDao;
+    private TypeDao mTypeDao;
+    private BillDao mBillDao;
+    private StatsDao mStatsDao;
     private CurrencyInfoDao mCurrencyInfoDao;
     private CurrencyRateDao mCurrencyRateDao;
-
-    private final ReentrantReadWriteLock dbLock = new ReentrantReadWriteLock(true);
-
-    private static final boolean DEBUG = false;
-
-    private static volatile AppRepository INSTANCE;
-
     private AppExecutors mExecutors;
-
-    private void slowDown() {
-        if (DEBUG) {
-            try {
-                sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     private AppRepository(@NonNull AppExecutors executors, @NonNull Context context) {
         mExecutors = executors;
@@ -106,15 +93,6 @@ public class AppRepository implements AppDataSource {
             }
         }
         return INSTANCE;
-    }
-
-    private void initDao(AppDatabase database) {
-        mAccountDao = database.accountDao();
-        mTypeDao = database.typeDao();
-        mBillDao = database.billDao();
-        mStatsDao = database.statsDao();
-        mCurrencyInfoDao = database.currencyInfoDao();
-        mCurrencyRateDao = database.currencyRateDao();
     }
 
     @VisibleForTesting
@@ -139,6 +117,25 @@ public class AppRepository implements AppDataSource {
         sAccountCache.clear();
     }
 
+    private void slowDown() {
+        if (DEBUG) {
+            try {
+                sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void initDao(AppDatabase database) {
+        mAccountDao = database.accountDao();
+        mTypeDao = database.typeDao();
+        mBillDao = database.billDao();
+        mStatsDao = database.statsDao();
+        mCurrencyInfoDao = database.currencyInfoDao();
+        mCurrencyRateDao = database.currencyRateDao();
+    }
+
     void getAccountsOnBackground(LoadAccountsCallBack callBack) {
         execute(() -> {
             Log.d(TAG, "getAccountsOnBackground: in " + currentThread().getName());
@@ -153,8 +150,6 @@ public class AppRepository implements AppDataSource {
             callBack.onAccountsLoaded(accounts);
         });
     }
-
-    private static Map<String, List<Type>> sTypesCache = new ConcurrentHashMap<>();
 
     @Override
     public void getBillInfoList(int year, int month, LoadBillsInfoCallBack callBack) {
