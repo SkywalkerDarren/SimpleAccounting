@@ -17,6 +17,9 @@
         <meta-data
             android:name="com.currencylayer.TOKEN"
             android:value="${currencylayer_token}" />
+        <meta-data
+            android:name="DEBUG"
+            android:value="${isDebug}" />
         <activity
             android:name=".ui.activity.WelcomeActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">

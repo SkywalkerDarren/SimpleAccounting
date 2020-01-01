@@ -30,21 +30,27 @@ public class AboutActivity extends AppCompatActivity {
         binding.back.setOnClickListener(view -> finish());
         binding.iv1.setLongClickable(true);
         String versionName;
+        boolean debug = false;
         try {
             versionName = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_CONFIGURATIONS).versionName;
+            debug = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA).metaData.getBoolean("DEBUG");
+
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
             versionName = getString(R.string.version);
         }
         binding.version.setText(versionName);
-        binding.iv1.setOnLongClickListener(view -> {
-            Demo demo = new Demo(AboutActivity.this);
-            int cnt = 400;
-            DateTime now = DateTime.now();
-            demo.createRandomBill(cnt, now.minusMonths(6), now);
-            DesktopWidget.refresh(getApplicationContext());
-            Toast.makeText(AboutActivity.this, "增加了" + cnt + "个演示数据", Toast.LENGTH_SHORT).show();
-            return false;
-        });
+
+        if (debug) {
+            binding.iv1.setOnLongClickListener(view -> {
+                Demo demo = new Demo(AboutActivity.this);
+                int cnt = 400;
+                DateTime now = DateTime.now();
+                demo.createRandomBill(cnt, now.minusMonths(6), now);
+                DesktopWidget.refresh(getApplicationContext());
+                Toast.makeText(AboutActivity.this, "增加了" + cnt + "个演示数据", Toast.LENGTH_SHORT).show();
+                return false;
+            });
+        }
     }
 }

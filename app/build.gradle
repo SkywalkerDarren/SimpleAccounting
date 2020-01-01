@@ -30,12 +30,12 @@ android {
     }
     buildTypes {
         debug {
-            manifestPlaceholders = [currencylayer_token: System.getenv("CURRENCY_TOKEN")]
+            manifestPlaceholders = [currencylayer_token: System.getenv("CURRENCY_TOKEN"), isDebug: true]
             buildConfigField("boolean", "LOG", "true")
             applicationIdSuffix ".debug"
         }
         release {
-            manifestPlaceholders = [currencylayer_token: System.getenv("CURRENCY_TOKEN")]
+            manifestPlaceholders = [currencylayer_token: System.getenv("CURRENCY_TOKEN"), isDebug: false]
             minifyEnabled false
             buildConfigField("boolean", "LOG", "false")
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
