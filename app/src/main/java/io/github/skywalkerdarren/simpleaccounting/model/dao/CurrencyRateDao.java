@@ -15,7 +15,7 @@ public interface CurrencyRateDao {
     @Query("SELECT * FROM currency")
     List<Currency> getCurrencies();
 
-    @Query("SELECT * FROM currency WHERE favourite == :favourite")
+    @Query("SELECT * FROM currency WHERE favourite == :favourite ORDER BY id DESC")
     List<Currency> getFavouriteCurrencies(boolean favourite);
 
     @Query("SELECT * FROM currency WHERE name == :name")
@@ -29,4 +29,7 @@ public interface CurrencyRateDao {
 
     @Query("DELETE FROM currency WHERE name == :name")
     void deleteCurrency(String name);
+
+    @Query("UPDATE currency SET id = :id WHERE name == :name")
+    void updateCurrencyId(String name, Integer id);
 }

@@ -548,6 +548,22 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
+    public void changeCurrencyPosition(Currency a, Currency b) {
+        execute(() -> {
+            dbLock.writeLock().lock();
+            Log.d(TAG, "changeCurrencyPosition: in " + currentThread().getName());
+            Integer i = a.getId();
+            Integer j = b.getId();
+            a.setId(j);
+            b.setId(i);
+            mCurrencyRateDao.updateCurrencyId(a.getName(), -1);
+            mCurrencyRateDao.updateCurrencyId(b.getName(), i);
+            mCurrencyRateDao.updateCurrencyId(a.getName(), j);
+            dbLock.writeLock().unlock();
+        });
+    }
+
+    @Override
     public void updateCurrencies(Context context, UpdateCallback callback) {
         mExecutors.networkIO().execute(() -> {
             CurrencyRequest request = new CurrencyRequest(context);

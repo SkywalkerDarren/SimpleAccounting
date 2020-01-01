@@ -25,6 +25,8 @@ public interface CurrencyDataSource {
 
     void initCurrenciesAndInfos(Context context);
 
+    void changeCurrencyPosition(Currency currencyA, Currency currencyB);
+
     interface LoadExchangeRateCallback {
         void onExchangeRateLoaded(Currency currency);
 

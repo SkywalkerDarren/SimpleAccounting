@@ -13,16 +13,24 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
+import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
+import com.chad.library.adapter.base.listener.OnItemDragListener;
 
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
+import io.github.skywalkerdarren.simpleaccounting.adapter.ExchangeRateAdapter;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentDiscoveryBinding;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Currency;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.MyAccountActivity;
 import io.github.skywalkerdarren.simpleaccounting.util.PreferenceUtil;
 import io.github.skywalkerdarren.simpleaccounting.util.ViewModelFactory;
@@ -41,24 +49,14 @@ public class DiscoveryFragment extends BaseFragment {
     private ArrayList<ImageView> mImageViews;
     private FragmentDiscoveryBinding mBinding;
     private DiscoveryViewModel mViewModel;
+    ExchangeRateAdapter mAdapter;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment DiscoveryFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+
     public static DiscoveryFragment newInstance() {
         Bundle args = new Bundle();
         DiscoveryFragment fragment = new DiscoveryFragment();
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -78,6 +76,31 @@ public class DiscoveryFragment extends BaseFragment {
         viewPager.setAdapter(new DiscoverAdapter());
         viewPager.addOnPageChangeListener(new DiscoverListener());
         viewPager.setOffscreenPageLimit(2);
+
+        mAdapter = new ExchangeRateAdapter();
+        ItemDragAndSwipeCallback itemDragAndSwipeCallback = new ItemDragAndSwipeCallback(mAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemDragAndSwipeCallback);
+        itemTouchHelper.attachToRecyclerView(mBinding.exchangeRateRecyclerView);
+        mAdapter.enableDragItem(itemTouchHelper);
+        mAdapter.setOnItemDragListener(new OnItemDragListener() {
+            @Override
+            public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
+            }
+
+            @Override
+            public void onItemDragMoving(RecyclerView.ViewHolder source, int from, RecyclerView.ViewHolder target, int to) {
+                Currency a = mAdapter.getItem(from);
+                Currency b = mAdapter.getItem(to);
+                mViewModel.changeCurrencyPosition(a, b);
+
+            }
+
+            @Override
+            public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {
+            }
+        });
+        mBinding.exchangeRateRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        mBinding.exchangeRateRecyclerView.setAdapter(mAdapter);
         return mBinding.getRoot();
     }
 
@@ -109,7 +132,6 @@ public class DiscoveryFragment extends BaseFragment {
         mViewModel = ViewModelProviders.of(this, factory).get(DiscoveryViewModel.class);
         mBinding.setDiscovery(mViewModel);
         mBinding.setLifecycleOwner(this);
-
         int days = Integer.parseInt(PreferenceUtil.getString(requireContext(), CUMULATIVE_DAYS, "1"));
         String lastRunDate = PreferenceUtil.getString(requireContext(), LAST_RUN_DATE);
         DateTime now = DateTime.now();
@@ -133,7 +155,10 @@ public class DiscoveryFragment extends BaseFragment {
 
     @Override
     protected void updateUI() {
-
+        mViewModel.getFavoriteCurrencies().observe(this, currencies -> {
+            mAdapter.setNewData(currencies);
+            mAdapter.notifyDataSetChanged();
+        });
     }
 
     private class DiscoverListener implements ViewPager.OnPageChangeListener {
