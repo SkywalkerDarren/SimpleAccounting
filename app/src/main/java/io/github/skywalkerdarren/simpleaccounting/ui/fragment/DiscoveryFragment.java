@@ -15,12 +15,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
-import com.chad.library.adapter.base.listener.OnItemDragListener;
 
 import org.joda.time.DateTime;
 
@@ -30,7 +28,6 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.ExchangeRateAdapter;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentDiscoveryBinding;
-import io.github.skywalkerdarren.simpleaccounting.model.entity.Currency;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.MyAccountActivity;
 import io.github.skywalkerdarren.simpleaccounting.util.PreferenceUtil;
 import io.github.skywalkerdarren.simpleaccounting.util.ViewModelFactory;
@@ -82,23 +79,6 @@ public class DiscoveryFragment extends BaseFragment {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemDragAndSwipeCallback);
         itemTouchHelper.attachToRecyclerView(mBinding.exchangeRateRecyclerView);
         mAdapter.enableDragItem(itemTouchHelper);
-        mAdapter.setOnItemDragListener(new OnItemDragListener() {
-            @Override
-            public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
-            }
-
-            @Override
-            public void onItemDragMoving(RecyclerView.ViewHolder source, int from, RecyclerView.ViewHolder target, int to) {
-                Currency a = mAdapter.getItem(from);
-                Currency b = mAdapter.getItem(to);
-                mViewModel.changeCurrencyPosition(a, b);
-
-            }
-
-            @Override
-            public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {
-            }
-        });
         mBinding.exchangeRateRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         mBinding.exchangeRateRecyclerView.setAdapter(mAdapter);
         return mBinding.getRoot();

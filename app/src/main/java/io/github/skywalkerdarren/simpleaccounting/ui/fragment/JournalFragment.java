@@ -91,7 +91,7 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
         binding.expenseCardView.setOnClickListener(this);
         binding.incomeCardView.setOnClickListener(this);
         binding.balanceCardView.setOnClickListener(this);
-        mStatsAdapter = new StatsAdapter(null);
+        mStatsAdapter = new StatsAdapter();
         binding.statsRecyclerView.setAdapter(mStatsAdapter);
         // TODO 动态年份
         configChartStyle(mLineChart);

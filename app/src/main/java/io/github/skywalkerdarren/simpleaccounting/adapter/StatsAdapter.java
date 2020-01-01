@@ -21,10 +21,9 @@ public class StatsAdapter extends BaseDataBindingAdapter<BillStats, ItemStatsBin
     /**
      * 统计适配器
      *
-     * @param data 统计类列表
      */
-    public StatsAdapter(List<BillStats> data) {
-        super(R.layout.item_stats, data);
+    public StatsAdapter() {
+        super(R.layout.item_stats, null);
     }
 
     @Override

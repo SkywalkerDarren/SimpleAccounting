@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -135,7 +134,7 @@ public class BillEditFragment extends BaseFragment {
         mBinding.setLifecycleOwner(this);
 
         // 配置适配器
-        TypeAdapter adapter = new TypeAdapter(null, mBinding);
+        TypeAdapter adapter = new TypeAdapter(mBinding);
         // 配置选择按钮
         mTypeSbg.setOnClickedButtonListener(position -> {
             mViewModel.getTypes(position == 1).observe(this, types -> {

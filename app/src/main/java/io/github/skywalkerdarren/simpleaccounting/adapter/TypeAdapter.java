@@ -3,10 +3,6 @@ package io.github.skywalkerdarren.simpleaccounting.adapter;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 
-import androidx.annotation.Nullable;
-
-import java.util.List;
-
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseDataBindingAdapter;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillEditBinding;
@@ -24,8 +20,8 @@ public class TypeAdapter extends BaseDataBindingAdapter<Type, ItemTypeBinding> {
     private FragmentBillEditBinding mBinding;
     public boolean isOpen = false;
 
-    public TypeAdapter(@Nullable List<Type> data, FragmentBillEditBinding binding) {
-        super(R.layout.item_type, data);
+    public TypeAdapter(FragmentBillEditBinding binding) {
+        super(R.layout.item_type, null);
         mBinding = binding;
         openLoadAnimation(view -> {
             if (isOpen) {

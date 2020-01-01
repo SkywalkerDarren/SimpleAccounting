@@ -1,7 +1,6 @@
 package io.github.skywalkerdarren.simpleaccounting.adapter;
 
 import android.animation.ObjectAnimator;
-import android.app.Application;
 import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,8 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.chad.library.adapter.base.listener.OnItemDragListener;
 
 import org.joda.time.DateTime;
-
-import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseDraggableDataBindingAdapter;
@@ -28,9 +25,9 @@ import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 public class AccountAdapter extends BaseDraggableDataBindingAdapter<Account, ItemAccountBinding> {
     private final AppRepository mRepository;
 
-    public AccountAdapter(List<Account> data, Application application) {
-        super(R.layout.item_account, data);
-        mRepository = AppRepository.getInstance(new AppExecutors(), application);
+    public AccountAdapter() {
+        super(R.layout.item_account, null);
+        mRepository = AppRepository.getInstance(new AppExecutors(), mContext);
         setOnItemDragListener(new OnItemDragListener() {
 
             @Override

@@ -99,8 +99,4 @@ public class DiscoveryViewModel extends ViewModel {
     public LiveData<List<Currency>> getFavoriteCurrencies() {
         return favoriteCurrencies;
     }
-
-    public void changeCurrencyPosition(Currency a, Currency b) {
-        mRepository.changeCurrencyPosition(a, b);
-    }
 }

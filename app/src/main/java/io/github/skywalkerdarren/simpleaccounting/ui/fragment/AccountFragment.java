@@ -110,7 +110,7 @@ public class AccountFragment extends BaseFragment {
     @Override
     protected void updateUI() {
         if (mAdapter == null) {
-            mAdapter = new AccountAdapter(null, requireActivity().getApplication());
+            mAdapter = new AccountAdapter();
         }
         mViewModel.getAccounts().observe(this, accounts -> {
             mAdapter.setNewData(accounts);
