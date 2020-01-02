@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -87,4 +88,5 @@ dependencies {
     implementation "com.google.code.gson:gson:${gsonVersion}"
     androidTestImplementation "androidx.room:room-testing:${roomVersion}"
     implementation "androidx.constraintlayout:constraintlayout:${constraintlayoutVersion}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}"
 }

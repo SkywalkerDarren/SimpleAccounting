@@ -287,7 +287,7 @@ public class AppRepository implements AppDataSource {
             Log.d(TAG, "getBillsCount: in " + currentThread().getName());
             DateTime start = new DateTime(year, month, 1, 0, 0);
             DateTime end = start.plusMonths(1);
-            Integer count = mBillDao.getBillsCount(start, end);
+            Integer count = mBillDao.getBillsCount();
             dbLock.readLock().unlock();
 
             mExecutors.mainThread().execute(() -> callBack.onBillCountLoaded(count));
