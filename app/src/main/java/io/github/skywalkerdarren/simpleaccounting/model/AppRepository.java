@@ -565,7 +565,7 @@ public class AppRepository implements AppDataSource {
             if (request.checkConnection()) {
 
                 String timestamp = PreferenceUtil.getString(context, LAST_UPDATE_TIMESTAMP, "0");
-                DateTime before = new DateTime(Long.valueOf(timestamp));
+                DateTime before = new DateTime(Long.valueOf(timestamp) * 1000);
                 DateTime after = DateTime.now();
 
                 if (!after.minusDays(1).isAfter(before)) {
