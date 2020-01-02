@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "6a6e220ef2a7d96d62e984eafbb1e234",
+    "identityHash": "dde677e3e84313fddd2be5ff011019ca",
     "entities": [
       {
         "tableName": "type",
@@ -65,20 +65,8 @@
       },
       {
         "tableName": "account",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `uuid` TEXT, `name` TEXT, `balance_hint` TEXT, `balance` TEXT, `image` TEXT, `color_id` INTEGER)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT, `balance_hint` TEXT, `balance` TEXT, `image` TEXT, `color_id` INTEGER, `uuid` TEXT, `id` INTEGER PRIMARY KEY AUTOINCREMENT)",
         "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "uuid",
-            "columnName": "uuid",
-            "affinity": "TEXT",
-            "notNull": false
-          },
           {
             "fieldPath": "name",
             "columnName": "name",
@@ -106,6 +94,18 @@
           {
             "fieldPath": "colorId",
             "columnName": "color_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
             "affinity": "INTEGER",
             "notNull": false
           }
@@ -356,7 +356,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6a6e220ef2a7d96d62e984eafbb1e234')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'dde677e3e84313fddd2be5ff011019ca')"
     ]
   }
 }

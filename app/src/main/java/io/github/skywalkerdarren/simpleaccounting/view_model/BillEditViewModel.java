@@ -19,8 +19,6 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 
-import static io.github.skywalkerdarren.simpleaccounting.model.entity.Account.FOLDER;
-
 /**
  * @author darren
  * @date 2018/4/4
@@ -71,7 +69,7 @@ public class BillEditViewModel extends ViewModel {
      * @param account 设置的账户
      */
     public void setAccount(@NonNull Account account) {
-        accountImg.setValue(FOLDER + account.getBitmap());
+        accountImg.setValue(account.getBitmap());
         accountColor.setValue(account.getColorId());
         accountId.setValue(account.getUuid());
     }

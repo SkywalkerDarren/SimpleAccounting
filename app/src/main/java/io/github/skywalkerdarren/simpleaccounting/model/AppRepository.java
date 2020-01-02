@@ -697,12 +697,14 @@ public class AppRepository implements AppDataSource {
         execute(() -> {
             Log.d(TAG, "initDb: in " + currentThread().getName());
             dbLock.writeLock().lock();
-            mAccountDao.newAccount(new Account("现金", "现金金额",
-                    BigDecimal.ZERO, "cash.png", R.color.amber500));
+            Account account = new Account("现金", "现金金额",
+                    BigDecimal.ZERO, "account/cash.png", R.color.amber500);
+            mAccountDao.newAccount(account);
+            Log.d(TAG, "initDb: " + account);
             mAccountDao.newAccount(new Account("支付宝", "在线支付余额",
-                    BigDecimal.ZERO, "alipay.png", R.color.lightblue500));
+                    BigDecimal.ZERO, "account/alipay.png", R.color.lightblue500));
             mAccountDao.newAccount(new Account("微信", "在线支付余额",
-                    BigDecimal.ZERO, "wechat.png", R.color.lightgreen500));
+                    BigDecimal.ZERO, "account/wechat.png", R.color.lightgreen500));
             mTypeDao.newType(new Type("吃喝", Color.rgb(0xe6, 0xc4, 0x53),
                     true, "diet.png"));
             mTypeDao.newType(new Type("娱乐", Color.rgb(0x73, 0xc8, 0xd5),

@@ -31,7 +31,8 @@ android {
     }
     buildTypes {
         debug {
-            manifestPlaceholders = [currencylayer_token: System.getenv("CURRENCY_TOKEN"), isDebug: true]
+//            manifestPlaceholders = [currencylayer_token: System.getenv("CURRENCY_TOKEN"), isDebug: true]
+            manifestPlaceholders = [currencylayer_token: "token", isDebug: true]
             buildConfigField("boolean", "LOG", "true")
             applicationIdSuffix ".debug"
         }
