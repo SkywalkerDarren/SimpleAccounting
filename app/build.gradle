@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -31,13 +32,14 @@ android {
     }
     buildTypes {
         debug {
-//            manifestPlaceholders = [currencylayer_token: System.getenv("CURRENCY_TOKEN"), isDebug: true]
-            manifestPlaceholders = [currencylayer_token: "token", isDebug: true]
+            manifestPlaceholders = [currencylayer_token: project.hasProperty("CURRENCY_TOKEN") ?
+                    CURRENCY_TOKEN : System.getenv("CURRENCY_TOKEN"), isDebug: true]
             buildConfigField("boolean", "LOG", "true")
             applicationIdSuffix ".debug"
         }
         release {
-            manifestPlaceholders = [currencylayer_token: System.getenv("CURRENCY_TOKEN"), isDebug: false]
+            manifestPlaceholders = [currencylayer_token: project.hasProperty("CURRENCY_TOKEN") ?
+                    CURRENCY_TOKEN : System.getenv("CURRENCY_TOKEN"), isDebug: false]
             minifyEnabled false
             buildConfigField("boolean", "LOG", "false")
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -80,9 +82,11 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:${lifecycleVersion}"
     implementation "androidx.room:room-runtime:${roomVersion}"
     annotationProcessor "androidx.room:room-compiler:${roomVersion}"
+    kapt "androidx.room:room-compiler:${roomVersion}"
     implementation "com.google.android.material:material:${materialVersion}"
     implementation "com.github.bumptech.glide:glide:${glideVersion}"
     annotationProcessor "com.github.bumptech.glide:compiler:${glideVersion}"
+    kapt "com.github.bumptech.glide:compiler:${glideVersion}"
     implementation "org.apache.commons:commons-csv:${csvVersion}"
     implementation "io.reactivex.rxjava2:rxandroid:${rxandroidVersion}"
     implementation "com.squareup.okhttp3:okhttp:${okhttpVersion}"

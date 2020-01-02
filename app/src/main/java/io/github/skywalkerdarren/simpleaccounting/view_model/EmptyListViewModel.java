@@ -9,7 +9,6 @@ import android.view.View;
 import androidx.databinding.BindingAdapter;
 import androidx.lifecycle.ViewModel;
 
-import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillEditActivity;
 
 /**
@@ -42,8 +41,7 @@ public class EmptyListViewModel extends ViewModel {
      * 点击跳转新建账单
      */
     public void onClick(Context context) {
-        Bill bill = new Bill();
-        Intent intent = BillEditActivity.newIntent(context, bill,
+        Intent intent = BillEditActivity.newIntent(context, null,
                 mX, mY);
         context.startActivity(intent);
     }

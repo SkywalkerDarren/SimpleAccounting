@@ -25,7 +25,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.databinding.ActivityBillBinding;
-import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.ui.fragment.AccountFragment;
 import io.github.skywalkerdarren.simpleaccounting.ui.fragment.BillListFragment;
 import io.github.skywalkerdarren.simpleaccounting.ui.fragment.DiscoveryFragment;
@@ -86,10 +85,9 @@ public class MainActivity extends AppCompatActivity {
 
         // 点击增加按钮事件
         mAddBillButton.setOnClickListener(view -> {
-            Bill bill = new Bill();
             int x = (int) view.getX() + view.getWidth() / 2;
             int y = (int) view.getY() + view.getHeight() / 2;
-            Intent intent = BillEditActivity.newIntent(this, bill, x, y);
+            Intent intent = BillEditActivity.newIntent(this, null, x, y);
             startActivityForResult(intent, REQUEST_UPDATE_BILL);
         });
         FragmentManager fragmentManager = getSupportFragmentManager();

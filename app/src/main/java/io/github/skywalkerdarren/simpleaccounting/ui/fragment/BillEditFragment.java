@@ -37,7 +37,11 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import org.joda.time.DateTime;
+
+import java.util.Objects;
 
 import co.ceryle.segmentedbutton.SegmentedButtonGroup;
 import io.github.skywalkerdarren.simpleaccounting.R;
@@ -85,7 +89,7 @@ public class BillEditFragment extends BaseFragment {
      * @param bill 要编辑的账单
      * @return A new instance of fragment BillEditFragment.
      */
-    public static BillEditFragment newInstance(Bill bill, int centerX, int centerY) {
+    public static BillEditFragment newInstance(@Nullable Bill bill, int centerX, int centerY) {
         BillEditFragment fragment = new BillEditFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_BILL, bill);
@@ -263,7 +267,8 @@ public class BillEditFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_save_item:
-                if (!mViewModel.saveBill()) {
+                if (!mViewModel.saveBill(msg ->
+                        Snackbar.make(requireView(), msg, Snackbar.LENGTH_SHORT).show())) {
                     // 保存失败直接返回
                     return true;
                 }
@@ -300,15 +305,15 @@ public class BillEditFragment extends BaseFragment {
 
     @Override
     protected void updateUI() {
-        if (mBill.getDate() == null) {
-            mViewModel.getAccounts().observe(this, accounts -> {
-                mBill.setAccountId(accounts.get(0).getUuid());
-                mViewModel.getTypes(true).observe(this, types -> {
-                    mBill.setTypeId(types.get(0).getUuid());
+        if (mBill == null) {
+            mViewModel.getAccounts().observe(this, accounts ->
+                    mViewModel.getTypes(true).observe(this, types -> {
+                        mBill = new Bill(
+                                types.get(0).getUuid(),
+                                Objects.requireNonNull(accounts.get(0).getUuid()),
+                                types.get(0).getName());
                     mViewModel.setBill(mBill);
-                });
-            });
-
+                    }));
         } else {
             mViewModel.setBill(mBill);
         }

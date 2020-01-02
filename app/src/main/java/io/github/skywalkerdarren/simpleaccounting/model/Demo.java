@@ -7,6 +7,7 @@ import org.joda.time.DateTime;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 
@@ -56,7 +57,6 @@ public class Demo {
     }
 
     private void createRandomBill(DateTime start, DateTime end) {
-        Bill bill = new Bill();
 
         // 1/10 income
         Type type;
@@ -72,15 +72,15 @@ public class Demo {
             // 500-1.5k
             balance = new BigDecimal(getRandomFloat(1000, 500));
         }
-        bill.setTypeId(type.getUuid());
-        bill.setName(type.getName());
-        bill.setBalance(balance);
-
-        bill.setAccountId(mAccounts.get(getRandomInt(mAccounts.size())).getUuid());
-
         long p = end.getMillis() - start.getMillis();
         p = mRandom.nextLong() % p;
-        bill.setDate(start.plus(p));
+
+        Bill bill = new Bill(
+                type.getUuid(),
+                Objects.requireNonNull(mAccounts.get(getRandomInt(mAccounts.size())).getUuid()),
+                start.plus(p),
+                type.getName(),
+                balance);
 
         if (!(getRandomInt(3) > 1)) {
             bill.setRemark("这是备注");

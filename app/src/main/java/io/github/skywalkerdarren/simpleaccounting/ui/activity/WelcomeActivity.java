@@ -2,6 +2,7 @@ package io.github.skywalkerdarren.simpleaccounting.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -44,6 +45,8 @@ public class WelcomeActivity extends AppCompatActivity {
             } else {
                 startMainActivity();
             }
+        } catch (Exception e) {
+            Log.e("Exception", "onCreate: repository" + e.getMessage(), e);
         } finally {
             count++;
             PreferenceUtil.setString(this, RUN_APP_TIMES, String.valueOf(count));

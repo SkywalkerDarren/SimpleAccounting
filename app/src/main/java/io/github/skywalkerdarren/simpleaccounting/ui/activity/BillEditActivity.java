@@ -27,7 +27,7 @@ public class BillEditActivity extends BaseFragmentActivity {
     public static final String EXTRA_CENTER_Y = "io.github.skywalkerdarren.simpleaccounting.centerY";
     private static final String EXTRA_BILL = "bill";
 
-    public static Intent newIntent(Context context, Bill bill, int x, int y) {
+    public static Intent newIntent(Context context, @Nullable Bill bill, int x, int y) {
         Intent intent = new Intent(context, BillEditActivity.class);
         intent.putExtra(EXTRA_BILL, bill);
         intent.putExtra(EXTRA_CENTER_X, x);

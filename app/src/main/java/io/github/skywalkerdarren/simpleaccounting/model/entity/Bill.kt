@@ -23,10 +23,10 @@ import java.util.*
             ForeignKey(entity = Account::class, parentColumns = ["uuid"], childColumns = ["account_id"],
                     onDelete = ForeignKey.CASCADE, onUpdate = ForeignKey.CASCADE)])
 data class Bill @JvmOverloads constructor(
-        @ColumnInfo(name = "type_id") var typeId: UUID? = null,
-        @ColumnInfo(name = "account_id") var accountId: UUID? = null,
-        @ColumnInfo(name = "date") var date: DateTime? = null,
-        @ColumnInfo(name = "name") var name: String? = null,
+        @ColumnInfo(name = "type_id") var typeId: UUID,
+        @ColumnInfo(name = "account_id") var accountId: UUID,
+        @ColumnInfo(name = "date") var date: DateTime = DateTime.now(),
+        @ColumnInfo(name = "name") var name: String,
         @ColumnInfo(name = "balance") var balance: BigDecimal? = null,
         @ColumnInfo(name = "remark") var remark: String? = null,
         @ColumnInfo(name = "uuid") var uuid: UUID = UUID.randomUUID(),

@@ -75,7 +75,7 @@ public class AppRepository implements AppDataSource {
 
     private AppRepository(@NonNull AppExecutors executors, @NonNull Context context) {
         mExecutors = executors;
-        AppDatabase database = AppDatabase.getInstance(context);
+        AppDatabase database = AppDatabase.Companion.getInstance(context);
         initDao(database);
     }
 

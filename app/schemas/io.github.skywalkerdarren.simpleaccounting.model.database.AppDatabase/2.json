@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "b24bc935f4aa241063d70904f0461083",
+    "identityHash": "483d5805f18b2dfcab85f5f1b703e743",
     "entities": [
       {
         "tableName": "type",
@@ -130,31 +130,31 @@
       },
       {
         "tableName": "bill",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`type_id` TEXT, `account_id` TEXT, `date` INTEGER, `name` TEXT, `balance` TEXT, `remark` TEXT, `uuid` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, FOREIGN KEY(`type_id`) REFERENCES `type`(`uuid`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`account_id`) REFERENCES `account`(`uuid`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`type_id` TEXT NOT NULL, `account_id` TEXT NOT NULL, `date` INTEGER NOT NULL, `name` TEXT NOT NULL, `balance` TEXT, `remark` TEXT, `uuid` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, FOREIGN KEY(`type_id`) REFERENCES `type`(`uuid`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`account_id`) REFERENCES `account`(`uuid`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "typeId",
             "columnName": "type_id",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "accountId",
             "columnName": "account_id",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "date",
             "columnName": "date",
             "affinity": "INTEGER",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "name",
             "columnName": "name",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "balance",
@@ -356,7 +356,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b24bc935f4aa241063d70904f0461083')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '483d5805f18b2dfcab85f5f1b703e743')"
     ]
   }
 }

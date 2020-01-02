@@ -46,6 +46,6 @@ public class JsonConvertorTest {
         InputStream inputStream = mContext.getResources().getAssets().open("currency/default_rate.json");
         Reader reader = new InputStreamReader(inputStream);
         CurrenciesInfo info = JsonConvertor.toCurrenciesInfo(reader);
-        assertEquals(167, info.quotes.size());
+        assertEquals(167, info.getQuotes().size());
     }
 }

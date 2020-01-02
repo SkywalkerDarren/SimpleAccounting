@@ -11,6 +11,7 @@ import org.joda.time.DateTime;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
@@ -148,34 +149,44 @@ public class BillEditViewModel extends ViewModel {
     /**
      * 保存账单
      */
-    public boolean saveBill() {
+    public boolean saveBill(SaveFailed failed) {
         if (TextUtils.isEmpty(balance.getValue())) {
+            failed.saveFailed("账单不能为空");
             return false;
         }
-        Bill bill = new Bill();
         try {
             BigDecimal r = new BigDecimal(balance.getValue());
-            bill.setBalance(r);
-            bill.setName(getTypeName().getValue());
-            bill.setDate(getDate().getValue());
-            bill.setRemark(getRemark().getValue());
-            bill.setTypeId(typeId.getValue());
-            bill.setAccountId(accountId.getValue());
+            if (r.equals(BigDecimal.ZERO)) {
+                failed.saveFailed("账单不能为0");
+                return false;
+            }
+            Bill bill = new Bill(
+                    Objects.requireNonNull(typeId.getValue()),
+                    Objects.requireNonNull(accountId.getValue()),
+                    getDate().getValue(),
+                    getTypeName().getValue(),
+                    r,
+                    getRemark().getValue()
+            );
+            // 刷新账单数据库
+            mRepository.getBill(billId.getValue(), b -> {
+                if (b == null) {
+                    mRepository.addBill(bill);
+                } else {
+                    bill.setId(b.getId());
+                    bill.setUuid(b.getUuid());
+                    mRepository.updateBill(bill);
+                }
+            });
+            return true;
         } catch (Exception e) {
-            //Toast.makeText(mContext, "表达式错误", Toast.LENGTH_SHORT).show();
+            failed.saveFailed("表达式错误");
             return false;
         }
-        // 刷新账单数据库
-        mRepository.getBill(billId.getValue(), b -> {
-            if (b == null) {
-                mRepository.addBill(bill);
-            } else {
-                bill.setId(b.getId());
-                bill.setUuid(b.getUuid());
-                mRepository.updateBill(bill);
-            }
-        });
-        return true;
+    }
+
+    public interface SaveFailed {
+        void saveFailed(String msg);
     }
 
     /**

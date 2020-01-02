@@ -35,6 +35,7 @@ ext {
     compileSdkVersion = 29
     minSdkVersion = 21
     targetSdkVersion = 29
+    buildToolsVersion = '29.0.2'
 
     // androidx
     legacyVersion = '1.0.0'
