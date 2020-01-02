@@ -41,7 +41,7 @@ import static org.junit.Assert.fail;
 @LargeTest
 public class AppRepositoryTest {
     private static final String TAG = "AppRepositoryTest";
-    private static final Account ACCOUNT = new Account("name", "balanceHint", BigDecimal.ZERO, "image", R.color.black);
+    private static final Account ACCOUNT = new Account("name", "balanceHint", BigDecimal.ZERO, R.color.black, "image");
     private static final Type TYPE = new Type("TYPE", R.color.darkorchid, true, "assetsName");
     private final DateTime now = DateTime.now();
     private AppRepository mRepository;
@@ -72,12 +72,12 @@ public class AppRepositoryTest {
 
     @Before
     public void setUp() {
-        Account account1 = new Account("name1", "balanceHint1", BigDecimal.ZERO, "image1", R.color.black);
-        Account account2 = new Account("name2", "balanceHint2", BigDecimal.ONE, "image2", R.color.white);
+        Account account1 = new Account("name1", "balanceHint1", BigDecimal.ZERO, R.color.black, "image1");
+        Account account2 = new Account("name2", "balanceHint2", BigDecimal.ONE, R.color.white, "image2");
         Type type1 = new Type("name1", R.color.darkorchid, true, "assetsName");
         Type type2 = new Type("name2", R.color.darkorchid, false, "assetsName");
-        mBill1 = new Bill(type1.getUUID(), account1.getUUID(), now, "name1", new BigDecimal(100), "remark");
-        mBill2 = new Bill(type2.getUUID(), account2.getUUID(), now.minusDays(1), "name2", new BigDecimal(200), "remark");
+        mBill1 = new Bill(type1.getUUID(), account1.getUuid(), now, "name1", new BigDecimal(100), "remark");
+        mBill2 = new Bill(type2.getUUID(), account2.getUuid(), now.minusDays(1), "name2", new BigDecimal(200), "remark");
 
         AppRepository.clearInstance();
         mRepository = AppRepository.getInstance(new SingleExecutors(), mDatabase);
@@ -143,8 +143,8 @@ public class AppRepositoryTest {
                 }));
         mRepository.getAccount(mBill1.getAccountId(), a ->
                 mRepository.getAccount(mBill2.getAccountId(), b -> {
-                    assertEquals(id[1], a.getId().intValue());
-                    assertEquals(id[0], b.getId().intValue());
+                    assertEquals(id[1], a.getId());
+                    assertEquals(id[0], b.getId());
                 }));
     }
 
@@ -156,7 +156,7 @@ public class AppRepositoryTest {
 
     @Test
     public void addBill() {
-        Bill bill = new Bill(TYPE.getUUID(), ACCOUNT.getUUID(), now, "name", BigDecimal.ZERO, "remark");
+        Bill bill = new Bill(TYPE.getUUID(), ACCOUNT.getUuid(), now, "name", BigDecimal.ZERO, "remark");
         mRepository.addBill(bill);
         mRepository.getBill(bill.getUUID(), b -> assertBill(bill, b));
     }
@@ -171,7 +171,7 @@ public class AppRepositoryTest {
     @Test
     public void updateBill() {
         mBill1.setTypeId(TYPE.getUUID());
-        mBill1.setAccountId(ACCOUNT.getUUID());
+        mBill1.setAccountId(ACCOUNT.getUuid());
         mBill1.setBalance(BigDecimal.ONE);
         mBill1.setName("name");
         mBill1.setDate(now.plusDays(1));

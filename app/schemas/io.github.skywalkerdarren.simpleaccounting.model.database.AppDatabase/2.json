@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "dde677e3e84313fddd2be5ff011019ca",
+    "identityHash": "6a6e220ef2a7d96d62e984eafbb1e234",
     "entities": [
       {
         "tableName": "type",
@@ -65,7 +65,7 @@
       },
       {
         "tableName": "account",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT, `balance_hint` TEXT, `balance` TEXT, `image` TEXT, `color_id` INTEGER, `uuid` TEXT, `id` INTEGER PRIMARY KEY AUTOINCREMENT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT, `balance_hint` TEXT, `balance` TEXT, `color_id` INTEGER, `image` TEXT, `uuid` TEXT, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
         "fields": [
           {
             "fieldPath": "name",
@@ -86,15 +86,15 @@
             "notNull": false
           },
           {
-            "fieldPath": "bitmap",
-            "columnName": "image",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
             "fieldPath": "colorId",
             "columnName": "color_id",
             "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "bitmap",
+            "columnName": "image",
+            "affinity": "TEXT",
             "notNull": false
           },
           {
@@ -107,7 +107,7 @@
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
-            "notNull": false
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -356,7 +356,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'dde677e3e84313fddd2be5ff011019ca')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6a6e220ef2a7d96d62e984eafbb1e234')"
     ]
   }
 }
