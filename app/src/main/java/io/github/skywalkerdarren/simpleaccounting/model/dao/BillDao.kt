@@ -25,6 +25,7 @@ interface BillDao {
     @Query("DELETE FROM bill WHERE uuid = :uuid")
     fun delBill(uuid: UUID)
 
+    @Transaction
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun updateBill(bill: Bill)
 

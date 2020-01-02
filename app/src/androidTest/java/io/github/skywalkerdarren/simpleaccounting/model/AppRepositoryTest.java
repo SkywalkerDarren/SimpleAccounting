@@ -246,7 +246,7 @@ public class AppRepositoryTest {
     @Test
     public void getAccountStats() {
         mRepository.getAccountStats(mBill1.getAccountId(), now.minusDays(2), now.plusDays(2), accountStats ->
-                assertEquals(-100, accountStats.getSum().intValue()));
+                assertEquals(-100, accountStats.getSum()));
     }
 
     @Test
