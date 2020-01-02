@@ -152,7 +152,7 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void getBillInfoList(int year, int month, LoadBillsInfoCallBack callBack) {
+    public void getBillInfoList(int year, int month, @NonNull LoadBillsInfoCallBack callBack) {
         execute(() -> {
             Log.d(TAG, "getBillInfoList: in " + currentThread().getName());
             DateTime start = new DateTime(year, month, 1, 1, 0, 0);
@@ -190,7 +190,7 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void getAccount(UUID uuid, LoadAccountCallBack callBack) {
+    public void getAccount(@NonNull UUID uuid, @NonNull LoadAccountCallBack callBack) {
         execute(() -> {
             Log.d(TAG, "getAccount: in " + currentThread().getName());
 
@@ -207,7 +207,7 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void getsBills(int year, int month, LoadBillsCallBack callBack) {
+    public void getsBills(int year, int month, @NonNull LoadBillsCallBack callBack) {
         execute(() -> {
             Log.d(TAG, "getsBills: in " + currentThread().getName());
             DateTime start = new DateTime(year, month, 1, 1, 0, 0);
@@ -222,7 +222,7 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void getAccounts(LoadAccountsCallBack callBack) {
+    public void getAccounts(@NonNull LoadAccountsCallBack callBack) {
         execute(() -> {
             Log.d(TAG, "getAccounts: in " + currentThread().getName());
             dbLock.readLock().lock();
@@ -238,7 +238,7 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void delAccount(UUID uuid) {
+    public void delAccount(@NonNull UUID uuid) {
         execute(() -> {
             Log.d(TAG, "delAccount: in " + currentThread().getName());
             dbLock.writeLock().lock();
@@ -250,12 +250,12 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void changePosition(Account a, Account b) {
+    public void changePosition(@NonNull Account a, @NonNull Account b) {
         execute(() -> {
             dbLock.writeLock().lock();
             Log.d(TAG, "changePosition: in " + currentThread().getName());
-            Integer i = a.getId();
-            Integer j = b.getId();
+            int i = a.getId();
+            int j = b.getId();
             a.setId(j);
             b.setId(i);
             mAccountDao.updateAccountId(a.getUuid(), -1);
@@ -269,11 +269,11 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void getBillsCount(LoadBillCountCallBack callBack) {
+    public void getBillsCount(@NonNull LoadBillCountCallBack callBack) {
         execute(() -> {
             dbLock.readLock().lock();
             Log.d(TAG, "getBillsCount: in " + currentThread().getName());
-            Integer count = mBillDao.getBillsCount();
+            int count = mBillDao.getBillsCount();
             dbLock.readLock().unlock();
 
             mExecutors.mainThread().execute(() -> callBack.onBillCountLoaded(count));
@@ -281,13 +281,13 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void getBillsCount(int year, int month, LoadBillCountCallBack callBack) {
+    public void getBillsCount(int year, int month, @NonNull LoadBillCountCallBack callBack) {
         execute(() -> {
             dbLock.readLock().lock();
             Log.d(TAG, "getBillsCount: in " + currentThread().getName());
             DateTime start = new DateTime(year, month, 1, 0, 0);
             DateTime end = start.plusMonths(1);
-            Integer count = mBillDao.getBillsCount();
+            int count = mBillDao.getBillsCount();
             dbLock.readLock().unlock();
 
             mExecutors.mainThread().execute(() -> callBack.onBillCountLoaded(count));
@@ -295,7 +295,7 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void getBill(UUID id, LoadBillCallBack callBack) {
+    public void getBill(@NonNull UUID id, @NonNull LoadBillCallBack callBack) {
         execute(() -> {
             Log.d(TAG, "getBill: in " + currentThread().getName());
 
@@ -317,7 +317,7 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void addBill(Bill bill) {
+    public void addBill(@NonNull Bill bill) {
         execute(() -> {
             Log.d(TAG, "addBill: in " + currentThread().getName());
             dbLock.writeLock().lock();
@@ -329,7 +329,7 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void delBill(UUID id) {
+    public void delBill(@NonNull UUID id) {
         execute(() -> {
             Log.d(TAG, "delBill: in " + currentThread().getName());
             dbLock.writeLock().lock();
@@ -341,7 +341,7 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void updateBill(Bill bill) {
+    public void updateBill(@NonNull Bill bill) {
         execute(() -> {
             dbLock.writeLock().lock();
             Log.d(TAG, "updateBill: in " + currentThread().getName() + bill);
@@ -364,7 +364,7 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void getType(UUID uuid, LoadTypeCallBack callBack) {
+    public void getType(@NonNull UUID uuid, @NonNull LoadTypeCallBack callBack) {
         execute(() -> {
             Log.d(TAG, "getType: in " + currentThread().getName());
             dbLock.readLock().lock();
@@ -380,7 +380,7 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void getTypes(boolean isExpense, LoadTypesCallBack callBack) {
+    public void getTypes(boolean isExpense, @NonNull LoadTypesCallBack callBack) {
         execute(() -> {
             Log.d(TAG, "getTypes: in " + currentThread().getName());
             final String flag = isExpense ? EXPENSE_TYPES : INCOME_TYPES;
@@ -413,7 +413,7 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void delType(UUID uuid) {
+    public void delType(@NonNull UUID uuid) {
         execute(() -> {
             Log.d(TAG, "delType: in " + currentThread().getName());
             dbLock.writeLock().lock();
@@ -441,7 +441,7 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void getBillsAnnualStats(int year, LoadBillsStatsCallBack callBack) {
+    public void getBillsAnnualStats(int year, @NonNull LoadBillsStatsCallBack callBack) {
         execute(() -> {
             Log.d(TAG, "getBillsAnnualStats: in " + currentThread().getName());
             DateTime start = new DateTime(year, 1, 1, 0, 0, 0);
@@ -470,7 +470,7 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void getBillStats(DateTime start, DateTime end, LoadBillStatsCallBack callBack) {
+    public void getBillStats(@NonNull DateTime start, @NonNull DateTime end, @NonNull LoadBillStatsCallBack callBack) {
         execute(() -> {
             Log.d(TAG, "getBillStats: in " + currentThread().getName());
             dbLock.readLock().lock();
@@ -490,7 +490,7 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void getTypesStats(DateTime start, DateTime end, boolean isExpense, LoadTypesStatsCallBack callBack) {
+    public void getTypesStats(@NonNull DateTime start, @NonNull DateTime end, boolean isExpense, @NonNull LoadTypesStatsCallBack callBack) {
         execute(() -> {
             Log.d(TAG, "getTypesStats: in " + currentThread().getName());
             dbLock.readLock().lock();
@@ -501,7 +501,7 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void getTypeStats(DateTime start, DateTime end, UUID typeId, LoadTypeStatsCallBack callBack) {
+    public void getTypeStats(@NonNull DateTime start, @NonNull DateTime end, @NonNull UUID typeId, @NonNull LoadTypeStatsCallBack callBack) {
         execute(() -> {
             Log.d(TAG, "getTypeStats: in " + currentThread().getName());
             dbLock.readLock().lock();
@@ -513,7 +513,7 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void getTypeAverage(DateTime start, DateTime end, UUID typeId, LoadTypeStatsCallBack callBack) {
+    public void getTypeAverage(@NonNull DateTime start, @NonNull DateTime end, @NonNull UUID typeId, @NonNull LoadTypeStatsCallBack callBack) {
         execute(() -> {
             Log.d(TAG, "getTypeAverage: in " + currentThread().getName());
             dbLock.readLock().lock();
@@ -525,7 +525,7 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void getAccountStats(UUID accountId, DateTime start, DateTime end, LoadAccountStatsCallBack callBack) {
+    public void getAccountStats(@NonNull UUID accountId, @NonNull DateTime start, @NonNull DateTime end, @NonNull LoadAccountStatsCallBack callBack) {
         execute(() -> {
             Log.d(TAG, "getAccountStats: in " + currentThread().getName());
             dbLock.readLock().lock();
@@ -545,12 +545,12 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void changeCurrencyPosition(Currency a, Currency b) {
+    public void changeCurrencyPosition(@NonNull Currency a, @NonNull Currency b) {
         execute(() -> {
             dbLock.writeLock().lock();
             Log.d(TAG, "changeCurrencyPosition: in " + currentThread().getName());
-            Integer i = a.getId();
-            Integer j = b.getId();
+            int i = a.getId();
+            int j = b.getId();
             a.setId(j);
             b.setId(i);
             mCurrencyRateDao.updateCurrencyId(a.getName(), -1);
@@ -561,7 +561,7 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void updateCurrencies(Context context, UpdateCallback callback) {
+    public void updateCurrencies(@NonNull Context context, @NonNull UpdateCallback callback) {
         mExecutors.networkIO().execute(() -> {
             CurrencyRequest request = new CurrencyRequest(context);
             if (request.checkConnection()) {
@@ -603,7 +603,7 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void getCurrencyInfo(String name, LoadCurrencyInfoCallback callback) {
+    public void getCurrencyInfo(@NonNull String name, @NonNull LoadCurrencyInfoCallback callback) {
         execute(() -> {
             CurrencyInfo info = mCurrencyInfoDao.getInfo(name);
             if (info != null) {
@@ -615,7 +615,7 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void getFavouriteCurrenciesInfo(LoadCurrenciesInfoCallback callback) {
+    public void getFavouriteCurrenciesInfo(@NonNull LoadCurrenciesInfoCallback callback) {
         execute(() -> {
             List<Currency> favouriteCurrencies = mCurrencyRateDao.getFavouriteCurrencies(true);
             List<CurrencyInfo> infos = new ArrayList<>();
@@ -632,13 +632,13 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void getFavouriteCurrenciesExchangeRate(String from, LoadExchangeRatesCallback callback) {
+    public void getFavouriteCurrenciesExchangeRate(@NonNull String from, @NonNull LoadExchangeRatesCallback callback) {
         execute(() -> {
             Currency currencyFrom = mCurrencyRateDao.getCurrency(from);
             List<Currency> favouriteCurrencies = mCurrencyRateDao.getFavouriteCurrencies(true);
             if (currencyFrom != null && favouriteCurrencies != null && !favouriteCurrencies.isEmpty()) {
                 for (Currency currencyTo : favouriteCurrencies) {
-                    Double rate = currencyTo.getExchangeRate() / currencyFrom.getExchangeRate();
+                    double rate = currencyTo.getExchangeRate() / currencyFrom.getExchangeRate();
                     currencyTo.setExchangeRate(rate);
                     currencyTo.setSource(from);
                 }
@@ -650,13 +650,13 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void getCurrenciesExchangeRate(String from, LoadExchangeRatesCallback callback) {
+    public void getCurrenciesExchangeRate(@NonNull String from, @NonNull LoadExchangeRatesCallback callback) {
         execute(() -> {
             Currency currencyFrom = mCurrencyRateDao.getCurrency(from);
             List<Currency> currencies = mCurrencyRateDao.getCurrencies();
             if (currencyFrom != null && currencies != null && !currencies.isEmpty()) {
                 for (Currency currencyTo : currencies) {
-                    Double rate = currencyTo.getExchangeRate() / currencyFrom.getExchangeRate();
+                    double rate = currencyTo.getExchangeRate() / currencyFrom.getExchangeRate();
                     currencyTo.setExchangeRate(rate);
                     currencyTo.setSource(from);
                 }
@@ -668,12 +668,12 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void getCurrencyExchangeRate(String from, String to, LoadExchangeRateCallback callback) {
+    public void getCurrencyExchangeRate(@NonNull String from, @NonNull String to, @NonNull LoadExchangeRateCallback callback) {
         execute(() -> {
             Currency currencyFrom = mCurrencyRateDao.getCurrency(from);
             Currency currencyTo = mCurrencyRateDao.getCurrency(to);
             if (currencyFrom != null && currencyTo != null) {
-                Double rate = currencyTo.getExchangeRate() / currencyFrom.getExchangeRate();
+                double rate = currencyTo.getExchangeRate() / currencyFrom.getExchangeRate();
                 Currency currency = new Currency(from, to, rate);
                 mExecutors.mainThread().execute(() -> callback.onExchangeRateLoaded(currency));
             } else {
@@ -683,7 +683,7 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void getCurrency(String name, LoadExchangeRateCallback callback) {
+    public void getCurrency(@NonNull String name, @NonNull LoadExchangeRateCallback callback) {
         execute(() -> {
             Currency currency = mCurrencyRateDao.getCurrency(name);
             if (currency == null) {
@@ -741,7 +741,7 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public void initCurrenciesAndInfos(Context context) {
+    public void initCurrenciesAndInfos(@NonNull Context context) {
         execute(() -> {
             try (InputStream inputStream = context.getResources().getAssets().open("currency/default_rate.json")) {
                 Reader reader = new InputStreamReader(inputStream);

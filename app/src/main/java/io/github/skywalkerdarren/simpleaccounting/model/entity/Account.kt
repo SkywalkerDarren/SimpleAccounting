@@ -18,12 +18,12 @@ import java.util.*
  */
 @Entity(tableName = "account", indices = [Index(value = ["uuid"], unique = true)])
 data class Account @JvmOverloads constructor(
-        @ColumnInfo(name = "name") var name: String? = null,
-        @ColumnInfo(name = "balance_hint") var balanceHint: String? = null,
-        @ColumnInfo(name = "balance") var balance: BigDecimal? = null,
-        @ColumnInfo(name = "color_id") @ColorRes var colorId: Int? = R.color.white,
-        @ColumnInfo(name = "image") var bitmap: String? = null,
-        @ColumnInfo(name = "uuid") var uuid: UUID? = UUID.randomUUID(),
+        @ColumnInfo(name = "name") var name: String,
+        @ColumnInfo(name = "balance_hint") var balanceHint: String,
+        @ColumnInfo(name = "balance") var balance: BigDecimal = BigDecimal.ZERO,
+        @ColumnInfo(name = "color_id") @ColorRes var colorId: Int = R.color.white,
+        @ColumnInfo(name = "image") var bitmap: String,
+        @ColumnInfo(name = "uuid") var uuid: UUID = UUID.randomUUID(),
         @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) var id: Int = 0
 ) : Serializable {
     fun plusBalance(balance: BigDecimal) {
