@@ -63,16 +63,16 @@ public class Demo {
         BigDecimal balance;
         if (getRandomInt(10) > 1) {
             type = mExpense.get(getRandomInt(mExpense.size()));
-            type.setIsExpense(true);
+            type.setExpense(true);
             // 1-201
             balance = new BigDecimal(getRandomFloat(200, 1));
         } else {
             type = mIncome.get(getRandomInt(mIncome.size()));
-            type.setIsExpense(false);
+            type.setExpense(false);
             // 500-1.5k
             balance = new BigDecimal(getRandomFloat(1000, 500));
         }
-        bill.setTypeId(type.getUUID());
+        bill.setTypeId(type.getUuid());
         bill.setName(type.getName());
         bill.setBalance(balance);
 

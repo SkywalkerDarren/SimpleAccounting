@@ -41,7 +41,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
                 android:contentDescription="@string/type_image"
-                android:src="@{type.FOLDER + type.assetsName}"
+                android:src="@{type.assetsName}"
                 tools:src="@drawable/account" />
 
         </androidx.cardview.widget.CardView>

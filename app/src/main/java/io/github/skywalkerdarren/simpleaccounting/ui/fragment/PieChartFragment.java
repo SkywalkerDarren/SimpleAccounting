@@ -132,7 +132,7 @@ public class PieChartFragment extends BaseFragment {
 
     @Override
     protected void updateUI() {
-        mViewModel.start(mStartDateTime, mEndDateTime, mIsExpense);
+        mViewModel.start(mStartDateTime, mEndDateTime, mIsExpense, requireContext());
 
         mViewModel.getPieData().observe(this, pieData -> {
             mPieChart.setData(pieData);

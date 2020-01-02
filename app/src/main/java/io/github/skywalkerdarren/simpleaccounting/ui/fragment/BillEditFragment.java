@@ -304,7 +304,7 @@ public class BillEditFragment extends BaseFragment {
             mViewModel.getAccounts().observe(this, accounts -> {
                 mBill.setAccountId(accounts.get(0).getUuid());
                 mViewModel.getTypes(true).observe(this, types -> {
-                    mBill.setTypeId(types.get(0).getUUID());
+                    mBill.setTypeId(types.get(0).getUuid());
                     mViewModel.setBill(mBill);
                 });
             });

@@ -1,7 +1,6 @@
 package io.github.skywalkerdarren.simpleaccounting.model;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -705,38 +704,38 @@ public class AppRepository implements AppDataSource {
                     BigDecimal.ZERO, R.color.lightblue500, "account/alipay.png"));
             mAccountDao.newAccount(new Account("微信", "在线支付余额",
                     BigDecimal.ZERO, R.color.lightgreen500, "account/wechat.png"));
-            mTypeDao.newType(new Type("吃喝", Color.rgb(0xe6, 0xc4, 0x53),
-                    true, "diet.png"));
-            mTypeDao.newType(new Type("娱乐", Color.rgb(0x73, 0xc8, 0xd5),
-                    true, "entertainment.png"));
-            mTypeDao.newType(new Type("交通", Color.rgb(0xf9, 0xd5, 0x5d),
-                    true, "traffic.png"));
-            mTypeDao.newType(new Type("日用品", Color.rgb(0xf0, 0x8d, 0x78),
-                    true, "daily_necessities.png"));
-            mTypeDao.newType(new Type("化妆护肤", Color.rgb(0xfe, 0x4c, 0x5e),
-                    true, "make_up.png"));
-            mTypeDao.newType(new Type("医疗", Color.rgb(0xc0, 0xf1, 0xf9),
-                    true, "medical.png"));
-            mTypeDao.newType(new Type("服饰", Color.rgb(0x7e, 0xb7, 0x9f),
-                    true, "apparel.png"));
-            mTypeDao.newType(new Type("话费", Color.rgb(0x83, 0x6c, 0xab),
-                    true, "calls.png"));
-            mTypeDao.newType(new Type("红包", Color.rgb(0xf7, 0x2e, 0x42),
-                    true, "red_package.png"));
-            mTypeDao.newType(new Type("其他", Color.rgb(0xcd, 0x53, 0x3b),
-                    true, "other.png"));
-            mTypeDao.newType(new Type("工资", Color.rgb(0x97, 0x73, 0x69),
-                    false, "wage.png"));
-            mTypeDao.newType(new Type("兼职", Color.rgb(0xa7, 0xee, 0xf9),
-                    false, "part_time.png"));
-            mTypeDao.newType(new Type("奖金", Color.rgb(0xf4, 0xbc, 0xb1),
-                    false, "prize.png"));
-            mTypeDao.newType(new Type("理财投资", Color.rgb(0xff, 0xec, 0xab),
-                    false, "invest.png"));
-            mTypeDao.newType(new Type("红包", Color.rgb(0xf7, 0x2e, 0x42),
-                    false, "red_package.png"));
-            mTypeDao.newType(new Type("其他", Color.rgb(0xcd, 0x53, 0x3b),
-                    false, "other.png"));
+            mTypeDao.newType(new Type("吃喝", R.color.diet,
+                    true, "type/diet.png"));
+            mTypeDao.newType(new Type("娱乐", R.color.entertainment,
+                    true, "type/entertainment.png"));
+            mTypeDao.newType(new Type("交通", R.color.traffic,
+                    true, "type/traffic.png"));
+            mTypeDao.newType(new Type("日用品", R.color.daily_necessities,
+                    true, "type/daily_necessities.png"));
+            mTypeDao.newType(new Type("化妆护肤", R.color.make_up,
+                    true, "type/make_up.png"));
+            mTypeDao.newType(new Type("医疗", R.color.medical,
+                    true, "type/medical.png"));
+            mTypeDao.newType(new Type("服饰", R.color.apparel,
+                    true, "type/apparel.png"));
+            mTypeDao.newType(new Type("话费", R.color.calls,
+                    true, "type/calls.png"));
+            mTypeDao.newType(new Type("红包", R.color.red_package,
+                    true, "type/red_package.png"));
+            mTypeDao.newType(new Type("其他", R.color.other,
+                    true, "type/other.png"));
+            mTypeDao.newType(new Type("工资", R.color.wage,
+                    false, "type/wage.png"));
+            mTypeDao.newType(new Type("兼职", R.color.part_time,
+                    false, "type/part_time.png"));
+            mTypeDao.newType(new Type("奖金", R.color.prize,
+                    false, "type/prize.png"));
+            mTypeDao.newType(new Type("理财投资", R.color.invest,
+                    false, "type/invest.png"));
+            mTypeDao.newType(new Type("红包", R.color.red_package,
+                    false, "type/red_package.png"));
+            mTypeDao.newType(new Type("其他", R.color.other,
+                    false, "type/other.png"));
             dbLock.writeLock().unlock();
         });
     }
@@ -800,11 +799,11 @@ public class AppRepository implements AppDataSource {
                 }
 
                 for (String key : codeMap.keySet()) {
-                    CurrencyInfo info = new CurrencyInfo();
-                    info.setName(key);
-                    info.setFlagLocation(flagsMap.get(key));
-                    info.setFullName(codeMap.get(key));
-                    info.setFullNameCN(translationCnCodeMap.get(key));
+                    CurrencyInfo info = new CurrencyInfo(
+                            key,
+                            codeMap.get(key),
+                            translationCnCodeMap.get(key),
+                            flagsMap.get(key));
                     mCurrencyInfoDao.addInfo(info);
                 }
 

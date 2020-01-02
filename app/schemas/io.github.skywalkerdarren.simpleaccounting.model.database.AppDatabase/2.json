@@ -2,47 +2,47 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "2b9dd0e5d0efb7d2e2262fa25f5ce7ee",
+    "identityHash": "b24bc935f4aa241063d70904f0461083",
     "entities": [
       {
         "tableName": "type",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `uuid` TEXT, `name` TEXT, `color_id` INTEGER NOT NULL, `is_expense` INTEGER NOT NULL, `assets_name` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `color_id` INTEGER NOT NULL, `is_expense` INTEGER NOT NULL, `assets_name` TEXT NOT NULL, `uuid` TEXT NOT NULL)",
         "fields": [
           {
-            "fieldPath": "mId",
+            "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "mUUID",
-            "columnName": "uuid",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "mName",
+            "fieldPath": "name",
             "columnName": "name",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
-            "fieldPath": "mColorId",
+            "fieldPath": "colorId",
             "columnName": "color_id",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "mIsExpense",
+            "fieldPath": "isExpense",
             "columnName": "is_expense",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "mAssetsName",
+            "fieldPath": "assetsName",
             "columnName": "assets_name",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
+          },
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -240,37 +240,37 @@
       },
       {
         "tableName": "currency",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `source` TEXT, `name` TEXT, `exchange_rate` REAL, `favourite` INTEGER)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `favourite` INTEGER NOT NULL, `source` TEXT NOT NULL, `name` TEXT NOT NULL, `exchange_rate` REAL NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "source",
-            "columnName": "source",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "exchangeRate",
-            "columnName": "exchange_rate",
-            "affinity": "REAL",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "favourite",
             "columnName": "favourite",
             "affinity": "INTEGER",
-            "notNull": false
+            "notNull": true
+          },
+          {
+            "fieldPath": "source",
+            "columnName": "source",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "exchangeRate",
+            "columnName": "exchange_rate",
+            "affinity": "REAL",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -301,19 +301,19 @@
       },
       {
         "tableName": "currency_info",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT, `full_name` TEXT, `full_name_cn` TEXT, `flag_location` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `full_name` TEXT, `full_name_cn` TEXT, `flag_location` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "name",
             "columnName": "name",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "fullName",
@@ -356,7 +356,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2b9dd0e5d0efb7d2e2262fa25f5ce7ee')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b24bc935f4aa241063d70904f0461083')"
     ]
   }
 }

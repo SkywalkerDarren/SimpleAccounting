@@ -12,7 +12,6 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.BillDataSource;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
-import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
 import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
@@ -75,18 +74,18 @@ public class BillDetailViewModel extends ViewModel implements BillDataSource.Loa
         mRepository.getAccount(bill.getAccountId(), account ->
                 accountName.setValue(account.getName()));
         mRepository.getType(bill.getTypeId(), type -> {
-            typeImage.setValue(Type.FOLDER + type.getAssetsName());
+            typeImage.setValue(type.getAssetsName());
             typeName.setValue(type.getName());
-            balanceColor.setValue(type.getIsExpense() ?
+            balanceColor.setValue(type.isExpense() ?
                     R.color.deeporange800 : R.color.lightgreen700);
-            expensePercentHint.setValue(type.getIsExpense() ?
+            expensePercentHint.setValue(type.isExpense() ?
                     R.string.expense_percent : R.string.income_percent);
             mRepository.getAccountStats(bill.getAccountId(), start, end, accountStats ->
-                    accountPercent.setValue(type.getIsExpense() ?
+                    accountPercent.setValue(type.isExpense() ?
                             getPercent(bill, accountStats.getExpense()) :
                             getPercent(bill, accountStats.getIncome())));
             mRepository.getBillStats(start, end, billStats ->
-                    expensePercent.setValue(type.getIsExpense() ?
+                    expensePercent.setValue(type.isExpense() ?
                             getPercent(bill, billStats.getExpense()) :
                             getPercent(bill, billStats.getIncome())));
         });

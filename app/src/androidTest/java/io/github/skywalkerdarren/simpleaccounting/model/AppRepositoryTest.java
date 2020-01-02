@@ -67,7 +67,7 @@ public class AppRepositoryTest {
     }
 
     private void assertType(Type expect) {
-        assertThat(expect.getUUID(), is(mBill1.getTypeId()));
+        assertThat(expect.getUuid(), is(mBill1.getTypeId()));
     }
 
     @Before
@@ -76,8 +76,8 @@ public class AppRepositoryTest {
         Account account2 = new Account("name2", "balanceHint2", BigDecimal.ONE, R.color.white, "image2");
         Type type1 = new Type("name1", R.color.darkorchid, true, "assetsName");
         Type type2 = new Type("name2", R.color.darkorchid, false, "assetsName");
-        mBill1 = new Bill(type1.getUUID(), account1.getUuid(), now, "name1", new BigDecimal(100), "remark");
-        mBill2 = new Bill(type2.getUUID(), account2.getUuid(), now.minusDays(1), "name2", new BigDecimal(200), "remark");
+        mBill1 = new Bill(type1.getUuid(), account1.getUuid(), now, "name1", new BigDecimal(100), "remark");
+        mBill2 = new Bill(type2.getUuid(), account2.getUuid(), now.minusDays(1), "name2", new BigDecimal(200), "remark");
 
         AppRepository.clearInstance();
         mRepository = AppRepository.getInstance(new SingleExecutors(), mDatabase);
@@ -156,7 +156,7 @@ public class AppRepositoryTest {
 
     @Test
     public void addBill() {
-        Bill bill = new Bill(TYPE.getUUID(), ACCOUNT.getUuid(), now, "name", BigDecimal.ZERO, "remark");
+        Bill bill = new Bill(TYPE.getUuid(), ACCOUNT.getUuid(), now, "name", BigDecimal.ZERO, "remark");
         mRepository.addBill(bill);
         mRepository.getBill(bill.getUuid(), b -> assertBill(bill, b));
     }
@@ -170,7 +170,7 @@ public class AppRepositoryTest {
 
     @Test
     public void updateBill() {
-        mBill1.setTypeId(TYPE.getUUID());
+        mBill1.setTypeId(TYPE.getUuid());
         mBill1.setAccountId(ACCOUNT.getUuid());
         mBill1.setBalance(BigDecimal.ONE);
         mBill1.setName("name");

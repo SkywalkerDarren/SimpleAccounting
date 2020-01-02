@@ -8,8 +8,6 @@
 
         <import type="android.graphics.Color" />
 
-        <import type="io.github.skywalkerdarren.simpleaccounting.model.entity.Type" />
-
         <variable
             name="billInfo"
             type="io.github.skywalkerdarren.simpleaccounting.model.entity.BillInfo" />
@@ -58,7 +56,7 @@
                         android:id="@+id/type_image_view"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@{Type.FOLDER + billInfo.billTypeRes}"
+                        android:src="@{billInfo.billTypeRes}"
                         android:transitionName="type_image_view"
                         tools:src="@drawable/award" />
                 </FrameLayout>

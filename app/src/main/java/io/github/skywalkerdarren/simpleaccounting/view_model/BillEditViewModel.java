@@ -78,10 +78,10 @@ public class BillEditViewModel extends ViewModel {
      * @param type 设置类型
      */
     public void setType(@NonNull Type type) {
-        isExpense.setValue(type.getIsExpense());
+        isExpense.setValue(type.isExpense());
         typeName.setValue(type.getName());
-        typeImg.setValue(Type.FOLDER + type.getAssetsName());
-        typeId.setValue(type.getUUID());
+        typeImg.setValue(type.getAssetsName());
+        typeId.setValue(type.getUuid());
     }
 
 

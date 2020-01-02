@@ -1,8 +1,10 @@
 package io.github.skywalkerdarren.simpleaccounting.view_model;
 
+import android.content.Context;
 import android.graphics.Color;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -38,14 +40,14 @@ public class ChartViewModel extends ViewModel {
         return mPieData;
     }
 
-    public void start(DateTime startDateTime, DateTime endDateTime, boolean isExpense) {
+    public void start(DateTime startDateTime, DateTime endDateTime, boolean isExpense, Context context) {
         List<PieEntry> pieEntries = new ArrayList<>(10);
         List<Integer> colorList = new ArrayList<>(10);
         mRepository.getTypesStats(startDateTime, endDateTime, isExpense, typesStats -> {
             for (TypeStats stats : typesStats) {
                 mRepository.getType(stats.getTypeId(), type -> {
                     PieEntry entry = new PieEntry(stats.getBalance().floatValue(), type.getName());
-                    colorList.add(type.getColorId());
+                    colorList.add(ContextCompat.getColor(context, type.getColorId()));
                     pieEntries.add(entry);
                     PieDataSet pieDataSet = getPieDataSet(pieEntries, colorList);
                     pieDataSet.notifyDataSetChanged();

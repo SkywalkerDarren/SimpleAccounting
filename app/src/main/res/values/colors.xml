@@ -577,4 +577,19 @@
     <!--灰色8f -->
     <color name="gray_8f">#8f8f8f</color>
 
+    <color name="diet">#e6c453</color>
+    <color name="entertainment">#73c8d5</color>
+    <color name="traffic">#f9d55d</color>
+    <color name="daily_necessities">#f08d78</color>
+    <color name="make_up">#fe4c5e</color>
+    <color name="medical">#c0f1f9</color>
+    <color name="apparel">#7eb79f</color>
+    <color name="calls">#836cab</color>
+    <color name="wage">#977369</color>
+    <color name="part_time">#a7eef9</color>
+    <color name="prize">#f4bcb1</color>
+    <color name="invest">#ffecab</color>
+    <color name="red_package">#f72e42</color>
+    <color name="other">#cd533b</color>
+
 </resources>
