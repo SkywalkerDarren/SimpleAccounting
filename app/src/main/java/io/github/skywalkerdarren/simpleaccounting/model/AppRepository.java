@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -789,7 +790,7 @@ public class AppRepository implements AppDataSource {
                 Reader translationCnReader = new InputStreamReader(translationCnIs);
                 Map<String, String> codeMap = JsonConvertor.toCurrencyCodeMap(nameReader);
                 Map<String, String> translationCnCodeMap = JsonConvertor.toCurrencyCodeMap(translationCnReader);
-                Map<String, String> flagsMap = new HashMap<>(flags.length);
+                Map<String, String> flagsMap = new HashMap<>(Objects.requireNonNull(flags).length);
 
                 for (String s : flags) {
                     String key = s.replace(".png", "");
