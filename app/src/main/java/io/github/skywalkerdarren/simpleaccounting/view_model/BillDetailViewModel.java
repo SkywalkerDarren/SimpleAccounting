@@ -47,7 +47,7 @@ public class BillDetailViewModel extends ViewModel implements BillDataSource.Loa
     }
 
     public void start(Bill b) {
-        mRepository.getBill(b.getUUID(), this);
+        mRepository.getBill(b.getUuid(), this);
     }
 
     private void setLoading() {

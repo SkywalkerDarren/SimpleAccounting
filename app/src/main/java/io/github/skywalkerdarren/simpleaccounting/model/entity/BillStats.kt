@@ -2,7 +2,7 @@ package io.github.skywalkerdarren.simpleaccounting.model.entity
 
 import java.math.BigDecimal
 
-data class AccountStats @JvmOverloads constructor(
+data class BillStats @JvmOverloads constructor(
         var income: BigDecimal = BigDecimal.ZERO,
         var expense: BigDecimal = BigDecimal.ZERO
 ) {

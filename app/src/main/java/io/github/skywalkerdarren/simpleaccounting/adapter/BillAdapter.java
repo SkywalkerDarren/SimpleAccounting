@@ -102,7 +102,7 @@ public class BillAdapter extends BaseMultiItemDataBindingAdapter<BillInfo, ViewD
     }
 
     private void click(BillInfo item, ImageView imageView) {
-        mRepository.getBill(item.getUUID(), bill -> {
+        mRepository.getBill(item.getUuid(), bill -> {
             Intent intent = BillDetailActivity.newIntent(mContext,
                     bill, mX, mY, R.color.orangea200);
             intent.putExtra(BillDetailActivity.EXTRA_START_COLOR, R.color.orangea200);

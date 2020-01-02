@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "6a6e220ef2a7d96d62e984eafbb1e234",
+    "identityHash": "2b9dd0e5d0efb7d2e2262fa25f5ce7ee",
     "entities": [
       {
         "tableName": "type",
@@ -130,55 +130,55 @@
       },
       {
         "tableName": "bill",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `uuid` TEXT, `type_id` TEXT, `account_id` TEXT, `date` INTEGER, `name` TEXT, `balance` TEXT, `remark` TEXT, FOREIGN KEY(`type_id`) REFERENCES `type`(`uuid`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`account_id`) REFERENCES `account`(`uuid`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`type_id` TEXT, `account_id` TEXT, `date` INTEGER, `name` TEXT, `balance` TEXT, `remark` TEXT, `uuid` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, FOREIGN KEY(`type_id`) REFERENCES `type`(`uuid`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`account_id`) REFERENCES `account`(`uuid`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
-            "fieldPath": "mId",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "mUUID",
-            "columnName": "uuid",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "mTypeId",
+            "fieldPath": "typeId",
             "columnName": "type_id",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "mAccountId",
+            "fieldPath": "accountId",
             "columnName": "account_id",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "mDate",
+            "fieldPath": "date",
             "columnName": "date",
             "affinity": "INTEGER",
             "notNull": false
           },
           {
-            "fieldPath": "mName",
+            "fieldPath": "name",
             "columnName": "name",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "mBalance",
+            "fieldPath": "balance",
             "columnName": "balance",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "mRemark",
+            "fieldPath": "remark",
             "columnName": "remark",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -356,7 +356,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6a6e220ef2a7d96d62e984eafbb1e234')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2b9dd0e5d0efb7d2e2262fa25f5ce7ee')"
     ]
   }
 }

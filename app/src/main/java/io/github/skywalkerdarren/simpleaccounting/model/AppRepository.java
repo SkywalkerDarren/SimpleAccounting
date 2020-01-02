@@ -61,7 +61,7 @@ public class AppRepository implements AppDataSource {
     private static final boolean DEBUG = false;
     private static Map<UUID, Account> sAccountCache = new ConcurrentHashMap<>();
     private static Map<String, List<Account>> sAccountsCache = new ConcurrentHashMap<>();
-    private static Map<UUID, Bill> sBillCache = new ConcurrentHashMap<>();
+    //private static Map<UUID, Bill> sBillCache = new ConcurrentHashMap<>();
     private static Map<UUID, Type> sTypeCache = new ConcurrentHashMap<>();
     private static volatile AppRepository INSTANCE;
     private static Map<String, List<Type>> sTypesCache = new ConcurrentHashMap<>();
@@ -113,7 +113,7 @@ public class AppRepository implements AppDataSource {
         INSTANCE = null;
         sTypesCache.clear();
         sAccountsCache.clear();
-        sBillCache.clear();
+        //sBillCache.clear();
         sTypeCache.clear();
         sAccountCache.clear();
     }
@@ -180,6 +180,7 @@ public class AppRepository implements AppDataSource {
                     BigDecimal expense = getBillStats(date, date.plusDays(1)).getExpense();
                     billInfoList.add(new BillInfo(new DateHeaderDivider(date, income, expense)));
                 }
+                Log.d(TAG, "getBillInfoList: " + bill);
                 billInfoList.add(new BillInfo(bill, type));
             }
             dbLock.readLock().unlock();
@@ -300,18 +301,19 @@ public class AppRepository implements AppDataSource {
             Log.d(TAG, "getBill: in " + currentThread().getName());
 
             dbLock.readLock().lock();
-            Bill bill = sBillCache.get(id);
-            if (bill == null) {
-                bill = mBillDao.getBill(id);
-                try {
-                    sBillCache.put(id, bill);
-                } catch (NullPointerException ignore) {
-
-                }
-            }
+            //Bill bill = sBillCache.get(id);
+            //if (bill == null) {
+            //    bill = mBillDao.getBill(id);
+            //    try {
+            //        sBillCache.put(id, bill);
+            //    } catch (NullPointerException ignore) {
+            //
+            //    }
+            //}
+            Bill bill = mBillDao.getBill(id);
             dbLock.readLock().unlock();
 
-            mExecutors.mainThread().execute(() -> callBack.onBillLoaded(sBillCache.get(id)));
+            mExecutors.mainThread().execute(() -> callBack.onBillLoaded(bill));
         });
     }
 
@@ -321,7 +323,7 @@ public class AppRepository implements AppDataSource {
             Log.d(TAG, "addBill: in " + currentThread().getName());
             dbLock.writeLock().lock();
             mBillDao.addBill(bill);
-            sBillCache.put(bill.getUUID(), bill);
+            //sBillCache.put(bill.getUuid(), bill);
             dbLock.writeLock().unlock();
 
         });
@@ -333,7 +335,7 @@ public class AppRepository implements AppDataSource {
             Log.d(TAG, "delBill: in " + currentThread().getName());
             dbLock.writeLock().lock();
             mBillDao.delBill(id);
-            sBillCache.remove(id);
+            //sBillCache.remove(id);
             dbLock.writeLock().unlock();
 
         });
@@ -342,10 +344,10 @@ public class AppRepository implements AppDataSource {
     @Override
     public void updateBill(Bill bill) {
         execute(() -> {
-            Log.d(TAG, "updateBill: in " + currentThread().getName());
             dbLock.writeLock().lock();
+            Log.d(TAG, "updateBill: in " + currentThread().getName() + bill);
             mBillDao.updateBill(bill);
-            sBillCache.put(bill.getUUID(), bill);
+            //sBillCache.put(bill.getUuid(), bill);
             dbLock.writeLock().unlock();
 
         });
@@ -357,7 +359,7 @@ public class AppRepository implements AppDataSource {
             Log.d(TAG, "clearBill: in " + currentThread().getName());
             dbLock.writeLock().lock();
             mBillDao.clearBill();
-            sBillCache.clear();
+            //sBillCache.clear();
             dbLock.writeLock().unlock();
         });
     }

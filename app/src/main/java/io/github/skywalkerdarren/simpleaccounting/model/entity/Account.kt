@@ -6,6 +6,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import io.github.skywalkerdarren.simpleaccounting.R
+import java.io.Serializable
 import java.math.BigDecimal
 import java.util.*
 
@@ -24,7 +25,7 @@ data class Account @JvmOverloads constructor(
         @ColumnInfo(name = "image") var bitmap: String? = null,
         @ColumnInfo(name = "uuid") var uuid: UUID? = UUID.randomUUID(),
         @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) var id: Int = 0
-) {
+) : Serializable {
     fun plusBalance(balance: BigDecimal) {
         this.balance = balance.add(balance)
     }

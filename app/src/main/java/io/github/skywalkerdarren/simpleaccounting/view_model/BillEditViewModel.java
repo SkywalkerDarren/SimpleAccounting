@@ -62,7 +62,7 @@ public class BillEditViewModel extends ViewModel {
         balance.setValue(bill.getBalance() == null ? null : bill.getBalance().toString());
         date.setValue(bill.getDate());
         remark.setValue(bill.getRemark());
-        billId.setValue(bill.getUUID());
+        billId.setValue(bill.getUuid());
     }
 
     /**
@@ -171,7 +171,7 @@ public class BillEditViewModel extends ViewModel {
                 mRepository.addBill(bill);
             } else {
                 bill.setId(b.getId());
-                bill.setUUID(b.getUUID());
+                bill.setUuid(b.getUuid());
                 mRepository.updateBill(bill);
             }
         });

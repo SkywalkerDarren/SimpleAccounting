@@ -150,20 +150,20 @@ public class AppRepositoryTest {
 
     @Test
     public void getBill() {
-        mRepository.getBill(mBill1.getUUID(), bill -> assertBill(mBill1, bill));
-        mRepository.getBill(mBill2.getUUID(), bill -> assertBill(mBill2, bill));
+        mRepository.getBill(mBill1.getUuid(), bill -> assertBill(mBill1, bill));
+        mRepository.getBill(mBill2.getUuid(), bill -> assertBill(mBill2, bill));
     }
 
     @Test
     public void addBill() {
         Bill bill = new Bill(TYPE.getUUID(), ACCOUNT.getUuid(), now, "name", BigDecimal.ZERO, "remark");
         mRepository.addBill(bill);
-        mRepository.getBill(bill.getUUID(), b -> assertBill(bill, b));
+        mRepository.getBill(bill.getUuid(), b -> assertBill(bill, b));
     }
 
     @Test
     public void delBill() {
-        mRepository.delBill(mBill2.getUUID());
+        mRepository.delBill(mBill2.getUuid());
         mRepository.getsBills(now.getYear(), now.getMonthOfYear(), bills ->
                 assertEquals(1, bills.size()));
     }
@@ -177,7 +177,7 @@ public class AppRepositoryTest {
         mBill1.setDate(now.plusDays(1));
         mBill1.setRemark("update");
         mRepository.updateBill(mBill1);
-        mRepository.getBill(mBill1.getUUID(), bill -> assertBill(mBill1, bill));
+        mRepository.getBill(mBill1.getUuid(), bill -> assertBill(mBill1, bill));
     }
 
     @Test
