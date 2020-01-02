@@ -49,7 +49,7 @@ public class BillEditViewModel extends ViewModel {
         mRepository = repository;
         mRepository.getTypes(true, list -> expenseTypes.setValue(list));
         mRepository.getTypes(false, list -> incomeTypes.setValue(list));
-        mRepository.getAccounts(accounts1 -> accounts.setValue(accounts1));
+        mRepository.getAccounts(accountList -> accounts.setValue(accountList));
     }
 
     public void setBill(@NonNull Bill bill) {

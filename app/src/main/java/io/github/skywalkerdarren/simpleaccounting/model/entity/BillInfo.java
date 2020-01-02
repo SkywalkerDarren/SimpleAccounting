@@ -25,7 +25,7 @@ import static io.github.skywalkerdarren.simpleaccounting.adapter.BillAdapter.WIT
  * @date 2018/3/17
  */
 
-public class BillInfo implements MultiItemEntity {
+public final class BillInfo implements MultiItemEntity {
     private int mType;
 
     private UUID mUUID;

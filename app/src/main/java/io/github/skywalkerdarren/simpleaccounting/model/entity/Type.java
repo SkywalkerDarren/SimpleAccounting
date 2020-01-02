@@ -18,7 +18,7 @@ import java.util.UUID;
  */
 
 @Entity(tableName = "type", indices = @Index(value = "uuid", unique = true))
-public class Type {
+public final class Type {
     @Ignore
     public static final String FOLDER = "type/";
     @Ignore

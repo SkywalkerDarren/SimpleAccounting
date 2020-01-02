@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 import java.io.Serializable;
 
 @Entity(tableName = "currency_info", indices = @Index(value = "name", unique = true))
-public class CurrencyInfo implements Serializable {
+public final class CurrencyInfo implements Serializable {
     @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)
     private Integer id;

@@ -27,7 +27,7 @@ import static androidx.room.ForeignKey.CASCADE;
 @Entity(tableName = "bill", indices = {@Index(value = "uuid", unique = true), @Index("type_id"), @Index("account_id")}, foreignKeys = {
         @ForeignKey(entity = Type.class, parentColumns = "uuid", childColumns = "type_id", onDelete = CASCADE, onUpdate = CASCADE),
         @ForeignKey(entity = Account.class, parentColumns = "uuid", childColumns = "account_id", onDelete = CASCADE, onUpdate = CASCADE)})
-public class Bill implements Serializable {
+public final class Bill implements Serializable {
 
     @NonNull
     @ColumnInfo(name = "id")

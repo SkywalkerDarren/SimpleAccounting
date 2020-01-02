@@ -19,7 +19,7 @@ import java.util.UUID;
  * @date 2018/3/24
  */
 @Entity(tableName = "account", indices = @Index(value = "uuid", unique = true))
-public class Account {
+public final class Account {
     @Ignore
     public static final String FOLDER = "account/";
     @Ignore

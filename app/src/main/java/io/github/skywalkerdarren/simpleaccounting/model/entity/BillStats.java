@@ -2,7 +2,7 @@ package io.github.skywalkerdarren.simpleaccounting.model.entity;
 
 import java.math.BigDecimal;
 
-public class BillStats {
+public final class BillStats {
     private BigDecimal income = BigDecimal.ZERO;
     private BigDecimal expense = BigDecimal.ZERO;
     private BigDecimal sum = BigDecimal.ZERO;
