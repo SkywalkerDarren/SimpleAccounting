@@ -234,13 +234,13 @@ public class AppRepositoryTest {
     @Test
     public void getTypeStats() {
         mRepository.getTypeStats(now.minusDays(2), now.plusDays(2), mBill1.getTypeId(), typeStats ->
-                assertEquals(100, typeStats.getBalance().intValue()));
+                assertEquals(100, typeStats.balance.intValue()));
     }
 
     @Test
     public void getTypeAverage() {
         mRepository.getTypeStats(now.minusDays(2), now.plusDays(2), mBill1.getTypeId(), typeStats ->
-                assertEquals(100, typeStats.getBalance().intValue()));
+                assertEquals(100, typeStats.balance.intValue()));
     }
 
     @Test
