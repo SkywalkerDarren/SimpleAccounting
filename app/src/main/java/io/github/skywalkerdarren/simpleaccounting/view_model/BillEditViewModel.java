@@ -73,7 +73,7 @@ public class BillEditViewModel extends ViewModel {
     public void setAccount(@NonNull Account account) {
         accountImg.setValue(FOLDER + account.getBitmap());
         accountColor.setValue(account.getColorId());
-        accountId.setValue(account.getUUID());
+        accountId.setValue(account.getUuid());
     }
 
     /**

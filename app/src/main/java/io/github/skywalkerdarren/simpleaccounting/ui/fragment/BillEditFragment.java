@@ -302,7 +302,7 @@ public class BillEditFragment extends BaseFragment {
     protected void updateUI() {
         if (mBill.getDate() == null) {
             mViewModel.getAccounts().observe(this, accounts -> {
-                mBill.setAccountId(accounts.get(0).getUUID());
+                mBill.setAccountId(accounts.get(0).getUuid());
                 mViewModel.getTypes(true).observe(this, types -> {
                     mBill.setTypeId(types.get(0).getUUID());
                     mViewModel.setBill(mBill);

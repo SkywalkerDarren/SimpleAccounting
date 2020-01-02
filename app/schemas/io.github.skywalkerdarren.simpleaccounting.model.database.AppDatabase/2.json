@@ -68,43 +68,43 @@
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `uuid` TEXT, `name` TEXT, `balance_hint` TEXT, `balance` TEXT, `image` TEXT, `color_id` INTEGER)",
         "fields": [
           {
-            "fieldPath": "mId",
+            "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "mUUID",
+            "fieldPath": "uuid",
             "columnName": "uuid",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "mName",
+            "fieldPath": "name",
             "columnName": "name",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "mBalanceHint",
+            "fieldPath": "balanceHint",
             "columnName": "balance_hint",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "mBalance",
+            "fieldPath": "balance",
             "columnName": "balance",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "mBitmap",
+            "fieldPath": "bitmap",
             "columnName": "image",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "mColorId",
+            "fieldPath": "colorId",
             "columnName": "color_id",
             "affinity": "INTEGER",
             "notNull": false

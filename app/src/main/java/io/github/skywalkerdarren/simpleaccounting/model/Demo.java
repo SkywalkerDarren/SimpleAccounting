@@ -76,7 +76,7 @@ public class Demo {
         bill.setName(type.getName());
         bill.setBalance(balance);
 
-        bill.setAccountId(mAccounts.get(getRandomInt(mAccounts.size())).getUUID());
+        bill.setAccountId(mAccounts.get(getRandomInt(mAccounts.size())).getUuid());
 
         long p = end.getMillis() - start.getMillis();
         p = mRandom.nextLong() % p;

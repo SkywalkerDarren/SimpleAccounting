@@ -62,7 +62,7 @@ public class AccountAdapter extends BaseDraggableDataBindingAdapter<Account, Ite
     @Override
     protected void convert(ItemAccountBinding binding, Account item) {
         binding.setAccount(item);
-        mRepository.getAccountStats(item.getUUID(), new DateTime(0), DateTime.now(), accountStats ->
+        mRepository.getAccountStats(item.getUuid(), new DateTime(0), DateTime.now(), accountStats ->
                 binding.balanceTextView.setText(FormatUtil.getNumeric(accountStats.getSum())));
     }
 }

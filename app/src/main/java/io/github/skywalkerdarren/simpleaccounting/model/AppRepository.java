@@ -258,11 +258,11 @@ public class AppRepository implements AppDataSource {
             Integer j = b.getId();
             a.setId(j);
             b.setId(i);
-            mAccountDao.updateAccountId(a.getUUID(), -1);
-            mAccountDao.updateAccountId(b.getUUID(), i);
-            mAccountDao.updateAccountId(a.getUUID(), j);
-            sAccountCache.put(a.getUUID(), a);
-            sAccountCache.put(b.getUUID(), b);
+            mAccountDao.updateAccountId(a.getUuid(), -1);
+            mAccountDao.updateAccountId(b.getUuid(), i);
+            mAccountDao.updateAccountId(a.getUuid(), j);
+            sAccountCache.put(a.getUuid(), a);
+            sAccountCache.put(b.getUuid(), b);
             sAccountsCache.clear();
             dbLock.writeLock().unlock();
         });
