@@ -38,7 +38,7 @@
                     <ImageView
                         android:layout_width="33dp"
                         android:layout_height="33dp"
-                        android:src="@drawable/wallet" />
+                        app:srcCompat="@drawable/wallet" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -53,7 +53,7 @@
                         android:id="@+id/my_account"
                         android:layout_width="33dp"
                         android:layout_height="33dp"
-                        android:src="@drawable/account" />
+                        app:srcCompat="@drawable/account" />
                 </LinearLayout>
 
                 <FrameLayout
@@ -86,7 +86,7 @@
                         android:layout_weight="1"
                         android:clickable="true"
                         android:focusable="true"
-                        android:foreground="?android:attr/selectableItemBackground"
+                        android:foreground="?attr/selectableItemBackground"
                         app:cardCornerRadius="5dp"
                         app:cardElevation="0.5dp"
                         app:cardUseCompatPadding="true"
@@ -203,7 +203,7 @@
                         android:layout_weight="1"
                         android:clickable="true"
                         android:focusable="true"
-                        android:foreground="?android:attr/selectableItemBackground"
+                        android:foreground="?attr/selectableItemBackground"
                         app:cardCornerRadius="5dp"
                         app:cardElevation="0.5dp"
                         app:cardUseCompatPadding="true"
@@ -338,6 +338,17 @@
                         android:src="@{discovery.currentCurrencyPic}"
                         tools:src="@drawable/award" />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/update_date" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{discovery.currencyDate}"
+                        tools:text="2020-1-1" />
+
                     <Space
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -346,7 +357,7 @@
                     <ImageView
                         android:layout_width="19dp"
                         android:layout_height="19dp"
-                        android:src="@drawable/ic_menu"
+                        app:srcCompat="@drawable/ic_menu"
                         android:tint="@color/gray" />
                 </LinearLayout>
 

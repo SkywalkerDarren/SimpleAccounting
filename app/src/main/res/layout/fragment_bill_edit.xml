@@ -183,7 +183,7 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="3dp"
                 android:contentDescription="@string/bills_date"
-                android:src="@drawable/detail_calendar_black"
+                app:srcCompat="@drawable/detail_calendar_black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

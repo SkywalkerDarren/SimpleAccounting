@@ -1,4 +1,5 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -25,7 +26,7 @@
                 android:id="@+id/back_image_view"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/back" />
+                app:srcCompat="@drawable/back" />
 
             <TextView
                 android:id="@+id/date_text_view"
@@ -38,13 +39,13 @@
                 android:id="@+id/custom_image_view"
                 android:layout_width="20dp"
                 android:layout_height="16dp"
-                android:src="@drawable/custom" />
+                app:srcCompat="@drawable/custom" />
 
             <ImageView
                 android:id="@+id/more_image_view"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/more" />
+                app:srcCompat="@drawable/more" />
         </LinearLayout>
 
         <FrameLayout
@@ -56,7 +57,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_gravity="center_vertical|left"
-                android:src="@drawable/back"
+                app:srcCompat="@drawable/back"
                 tools:ignore="RtlHardcoded" />
 
             <androidx.viewpager.widget.ViewPager
@@ -71,7 +72,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_gravity="center_vertical|right"
-                android:src="@drawable/more"
+                app:srcCompat="@drawable/more"
                 tools:ignore="RtlHardcoded" />
 
         </FrameLayout>

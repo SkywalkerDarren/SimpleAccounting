@@ -22,7 +22,7 @@
                 android:id="@+id/back"
                 android:layout_width="33dp"
                 android:layout_height="33dp"
-                android:src="@drawable/back" />
+                app:srcCompat="@drawable/back" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -128,7 +128,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/more" />
+                app:srcCompat="@drawable/more" />
 
         </LinearLayout>
 
@@ -156,7 +156,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/more" />
+                app:srcCompat="@drawable/more" />
 
         </LinearLayout>
 
@@ -183,7 +183,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/more" />
+                app:srcCompat="@drawable/more" />
 
         </LinearLayout>
 
@@ -211,7 +211,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/more" />
+                app:srcCompat="@drawable/more" />
 
         </LinearLayout>
 

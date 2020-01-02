@@ -14,6 +14,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.Currency;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrencyInfo;
 
 public class DiscoveryViewModel extends ViewModel {
+    private static final String defCurrency = "CNY";
     private final AppRepository mRepository;
     private final MutableLiveData<String> cumulativeDays = new MutableLiveData<>();
     private final MutableLiveData<String> monthOfAccountingCounts = new MutableLiveData<>();
@@ -24,40 +25,18 @@ public class DiscoveryViewModel extends ViewModel {
     private final MutableLiveData<String> currentCurrency = new MutableLiveData<>();
     private final MutableLiveData<String> currentCurrencyPic = new MutableLiveData<>();
     private final MutableLiveData<List<Currency>> favoriteCurrencies = new MutableLiveData<>();
+    private final MutableLiveData<String> currencyDate = new MutableLiveData<>();
 
     public DiscoveryViewModel(AppRepository repository) {
-        String defCurrency = "CNY";
         mRepository = repository;
-        mRepository.getBillsCount(count -> sumOfAccountingCounts.setValue(count + "单"));
-        DateTime dateTime = new DateTime();
-        mRepository.getBillsCount(dateTime.getYear(), dateTime.getMonthOfYear(),
-                count -> monthOfAccountingCounts.setValue(count + "单"));
-        monthReport.setValue(dateTime.getMonthOfYear() + "月报表");
-        yearReport.setValue(dateTime.getYear() + "年报表");
-        weekReport.setValue("第" + dateTime.getWeekOfWeekyear() + "周报表");
-        mRepository.getCurrencyInfo(defCurrency, new CurrencyDataSource.LoadCurrencyInfoCallback() {
-            @Override
-            public void onCurrencyInfoLoaded(CurrencyInfo info) {
-                currentCurrency.setValue(info.getFullNameCN());
-                currentCurrencyPic.setValue(info.getFlagLocation());
-            }
+    }
 
-            @Override
-            public void onDataUnavailable() {
+    public MutableLiveData<String> getCurrencyDate() {
+        return currencyDate;
+    }
 
-            }
-        });
-        mRepository.getFavouriteCurrenciesExchangeRate(defCurrency, new CurrencyDataSource.LoadExchangeRatesCallback() {
-            @Override
-            public void onExchangeRatesLoaded(List<Currency> currencies) {
-                favoriteCurrencies.setValue(currencies);
-            }
-
-            @Override
-            public void onDataUnavailable() {
-
-            }
-        });
+    public void setCurrencyDate(String date) {
+        currencyDate.setValue(date);
     }
 
     public MutableLiveData<String> getCurrentCurrency() {
@@ -98,5 +77,38 @@ public class DiscoveryViewModel extends ViewModel {
 
     public LiveData<List<Currency>> getFavoriteCurrencies() {
         return favoriteCurrencies;
+    }
+
+    public void start() {
+        mRepository.getBillsCount(count -> sumOfAccountingCounts.setValue(count + "单"));
+        DateTime dateTime = new DateTime();
+        mRepository.getBillsCount(dateTime.getYear(), dateTime.getMonthOfYear(),
+                count -> monthOfAccountingCounts.setValue(count + "单"));
+        monthReport.setValue(dateTime.getMonthOfYear() + "月报表");
+        yearReport.setValue(dateTime.getYear() + "年报表");
+        weekReport.setValue("第" + dateTime.getWeekOfWeekyear() + "周报表");
+        mRepository.getCurrencyInfo(defCurrency, new CurrencyDataSource.LoadCurrencyInfoCallback() {
+            @Override
+            public void onCurrencyInfoLoaded(CurrencyInfo info) {
+                currentCurrency.setValue(info.getFullNameCN());
+                currentCurrencyPic.setValue(info.getFlagLocation());
+            }
+
+            @Override
+            public void onDataUnavailable() {
+
+            }
+        });
+        mRepository.getFavouriteCurrenciesExchangeRate(defCurrency, new CurrencyDataSource.LoadExchangeRatesCallback() {
+            @Override
+            public void onExchangeRatesLoaded(List<Currency> currencies) {
+                favoriteCurrencies.setValue(currencies);
+            }
+
+            @Override
+            public void onDataUnavailable() {
+
+            }
+        });
     }
 }

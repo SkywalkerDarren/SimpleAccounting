@@ -121,7 +121,7 @@
                         android:layout_height="20dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="16dp"
-                        android:src="@drawable/check_account"
+                        app:srcCompat="@drawable/check_account"
                         app:layout_constraintStart_toEndOf="@id/textView1"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -182,7 +182,7 @@
                         android:id="@+id/add_account_text_view"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/account_setting"
+                        app:srcCompat="@drawable/account_setting"
                         tools:ignore="ContentDescription" />
                 </LinearLayout>
 
@@ -228,7 +228,7 @@
                         android:layout_marginBottom="4dp"
                         android:clickable="true"
                         android:focusable="true"
-                        android:foreground="?android:attr/selectableItemBackground"
+                        android:foreground="?attr/selectableItemBackground"
                         app:cardCornerRadius="5dp"
                         app:cardElevation="0dp">
 
@@ -299,7 +299,7 @@
                         android:layout_marginBottom="4dp"
                         android:clickable="true"
                         android:focusable="true"
-                        android:foreground="?android:attr/selectableItemBackground"
+                        android:foreground="?attr/selectableItemBackground"
                         app:cardCornerRadius="5dp"
                         app:cardElevation="0dp">
 
@@ -397,7 +397,7 @@
                         android:layout_marginBottom="4dp"
                         android:clickable="true"
                         android:focusable="true"
-                        android:foreground="?android:attr/selectableItemBackground"
+                        android:foreground="?attr/selectableItemBackground"
                         app:cardBackgroundColor="@color/orange500"
                         app:cardCornerRadius="5dp"
                         app:cardElevation="1dp">
@@ -427,7 +427,7 @@
                         android:layout_marginBottom="4dp"
                         android:clickable="true"
                         android:focusable="true"
-                        android:foreground="?android:attr/selectableItemBackground"
+                        android:foreground="?attr/selectableItemBackground"
                         app:cardBackgroundColor="@color/red500"
                         app:cardCornerRadius="5dp"
                         app:cardElevation="1dp">

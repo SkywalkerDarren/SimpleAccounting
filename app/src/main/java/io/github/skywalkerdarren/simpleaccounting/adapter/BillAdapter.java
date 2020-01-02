@@ -1,12 +1,12 @@
 package io.github.skywalkerdarren.simpleaccounting.adapter;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.databinding.ViewDataBinding;
+import androidx.fragment.app.FragmentActivity;
 
 import java.util.List;
 
@@ -44,14 +44,14 @@ public class BillAdapter extends BaseMultiItemDataBindingAdapter<BillInfo, ViewD
     public static final int WITH_REMARK = 1;
     private final AppRepository mRepository = AppRepository.getInstance(new AppExecutors(), mContext);
     private int mX, mY;
-    private Activity mActivity;
+    private FragmentActivity mActivity;
 
     /**
      * 将帐单列表适配到适配器中
      *
      * @param bills 含分隔符的账单信息列表
      */
-    public BillAdapter(List<BillInfo> bills, Activity activity) {
+    public BillAdapter(List<BillInfo> bills, FragmentActivity activity) {
         super(bills);
         mActivity = activity;
         addItemType(WITH_REMARK, R.layout.item_list_bill);

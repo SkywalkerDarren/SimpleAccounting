@@ -163,5 +163,6 @@
     <string name="version">v0.0.0</string>
     <string name="loading">loading...</string>
     <string name="day">天</string>
-    <string name="current_currency">当前货币:</string>
+    <string name="current_currency">当前货币：</string>
+    <string name="update_date">更新日期：</string>
 </resources>

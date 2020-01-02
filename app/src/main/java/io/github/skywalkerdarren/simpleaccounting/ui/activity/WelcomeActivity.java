@@ -1,6 +1,5 @@
 package io.github.skywalkerdarren.simpleaccounting.ui.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -25,7 +25,7 @@ import io.github.skywalkerdarren.simpleaccounting.util.PreferenceUtil;
 
 import static io.github.skywalkerdarren.simpleaccounting.util.PreferenceUtil.RUN_APP_TIMES;
 
-public class WelcomeActivity extends Activity {
+public class WelcomeActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private LinearLayout mDotLayout;
     private List<ImageView> mImageViews;

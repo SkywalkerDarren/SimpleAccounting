@@ -35,6 +35,7 @@ import io.github.skywalkerdarren.simpleaccounting.view_model.DiscoveryViewModel;
 
 import static io.github.skywalkerdarren.simpleaccounting.util.PreferenceUtil.CUMULATIVE_DAYS;
 import static io.github.skywalkerdarren.simpleaccounting.util.PreferenceUtil.LAST_RUN_DATE;
+import static io.github.skywalkerdarren.simpleaccounting.util.PreferenceUtil.LAST_UPDATE_TIMESTAMP;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -134,10 +135,14 @@ public class DiscoveryFragment extends BaseFragment {
 
     @Override
     protected void updateUI() {
+        mViewModel.start();
         mViewModel.getFavoriteCurrencies().observe(this, currencies -> {
             mAdapter.setNewData(currencies);
             mAdapter.notifyDataSetChanged();
         });
+        long timeStamp = Long.parseLong(PreferenceUtil.getString(requireContext(), LAST_UPDATE_TIMESTAMP));
+        DateTime dateTime = new DateTime(timeStamp * 1000);
+        mViewModel.setCurrencyDate(dateTime.toString("yyyy-MM-dd"));
     }
 
     private class DiscoverListener implements ViewPager.OnPageChangeListener {

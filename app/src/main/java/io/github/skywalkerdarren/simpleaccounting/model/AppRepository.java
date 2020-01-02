@@ -776,7 +776,7 @@ public class AppRepository implements AppDataSource {
 
                 @Override
                 public void updated() {
-
+                    Log.d(TAG, "updated: ");
                 }
             });
 
