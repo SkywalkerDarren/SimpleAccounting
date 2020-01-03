@@ -7,12 +7,14 @@ import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -39,6 +41,7 @@ import io.github.skywalkerdarren.simpleaccounting.view_model.ClassifyViewModel;
  * create an instance of this fragment.
  */
 public class ClassifyFragment extends BaseFragment {
+    private static final String TAG = "ClassifyFragment";
 
     private static final int REQUEST_PERIOD = 0;
     private ClassifyViewModel mViewModel;
@@ -105,13 +108,21 @@ public class ClassifyFragment extends BaseFragment {
         binding.classifyRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         mClassifyAdapter = new ClassifyAdapter(requireContext());
-        mViewModel.getStatsList().observe(this, typeStats -> mClassifyAdapter.setNewData(typeStats));
         mClassifyAdapter.setDuration(100);
         mClassifyAdapter.setEmptyView(emptyView());
         binding.classifyRecyclerView.setAdapter(mClassifyAdapter);
         binding.setClassify(mViewModel);
         mViewModel.start();
         return binding.getRoot();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mViewModel.getStatsList().observe(this, typeStats -> {
+            Log.d(TAG, "onActivityCreated: " + typeStats);
+            mClassifyAdapter.setNewData(typeStats);
+        });
     }
 
     private void customDialog() {
@@ -191,7 +202,9 @@ public class ClassifyFragment extends BaseFragment {
     private void setStatsData(boolean t, ClassifyAdapter adapter) {
         changeImageView(t);
         mViewModel.setExpense(t);
-        mViewModel.getStatsList().observe(this, adapter::setNewData);
+        mViewModel.getStatsList().observe(this, typeStats -> {
+            mClassifyAdapter.setNewData(typeStats);
+        });
         adapter.openLoadAnimation(t ?
                 BaseQuickAdapter.SLIDEIN_RIGHT : BaseQuickAdapter.SLIDEIN_LEFT);
     }

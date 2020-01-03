@@ -111,6 +111,7 @@ public class ClassifyViewModel extends ViewModel {
      */
     public void setExpense(boolean expense) {
         mIsExpense = expense;
+        setStatsList(mStart, mEnd, mIsExpense);
     }
 
     /**
