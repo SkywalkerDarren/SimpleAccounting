@@ -33,7 +33,7 @@ class FeedBackFragment : BaseFragment() {
         binding.toolbar.collapseIcon
         binding.title.text = getString(R.string.feedback)
         fun close() {
-            fragmentManager?.beginTransaction()?.apply {
+            requireFragmentManager().beginTransaction().apply {
                 replace(R.id.fragment_container, MyAccountFragment.newInstance())
                 commit()
             }

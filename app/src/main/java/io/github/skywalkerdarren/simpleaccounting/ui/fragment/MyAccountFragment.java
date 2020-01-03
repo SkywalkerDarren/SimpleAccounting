@@ -16,7 +16,6 @@ import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentMyAccountBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
-import io.github.skywalkerdarren.simpleaccounting.ui.activity.AboutActivity;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.MainActivity;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.SettingsActivity;
 import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
@@ -49,8 +48,8 @@ public class MyAccountFragment extends BaseFragment {
         FragmentMyAccountBinding binding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_my_account, container, false);
         binding.aboutUs.setOnClickListener(view -> {
-            Intent intent = AboutActivity.newIntent(requireContext());
-            startActivity(intent);
+            AboutFragment aboutFragment = AboutFragment.Companion.newInstance();
+            gotoFragment(aboutFragment);
         });
         binding.setting.setOnClickListener(view -> {
             Intent intent = SettingsActivity.newIntent(requireContext());
@@ -59,11 +58,7 @@ public class MyAccountFragment extends BaseFragment {
         binding.back.setOnClickListener(view -> requireActivity().finish());
         binding.feedbackLayout.setOnClickListener(v -> {
             FeedBackFragment feedBackFragment = FeedBackFragment.Companion.newInstance();
-            requireFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, feedBackFragment, null)
-                    .addToBackStack(getTag())
-                    .commit();
+            gotoFragment(feedBackFragment);
         });
 
         binding.deleteAllCardView.setOnClickListener(view -> new AlertDialog.Builder(requireContext())
@@ -81,6 +76,14 @@ public class MyAccountFragment extends BaseFragment {
                 .create()
                 .show());
         return binding.getRoot();
+    }
+
+    private void gotoFragment(BaseFragment fragment) {
+        requireFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment, null)
+                .addToBackStack(getTag())
+                .commit();
     }
 
     @Override
