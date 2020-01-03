@@ -55,6 +55,13 @@ class AboutFragment : BaseFragment() {
             intent.action = Intent.ACTION_VIEW
             startActivity(intent)
         }
+
+        binding.myRepoLayout.setOnClickListener {
+            val intent = Intent()
+            intent.data = Uri.parse("https://github.com/SkywalkerDarren")
+            intent.action = Intent.ACTION_VIEW
+            startActivity(intent)
+        }
         return root
     }
 

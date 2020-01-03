@@ -47,7 +47,6 @@
                 android:id="@+id/textView14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="XXX"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -97,40 +96,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/more" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@color/grey50"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="8dp"
-            android:paddingStart="16dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="我的钱包"
-                android:textColor="@color/black" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
-                android:text="￥6666"
-                android:textColor="@color/orange400" />
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                app:srcCompat="@drawable/more" />
-
-        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/setting"
@@ -206,7 +171,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="关于我们"
+                android:text="@string/about_me"
                 android:textColor="@color/black" />
 
             <ImageView
@@ -221,7 +186,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="14dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="14dp"
             android:layout_marginBottom="4dp"
             android:clickable="true"

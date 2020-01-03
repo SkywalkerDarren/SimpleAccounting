@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="关于我们"
+                android:text="@string/about_me"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
         </Toolbar>
@@ -106,9 +106,12 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/my_repo_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/grey50"
+                android:layout_marginBottom="1dp"
+
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
@@ -121,7 +124,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="交流反馈"
+                    android:text="@string/my_repo"
                     android:textColor="@color/black" />
 
                 <ImageView
