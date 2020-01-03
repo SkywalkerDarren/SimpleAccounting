@@ -7,14 +7,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentMyAccountBinding;
+import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
+import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.AboutActivity;
+import io.github.skywalkerdarren.simpleaccounting.ui.activity.MainActivity;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.SettingsActivity;
+import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,6 +65,21 @@ public class MyAccountFragment extends BaseFragment {
                     .addToBackStack(getTag())
                     .commit();
         });
+
+        binding.deleteAllCardView.setOnClickListener(view -> new AlertDialog.Builder(requireContext())
+                .setCancelable(true)
+                .setMessage("是否删除所有账单，删除后的账单将无法恢复！")
+                .setTitle("警告")
+                .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
+                    AppRepository.getInstance(new AppExecutors(), requireContext()).clearBill();
+                    DesktopWidget.refresh(requireContext());
+                    onResume();
+                    MainActivity activity = (MainActivity) requireActivity();
+                    BillListFragment fragment = activity.mBillListFragment;
+                    fragment.onResume();
+                })
+                .create()
+                .show());
         return binding.getRoot();
     }
 

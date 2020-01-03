@@ -3,6 +3,7 @@ package io.github.skywalkerdarren.simpleaccounting.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -40,6 +41,13 @@ public class AboutActivity extends AppCompatActivity {
             versionName = getString(R.string.version);
         }
         binding.version.setText(versionName);
+
+        binding.sourceCodeLayout.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setData(Uri.parse("https://github.com/SkywalkerDarren/SimpleAccounting"));
+            intent.setAction(Intent.ACTION_VIEW);
+            startActivity(intent);
+        });
 
         if (debug) {
             binding.iv1.setOnLongClickListener(view -> {

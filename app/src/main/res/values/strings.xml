@@ -159,11 +159,12 @@
     <string name="my_borrow">我的借款</string>
     <string name="borrow_hint">应收款</string>
     <string name="lend_hint">应还款</string>
-    <string name="author">Made By 杨弘 B15041212\nhttps://github.com/SkywalkerDarren</string>
+    <string name="author">Made By SkywalkerDarren</string>
     <string name="version">v0.0.0</string>
     <string name="loading">loading...</string>
     <string name="day">天</string>
     <string name="current_currency">当前货币：</string>
     <string name="update_date">更新日期：</string>
     <string name="feedback">意见反馈</string>
+    <string name="check_source_code">查看源码</string>
 </resources>

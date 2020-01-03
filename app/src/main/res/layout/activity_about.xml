@@ -79,6 +79,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv2">
 
             <LinearLayout
+                android:id="@+id/source_code_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="1dp"
@@ -95,7 +96,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="加入我们"
+                    android:text="@string/check_source_code"
                     android:textColor="@color/black" />
 
                 <ImageView

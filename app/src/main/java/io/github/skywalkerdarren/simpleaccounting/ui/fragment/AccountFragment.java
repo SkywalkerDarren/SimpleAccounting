@@ -1,7 +1,6 @@
 package io.github.skywalkerdarren.simpleaccounting.ui.fragment;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +8,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -27,12 +25,7 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.AccountAdapter;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentAccountBinding;
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
-import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
-import io.github.skywalkerdarren.simpleaccounting.ui.activity.MainActivity;
-import io.github.skywalkerdarren.simpleaccounting.ui.activity.SettingsActivity;
-import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 import io.github.skywalkerdarren.simpleaccounting.util.ViewModelFactory;
 import io.github.skywalkerdarren.simpleaccounting.view_model.AccountViewModel;
 
@@ -82,21 +75,6 @@ public class AccountFragment extends BaseFragment {
                 .inflate(inflater, R.layout.fragment_account, container, false);
         mAccountRecyclerView = mBinding.accountRecyclerView;
         mAccountRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
-        mBinding.settingCardView.setOnClickListener(view -> toSettingActivity());
-        mBinding.deleteAllCardView.setOnClickListener(view -> new AlertDialog.Builder(requireContext())
-                .setCancelable(true)
-                .setMessage("是否删除所有账单，删除后的账单将无法恢复！")
-                .setTitle("警告")
-                .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
-                    AppRepository.getInstance(new AppExecutors(), requireContext()).clearBill();
-                    DesktopWidget.refresh(requireContext());
-                    onResume();
-                    MainActivity activity = (MainActivity) requireActivity();
-                    BillListFragment fragment = activity.mBillListFragment;
-                    fragment.onResume();
-                })
-                .create()
-                .show());
         return mBinding.getRoot();
     }
 
@@ -122,11 +100,6 @@ public class AccountFragment extends BaseFragment {
                 mAdapter.setNewData(accounts);
             }
         });
-    }
-
-    private void toSettingActivity() {
-        Intent intent = SettingsActivity.newIntent(requireContext());
-        startActivity(intent);
     }
 
     @Override
