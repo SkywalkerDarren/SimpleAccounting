@@ -4,11 +4,14 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.view.View;
 
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.listener.OnItemDragListener;
 
 import org.joda.time.DateTime;
+
+import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseDraggableDataBindingAdapter;
@@ -39,7 +42,6 @@ public class AccountAdapter extends BaseDraggableDataBindingAdapter<Account, Ite
             @Override
             public void onItemDragMoving(RecyclerView.ViewHolder source, int from, RecyclerView.ViewHolder target, int to) {
                 mRepository.changePosition(getItem(from), getItem(to));
-
             }
 
             @Override
@@ -50,6 +52,33 @@ public class AccountAdapter extends BaseDraggableDataBindingAdapter<Account, Ite
         });
     }
 
+    private boolean checkCache(List<Account> accounts) {
+        if (accounts == null) {
+            return true;
+        }
+        if (mData.size() != accounts.size()) {
+            mData.clear();
+            mData.addAll(accounts);
+            return true;
+        }
+        for (int i = 0; i < accounts.size(); i++) {
+            Account account = accounts.get(i);
+            Account cache = mData.get(i);
+            if (!account.equals(cache)) {
+                mData.clear();
+                mData.addAll(accounts);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void setNewData(@Nullable List<Account> data) {
+        if (checkCache(data)) {
+            super.setNewData(data);
+        }
+    }
 
     private void itemRaiseAnimator(View view, final float start, boolean raise) {
         final float end = start * 2;

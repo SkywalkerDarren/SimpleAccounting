@@ -4,6 +4,7 @@ import android.content.Context;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemDragListener;
 
 import java.util.Objects;
@@ -23,7 +24,7 @@ public class ExchangeRateAdapter extends BaseDraggableDataBindingAdapter<Currenc
     public ExchangeRateAdapter(Context context) {
         super(R.layout.item_exchange_rate, null);
         mRepository = AppRepository.getInstance(new AppExecutors(), context);
-        setHasStableIds(true);
+        openLoadAnimation(BaseQuickAdapter.SLIDEIN_RIGHT);
         setOnItemDragListener(new OnItemDragListener() {
             @Override
             public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {

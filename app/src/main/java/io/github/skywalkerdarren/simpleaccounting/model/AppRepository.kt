@@ -31,6 +31,7 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.collections.ArrayList
+import kotlin.concurrent.withLock
 
 class AppRepository private constructor(val executors: AppExecutors, val database: AppDatabase) : AppDataSource {
     private val dbLock = ReentrantReadWriteLock(true)
@@ -153,6 +154,18 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
                 }
                 dbLock.readLock().unlock()
                 executors.mainThread().execute { callBack.onAccountsLoaded(sAccountsCache[ACCOUNTS]) }
+            }
+        })
+    }
+
+    override fun updateAccountBalance(uuid: UUID, balance: BigDecimal) {
+        execute(object : LoadData {
+            override fun load() {
+                Log.d(TAG, "updateAccountBalance" + Thread.currentThread().name)
+                dbLock.writeLock().withLock {
+                    accountDao.updateAccountBalance(uuid, balance)
+                    sAccountsCache.clear()
+                }
             }
         })
     }

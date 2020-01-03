@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account
+import java.math.BigDecimal
 import java.util.*
 
 @Dao
@@ -22,4 +23,7 @@ interface AccountDao {
 
     @Insert
     fun newAccount(account: Account)
+
+    @Query("UPDATE account SET balance = :balance WHERE uuid == :uuid")
+    fun updateAccountBalance(uuid: UUID, balance: BigDecimal)
 }

@@ -98,5 +98,12 @@ public class Demo {
         for (int i = 0; i < cnt; i++) {
             createRandomBill(start, end);
         }
+        mRepository.getAccounts(accounts -> {
+            for (Account account : accounts) {
+                mRepository.getAccountStats(account.getUuid(), new DateTime(0), new DateTime(), accountStats -> {
+                    mRepository.updateAccountBalance(account.getUuid(), accountStats.getSum());
+                });
+            }
+        });
     }
 }

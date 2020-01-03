@@ -33,7 +33,7 @@ public class AccountViewModel extends ViewModel {
     }
 
     public void start() {
-        mRepository.getAccounts((accounts -> this.accounts.setValue(accounts)));
+        mRepository.getAccounts((this.accounts::setValue));
         mRepository.getBillStats(new DateTime(0), DateTime.now(), billStats -> {
             nav.setValue(FormatUtil.getNumeric(billStats.getSum()));
             liability.setValue(FormatUtil.getNumeric(billStats.getExpense()));

@@ -177,7 +177,10 @@ public class BillEditViewModel extends ViewModel {
                     bill.setUuid(b.getUuid());
                     mRepository.updateBill(bill);
                 }
+                mRepository.getAccountStats(accountId.getValue(), new DateTime(0), new DateTime(),
+                        accountStats -> mRepository.updateAccountBalance(accountId.getValue(), accountStats.getSum()));
             });
+
             return true;
         } catch (Exception e) {
             failed.saveFailed("表达式错误");

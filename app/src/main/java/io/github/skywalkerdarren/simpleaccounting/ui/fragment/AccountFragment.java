@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
 
 import java.util.ArrayList;
@@ -44,6 +45,8 @@ import io.github.skywalkerdarren.simpleaccounting.view_model.AccountViewModel;
  * @author darren
  */
 public class AccountFragment extends BaseFragment {
+    private static final String TAG = "AccountFragment";
+    private static final List<Account> accountsCache = new ArrayList<>();
     private RecyclerView mAccountRecyclerView;
     private AccountAdapter mAdapter;
     private FragmentAccountBinding mBinding;
@@ -100,10 +103,25 @@ public class AccountFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ViewModelFactory factory = ViewModelFactory.getInstance(requireActivity().getApplication());
-        mViewModel = ViewModelProviders.of(requireActivity(), factory).get(AccountViewModel.class);
+        if (mViewModel == null) {
+            ViewModelFactory factory = ViewModelFactory.getInstance(requireActivity().getApplication());
+            mViewModel = ViewModelProviders.of(requireActivity(), factory).get(AccountViewModel.class);
+        }
         mBinding.setAccount(mViewModel);
-        mBinding.setLifecycleOwner(this);
+        mBinding.setLifecycleOwner(getViewLifecycleOwner());
+        if (mAdapter == null) {
+            mAdapter = new AccountAdapter(requireContext());
+        }
+        mAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemDragAndSwipeCallback(mAdapter));
+        itemTouchHelper.attachToRecyclerView(mAccountRecyclerView);
+        mAdapter.enableDragItem(itemTouchHelper);
+        mAccountRecyclerView.setAdapter(mAdapter);
+        mViewModel.getAccounts().observe(getViewLifecycleOwner(), accounts -> {
+            if (isResumed()) {
+                mAdapter.setNewData(accounts);
+            }
+        });
     }
 
     private void toSettingActivity() {
@@ -111,40 +129,8 @@ public class AccountFragment extends BaseFragment {
         startActivity(intent);
     }
 
-    private static final List<Account> accountsCache = new ArrayList<>();
-
-    private boolean checkCache(List<Account> accounts) {
-        if (accountsCache.size() != accounts.size()) {
-            accountsCache.clear();
-            accountsCache.addAll(accounts);
-            return true;
-        }
-        for (int i = 0; i < accounts.size(); i++) {
-            Account account = accounts.get(i);
-            Account cache = accountsCache.get(i);
-            if (!account.equals(cache)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     @Override
     protected void updateUI() {
-        if (mAdapter == null) {
-            mAdapter = new AccountAdapter(requireContext());
-        }
-        mViewModel.getAccounts().observe(this, accounts -> {
-            if (checkCache(accounts)) {
-                mAdapter.setNewData(accounts);
-                mAdapter.notifyDataSetChanged();
-            }
-        });
-        mAccountRecyclerView.setAdapter(mAdapter);
-        ItemDragAndSwipeCallback itemDragAndSwipeCallback = new ItemDragAndSwipeCallback(mAdapter);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemDragAndSwipeCallback);
-        itemTouchHelper.attachToRecyclerView(mAccountRecyclerView);
-        mAdapter.enableDragItem(itemTouchHelper);
         mViewModel.start();
     }
 }
