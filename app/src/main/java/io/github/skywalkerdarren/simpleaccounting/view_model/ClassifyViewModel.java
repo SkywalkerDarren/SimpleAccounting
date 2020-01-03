@@ -57,7 +57,7 @@ public class ClassifyViewModel extends ViewModel {
     private void setStatsList(DateTime start, DateTime end, boolean isExpense) {
         String pattern = "yyyy年MM月dd日";
         date.setValue(mStart.toString(pattern) + " - " + mEnd.toString(pattern));
-        mRepository.getTypesStats(start, end, isExpense, typesStats -> statsList.setValue(typesStats));
+        mRepository.getTypesStats(start, end, isExpense, statsList::setValue);
     }
 
     /**
@@ -111,7 +111,6 @@ public class ClassifyViewModel extends ViewModel {
      */
     public void setExpense(boolean expense) {
         mIsExpense = expense;
-        setStatsList(mStart, mEnd, mIsExpense);
     }
 
     /**

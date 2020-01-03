@@ -94,13 +94,11 @@ public class ClassifyFragment extends BaseFragment {
             mViewModel.back();
             setStatsData(mViewPager.getCurrentItem() == 1, mClassifyAdapter);
             updateUI();
-            mViewModel.start();
         });
         binding.moreImageView.setOnClickListener(view -> {
             mViewModel.more();
             setStatsData(mViewPager.getCurrentItem() == 1, mClassifyAdapter);
             updateUI();
-            mViewModel.start();
         });
         binding.customImageView.setOnClickListener(view -> customDialog());
         binding.dateTextView.setOnClickListener(view -> customDialog());
@@ -119,8 +117,8 @@ public class ClassifyFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel.getStatsList().observe(this, typeStats -> {
-            Log.d(TAG, "onActivityCreated: " + typeStats);
+        mViewModel.getStatsList().observe(getViewLifecycleOwner(), typeStats -> {
+            Log.d(TAG, "onActivityCreated: " + getLifecycle().getCurrentState());
             mClassifyAdapter.setNewData(typeStats);
         });
     }
@@ -134,7 +132,8 @@ public class ClassifyFragment extends BaseFragment {
 
     @Override
     protected void updateUI() {
-        mViewPager.setAdapter(new FragmentStatePagerAdapter(getChildFragmentManager()) {
+        mViewPager.setAdapter(new FragmentStatePagerAdapter(getChildFragmentManager(),
+                FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
             @NonNull
             @Override
             public Fragment getItem(int position) {
@@ -174,6 +173,7 @@ public class ClassifyFragment extends BaseFragment {
                     default:
                         break;
                 }
+                mViewModel.start();
             }
 
             @Override
@@ -202,9 +202,6 @@ public class ClassifyFragment extends BaseFragment {
     private void setStatsData(boolean t, ClassifyAdapter adapter) {
         changeImageView(t);
         mViewModel.setExpense(t);
-        mViewModel.getStatsList().observe(this, typeStats -> {
-            mClassifyAdapter.setNewData(typeStats);
-        });
         adapter.openLoadAnimation(t ?
                 BaseQuickAdapter.SLIDEIN_RIGHT : BaseQuickAdapter.SLIDEIN_LEFT);
     }
@@ -220,15 +217,11 @@ public class ClassifyFragment extends BaseFragment {
         if (resultCode != Activity.RESULT_OK) {
             return;
         }
-        switch (requestCode) {
-            case REQUEST_PERIOD:
-                DateTime start = (DateTime) data.getSerializableExtra(PeriodDialogFragment.EXTRA_START_DATE);
-                DateTime end = (DateTime) data.getSerializableExtra(PeriodDialogFragment.EXTRA_END_DATE);
-                mViewModel.setDate(start, end);
-                updateUI();
-                break;
-            default:
-                break;
+        if (requestCode == REQUEST_PERIOD) {
+            DateTime start = (DateTime) data.getSerializableExtra(PeriodDialogFragment.EXTRA_START_DATE);
+            DateTime end = (DateTime) data.getSerializableExtra(PeriodDialogFragment.EXTRA_END_DATE);
+            mViewModel.setDate(start, end);
+            updateUI();
         }
     }
 }
