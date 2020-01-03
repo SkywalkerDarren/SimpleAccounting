@@ -74,7 +74,7 @@ public class DiscoveryFragment extends BaseFragment {
         viewPager.addOnPageChangeListener(new DiscoverListener());
         viewPager.setOffscreenPageLimit(2);
 
-        mAdapter = new ExchangeRateAdapter();
+        mAdapter = new ExchangeRateAdapter(requireContext());
         ItemDragAndSwipeCallback itemDragAndSwipeCallback = new ItemDragAndSwipeCallback(mAdapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemDragAndSwipeCallback);
         itemTouchHelper.attachToRecyclerView(mBinding.exchangeRateRecyclerView);

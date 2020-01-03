@@ -1,8 +1,12 @@
 package io.github.skywalkerdarren.simpleaccounting.adapter;
 
+import android.content.Context;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.listener.OnItemDragListener;
+
+import java.util.Objects;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseDraggableDataBindingAdapter;
@@ -16,9 +20,10 @@ import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 public class ExchangeRateAdapter extends BaseDraggableDataBindingAdapter<Currency, ItemExchangeRateBinding> {
     private AppRepository mRepository;
 
-    public ExchangeRateAdapter() {
+    public ExchangeRateAdapter(Context context) {
         super(R.layout.item_exchange_rate, null);
-        mRepository = AppRepository.getInstance(new AppExecutors(), mContext);
+        mRepository = AppRepository.getInstance(new AppExecutors(), context);
+        setHasStableIds(true);
         setOnItemDragListener(new OnItemDragListener() {
             @Override
             public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
@@ -26,7 +31,7 @@ public class ExchangeRateAdapter extends BaseDraggableDataBindingAdapter<Currenc
 
             @Override
             public void onItemDragMoving(RecyclerView.ViewHolder source, int from, RecyclerView.ViewHolder target, int to) {
-                mRepository.changeCurrencyPosition(getItem(from), getItem(to));
+                mRepository.changeCurrencyPosition(Objects.requireNonNull(getItem(from)), Objects.requireNonNull(getItem(to)));
 
             }
 

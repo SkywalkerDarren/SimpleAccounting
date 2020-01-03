@@ -42,7 +42,7 @@ public class BillAdapter extends BaseMultiItemDataBindingAdapter<BillInfo, ViewD
      * 带备注的账单
      */
     public static final int WITH_REMARK = 1;
-    private final AppRepository mRepository = AppRepository.getInstance(new AppExecutors(), mContext);
+    private final AppRepository mRepository;
     private int mX, mY;
     private FragmentActivity mActivity;
 
@@ -54,6 +54,7 @@ public class BillAdapter extends BaseMultiItemDataBindingAdapter<BillInfo, ViewD
     public BillAdapter(List<BillInfo> bills, FragmentActivity activity) {
         super(bills);
         mActivity = activity;
+        mRepository = AppRepository.getInstance(new AppExecutors(), activity);
         addItemType(WITH_REMARK, R.layout.item_list_bill);
         addItemType(WITHOUT_REMARK, R.layout.item_list_bill_without_remark);
         addItemType(HEADER, R.layout.item_list_bill_header);

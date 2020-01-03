@@ -1,6 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.adapter;
 
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,7 +16,6 @@ import io.github.skywalkerdarren.simpleaccounting.databinding.ItemAccountBinding
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
-import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 
 /**
  * @author darren
@@ -25,9 +25,9 @@ import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 public class AccountAdapter extends BaseDraggableDataBindingAdapter<Account, ItemAccountBinding> {
     private final AppRepository mRepository;
 
-    public AccountAdapter() {
+    public AccountAdapter(Context context) {
         super(R.layout.item_account, null);
-        mRepository = AppRepository.getInstance(new AppExecutors(), mContext);
+        mRepository = AppRepository.getInstance(new AppExecutors(), context);
         setOnItemDragListener(new OnItemDragListener() {
 
             @Override
@@ -62,7 +62,9 @@ public class AccountAdapter extends BaseDraggableDataBindingAdapter<Account, Ite
     @Override
     protected void convert(ItemAccountBinding binding, Account item) {
         binding.setAccount(item);
-        mRepository.getAccountStats(item.getUuid(), new DateTime(0), DateTime.now(), accountStats ->
-                binding.balanceTextView.setText(FormatUtil.getNumeric(accountStats.getSum())));
+        mRepository.getAccountStats(item.getUuid(), new DateTime(0), DateTime.now(), accountStats -> {
+            item.setBalance(accountStats.getSum());
+            binding.setAccount(item);
+        });
     }
 }

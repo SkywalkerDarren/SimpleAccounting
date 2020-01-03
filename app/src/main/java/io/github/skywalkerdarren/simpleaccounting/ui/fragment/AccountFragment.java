@@ -19,11 +19,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.AccountAdapter;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentAccountBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.MainActivity;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.SettingsActivity;
@@ -107,14 +111,34 @@ public class AccountFragment extends BaseFragment {
         startActivity(intent);
     }
 
+    private static final List<Account> accountsCache = new ArrayList<>();
+
+    private boolean checkCache(List<Account> accounts) {
+        if (accountsCache.size() != accounts.size()) {
+            accountsCache.clear();
+            accountsCache.addAll(accounts);
+            return true;
+        }
+        for (int i = 0; i < accounts.size(); i++) {
+            Account account = accounts.get(i);
+            Account cache = accountsCache.get(i);
+            if (!account.equals(cache)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     protected void updateUI() {
         if (mAdapter == null) {
-            mAdapter = new AccountAdapter();
+            mAdapter = new AccountAdapter(requireContext());
         }
         mViewModel.getAccounts().observe(this, accounts -> {
-            mAdapter.setNewData(accounts);
-            mAdapter.notifyDataSetChanged();
+            if (checkCache(accounts)) {
+                mAdapter.setNewData(accounts);
+                mAdapter.notifyDataSetChanged();
+            }
         });
         mAccountRecyclerView.setAdapter(mAdapter);
         ItemDragAndSwipeCallback itemDragAndSwipeCallback = new ItemDragAndSwipeCallback(mAdapter);

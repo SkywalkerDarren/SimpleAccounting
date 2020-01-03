@@ -1,6 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.adapter;
 
 import android.animation.Animator;
+import android.content.Context;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 import java.math.BigDecimal;
@@ -22,10 +23,11 @@ import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 
 public class ClassifyAdapter extends BaseDataBindingAdapter<TypeStats, ItemClassifyBinding> {
     private BigDecimal mSum = BigDecimal.ZERO;
-    private AppRepository mRepository = AppRepository.getInstance(new AppExecutors(), mContext);
+    private final AppRepository mRepository;
 
-    public ClassifyAdapter() {
+    public ClassifyAdapter(Context context) {
         super(R.layout.item_classify, null);
+        mRepository = AppRepository.getInstance(new AppExecutors(), context);
     }
 
     @Override

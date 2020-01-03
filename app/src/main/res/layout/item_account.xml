@@ -11,6 +11,10 @@
         <import type="io.github.skywalkerdarren.simpleaccounting.util.FormatUtil" />
 
         <variable
+            name="sum"
+            type="java.math.BigDecimal" />
+
+        <variable
             name="account"
             type="io.github.skywalkerdarren.simpleaccounting.model.entity.Account" />
     </data>
@@ -75,7 +79,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="16dp"
                 android:fontFamily="@font/lalezar"
-                android:text="@string/loading"
+                android:text="@{FormatUtil.getNumeric(account.balance), default=@string/loading}"
                 android:textAlignment="textEnd"
                 android:textColor="@color/black"
                 android:textSize="22sp"

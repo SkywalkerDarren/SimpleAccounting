@@ -104,7 +104,7 @@ public class ClassifyFragment extends BaseFragment {
 
         binding.classifyRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        mClassifyAdapter = new ClassifyAdapter();
+        mClassifyAdapter = new ClassifyAdapter(requireContext());
         mViewModel.getStatsList().observe(this, typeStats -> mClassifyAdapter.setNewData(typeStats));
         mClassifyAdapter.setDuration(100);
         mClassifyAdapter.setEmptyView(emptyView());
