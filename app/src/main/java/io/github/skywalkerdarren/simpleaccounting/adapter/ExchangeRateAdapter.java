@@ -1,12 +1,15 @@
 package io.github.skywalkerdarren.simpleaccounting.adapter;
 
+import android.animation.Animator;
 import android.content.Context;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemDragListener;
 
+import java.util.List;
 import java.util.Objects;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
@@ -24,7 +27,6 @@ public class ExchangeRateAdapter extends BaseDraggableDataBindingAdapter<Currenc
     public ExchangeRateAdapter(Context context) {
         super(R.layout.item_exchange_rate, null);
         mRepository = AppRepository.getInstance(new AppExecutors(), context);
-        openLoadAnimation(BaseQuickAdapter.SLIDEIN_RIGHT);
         setOnItemDragListener(new OnItemDragListener() {
             @Override
             public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
@@ -40,6 +42,25 @@ public class ExchangeRateAdapter extends BaseDraggableDataBindingAdapter<Currenc
             public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {
             }
         });
+    }
+
+    @Override
+    public void setNewData(@Nullable List<Currency> data) {
+        if (checkCache(data)) {
+            super.setNewData(data);
+        }
+    }
+
+    private boolean checkCache(List<Currency> currencies) {
+        if (currencies == null || mData.size() != currencies.size()) {
+            return true;
+        }
+        for (int i = 0; i < currencies.size(); i++) {
+            if (!currencies.get(i).equals(mData.get(i))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -62,5 +83,12 @@ public class ExchangeRateAdapter extends BaseDraggableDataBindingAdapter<Currenc
 
             }
         });
+    }
+
+    @Override
+    protected void startAnim(Animator anim, int index) {
+        anim.setDuration(300);
+        anim.setInterpolator(new AccelerateDecelerateInterpolator());
+        anim.start();
     }
 }

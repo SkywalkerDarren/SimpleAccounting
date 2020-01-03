@@ -53,20 +53,11 @@ public class AccountAdapter extends BaseDraggableDataBindingAdapter<Account, Ite
     }
 
     private boolean checkCache(List<Account> accounts) {
-        if (accounts == null) {
-            return true;
-        }
-        if (mData.size() != accounts.size()) {
-            mData.clear();
-            mData.addAll(accounts);
+        if (accounts == null || mData.size() != accounts.size()) {
             return true;
         }
         for (int i = 0; i < accounts.size(); i++) {
-            Account account = accounts.get(i);
-            Account cache = mData.get(i);
-            if (!account.equals(cache)) {
-                mData.clear();
-                mData.addAll(accounts);
+            if (!accounts.get(i).equals(mData.get(i))) {
                 return true;
             }
         }

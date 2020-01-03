@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
 
 import org.joda.time.DateTime;
@@ -66,6 +67,8 @@ public class DiscoveryFragment extends BaseFragment {
             startActivity(intent);
         });
 
+        mBinding.exchangeRateRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+
         ViewPager viewPager = mBinding.showPager;
         mDotLayout = mBinding.dotLayout;
         setImage();
@@ -73,14 +76,6 @@ public class DiscoveryFragment extends BaseFragment {
         viewPager.setAdapter(new DiscoverAdapter());
         viewPager.addOnPageChangeListener(new DiscoverListener());
         viewPager.setOffscreenPageLimit(2);
-
-        mAdapter = new ExchangeRateAdapter(requireContext());
-        ItemDragAndSwipeCallback itemDragAndSwipeCallback = new ItemDragAndSwipeCallback(mAdapter);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemDragAndSwipeCallback);
-        itemTouchHelper.attachToRecyclerView(mBinding.exchangeRateRecyclerView);
-        mAdapter.enableDragItem(itemTouchHelper);
-        mBinding.exchangeRateRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        mBinding.exchangeRateRecyclerView.setAdapter(mAdapter);
         return mBinding.getRoot();
     }
 
@@ -111,7 +106,7 @@ public class DiscoveryFragment extends BaseFragment {
         ViewModelFactory factory = ViewModelFactory.getInstance(requireActivity().getApplication());
         mViewModel = ViewModelProviders.of(this, factory).get(DiscoveryViewModel.class);
         mBinding.setDiscovery(mViewModel);
-        mBinding.setLifecycleOwner(this);
+        mBinding.setLifecycleOwner(getViewLifecycleOwner());
         int days = Integer.parseInt(PreferenceUtil.getString(requireContext(), CUMULATIVE_DAYS, "1"));
         String lastRunDate = PreferenceUtil.getString(requireContext(), LAST_RUN_DATE);
         DateTime now = DateTime.now();
@@ -131,15 +126,27 @@ public class DiscoveryFragment extends BaseFragment {
             }
         }
         mViewModel.setCumulativeDays(days + getString(R.string.day));
+
+        if (mAdapter == null) {
+            mAdapter = new ExchangeRateAdapter(requireContext());
+            mAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_RIGHT);
+        }
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemDragAndSwipeCallback(mAdapter));
+        itemTouchHelper.attachToRecyclerView(mBinding.exchangeRateRecyclerView);
+        mAdapter.enableDragItem(itemTouchHelper);
+        mAdapter.setDuration(100);
+        mBinding.exchangeRateRecyclerView.setAdapter(mAdapter);
+
+        mViewModel.getFavoriteCurrencies().observe(getViewLifecycleOwner(), currencies -> {
+            if (isResumed()) {
+                mAdapter.setNewData(currencies);
+            }
+        });
     }
 
     @Override
     protected void updateUI() {
         mViewModel.start();
-        mViewModel.getFavoriteCurrencies().observe(this, currencies -> {
-            mAdapter.setNewData(currencies);
-            mAdapter.notifyDataSetChanged();
-        });
         long timeStamp = Long.parseLong(PreferenceUtil.getString(requireContext(), LAST_UPDATE_TIMESTAMP));
         DateTime dateTime = new DateTime(timeStamp * 1000);
         mViewModel.setCurrencyDate(dateTime.toString("yyyy-MM-dd"));
