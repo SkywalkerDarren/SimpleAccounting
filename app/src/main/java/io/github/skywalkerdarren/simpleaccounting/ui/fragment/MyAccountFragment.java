@@ -52,6 +52,14 @@ public class MyAccountFragment extends BaseFragment {
             startActivity(intent);
         });
         binding.back.setOnClickListener(view -> requireActivity().finish());
+        binding.feedbackLayout.setOnClickListener(v -> {
+            FeedBackFragment feedBackFragment = FeedBackFragment.Companion.newInstance();
+            requireFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, feedBackFragment, null)
+                    .addToBackStack(getTag())
+                    .commit();
+        });
         return binding.getRoot();
     }
 

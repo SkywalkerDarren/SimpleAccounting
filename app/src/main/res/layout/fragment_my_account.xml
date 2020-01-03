@@ -161,6 +161,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/feedback_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -177,7 +178,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="账本安全"
+                android:text="@string/feedback"
                 android:textColor="@color/black" />
 
             <ImageView

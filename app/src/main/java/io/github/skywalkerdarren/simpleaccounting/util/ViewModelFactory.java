@@ -16,6 +16,7 @@ import io.github.skywalkerdarren.simpleaccounting.view_model.ChartViewModel;
 import io.github.skywalkerdarren.simpleaccounting.view_model.ClassifyViewModel;
 import io.github.skywalkerdarren.simpleaccounting.view_model.DiscoveryViewModel;
 import io.github.skywalkerdarren.simpleaccounting.view_model.EmptyListViewModel;
+import io.github.skywalkerdarren.simpleaccounting.view_model.FeedBackViewModel;
 import io.github.skywalkerdarren.simpleaccounting.view_model.JournalViewModel;
 
 public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
@@ -76,6 +77,9 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         } else if (modelClass.isAssignableFrom(EmptyListViewModel.class)) {
             //noinspection unchecked
             return (T) new EmptyListViewModel();
+        } else if (modelClass.isAssignableFrom(FeedBackViewModel.class)) {
+            //noinspection unchecked
+            return (T) new FeedBackViewModel();
         }
 
         throw new IllegalArgumentException("no this ViewModel");

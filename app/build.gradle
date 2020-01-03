@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -32,13 +33,13 @@ android {
     }
     buildTypes {
         debug {
-            manifestPlaceholders = [currencylayer_token: project.hasProperty("CURRENCY_TOKEN") ?
+            manifestPlaceholders = [currencylayer_token : project.hasProperty("CURRENCY_TOKEN") ?
                     CURRENCY_TOKEN : System.getenv("CURRENCY_TOKEN"), isDebug: true]
             buildConfigField("boolean", "LOG", "true")
             applicationIdSuffix ".debug"
         }
         release {
-            manifestPlaceholders = [currencylayer_token: project.hasProperty("CURRENCY_TOKEN") ?
+            manifestPlaceholders = [currencylayer_token : project.hasProperty("CURRENCY_TOKEN") ?
                     CURRENCY_TOKEN : System.getenv("CURRENCY_TOKEN"), isDebug: false]
             minifyEnabled false
             buildConfigField("boolean", "LOG", "false")
@@ -66,6 +67,9 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
+    implementation "androidx.legacy:legacy-support-v4:${legacyVersion}"
+    implementation "androidx.lifecycle:lifecycle-extensions:${lifecycleVersion}"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${lifecycleVersion}"
     androidTestImplementation "androidx.test.espresso:espresso-core:${espressoVersion}"
     androidTestImplementation "androidx.test.ext:junit:${androidJunitVersion}"
     testImplementation "junit:junit:${junitVersion}"
