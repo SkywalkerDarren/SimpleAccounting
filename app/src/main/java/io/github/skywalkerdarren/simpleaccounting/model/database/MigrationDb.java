@@ -4,6 +4,12 @@ import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 public class MigrationDb {
+    /**
+     * 新数据库改动太大了
+     * 反正没什么人用
+     * 数据库重建算了
+     */
+    @Deprecated
     static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {

@@ -29,6 +29,7 @@ abstract class AppDatabase : RoomDatabase() {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.applicationContext,
                             AppDatabase::class.java, "app.db")
+                            // TODO: it will be removed
                             .fallbackToDestructiveMigration()
 //                            .addMigrations(MigrationDb.MIGRATION_1_2)
                             .build()
