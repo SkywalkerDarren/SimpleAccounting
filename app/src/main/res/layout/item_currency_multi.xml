@@ -3,6 +3,7 @@
 
     <data>
 
+        <import type="android.view.View" />
         <variable
             name="currency"
             type="io.github.skywalkerdarren.simpleaccounting.model.entity.Currency" />
@@ -24,6 +25,7 @@
             android:layout_width="36dp"
             android:layout_height="24dp"
             android:src="@{info.flagLocation}"
+            android:visibility="@{info.flagLocation != null ? View.VISIBLE : View.INVISIBLE}"
             tools:src="@drawable/ic_refresh" />
 
         <TextView

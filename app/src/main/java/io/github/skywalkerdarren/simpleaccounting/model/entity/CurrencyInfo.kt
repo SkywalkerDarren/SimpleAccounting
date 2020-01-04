@@ -12,7 +12,7 @@ data class CurrencyInfo @JvmOverloads constructor(
         var name: String,
         @ColumnInfo(name = "full_name")
         var fullName: String? = null,
-        @ColumnInfo(name = "full_name_cn")
+        @ColumnInfo(name = "full_name_cn", collate = ColumnInfo.LOCALIZED)
         var fullNameCN: String? = null,
         @ColumnInfo(name = "flag_location")
         var flagLocation: String? = null

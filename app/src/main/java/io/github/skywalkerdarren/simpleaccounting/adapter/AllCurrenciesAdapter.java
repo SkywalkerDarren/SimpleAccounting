@@ -4,7 +4,7 @@ import android.content.Context;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseDataBindingAdapter;
-import io.github.skywalkerdarren.simpleaccounting.databinding.ItemCurrencyBinding;
+import io.github.skywalkerdarren.simpleaccounting.databinding.ItemCurrencyMultiBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Currency;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrencyInfo;
@@ -16,16 +16,16 @@ import kotlin.Pair;
  * @date 2018/4/13
  */
 
-public class AllCurrenciesAdapter extends BaseDataBindingAdapter<Pair<Currency, CurrencyInfo>, ItemCurrencyBinding> {
+public class AllCurrenciesAdapter extends BaseDataBindingAdapter<Pair<Currency, CurrencyInfo>, ItemCurrencyMultiBinding> {
     private final AppRepository mRepository;
 
     public AllCurrenciesAdapter(Context context) {
-        super(R.layout.item_currency, null);
+        super(R.layout.item_currency_multi, null);
         mRepository = AppRepository.getInstance(new AppExecutors(), context);
     }
 
     @Override
-    protected void convert(ItemCurrencyBinding binding, Pair<Currency, CurrencyInfo> item) {
+    protected void convert(ItemCurrencyMultiBinding binding, Pair<Currency, CurrencyInfo> item) {
         binding.setCurrency(item.getFirst());
         binding.setInfo(item.getSecond());
         binding.favCurrency.setOnCheckedChangeListener((buttonView, isChecked) -> {

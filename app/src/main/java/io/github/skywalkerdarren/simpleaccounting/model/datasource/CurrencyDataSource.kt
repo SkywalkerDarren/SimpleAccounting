@@ -16,6 +16,7 @@ interface CurrencyDataSource {
     fun changeCurrencyPosition(currencyA: Currency, currencyB: Currency)
     fun setCurrencyFav(name: String, isChecked: Boolean)
     fun getAllCurrencies(callback: LoadPairCurrenicesCallback)
+    fun getCurrencyInfos(callback: LoadCurrenciesInfoCallback)
 
     interface LoadPairCurrenicesCallback {
         fun onPairCurrenicesLoaded(currency: List<Pair<Currency, CurrencyInfo>>)

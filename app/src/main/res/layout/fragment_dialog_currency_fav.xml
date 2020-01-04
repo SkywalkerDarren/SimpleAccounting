@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:itemCount="50"
-            tools:listitem="@layout/item_currency" />
+            tools:listitem="@layout/item_currency_multi" />
 
     </FrameLayout>
 </layout>

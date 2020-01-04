@@ -2,6 +2,7 @@ package io.github.skywalkerdarren.simpleaccounting.util
 
 import android.app.PendingIntent
 import android.content.Context
+import android.util.Log
 import androidx.work.*
 import io.github.skywalkerdarren.simpleaccounting.R
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillEditActivity
@@ -27,6 +28,7 @@ class NotificationWorker(context: Context, workerParams: WorkerParameters) : Wor
     private val isPush = PreferenceUtil.getBoolean(context, PreferenceUtil.IS_PUSH, false)
 
     override fun doWork(): Result {
+        Log.d(TAG, "alive")
         if (hourChange()) {
             // 时段变化 重置flag
             PreferenceUtil.setBoolean(applicationContext, PreferenceUtil.IS_PUSH, false)

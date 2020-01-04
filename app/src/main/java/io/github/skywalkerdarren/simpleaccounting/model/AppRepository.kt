@@ -510,9 +510,9 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
             override fun load() {
                 Log.d(TAG, "setCurrencyFav: in " + Thread.currentThread().name)
                 dbLock.write {
-                    currencyRateDao.getCurrency(name)?.apply {
+                    currencyRateDao.getCurrency(name).apply {
                         favourite = isChecked
-                    }?.let {
+                    }.let {
                         currencyRateDao.updateCurrency(it)
                     }
                 }
@@ -526,15 +526,36 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
                 Log.d(TAG, "getAllCurrencies: in " + Thread.currentThread().name)
                 val pairs: MutableList<Pair<Currency, CurrencyInfo>> = ArrayList()
                 dbLock.read {
-                    currencyRateDao.currencies?.forEach { currency ->
-                        val info = currencyInfoDao.getInfo(currency.name)
-                        if (info != null) {
-                            val pair = Pair(currency, info)
-                            pairs.add(pair)
+                    val temp: MutableList<Pair<Currency, CurrencyInfo>> = ArrayList()
+                    currencyInfoDao.infos?.forEach { info ->
+                        val currency: Currency = currencyRateDao.getCurrency(info.name)
+
+                        if (info.fullNameCN == null) {
+                            temp.add(Pair(currency, info))
+                        } else {
+                            pairs.add(Pair(currency, info))
                         }
                     }
+                    pairs.addAll(temp)
                 }
                 executors.mainThread().execute { callback.onPairCurrenicesLoaded(pairs.toList()) }
+            }
+        })
+    }
+
+    override fun getCurrencyInfos(callback: LoadCurrenciesInfoCallback) {
+        execute(object : LoadData {
+            override fun load() {
+                Log.d(TAG, "getCurrencyInfos: in " + Thread.currentThread().name)
+                var infos: List<CurrencyInfo>? = null
+                dbLock.read {
+                    infos = currencyInfoDao.infos
+                }
+                if (infos == null) {
+                    executors.mainThread().execute { callback.onDataUnavailable() }
+                } else {
+                    executors.mainThread().execute { callback.onCurrenciesInfoLoaded(infos) }
+                }
             }
         })
     }
@@ -560,13 +581,8 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
                 if (currencies != null) {
                     for (currency in currencies) {
                         val rawCurrency = currencyRateDao.getCurrency(currency.name)
-                        if (rawCurrency != null) {
-                            rawCurrency.exchangeRate = currency.exchangeRate
-                            currencyRateDao.updateCurrency(rawCurrency)
-                        } else {
-                            currency.favourite = false
-                            currencyRateDao.addCurrency(currency)
-                        }
+                        rawCurrency.exchangeRate = currency.exchangeRate
+                        currencyRateDao.updateCurrency(rawCurrency)
                     }
                 }
                 executors.mainThread().execute { callback.updated() }
@@ -614,7 +630,7 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
             override fun load() {
                 val currencyFrom = currencyRateDao.getCurrency(from)
                 val favouriteCurrencies = currencyRateDao.getFavouriteCurrencies(true)
-                if (currencyFrom != null && favouriteCurrencies != null && favouriteCurrencies.isNotEmpty()) {
+                if (favouriteCurrencies != null && favouriteCurrencies.isNotEmpty()) {
                     for (currencyTo in favouriteCurrencies) {
                         val rate = currencyTo.exchangeRate / currencyFrom.exchangeRate
                         currencyTo.exchangeRate = rate
@@ -633,7 +649,7 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
             override fun load() {
                 val currencyFrom = currencyRateDao.getCurrency(from)
                 val currencies = currencyRateDao.currencies
-                if (currencyFrom != null && currencies != null && currencies.isNotEmpty()) {
+                if (currencies != null && currencies.isNotEmpty()) {
                     for (currencyTo in currencies) {
                         val rate = currencyTo.exchangeRate / currencyFrom.exchangeRate
                         currencyTo.exchangeRate = rate
@@ -652,13 +668,9 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
             override fun load() {
                 val currencyFrom = currencyRateDao.getCurrency(from)
                 val currencyTo = currencyRateDao.getCurrency(to)
-                if (currencyFrom != null && currencyTo != null) {
-                    val rate = currencyTo.exchangeRate / currencyFrom.exchangeRate
-                    val currency = Currency(from, to, rate)
-                    executors.mainThread().execute { callback.onExchangeRateLoaded(currency) }
-                } else {
-                    executors.mainThread().execute { callback.onDataUnavailable() }
-                }
+                val rate = currencyTo.exchangeRate / currencyFrom.exchangeRate
+                val currency = Currency(from, to, rate)
+                executors.mainThread().execute { callback.onExchangeRateLoaded(currency) }
             }
         })
     }
@@ -667,11 +679,7 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         execute(object : LoadData {
             override fun load() {
                 val currency = currencyRateDao.getCurrency(name)
-                if (currency == null) {
-                    executors.mainThread().execute { callback.onDataUnavailable() }
-                } else {
-                    executors.mainThread().execute { callback.onExchangeRateLoaded(currency) }
-                }
+                executors.mainThread().execute { callback.onExchangeRateLoaded(currency) }
             }
         })
     }

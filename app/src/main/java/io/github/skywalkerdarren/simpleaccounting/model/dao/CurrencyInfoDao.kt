@@ -5,7 +5,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrencyInfo
 
 @Dao
 interface CurrencyInfoDao {
-    @get:Query("SELECT * FROM currency_info")
+    @get:Query("SELECT * FROM currency_info ORDER BY full_name_cn")
     val infos: List<CurrencyInfo>?
 
     @Query("SELECT * FROM currency_info WHERE name == :name")

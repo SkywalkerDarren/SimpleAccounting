@@ -12,7 +12,7 @@ interface CurrencyRateDao {
     fun getFavouriteCurrencies(favourite: Boolean): List<Currency>?
 
     @Query("SELECT * FROM currency WHERE name == :name")
-    fun getCurrency(name: String): Currency?
+    fun getCurrency(name: String): Currency
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addCurrency(currency: Currency)
