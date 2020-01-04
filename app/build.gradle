@@ -66,7 +66,13 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-
+    implementation "androidx.navigation:navigation-fragment:${navVersion}"
+    implementation "androidx.navigation:navigation-ui:${navVersion}"
+    implementation "androidx.navigation:navigation-fragment-ktx:${navVersion}"
+    implementation "androidx.navigation:navigation-ui-ktx:${navVersion}"
+    implementation "androidx.work:work-runtime-ktx:${workVersion}"
+    implementation "androidx.work:work-runtime:${workVersion}"
+    implementation "androidx.room:room-ktx:${roomVersion}"
     implementation "androidx.legacy:legacy-support-v4:${legacyVersion}"
     implementation "androidx.lifecycle:lifecycle-extensions:${lifecycleVersion}"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${lifecycleVersion}"
@@ -80,9 +86,9 @@ dependencies {
     implementation "com.oushangfeng:PinnedSectionItemDecoration:${pinnedSectionItemDecorationVersion}"
     implementation "androidx.cardview:cardview:${cardviewVersion}"
     implementation "androidx.legacy:legacy-support-v13:${legacyVersion}"
-    implementation "androidx.appcompat:appcompat:${androidxVersion}"
-    implementation "androidx.recyclerview:recyclerview:${androidxVersion}"
-    implementation "androidx.vectordrawable:vectordrawable:${androidxVersion}"
+    implementation "androidx.appcompat:appcompat:${appcompatVersion}"
+    implementation "androidx.recyclerview:recyclerview:${recyclerviewVersion}"
+    implementation "androidx.vectordrawable:vectordrawable:${vectordrawableVersion}"
     implementation "androidx.lifecycle:lifecycle-extensions:${lifecycleVersion}"
     implementation "androidx.room:room-runtime:${roomVersion}"
     annotationProcessor "androidx.room:room-compiler:${roomVersion}"
