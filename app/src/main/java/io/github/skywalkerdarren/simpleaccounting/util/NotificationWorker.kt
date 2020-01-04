@@ -24,7 +24,7 @@ class NotificationWorker(context: Context, workerParams: WorkerParameters) : Wor
     }
 
     private val isPush = PreferenceUtil.getBoolean(context, PreferenceUtil.IS_PUSH, false)
-    var hourList: MutableList<Int> = arrayListOf(13, 20, 1)
+    var hourList: MutableList<Int> = arrayListOf(13, 20)
 
     override fun doWork(): Result {
         if (compareCurrentHour(hourList)) {
