@@ -38,9 +38,9 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         int count = Integer.parseInt(PreferenceUtil.getString(this, RUN_APP_TIMES, "0"));
-        NotificationWorker.start(this);
         try {
             if (count == 0) {
+                NotificationWorker.start(this);
                 AppRepository repository = AppRepository.getInstance(new AppExecutors(), getApplicationContext());
                 repository.initDb();
                 repository.initCurrenciesAndInfos(getApplicationContext());

@@ -50,7 +50,8 @@ public class MyAccountFragment extends BaseFragment {
             gotoFragment(aboutFragment);
         });
         binding.setting.setOnClickListener(view -> {
-
+            SettingsFragment settingsFragment = SettingsFragment.Companion.newInstance();
+            gotoFragment(settingsFragment);
         });
         binding.back.setOnClickListener(view -> requireActivity().finish());
         binding.feedbackLayout.setOnClickListener(v -> {
@@ -75,7 +76,7 @@ public class MyAccountFragment extends BaseFragment {
         return binding.getRoot();
     }
 
-    private void gotoFragment(BaseFragment fragment) {
+    private void gotoFragment(Fragment fragment) {
         requireFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, null)

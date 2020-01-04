@@ -1,5 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.view_model;
 
+import android.content.Context;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -77,6 +79,10 @@ public class DiscoveryViewModel extends ViewModel {
 
     public LiveData<List<Currency>> getFavoriteCurrencies() {
         return favoriteCurrencies;
+    }
+
+    public void refreshCurrency(Context context, CurrencyDataSource.UpdateCallback callback) {
+        mRepository.updateCurrencies(context, callback);
     }
 
     public void start() {

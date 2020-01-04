@@ -33,14 +33,16 @@ android {
     }
     buildTypes {
         debug {
-            manifestPlaceholders = [currencylayer_token : project.hasProperty("CURRENCY_TOKEN") ?
-                    CURRENCY_TOKEN : System.getenv("CURRENCY_TOKEN"), isDebug: true]
+            manifestPlaceholders = [currencylayer_token: project.hasProperty("CURRENCY_TOKEN") ?
+                    CURRENCY_TOKEN : System.getenv("CURRENCY_TOKEN"),
+                                    isDebug            : true]
             buildConfigField("boolean", "LOG", "true")
             applicationIdSuffix ".debug"
         }
         release {
-            manifestPlaceholders = [currencylayer_token : project.hasProperty("CURRENCY_TOKEN") ?
-                    CURRENCY_TOKEN : System.getenv("CURRENCY_TOKEN"), isDebug: false]
+            manifestPlaceholders = [currencylayer_token: project.hasProperty("CURRENCY_TOKEN") ?
+                    CURRENCY_TOKEN : System.getenv("CURRENCY_TOKEN"),
+                                    isDebug            : false]
             minifyEnabled false
             buildConfigField("boolean", "LOG", "false")
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -54,7 +56,7 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
-    buildToolsVersion '29.0.2'
+    buildToolsVersion rootProject.buildToolsVersion
     dexOptions {
         dexInProcess true
         preDexLibraries true
@@ -69,6 +71,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "androidx.preference:preference:${preferenceVersion}"
     implementation "androidx.navigation:navigation-fragment:${navVersion}"
     implementation "androidx.navigation:navigation-ui:${navVersion}"
     implementation "androidx.navigation:navigation-fragment-ktx:${navVersion}"

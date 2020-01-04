@@ -297,7 +297,6 @@
                                     android:text="周报"
                                     android:textSize="14sp" />
 
-
                                 <Space
                                     android:layout_width="0dp"
                                     android:layout_height="match_parent"
@@ -355,10 +354,11 @@
                         android:layout_weight="1" />
 
                     <ImageView
+                        android:id="@+id/currency_menu"
                         android:layout_width="19dp"
                         android:layout_height="19dp"
-                        app:srcCompat="@drawable/ic_menu"
-                        android:tint="@color/gray" />
+                        android:tint="@color/gray"
+                        app:srcCompat="@drawable/ic_menu" />
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView

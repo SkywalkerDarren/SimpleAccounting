@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/refresh"
+        android:title="@string/refresh_currency" />
+    <item
+        android:id="@+id/modify_current"
+        android:title="更改当前货币" />
+    <item
+        android:id="@+id/modify_fav_currency"
+        android:title="更改显示货币" />
+
+</menu>

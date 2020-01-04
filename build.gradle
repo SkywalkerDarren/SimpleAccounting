@@ -41,6 +41,7 @@ ext {
     buildToolsVersion = '29.0.2'
 
     // androidx
+    preferenceVersion = '1.1.0'
     legacyVersion = '1.0.0'
     cardviewVersion = '1.0.0'
     roomVersion = '2.2.3'

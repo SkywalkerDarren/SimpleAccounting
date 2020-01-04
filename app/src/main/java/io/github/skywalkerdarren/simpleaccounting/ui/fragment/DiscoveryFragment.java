@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +31,7 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.ExchangeRateAdapter;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentDiscoveryBinding;
+import io.github.skywalkerdarren.simpleaccounting.model.datasource.CurrencyDataSource;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.MyAccountActivity;
 import io.github.skywalkerdarren.simpleaccounting.util.PreferenceUtil;
 import io.github.skywalkerdarren.simpleaccounting.util.ViewModelFactory;
@@ -44,7 +47,7 @@ import static io.github.skywalkerdarren.simpleaccounting.util.PreferenceUtil.LAS
  * create an instance of this fragment.
  */
 public class DiscoveryFragment extends BaseFragment {
-    ExchangeRateAdapter mAdapter;
+    private ExchangeRateAdapter mAdapter;
     private LinearLayout mDotLayout;
     private ArrayList<ImageView> mImageViews;
     private FragmentDiscoveryBinding mBinding;
@@ -68,6 +71,8 @@ public class DiscoveryFragment extends BaseFragment {
         });
 
         mBinding.exchangeRateRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+
+        mBinding.currencyMenu.setOnClickListener(v -> createPopupMenu(mBinding.currencyMenu));
 
         ViewPager viewPager = mBinding.showPager;
         mDotLayout = mBinding.dotLayout;
@@ -98,6 +103,39 @@ public class DiscoveryFragment extends BaseFragment {
             }
             mDotLayout.addView(view, params);
         }
+    }
+
+    public void createPopupMenu(View view) {
+        // 实例化PopupMenu对象
+        PopupMenu popupMenu = new PopupMenu(requireContext(), view);
+        // 将R.menu.main加载到popupMenu中
+        requireActivity().getMenuInflater().inflate(R.menu.currency, popupMenu.getMenu());
+        // 为popupMenu菜单的菜单项单机时间绑定时间监听器
+        popupMenu.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.refresh:
+                    mViewModel.refreshCurrency(requireContext(), new CurrencyDataSource.UpdateCallback() {
+                        @Override
+                        public void connectFailed(@Nullable String msg) {
+                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void updated() {
+                            updateUI();
+                        }
+                    });
+                    break;
+                case R.id.modify_fav_currency:
+                    break;
+                case R.id.modify_current:
+                    break;
+                default:
+                    break;
+            }
+            return true;
+        });
+        popupMenu.show();
     }
 
     @Override
