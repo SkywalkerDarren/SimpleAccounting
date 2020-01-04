@@ -14,6 +14,14 @@ interface CurrencyDataSource {
     fun updateCurrencies(context: Context, callback: UpdateCallback)
     fun initCurrenciesAndInfos(context: Context)
     fun changeCurrencyPosition(currencyA: Currency, currencyB: Currency)
+    fun setCurrencyFav(name: String, isChecked: Boolean)
+    fun getAllCurrencies(callback: LoadPairCurrenicesCallback)
+
+    interface LoadPairCurrenicesCallback {
+        fun onPairCurrenicesLoaded(currency: List<Pair<Currency, CurrencyInfo>>)
+        fun onDataUnavailable()
+    }
+
     interface LoadExchangeRateCallback {
         fun onExchangeRateLoaded(currency: Currency?)
         fun onDataUnavailable()

@@ -105,7 +105,7 @@ public class DiscoveryFragment extends BaseFragment {
         }
     }
 
-    public void createPopupMenu(View view) {
+    private void createPopupMenu(View view) {
         // 实例化PopupMenu对象
         PopupMenu popupMenu = new PopupMenu(requireContext(), view);
         // 将R.menu.main加载到popupMenu中
@@ -127,8 +127,11 @@ public class DiscoveryFragment extends BaseFragment {
                     });
                     break;
                 case R.id.modify_fav_currency:
+                    showMultiAlertDialog();
                     break;
                 case R.id.modify_current:
+                    // TODO 增加当前货币选择
+                    updateUI();
                     break;
                 default:
                     break;
@@ -137,6 +140,14 @@ public class DiscoveryFragment extends BaseFragment {
         });
         popupMenu.show();
     }
+
+
+    private void showMultiAlertDialog() {
+        CurrencyFavDialogFragment currencyFavDialogFragment = new CurrencyFavDialogFragment();
+        currencyFavDialogFragment.setOnDismissListener(this::updateUI);
+        currencyFavDialogFragment.show(requireFragmentManager(), "currencyFavDialogFragment");
+    }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {

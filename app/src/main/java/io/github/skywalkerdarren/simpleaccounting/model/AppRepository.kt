@@ -31,7 +31,9 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.collections.ArrayList
+import kotlin.concurrent.read
 import kotlin.concurrent.withLock
+import kotlin.concurrent.write
 
 class AppRepository private constructor(val executors: AppExecutors, val database: AppDatabase) : AppDataSource {
     private val dbLock = ReentrantReadWriteLock(true)
@@ -499,6 +501,40 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
                 currencyRateDao.updateCurrencyId(currencyB.name, i)
                 currencyRateDao.updateCurrencyId(currencyA.name, j)
                 dbLock.writeLock().unlock()
+            }
+        })
+    }
+
+    override fun setCurrencyFav(name: String, isChecked: Boolean) {
+        execute(object : LoadData {
+            override fun load() {
+                Log.d(TAG, "setCurrencyFav: in " + Thread.currentThread().name)
+                dbLock.write {
+                    currencyRateDao.getCurrency(name)?.apply {
+                        favourite = isChecked
+                    }?.let {
+                        currencyRateDao.updateCurrency(it)
+                    }
+                }
+            }
+        })
+    }
+
+    override fun getAllCurrencies(callback: LoadPairCurrenicesCallback) {
+        execute(object : LoadData {
+            override fun load() {
+                Log.d(TAG, "getAllCurrencies: in " + Thread.currentThread().name)
+                val pairs: MutableList<Pair<Currency, CurrencyInfo>> = ArrayList()
+                dbLock.read {
+                    currencyRateDao.currencies?.forEach { currency ->
+                        val info = currencyInfoDao.getInfo(currency.name)
+                        if (info != null) {
+                            val pair = Pair(currency, info)
+                            pairs.add(pair)
+                        }
+                    }
+                }
+                executors.mainThread().execute { callback.onPairCurrenicesLoaded(pairs.toList()) }
             }
         })
     }
