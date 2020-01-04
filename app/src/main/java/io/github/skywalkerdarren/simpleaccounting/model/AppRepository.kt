@@ -694,12 +694,13 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
                 try {
                     context.resources.assets.open("currency/default_rate.json").use { inputStream ->
                         val reader: Reader = InputStreamReader(inputStream)
-                        val (_, timestamp, quotes) = JsonConvertor.toCurrenciesInfo(reader)
-                        PreferenceUtil.setString(context, PreferenceUtil.LAST_UPDATE_TIMESTAMP, timestamp)
-                        if (quotes != null) {
-                            for (currency in quotes) {
+                        val info = JsonConvertor.toCurrenciesInfo(reader)
+                        PreferenceUtil.setString(context, PreferenceUtil.LAST_UPDATE_TIMESTAMP, info.timestamp)
+                        if (info.quotes != null) {
+                            for (currency in info.quotes) {
                                 when (currency.name) {
-                                    "CNY", "USD", "HKD", "JPY", "MOP", "TWD", "CAD", "EUR", "GBP", "AUD" -> currency.favourite = java.lang.Boolean.TRUE
+                                    "CNY", "USD", "HKD", "JPY", "MOP", "TWD", "CAD", "EUR", "GBP", "AUD" ->
+                                        currency.favourite = java.lang.Boolean.TRUE
                                     else -> currency.favourite = java.lang.Boolean.FALSE
                                 }
                                 currencyRateDao.addCurrency(currency)
