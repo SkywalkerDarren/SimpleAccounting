@@ -22,6 +22,7 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.databinding.ActivityWelcomeBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
+import io.github.skywalkerdarren.simpleaccounting.util.NotificationWorker;
 import io.github.skywalkerdarren.simpleaccounting.util.PreferenceUtil;
 
 import static io.github.skywalkerdarren.simpleaccounting.util.PreferenceUtil.RUN_APP_TIMES;
@@ -37,6 +38,7 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         int count = Integer.parseInt(PreferenceUtil.getString(this, RUN_APP_TIMES, "0"));
+        NotificationWorker.start(this);
         try {
             if (count == 0) {
                 AppRepository repository = AppRepository.getInstance(new AppExecutors(), getApplicationContext());

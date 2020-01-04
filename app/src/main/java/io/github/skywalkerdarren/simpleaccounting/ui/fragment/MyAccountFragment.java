@@ -1,7 +1,6 @@
 package io.github.skywalkerdarren.simpleaccounting.ui.fragment;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,6 @@ import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentMyAccountB
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.MainActivity;
-import io.github.skywalkerdarren.simpleaccounting.ui.activity.SettingsActivity;
 import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 
 /**
@@ -52,8 +50,7 @@ public class MyAccountFragment extends BaseFragment {
             gotoFragment(aboutFragment);
         });
         binding.setting.setOnClickListener(view -> {
-            Intent intent = SettingsActivity.newIntent(requireContext());
-            startActivity(intent);
+
         });
         binding.back.setOnClickListener(view -> requireActivity().finish());
         binding.feedbackLayout.setOnClickListener(v -> {

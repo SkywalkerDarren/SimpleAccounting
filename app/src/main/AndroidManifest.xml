@@ -42,6 +42,7 @@
             android:name=".ui.activity.BillEditActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".ui.activity.StatsActivity" />
+        <activity android:name=".ui.activity.MyAccountActivity" />
 
         <receiver android:name=".ui.DesktopWidget">
             <intent-filter>
@@ -52,9 +53,6 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/bill_widget" />
         </receiver>
-
-        <activity android:name=".ui.activity.SettingsActivity" />
-        <activity android:name=".ui.activity.MyAccountActivity" />
     </application>
 
 </manifest>
