@@ -29,7 +29,6 @@ import java.util.ArrayList;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.ExchangeRateAdapter;
-import io.github.skywalkerdarren.simpleaccounting.base.BaseDialogFragment;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentDiscoveryBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.CurrencyDataSource;
@@ -150,13 +149,10 @@ public class DiscoveryFragment extends BaseFragment {
 
     private void showSingleAlertDialog() {
         CurrencySelectDialogFragment currencySelectDialogFragment = new CurrencySelectDialogFragment();
-        currencySelectDialogFragment.setOnDismissListener(new BaseDialogFragment.DismissListener() {
-            @Override
-            public void callback() {
-                String current = currencySelectDialogFragment.getCurrencyAdapter().getCurrent();
-                mViewModel.setCurrency(current);
-                updateUI();
-            }
+        currencySelectDialogFragment.setOnDismissListener(() -> {
+            String current = currencySelectDialogFragment.getCurrencyAdapter().getCurrent();
+            mViewModel.setCurrency(current);
+            updateUI();
         });
         currencySelectDialogFragment.show(requireFragmentManager(), "currencySelectDialogFragment");
     }
@@ -209,7 +205,7 @@ public class DiscoveryFragment extends BaseFragment {
     @Override
     protected void updateUI() {
         mViewModel.start();
-        long timeStamp = Long.parseLong(PreferenceUtil.getString(requireContext(), LAST_UPDATE_TIMESTAMP));
+        long timeStamp = Long.parseLong(PreferenceUtil.getString(requireContext(), LAST_UPDATE_TIMESTAMP, "0"));
         DateTime dateTime = new DateTime(timeStamp * 1000);
         mViewModel.setCurrencyDate(dateTime.toString("yyyy-MM-dd"));
     }
@@ -243,15 +239,16 @@ public class DiscoveryFragment extends BaseFragment {
         }
 
         @Override
-        public boolean isViewFromObject(View view, Object object) {
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
             return view == object;
         }
 
         @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
+        public void destroyItem(ViewGroup container, int position, @NonNull Object object) {
             container.removeView(mImageViews.get(position));
         }
 
+        @NonNull
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             container.addView(mImageViews.get(position));
