@@ -16,7 +16,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.Currency;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrencyInfo;
 
 public class DiscoveryViewModel extends ViewModel {
-    private static final String defCurrency = "CNY";
+    private String defCurrency = "CNY";
     private final AppRepository mRepository;
     private final MutableLiveData<String> cumulativeDays = new MutableLiveData<>();
     private final MutableLiveData<String> monthOfAccountingCounts = new MutableLiveData<>();
@@ -116,5 +116,9 @@ public class DiscoveryViewModel extends ViewModel {
 
             }
         });
+    }
+
+    public void setCurrency(String current) {
+        defCurrency = current;
     }
 }

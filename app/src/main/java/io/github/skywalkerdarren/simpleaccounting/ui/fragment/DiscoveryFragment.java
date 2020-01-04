@@ -29,6 +29,7 @@ import java.util.ArrayList;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.ExchangeRateAdapter;
+import io.github.skywalkerdarren.simpleaccounting.base.BaseDialogFragment;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentDiscoveryBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.CurrencyDataSource;
@@ -130,8 +131,7 @@ public class DiscoveryFragment extends BaseFragment {
                     showMultiAlertDialog();
                     break;
                 case R.id.modify_current:
-                    // TODO 增加当前货币选择
-                    updateUI();
+                    showSingleAlertDialog();
                     break;
                 default:
                     break;
@@ -146,6 +146,19 @@ public class DiscoveryFragment extends BaseFragment {
         CurrencyFavDialogFragment currencyFavDialogFragment = new CurrencyFavDialogFragment();
         currencyFavDialogFragment.setOnDismissListener(this::updateUI);
         currencyFavDialogFragment.show(requireFragmentManager(), "currencyFavDialogFragment");
+    }
+
+    private void showSingleAlertDialog() {
+        CurrencySelectDialogFragment currencySelectDialogFragment = new CurrencySelectDialogFragment();
+        currencySelectDialogFragment.setOnDismissListener(new BaseDialogFragment.DismissListener() {
+            @Override
+            public void callback() {
+                String current = currencySelectDialogFragment.getCurrencyAdapter().getCurrent();
+                mViewModel.setCurrency(current);
+                updateUI();
+            }
+        });
+        currencySelectDialogFragment.show(requireFragmentManager(), "currencySelectDialogFragment");
     }
 
 
