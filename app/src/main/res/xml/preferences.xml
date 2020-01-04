@@ -9,9 +9,9 @@
             app:key="notifications"
             app:title="允许通知" />
         <MultiSelectListPreference
-            android:defaultValue="@array/multi_select_list_preference_default_value"
-            android:entries="@array/multi_select_list_preference_default_value"
-            android:entryValues="@array/multi_select_list_preference_default_value"
+            android:defaultValue="@array/list_time_def_value"
+            android:entries="@array/list_time"
+            android:entryValues="@array/list_time_value"
             android:key="notifications_time"
             android:title="通知时间设置" />
 

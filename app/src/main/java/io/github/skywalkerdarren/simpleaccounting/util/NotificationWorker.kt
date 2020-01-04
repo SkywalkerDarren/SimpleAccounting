@@ -3,6 +3,7 @@ package io.github.skywalkerdarren.simpleaccounting.util
 import android.app.PendingIntent
 import android.content.Context
 import androidx.work.*
+import io.github.skywalkerdarren.simpleaccounting.R
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillEditActivity
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -24,9 +25,14 @@ class NotificationWorker(context: Context, workerParams: WorkerParameters) : Wor
     }
 
     private val isPush = PreferenceUtil.getBoolean(context, PreferenceUtil.IS_PUSH, false)
-    var hourList: MutableList<Int> = arrayListOf(13, 20)
 
     override fun doWork(): Result {
+        if (hourChange()) {
+            // 时段变化 重置flag
+            PreferenceUtil.setBoolean(applicationContext, PreferenceUtil.IS_PUSH, false)
+        }
+        val hourList: MutableList<String> = applicationContext.resources
+                .getStringArray(R.array.list_time_def_value).toMutableList()
         if (compareCurrentHour(hourList)) {
             if (!isPush) {
                 //如果在指定时间段，并且没有推送过通知
@@ -51,9 +57,16 @@ class NotificationWorker(context: Context, workerParams: WorkerParameters) : Wor
         return Result.success()
     }
 
-    private fun compareCurrentHour(targetHour: List<Int>): Boolean {
+    private fun hourChange(): Boolean {
+        val hour = PreferenceUtil.getString(applicationContext, PreferenceUtil.CURRENT_HOUR, "")
         val current = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-        return targetHour.contains(current)
+        return current.toString() != hour
+    }
+
+    private fun compareCurrentHour(targetHour: List<String>): Boolean {
+        val current = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+        PreferenceUtil.setString(applicationContext, PreferenceUtil.CURRENT_HOUR, current.toString())
+        return targetHour.contains(current.toString())
     }
 
 }

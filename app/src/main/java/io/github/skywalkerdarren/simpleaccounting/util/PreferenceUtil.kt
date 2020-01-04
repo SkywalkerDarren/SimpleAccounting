@@ -3,6 +3,7 @@ package io.github.skywalkerdarren.simpleaccounting.util
 import android.content.Context
 
 object PreferenceUtil {
+    const val CURRENT_HOUR = "CURRENT_HOUR"
     const val BUDGET = "BUDGET"
     const val LAST_UPDATE_TIMESTAMP = "LAST_UPDATE_TIMESTAMP"
     const val RUN_APP_TIMES = "RUN_APP_TIMES"

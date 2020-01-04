@@ -1,6 +1,8 @@
 package io.github.skywalkerdarren.simpleaccounting.ui.fragment
 
 import android.os.Bundle
+import android.util.Log
+import androidx.preference.MultiSelectListPreference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import io.github.skywalkerdarren.simpleaccounting.R
@@ -21,6 +23,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
             } else {
                 NotificationWorker.cancel(requireContext())
             }
+            true
+        }
+        val timeSetting: MultiSelectListPreference? = findPreference("notifications_time")
+        timeSetting?.setOnPreferenceChangeListener { _, newValue ->
+            Log.d(TAG, "timeSetting: $newValue")
             true
         }
     }
