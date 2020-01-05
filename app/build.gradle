@@ -9,8 +9,8 @@ android {
         applicationId "io.github.skywalkerdarren.simpleaccounting"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 3
-        versionName "v0.3.2"
+        versionCode rootProject.appRawVersion
+        versionName rootProject.appSemVersion
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         javaCompileOptions {
@@ -50,11 +50,11 @@ android {
         }
     }
     compileOptions {
-        targetCompatibility JavaVersion.VERSION_1_8
-        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility rootProject.javaVersion
+        sourceCompatibility rootProject.javaVersion
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = rootProject.javaVersion.toString()
     }
     buildToolsVersion rootProject.buildToolsVersion
     dexOptions {
