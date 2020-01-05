@@ -40,17 +40,16 @@
 
 ## 使用框架
 
-项目结构：
+项目架构：
 
-* ~~MVC~~ 已重构
-* MVVM
+- ~~MVC~~ 已重构
+- MVVM
 
-* java1.8
-* kotlin 1.3.61
-* kotlin协程
+基础组件：
 
-* ~~android.support~~ 已迁移
-* androidx
+- ~~android.support~~ 已迁移
+- androidx
+- kotlin协程
 
 jetpack组件：
 
