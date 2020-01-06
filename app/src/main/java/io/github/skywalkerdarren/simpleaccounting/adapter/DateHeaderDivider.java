@@ -4,7 +4,7 @@ import org.joda.time.DateTime;
 
 import java.math.BigDecimal;
 
-import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
+import io.github.skywalkerdarren.simpleaccounting.util.view.FormatUtil;
 
 /**
  * 账单分隔符

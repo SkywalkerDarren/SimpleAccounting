@@ -15,6 +15,7 @@ import java.io.Reader;
 import java.util.Map;
 
 import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrenciesInfo;
+import io.github.skywalkerdarren.simpleaccounting.util.data.JsonConvertor;
 
 import static org.junit.Assert.assertEquals;
 

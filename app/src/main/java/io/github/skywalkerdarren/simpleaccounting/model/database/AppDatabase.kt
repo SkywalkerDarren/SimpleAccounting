@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import io.github.skywalkerdarren.simpleaccounting.model.dao.*
 import io.github.skywalkerdarren.simpleaccounting.model.entity.*
-import io.github.skywalkerdarren.simpleaccounting.util.TypeConvertUtil
+import io.github.skywalkerdarren.simpleaccounting.util.data.TypeConvertUtil
 
 @Database(entities = [Type::class, Account::class, Bill::class, Currency::class, CurrencyInfo::class], version = 2)
 @TypeConverters(TypeConvertUtil::class)

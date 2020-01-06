@@ -26,9 +26,9 @@ import org.joda.time.DateTime;
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentChartBinding;
-import io.github.skywalkerdarren.simpleaccounting.util.CustomTypefaceSpan;
-import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
 import io.github.skywalkerdarren.simpleaccounting.util.ViewModelFactory;
+import io.github.skywalkerdarren.simpleaccounting.util.view.CustomTypefaceSpan;
+import io.github.skywalkerdarren.simpleaccounting.util.view.FormatUtil;
 import io.github.skywalkerdarren.simpleaccounting.view_model.ChartViewModel;
 
 /**

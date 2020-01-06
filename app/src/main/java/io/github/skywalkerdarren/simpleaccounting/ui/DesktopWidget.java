@@ -19,7 +19,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillEditActivity;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.MainActivity;
 import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
-import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
+import io.github.skywalkerdarren.simpleaccounting.util.view.FormatUtil;
 
 /**
  * 桌面小部件

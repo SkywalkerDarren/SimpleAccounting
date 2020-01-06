@@ -14,6 +14,7 @@ import androidx.preference.PreferenceManager;
 import java.io.IOException;
 
 import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrenciesInfo;
+import io.github.skywalkerdarren.simpleaccounting.util.data.JsonConvertor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Request.Builder;

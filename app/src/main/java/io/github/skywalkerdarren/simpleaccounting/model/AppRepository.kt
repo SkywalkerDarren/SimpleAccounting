@@ -20,8 +20,8 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.*
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Currency
 import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors
 import io.github.skywalkerdarren.simpleaccounting.util.CurrencyRequest
-import io.github.skywalkerdarren.simpleaccounting.util.JsonConvertor
 import io.github.skywalkerdarren.simpleaccounting.util.PreferenceUtil
+import io.github.skywalkerdarren.simpleaccounting.util.data.JsonConvertor
 import org.joda.time.DateTime
 import java.io.IOException
 import java.io.InputStreamReader

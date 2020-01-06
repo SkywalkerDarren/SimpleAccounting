@@ -12,7 +12,7 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.BillDataSource;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
-import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
+import io.github.skywalkerdarren.simpleaccounting.util.view.FormatUtil;
 
 /**
  * 账单详单vm

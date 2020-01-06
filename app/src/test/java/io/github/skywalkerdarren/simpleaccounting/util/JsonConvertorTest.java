@@ -5,6 +5,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrenciesInfo;
+import io.github.skywalkerdarren.simpleaccounting.util.data.JsonConvertor;
 
 @RunWith(JUnit4.class)
 public class JsonConvertorTest {

@@ -14,7 +14,7 @@ import java.util.List;
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillInfo;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.StatsActivity;
-import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
+import io.github.skywalkerdarren.simpleaccounting.util.view.FormatUtil;
 
 /**
  * 账单列表vm

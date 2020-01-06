@@ -8,7 +8,7 @@
 
         <import type="java.math.BigDecimal" />
 
-        <import type="io.github.skywalkerdarren.simpleaccounting.util.FormatUtil" />
+        <import type="io.github.skywalkerdarren.simpleaccounting.util.view.FormatUtil" />
 
         <variable
             name="sum"

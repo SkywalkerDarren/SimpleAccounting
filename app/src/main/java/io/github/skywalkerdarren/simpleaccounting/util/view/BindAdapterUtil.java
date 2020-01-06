@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.util;
+package io.github.skywalkerdarren.simpleaccounting.util.view;
 
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;

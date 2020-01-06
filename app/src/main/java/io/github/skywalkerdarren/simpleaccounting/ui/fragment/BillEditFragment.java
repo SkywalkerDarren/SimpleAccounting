@@ -54,8 +54,8 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
 import io.github.skywalkerdarren.simpleaccounting.ui.NumPad;
-import io.github.skywalkerdarren.simpleaccounting.util.DpConvertUtils;
 import io.github.skywalkerdarren.simpleaccounting.util.ViewModelFactory;
+import io.github.skywalkerdarren.simpleaccounting.util.view.DpConvertUtils;
 import io.github.skywalkerdarren.simpleaccounting.view_model.BillEditViewModel;
 
 /**

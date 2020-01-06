@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.util;
+package io.github.skywalkerdarren.simpleaccounting.util.view;
 
 import android.graphics.Paint;
 import android.graphics.Typeface;

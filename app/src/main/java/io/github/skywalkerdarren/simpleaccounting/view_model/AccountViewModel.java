@@ -11,7 +11,7 @@ import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
-import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil;
+import io.github.skywalkerdarren.simpleaccounting.util.view.FormatUtil;
 
 /**
  * 账户页vm

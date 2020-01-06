@@ -19,7 +19,7 @@ import androidx.annotation.Nullable;
 import java.math.BigDecimal;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
-import io.github.skywalkerdarren.simpleaccounting.util.CalculateUtil;
+import io.github.skywalkerdarren.simpleaccounting.util.calculate.CalculateUtil;
 
 /**
  * 自定义键盘

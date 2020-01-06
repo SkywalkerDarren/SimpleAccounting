@@ -41,8 +41,8 @@ import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillDetailBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillEditActivity;
-import io.github.skywalkerdarren.simpleaccounting.util.DpConvertUtils;
 import io.github.skywalkerdarren.simpleaccounting.util.ViewModelFactory;
+import io.github.skywalkerdarren.simpleaccounting.util.view.DpConvertUtils;
 import io.github.skywalkerdarren.simpleaccounting.view_model.BillDetailViewModel;
 
 /**

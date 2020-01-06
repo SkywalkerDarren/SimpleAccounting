@@ -4,7 +4,7 @@ import android.text.TextUtils
 import com.chad.library.adapter.base.entity.MultiItemEntity
 import io.github.skywalkerdarren.simpleaccounting.adapter.BillAdapter
 import io.github.skywalkerdarren.simpleaccounting.adapter.DateHeaderDivider
-import io.github.skywalkerdarren.simpleaccounting.util.FormatUtil
+import io.github.skywalkerdarren.simpleaccounting.util.view.FormatUtil
 import org.joda.time.DateTime
 import java.util.*
 

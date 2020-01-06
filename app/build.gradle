@@ -110,4 +110,6 @@ dependencies {
     androidTestImplementation "androidx.room:room-testing:${roomVersion}"
     implementation "androidx.constraintlayout:constraintlayout:${constraintlayoutVersion}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}"
+    implementation 'com.squareup.retrofit2:retrofit:2.7.1'
+    implementation 'com.squareup.retrofit2:retrofit-converters:2.7.1'
 }

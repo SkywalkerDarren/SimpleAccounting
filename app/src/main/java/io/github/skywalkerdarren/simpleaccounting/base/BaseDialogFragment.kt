@@ -7,8 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import io.github.skywalkerdarren.simpleaccounting.util.ScreenUtil
 import io.github.skywalkerdarren.simpleaccounting.util.ViewModelFactory
+import io.github.skywalkerdarren.simpleaccounting.util.view.ScreenUtil
 
 abstract class BaseDialogFragment : DialogFragment() {
     interface DismissListener {

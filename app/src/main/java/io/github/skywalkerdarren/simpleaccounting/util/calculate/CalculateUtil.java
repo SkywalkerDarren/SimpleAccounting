@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.util;
+package io.github.skywalkerdarren.simpleaccounting.util.calculate;
 
 import android.text.TextUtils;
 
@@ -76,7 +76,7 @@ public class CalculateUtil {
 
         for (int i = 1; i < exp.length(); i++) {
             j = k;
-
+            c = exp.charAt(i);
             if (c >= '0' && c <= '9') {
                 k = 0;
             } else if (c == '.') {
@@ -157,9 +157,9 @@ public class CalculateUtil {
     private boolean checkExpression(List<String> exp) {
 
         int l = 0, r = 0;
-        //      neg,    num,    double, single, left,   right
+        //      neg,
         final boolean[][] fsm = new boolean[][]{
-                // neg
+                // neg, num,    double, single, left,   right
                 {false, true, false, false, false, false},
                 // num
                 {false, false, true, false, false, true},
