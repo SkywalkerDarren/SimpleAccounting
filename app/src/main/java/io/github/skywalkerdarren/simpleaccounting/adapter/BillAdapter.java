@@ -60,14 +60,15 @@ public class BillAdapter extends BaseMultiItemDataBindingAdapter<BillInfo, ViewD
         addItemType(HEADER, R.layout.item_list_bill_header);
     }
 
-    /**
-     * 设置新帐单
-     *
-     * @param bills 含分隔符的账单信息列表
-     */
-    public void setBills(List<BillInfo> bills) {
-        setNewData(bills);
-    }
+    ///**
+    // * 设置新帐单
+    // *
+    // * @param bills 含分隔符的账单信息列表
+    // */
+    //public void setBills(List<BillInfo> bills) {
+    //    new BillInfoDiff(mData, bills).getResult().dispatchUpdatesTo(this);
+    //    setNewData(bills);
+    //}
 
     @Override
     protected void convert(ViewDataBinding binding, BillInfo item) {

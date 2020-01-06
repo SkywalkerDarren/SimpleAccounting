@@ -28,6 +28,7 @@ import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillListBi
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillInfo;
 import io.github.skywalkerdarren.simpleaccounting.util.ViewModelFactory;
 import io.github.skywalkerdarren.simpleaccounting.util.data.PreferenceUtil;
+import io.github.skywalkerdarren.simpleaccounting.util.view.BillInfoDiff;
 import io.github.skywalkerdarren.simpleaccounting.view_model.BillListViewModel;
 import io.github.skywalkerdarren.simpleaccounting.view_model.EmptyListViewModel;
 
@@ -137,9 +138,7 @@ public class BillListFragment extends BaseFragment {
                     .Builder(HEADER)
                     .create());
         } else {
-            mBillAdapter.setBills(billInfoList);
-            mBillAdapter.notifyDataSetChanged();
-//            runLayoutAnimation(mBillListRecyclerView);
+            mBillAdapter.setNewDiffData(new BillInfoDiff(billInfoList));
         }
     }
 

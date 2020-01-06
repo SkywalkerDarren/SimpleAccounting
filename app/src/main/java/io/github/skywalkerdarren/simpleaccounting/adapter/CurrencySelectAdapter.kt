@@ -14,10 +14,10 @@ class CurrencySelectAdapter @JvmOverloads constructor(data: MutableList<Currency
         binding.selected.isChecked = current != null && item.name == current
     }
 
-    override fun convert(helper: BaseBindingViewHolder<ItemCurrencySingleBinding>?, item: CurrencyInfo?) {
+    override fun convert(helper: BaseBindingViewHolder<ItemCurrencySingleBinding>, item: CurrencyInfo?) {
         super.convert(helper, item)
-        helper?.addOnClickListener(R.id.item)
-        helper?.addOnClickListener(R.id.selected)
+        helper.addOnClickListener(R.id.item)
+        helper.addOnClickListener(R.id.selected)
     }
 
     fun setNewData(data: MutableList<CurrencyInfo>, current: String) {
