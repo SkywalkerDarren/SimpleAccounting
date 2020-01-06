@@ -27,16 +27,16 @@ public class JsonConvertor {
     }
 
     public static CurrenciesInfo toCurrenciesInfo(String json) {
-        Gson gson = getGson();
+        Gson gson = getCurrenciesInfoGson();
         return gson.fromJson(json, CurrenciesInfo.class);
     }
 
     public static CurrenciesInfo toCurrenciesInfo(Reader json) {
-        Gson gson = getGson();
+        Gson gson = getCurrenciesInfoGson();
         return gson.fromJson(json, CurrenciesInfo.class);
     }
 
-    private static Gson getGson() {
+    public static Gson getCurrenciesInfoGson() {
         Type currencyListType = new TypeToken<List<Currency>>() {
         }.getType();
         TypeAdapter<List<Currency>> currencyListReadAdapter = new TypeAdapter<List<Currency>>() {

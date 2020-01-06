@@ -19,10 +19,13 @@ import io.github.skywalkerdarren.simpleaccounting.model.datasource.TypeDataSourc
 import io.github.skywalkerdarren.simpleaccounting.model.entity.*
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Currency
 import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors
-import io.github.skywalkerdarren.simpleaccounting.util.CurrencyRequest
 import io.github.skywalkerdarren.simpleaccounting.util.data.JsonConvertor
 import io.github.skywalkerdarren.simpleaccounting.util.data.PreferenceUtil
+import io.github.skywalkerdarren.simpleaccounting.util.network.RequestService
 import org.joda.time.DateTime
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.IOException
 import java.io.InputStreamReader
 import java.io.Reader
@@ -561,35 +564,79 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
     }
 
     override fun updateCurrencies(context: Context, callback: UpdateCallback) {
-        executors.networkIO().execute {
-            val request = CurrencyRequest(context)
-            if (request.checkConnection()) {
-                val timestamp = PreferenceUtil.getString(context, PreferenceUtil.LAST_UPDATE_TIMESTAMP, "0")
-                val before = DateTime(timestamp.toLong() * 1000)
-                val after = DateTime.now()
-                if (!after.minusDays(1).isAfter(before)) {
-                    executors.mainThread().execute { callback.connectFailed("update date too close") }
-                    return@execute
-                }
-                val currenciesInfo = request.currenciesInfo
-                if ("false" == currenciesInfo.success) {
-                    executors.mainThread().execute { callback.connectFailed(currenciesInfo.error.toString()) }
-                    return@execute
-                }
-                PreferenceUtil.setString(context, PreferenceUtil.LAST_UPDATE_TIMESTAMP, currenciesInfo.timestamp)
-                val currencies = currenciesInfo.quotes
-                if (currencies != null) {
-                    for (currency in currencies) {
-                        val rawCurrency = currencyRateDao.getCurrency(currency.name)
-                        rawCurrency.exchangeRate = currency.exchangeRate
-                        currencyRateDao.updateCurrency(rawCurrency)
-                    }
-                }
-                executors.mainThread().execute { callback.updated() }
-            } else {
-                executors.mainThread().execute { callback.connectFailed("connect failed") }
-            }
+        val timestamp = PreferenceUtil.getString(context, PreferenceUtil.LAST_UPDATE_TIMESTAMP, "0")
+        val before = DateTime(timestamp.toLong() * 1000)
+        val after = DateTime.now()
+        if (!after.minusDays(1).isAfter(before)) {
+            callback.connectFailed("updated too frequently")
+            return
         }
+
+        val request2 = RequestService().requestCurrenciesInfo(context)
+        request2.enqueue(object : Callback<CurrenciesInfo> {
+            override fun onFailure(call: Call<CurrenciesInfo>, t: Throwable) {
+                callback.connectFailed(t.message)
+            }
+
+            override fun onResponse(call: Call<CurrenciesInfo>, response: Response<CurrenciesInfo>) {
+                val currenciesInfo = response.body()
+
+                if ("false" == currenciesInfo?.success) {
+                    callback.connectFailed(currenciesInfo.error.toString())
+                    return
+                }
+
+                PreferenceUtil.setString(context, PreferenceUtil.LAST_UPDATE_TIMESTAMP, currenciesInfo?.timestamp)
+                val currencies: List<Currency>? = currenciesInfo?.quotes
+                if (currencies == null) {
+                    callback.connectFailed("no currency")
+                    return
+                }
+                execute(object : LoadData {
+                    override fun load() {
+                        for (currency in currencies) {
+                            val rawCurrency = currencyRateDao.getCurrency(currency.name)
+                            rawCurrency.exchangeRate = currency.exchangeRate
+                            currencyRateDao.updateCurrency(rawCurrency)
+                        }
+                        executors.mainThread().execute { callback.updated() }
+                    }
+                })
+
+            }
+        })
+
+//        executors.networkIO().execute {
+//            val request = CurrencyRequest(context)
+//
+//
+//            if (request.checkConnection()) {
+//                val timestamp = PreferenceUtil.getString(context, PreferenceUtil.LAST_UPDATE_TIMESTAMP, "0")
+//                val before = DateTime(timestamp.toLong() * 1000)
+//                val after = DateTime.now()
+//                if (!after.minusDays(1).isAfter(before)) {
+//                    executors.mainThread().execute { callback.connectFailed("update date too close") }
+//                    return@execute
+//                }
+//                val currenciesInfo = request.currenciesInfo
+//                if ("false" == currenciesInfo.success) {
+//                    executors.mainThread().execute { callback.connectFailed(currenciesInfo.error.toString()) }
+//                    return@execute
+//                }
+//                PreferenceUtil.setString(context, PreferenceUtil.LAST_UPDATE_TIMESTAMP, currenciesInfo.timestamp)
+//                val currencies = currenciesInfo.quotes
+//                if (currencies != null) {
+//                    for (currency in currencies) {
+//                        val rawCurrency = currencyRateDao.getCurrency(currency.name)
+//                        rawCurrency.exchangeRate = currency.exchangeRate
+//                        currencyRateDao.updateCurrency(rawCurrency)
+//                    }
+//                }
+//                executors.mainThread().execute { callback.updated() }
+//            } else {
+//                executors.mainThread().execute { callback.connectFailed("connect failed") }
+//            }
+//        }
     }
 
     override fun getCurrencyInfo(name: String, callback: LoadCurrencyInfoCallback) {
