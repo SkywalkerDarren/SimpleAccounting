@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.view.View;
 
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.listener.OnItemDragListener;
@@ -52,25 +51,6 @@ public class AccountAdapter extends BaseDraggableDataBindingAdapter<Account, Ite
         });
     }
 
-    private boolean checkCache(List<Account> accounts) {
-        if (accounts == null || mData.size() != accounts.size()) {
-            return true;
-        }
-        for (int i = 0; i < accounts.size(); i++) {
-            if (!accounts.get(i).equals(mData.get(i))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public void setNewData(@Nullable List<Account> data) {
-        if (checkCache(data)) {
-            super.setNewData(data);
-        }
-    }
-
     private void itemRaiseAnimator(View view, final float start, boolean raise) {
         final float end = start * 2;
         ObjectAnimator animator = ObjectAnimator.ofFloat(view, "elevation",
@@ -86,5 +66,9 @@ public class AccountAdapter extends BaseDraggableDataBindingAdapter<Account, Ite
             item.setBalance(accountStats.getSum());
             binding.setAccount(item);
         });
+    }
+
+    public void setNewList(List<Account> accounts) {
+        setNewDiffData(new AccountDiff(accounts));
     }
 }

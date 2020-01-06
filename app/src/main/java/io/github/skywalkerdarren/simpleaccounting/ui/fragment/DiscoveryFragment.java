@@ -197,7 +197,7 @@ public class DiscoveryFragment extends BaseFragment {
 
         mViewModel.getFavoriteCurrencies().observe(getViewLifecycleOwner(), currencies -> {
             if (isResumed()) {
-                mAdapter.setNewData(currencies);
+                mAdapter.setNewList(currencies);
             }
         });
     }

@@ -61,8 +61,7 @@ public class BillAdapter extends BaseMultiItemDataBindingAdapter<BillInfo, ViewD
         addItemType(HEADER, R.layout.item_list_bill_header);
     }
 
-    @Override
-    public void setNewData(@Nullable List<BillInfo> data) {
+    public void setNewList(@Nullable List<BillInfo> data) {
         setNewDiffData(new BillInfoDiff(data));
     }
 

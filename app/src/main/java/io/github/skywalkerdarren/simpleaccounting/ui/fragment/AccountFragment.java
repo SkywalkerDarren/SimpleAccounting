@@ -96,9 +96,7 @@ public class AccountFragment extends BaseFragment {
         mAdapter.enableDragItem(itemTouchHelper);
         mAccountRecyclerView.setAdapter(mAdapter);
         mViewModel.getAccounts().observe(getViewLifecycleOwner(), accounts -> {
-            if (isResumed()) {
-                mAdapter.setNewData(accounts);
-            }
+            mAdapter.setNewList(accounts);
         });
     }
 

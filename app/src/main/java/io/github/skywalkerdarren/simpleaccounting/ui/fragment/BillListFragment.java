@@ -137,7 +137,7 @@ public class BillListFragment extends BaseFragment {
                     .Builder(HEADER)
                     .create());
         } else {
-            mBillAdapter.setNewData(billInfoList);
+            mBillAdapter.setNewList(billInfoList);
         }
     }
 

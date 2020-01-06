@@ -119,7 +119,7 @@ public class ClassifyFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         mViewModel.getStatsList().observe(getViewLifecycleOwner(), typeStats -> {
             Log.d(TAG, "onActivityCreated: " + getLifecycle().getCurrentState());
-            mClassifyAdapter.setNewData(typeStats);
+            mClassifyAdapter.setNewList(typeStats);
         });
     }
 

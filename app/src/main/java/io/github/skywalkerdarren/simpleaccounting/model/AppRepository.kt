@@ -476,7 +476,6 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
             override fun load() {
                 Log.d(TAG, "getAccountStats: in " + Thread.currentThread().name)
                 dbLock.readLock().lock()
-                dbLock.readLock().unlock()
                 val accountStats = AccountStats()
                 statsDao.getAccountStats(accountId, start, end)
                         ?.forEach { (balance, expense) ->
@@ -486,6 +485,7 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
                                 accountStats.income = balance
                             }
                         }
+                dbLock.readLock().unlock()
                 executors.mainThread().execute { callBack.onAccountStatsLoaded(accountStats) }
             }
         })

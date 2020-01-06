@@ -30,9 +30,8 @@ public class ClassifyAdapter extends BaseDataBindingAdapter<TypeStats, ItemClass
         mRepository = AppRepository.getInstance(new AppExecutors(), context);
     }
 
-    @Override
-    public void setNewData(List<TypeStats> data) {
-        super.setNewData(data);
+    public void setNewList(List<TypeStats> data) {
+        setNewDiffData(new TypeStatsDiff(data));
         mSum = BigDecimal.ZERO;
         if (data == null) {
             return;

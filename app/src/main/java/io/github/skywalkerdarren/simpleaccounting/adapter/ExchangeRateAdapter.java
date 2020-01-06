@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.content.Context;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.listener.OnItemDragListener;
@@ -45,25 +44,6 @@ public class ExchangeRateAdapter extends BaseDraggableDataBindingAdapter<Currenc
     }
 
     @Override
-    public void setNewData(@Nullable List<Currency> data) {
-        if (checkCache(data)) {
-            super.setNewData(data);
-        }
-    }
-
-    private boolean checkCache(List<Currency> currencies) {
-        if (currencies == null || mData.size() != currencies.size()) {
-            return true;
-        }
-        for (int i = 0; i < currencies.size(); i++) {
-            if (!currencies.get(i).equals(mData.get(i))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
     protected void convert(ItemExchangeRateBinding binding, Currency item) {
         binding.setData(item);
         mRepository.getCurrencyInfo(item.getName(), new CurrencyDataSource.LoadCurrencyInfoCallback() {
@@ -90,5 +70,9 @@ public class ExchangeRateAdapter extends BaseDraggableDataBindingAdapter<Currenc
         anim.setDuration(300);
         anim.setInterpolator(new AccelerateDecelerateInterpolator());
         anim.start();
+    }
+
+    public void setNewList(List<Currency> currencies) {
+        setNewDiffData(new CurrencyDiff(currencies));
     }
 }
