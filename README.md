@@ -61,7 +61,6 @@ jetpack组件：
 * LiveData 具有生命周期感知的数据存储器
 * LifeCycle 生命周期管理框架
 * WorkManager 任务调度组件
-* Navigation 导航组件
 
 视图组件：
 
