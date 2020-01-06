@@ -23,9 +23,9 @@ import io.github.skywalkerdarren.simpleaccounting.databinding.ActivityWelcomeBin
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 import io.github.skywalkerdarren.simpleaccounting.util.NotificationWorker;
-import io.github.skywalkerdarren.simpleaccounting.util.PreferenceUtil;
+import io.github.skywalkerdarren.simpleaccounting.util.data.PreferenceUtil;
 
-import static io.github.skywalkerdarren.simpleaccounting.util.PreferenceUtil.RUN_APP_TIMES;
+import static io.github.skywalkerdarren.simpleaccounting.util.data.PreferenceUtil.RUN_APP_TIMES;
 
 public class WelcomeActivity extends AppCompatActivity {
     private ViewPager mViewPager;

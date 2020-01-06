@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.util
+package io.github.skywalkerdarren.simpleaccounting.util.data
 
 import android.content.Context
 

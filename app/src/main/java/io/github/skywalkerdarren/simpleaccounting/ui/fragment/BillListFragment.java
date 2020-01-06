@@ -26,8 +26,8 @@ import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.EmptyLayoutBinding;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillListBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillInfo;
-import io.github.skywalkerdarren.simpleaccounting.util.PreferenceUtil;
 import io.github.skywalkerdarren.simpleaccounting.util.ViewModelFactory;
+import io.github.skywalkerdarren.simpleaccounting.util.data.PreferenceUtil;
 import io.github.skywalkerdarren.simpleaccounting.view_model.BillListViewModel;
 import io.github.skywalkerdarren.simpleaccounting.view_model.EmptyListViewModel;
 

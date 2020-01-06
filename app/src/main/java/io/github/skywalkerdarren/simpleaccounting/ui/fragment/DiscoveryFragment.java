@@ -33,13 +33,13 @@ import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentDiscoveryBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.CurrencyDataSource;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.MyAccountActivity;
-import io.github.skywalkerdarren.simpleaccounting.util.PreferenceUtil;
 import io.github.skywalkerdarren.simpleaccounting.util.ViewModelFactory;
+import io.github.skywalkerdarren.simpleaccounting.util.data.PreferenceUtil;
 import io.github.skywalkerdarren.simpleaccounting.view_model.DiscoveryViewModel;
 
-import static io.github.skywalkerdarren.simpleaccounting.util.PreferenceUtil.CUMULATIVE_DAYS;
-import static io.github.skywalkerdarren.simpleaccounting.util.PreferenceUtil.LAST_RUN_DATE;
-import static io.github.skywalkerdarren.simpleaccounting.util.PreferenceUtil.LAST_UPDATE_TIMESTAMP;
+import static io.github.skywalkerdarren.simpleaccounting.util.data.PreferenceUtil.CUMULATIVE_DAYS;
+import static io.github.skywalkerdarren.simpleaccounting.util.data.PreferenceUtil.LAST_RUN_DATE;
+import static io.github.skywalkerdarren.simpleaccounting.util.data.PreferenceUtil.LAST_UPDATE_TIMESTAMP;
 
 /**
  * A simple {@link Fragment} subclass.
