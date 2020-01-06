@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.FragmentActivity;
@@ -58,6 +59,11 @@ public class BillAdapter extends BaseMultiItemDataBindingAdapter<BillInfo, ViewD
         addItemType(WITH_REMARK, R.layout.item_list_bill);
         addItemType(WITHOUT_REMARK, R.layout.item_list_bill_without_remark);
         addItemType(HEADER, R.layout.item_list_bill_header);
+    }
+
+    @Override
+    public void setNewData(@Nullable List<BillInfo> data) {
+        setNewDiffData(new BillInfoDiff(data));
     }
 
     @Override

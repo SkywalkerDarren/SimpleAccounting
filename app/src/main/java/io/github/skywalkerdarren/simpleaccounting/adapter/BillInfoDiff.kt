@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.util.view
+package io.github.skywalkerdarren.simpleaccounting.adapter
 
 import com.chad.library.adapter.base.diff.BaseQuickDiffCallback
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillInfo
