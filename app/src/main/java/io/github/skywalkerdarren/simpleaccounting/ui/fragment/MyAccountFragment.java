@@ -15,7 +15,6 @@ import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentMyAccountBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget;
-import io.github.skywalkerdarren.simpleaccounting.ui.activity.MainActivity;
 import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 
 /**
@@ -66,10 +65,6 @@ public class MyAccountFragment extends BaseFragment {
                 .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
                     AppRepository.getInstance(new AppExecutors(), requireContext()).clearBill();
                     DesktopWidget.refresh(requireContext());
-                    onResume();
-                    MainActivity activity = (MainActivity) requireActivity();
-                    BillListFragment fragment = activity.mBillListFragment;
-                    fragment.onResume();
                 })
                 .create()
                 .show());
