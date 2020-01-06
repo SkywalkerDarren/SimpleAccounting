@@ -11,7 +11,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
  * @date 2018/4/5
  */
 
-public class BaseBindingViewHolder<Binding extends ViewDataBinding> extends BaseViewHolder {
+public abstract class BaseBindingViewHolder<Binding extends ViewDataBinding> extends BaseViewHolder {
     private Binding mBinding;
 
     BaseBindingViewHolder(View view) {

@@ -25,7 +25,8 @@ public abstract class BaseDraggableDataBindingAdapter<T, Binding extends ViewDat
 
     @Override
     protected BaseBindingViewHolder<Binding> createBaseViewHolder(View view) {
-        return new BaseBindingViewHolder<>(view);
+        return new BaseBindingViewHolder<Binding>(view) {
+        };
     }
 
     @Override
@@ -37,7 +38,8 @@ public abstract class BaseDraggableDataBindingAdapter<T, Binding extends ViewDat
         } else {
             view = binding.getRoot();
         }
-        BaseBindingViewHolder<Binding> holder = new BaseBindingViewHolder<>(view);
+        BaseBindingViewHolder<Binding> holder = new BaseBindingViewHolder<Binding>(view) {
+        };
         holder.setBinding(binding);
         return holder;
     }
