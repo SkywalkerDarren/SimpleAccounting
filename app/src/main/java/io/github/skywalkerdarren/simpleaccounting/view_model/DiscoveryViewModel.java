@@ -93,10 +93,14 @@ public class DiscoveryViewModel extends ViewModel {
         monthReport.setValue(dateTime.getMonthOfYear() + "月报表");
         yearReport.setValue(dateTime.getYear() + "年报表");
         weekReport.setValue("第" + dateTime.getWeekOfWeekyear() + "周报表");
+        if (defCurrency == null) {
+            defCurrency = "CNY";
+        }
         mRepository.getCurrencyInfo(defCurrency, new CurrencyDataSource.LoadCurrencyInfoCallback() {
             @Override
             public void onCurrencyInfoLoaded(CurrencyInfo info) {
-                currentCurrency.setValue(info.getFullNameCN());
+                String name = info.getFullNameCN() == null ? info.getFullName() : info.getFullNameCN();
+                currentCurrency.setValue(name);
                 currentCurrencyPic.setValue(info.getFlagLocation());
             }
 

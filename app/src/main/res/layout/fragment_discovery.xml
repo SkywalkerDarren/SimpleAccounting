@@ -6,6 +6,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="discovery"
             type="io.github.skywalkerdarren.simpleaccounting.view_model.DiscoveryViewModel" />
@@ -313,53 +315,76 @@
                     </androidx.cardview.widget.CardView>
                 </LinearLayout>
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:padding="8dp">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/textView12"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/current_currency" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:singleLine="true"
                         android:text="@{discovery.currentCurrency}"
-                        tools:text="CNY" />
+                        app:layout_constraintBottom_toBottomOf="@+id/imageView6"
+                        app:layout_constraintEnd_toStartOf="@+id/textView13"
+                        app:layout_constraintStart_toEndOf="@+id/imageView6"
+                        app:layout_constraintTop_toTopOf="@+id/imageView6"
+                        tools:text="CNYCNYCNYCNYCNYCN" />
 
                     <ImageView
+                        android:id="@+id/imageView6"
                         android:layout_width="38dp"
                         android:layout_height="19dp"
                         android:scaleType="centerInside"
                         android:src="@{discovery.currentCurrencyPic}"
+                        android:visibility="@{discovery.currentCurrencyPic == null ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintBottom_toBottomOf="@+id/textView11"
+                        app:layout_constraintStart_toEndOf="@+id/textView11"
+                        app:layout_constraintTop_toTopOf="@+id/textView11"
                         tools:src="@drawable/award" />
 
                     <TextView
+                        android:id="@+id/textView13"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/update_date" />
+                        android:text="@string/update_date"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/textView9"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
+                        android:id="@+id/textView9"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="8dp"
                         android:text="@{discovery.currencyDate}"
+                        app:layout_constraintBottom_toBottomOf="@+id/textView13"
+                        app:layout_constraintEnd_toStartOf="@+id/currency_menu"
+                        app:layout_constraintTop_toTopOf="@+id/textView13"
+                        tools:ignore="RtlHardcoded"
                         tools:text="2020-1-1" />
-
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
 
                     <ImageView
                         android:id="@+id/currency_menu"
                         android:layout_width="19dp"
                         android:layout_height="19dp"
                         android:tint="@color/gray"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/ic_menu" />
-                </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/textView11"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/current_currency"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/exchange_rate_recycler_view"
