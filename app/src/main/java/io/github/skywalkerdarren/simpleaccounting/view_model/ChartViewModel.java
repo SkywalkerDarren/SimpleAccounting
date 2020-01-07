@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModel;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import org.joda.time.DateTime;
 
@@ -67,9 +68,12 @@ public class ChartViewModel extends ViewModel {
         pieDataSet.setColors(colorList);
         pieDataSet.setValueTextColors(colorList);
         pieDataSet.setValueLineColor(Color.rgb(0xf5, 0x7f, 0x17));
-        pieDataSet.setValueFormatter((value, entry, dataSetIndex, viewPortHandler) -> {
-            DecimalFormat format = new DecimalFormat("##0.00");
-            return format.format(value) + " %";
+        pieDataSet.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getPieLabel(float value, PieEntry pieEntry) {
+                DecimalFormat format = new DecimalFormat("##0.00");
+                return format.format(value) + " %";
+            }
         });
         pieDataSet.setValueLinePart1OffsetPercentage(55f);
         pieDataSet.setValueLinePart1Length(0.1f);

@@ -111,7 +111,7 @@ public class PieChartFragment extends BaseFragment {
         mPieChart.setHoleRadius(70f);
         mPieChart.setTransparentCircleRadius(75f);
         mPieChart.setUsePercentValues(true);
-        mPieChart.animateY(1000, Easing.EasingOption.EaseInOutExpo);
+        mPieChart.animateY(1000, Easing.EaseInOutExpo);
 
         // 关闭图注
         Legend legend = mPieChart.getLegend();

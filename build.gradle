@@ -67,7 +67,7 @@ ext {
     retrofitVersion = '2.7.1'
     glideVersion = '4.10.0'
     jodaTimeVersion = '2.10.5'
-    MPAndroidChartVersion = 'v3.0.3'
+    MPAndroidChartVersion = 'v3.1.0'
     segmentedButtonVersion = 'v2.0.2'
     brvahVersion = '2.9.50'
     pinnedSectionItemDecorationVersion = '1.3.2-androidx'

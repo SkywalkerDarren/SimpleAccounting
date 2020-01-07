@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.MarkerView;
@@ -26,6 +27,7 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.MPPointF;
@@ -126,7 +128,7 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
         lineDataSets.add(expenseSet);
         mLineChart.setData(new LineData(lineDataSets));
         mLineChart.notifyDataSetChanged();
-        mLineChart.animateY(300, Easing.EasingOption.EaseOutCirc);
+        mLineChart.animateY(300, Easing.EaseOutCirc);
         mLineChart.invalidate();
     }
 
@@ -181,7 +183,12 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
         xAxis.setLabelCount(12, true);
-        xAxis.setValueFormatter((value, axis) -> (int) (value + 1) + "月");
+        xAxis.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getAxisLabel(float value, AxisBase axis) {
+                return (int) (value + 1) + "月";
+            }
+        });
 
         YAxis yAxis = lineChart.getAxisLeft();
         yAxis.setGridColor(ContextCompat.getColor(requireContext(), R.color.grey300));
