@@ -815,9 +815,6 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
 
     companion object {
         private const val TAG = "AppRepository"
-        private const val ACCOUNTS = "ACCOUNTS"
-        private const val INCOME_TYPES = "INCOME_TYPES"
-        private const val EXPENSE_TYPES = "EXPENSE_TYPES"
         private const val DEBUG = false
         @Volatile
         private var INSTANCE: AppRepository? = null
