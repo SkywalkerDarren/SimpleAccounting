@@ -8,8 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.listener.OnItemDragListener;
 
-import org.joda.time.DateTime;
-
 import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
@@ -62,10 +60,6 @@ public class AccountAdapter extends BaseDraggableDataBindingAdapter<Account, Ite
     @Override
     protected void convert(ItemAccountBinding binding, Account item) {
         binding.setAccount(item);
-        mRepository.getAccountStats(item.getUuid(), new DateTime(0), DateTime.now(), accountStats -> {
-            item.setBalance(accountStats.getSum());
-            binding.setAccount(item);
-        });
     }
 
     public void setNewList(List<Account> accounts) {

@@ -272,8 +272,4 @@ public class BillDetailViewModel extends ViewModel implements BillDataSource.Loa
         return expensePercentHint;
     }
 
-    public void delete(Bill bill) {
-        mRepository.getAccountStats(bill.getAccountId(), new DateTime(0), new DateTime(),
-                accountStats -> mRepository.updateAccountBalance(bill.getAccountId(), accountStats.getSum()));
-    }
 }

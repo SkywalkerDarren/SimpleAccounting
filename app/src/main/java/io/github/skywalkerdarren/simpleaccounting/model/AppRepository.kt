@@ -31,7 +31,6 @@ import java.io.InputStreamReader
 import java.io.Reader
 import java.math.BigDecimal
 import java.util.*
-import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.collections.ArrayList
 import kotlin.concurrent.read
@@ -68,11 +67,7 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
             override fun load() {
                 Log.d(TAG, "getAccountsOnBackground: in " + Thread.currentThread().name)
                 dbLock.readLock().lock()
-                var accounts = sAccountsCache[ACCOUNTS]
-                if (accounts == null) {
-                    accounts = accountDao.accounts
-                    sAccountsCache[ACCOUNTS] = accounts
-                }
+                val accounts = accountDao.accounts
                 dbLock.readLock().unlock()
                 callBack.onAccountsLoaded(accounts)
             }
@@ -122,13 +117,9 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
             override fun load() {
                 Log.d(TAG, "getAccount: in " + Thread.currentThread().name)
                 dbLock.readLock().lock()
-                var account = sAccountCache[uuid]
-                if (account == null) {
-                    account = accountDao.getAccount(uuid)
-                    sAccountCache[uuid] = account
-                }
+                val account = accountDao.getAccount(uuid)
                 dbLock.readLock().unlock()
-                executors.mainThread().execute { sAccountCache[uuid]?.let { callBack.onAccountLoaded(it) } }
+                executors.mainThread().execute { callBack.onAccountLoaded(account) }
             }
         })
     }
@@ -152,13 +143,9 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
             override fun load() {
                 Log.d(TAG, "getAccounts: in " + Thread.currentThread().name)
                 dbLock.readLock().lock()
-                var accounts = sAccountsCache[ACCOUNTS]
-                if (accounts == null) {
-                    accounts = accountDao.accounts
-                    sAccountsCache[ACCOUNTS] = accounts
-                }
+                val accounts = accountDao.accounts
                 dbLock.readLock().unlock()
-                executors.mainThread().execute { callBack.onAccountsLoaded(sAccountsCache[ACCOUNTS]) }
+                executors.mainThread().execute { callBack.onAccountsLoaded(accounts) }
             }
         })
     }
@@ -169,7 +156,6 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
                 Log.d(TAG, "updateAccountBalance" + Thread.currentThread().name)
                 dbLock.writeLock().withLock {
                     accountDao.updateAccountBalance(uuid, balance)
-                    sAccountsCache.clear()
                 }
             }
         })
@@ -181,8 +167,6 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
                 Log.d(TAG, "delAccount: in " + Thread.currentThread().name)
                 dbLock.writeLock().lock()
                 accountDao.delAccount(uuid)
-                sAccountsCache.clear()
-                sAccountCache.remove(uuid)
                 dbLock.writeLock().unlock()
             }
         })
@@ -200,9 +184,6 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
                 accountDao.updateAccountId(a.uuid, -1)
                 accountDao.updateAccountId(b.uuid, i)
                 accountDao.updateAccountId(a.uuid, j)
-                sAccountCache[a.uuid] = a
-                sAccountCache[b.uuid] = b
-                sAccountsCache.clear()
                 dbLock.writeLock().unlock()
             }
         })
@@ -260,6 +241,7 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
             override fun load() {
                 Log.d(TAG, "addBill: in " + Thread.currentThread().name)
                 dbLock.writeLock().lock()
+                updateAccountBalanceByAdd(bill)
                 billDao.addBill(bill)
                 //sBillCache.put(bill.getUuid(), bill);
                 dbLock.writeLock().unlock()
@@ -271,22 +253,38 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "delBill: in " + Thread.currentThread().name)
+                val bill = billDao.getBill(id) ?: return
                 dbLock.writeLock().lock()
+                updateAccountBalanceByMinus(bill)
                 billDao.delBill(id)
-                //sBillCache.remove(id);
                 dbLock.writeLock().unlock()
             }
         })
     }
 
+    private fun updateAccountBalanceByAdd(bill: Bill) {
+        val type = typeDao.getType(bill.typeId) ?: return
+        val account = accountDao.getAccount(bill.accountId)
+        val balance = account.balance.add(if (type.isExpense) bill.balance!!.negate() else bill.balance)
+        accountDao.updateAccountBalance(account.uuid, balance)
+    }
+
+    private fun updateAccountBalanceByMinus(bill: Bill) {
+        val account = accountDao.getAccount(bill.accountId)
+        val balance = account.balance.add(bill.balance)
+        accountDao.updateAccountBalance(account.uuid, balance)
+    }
+
     override fun updateBill(bill: Bill) {
         execute(object : LoadData {
             override fun load() {
-                dbLock.writeLock().lock()
-                Log.d(TAG, "updateBill: in " + Thread.currentThread().name + bill)
-                billDao.updateBill(bill)
-                //sBillCache.put(bill.getUuid(), bill);
-                dbLock.writeLock().unlock()
+                dbLock.write {
+                    Log.d(TAG, "updateBill: in " + Thread.currentThread().name + bill)
+                    val old = billDao.getBill(bill.uuid) ?: return
+                    updateAccountBalanceByMinus(old)
+                    updateAccountBalanceByAdd(bill)
+                    billDao.updateBill(bill)
+                }
             }
         })
     }
@@ -296,8 +294,9 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
             override fun load() {
                 Log.d(TAG, "clearBill: in " + Thread.currentThread().name)
                 dbLock.writeLock().lock()
+                val accounts = accountDao.accounts
+                accounts.forEach { accountDao.updateAccountBalance(it.uuid, BigDecimal.ZERO) }
                 billDao.clearBill()
-                //sBillCache.clear();
                 dbLock.writeLock().unlock()
             }
         })
@@ -308,13 +307,9 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
             override fun load() {
                 Log.d(TAG, "getType: in " + Thread.currentThread().name)
                 dbLock.readLock().lock()
-                var type = sTypeCache[uuid]
-                if (type == null) {
-                    type = typeDao.getType(uuid)
-                    sTypeCache[uuid] = type
-                }
+                val type = typeDao.getType(uuid)
                 dbLock.readLock().unlock()
-                executors.mainThread().execute { callBack.onTypeLoaded(sTypeCache[uuid]) }
+                executors.mainThread().execute { callBack.onTypeLoaded(type) }
             }
         })
     }
@@ -323,15 +318,11 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "getTypes: in " + Thread.currentThread().name)
-                val flag = if (isExpense) EXPENSE_TYPES else INCOME_TYPES
                 dbLock.readLock().lock()
-                var types = sTypesCache[flag]
-                if (types == null) {
-                    types = typeDao.getTypes(isExpense)
-                    sTypesCache[flag] = types
-                }
+                val types = typeDao.getTypes(isExpense)
+
                 dbLock.readLock().unlock()
-                executors.mainThread().execute { callBack.onTypesLoaded(sTypesCache[flag]) }
+                executors.mainThread().execute { callBack.onTypesLoaded(types) }
             }
         })
     }
@@ -340,13 +331,8 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "getTypesOnBackground: in " + Thread.currentThread().name)
-                val flag = if (isExpense) EXPENSE_TYPES else INCOME_TYPES
                 dbLock.readLock().lock()
-                var types = sTypesCache[flag]
-                if (types == null) {
-                    types = typeDao.getTypes(isExpense)
-                    sTypesCache[flag] = types
-                }
+                val types = typeDao.getTypes(isExpense)
                 dbLock.readLock().unlock()
                 callBack.onTypesLoaded(types)
             }
@@ -359,8 +345,6 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
                 Log.d(TAG, "delType: in " + Thread.currentThread().name)
                 dbLock.writeLock().lock()
                 typeDao.delType(uuid)
-                sTypeCache.remove(uuid)
-                sTypesCache.clear()
                 dbLock.writeLock().unlock()
             }
         })
@@ -605,38 +589,6 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
 
             }
         })
-
-//        executors.networkIO().execute {
-//            val request = CurrencyRequest(context)
-//
-//
-//            if (request.checkConnection()) {
-//                val timestamp = PreferenceUtil.getString(context, PreferenceUtil.LAST_UPDATE_TIMESTAMP, "0")
-//                val before = DateTime(timestamp.toLong() * 1000)
-//                val after = DateTime.now()
-//                if (!after.minusDays(1).isAfter(before)) {
-//                    executors.mainThread().execute { callback.connectFailed("update date too close") }
-//                    return@execute
-//                }
-//                val currenciesInfo = request.currenciesInfo
-//                if ("false" == currenciesInfo.success) {
-//                    executors.mainThread().execute { callback.connectFailed(currenciesInfo.error.toString()) }
-//                    return@execute
-//                }
-//                PreferenceUtil.setString(context, PreferenceUtil.LAST_UPDATE_TIMESTAMP, currenciesInfo.timestamp)
-//                val currencies = currenciesInfo.quotes
-//                if (currencies != null) {
-//                    for (currency in currencies) {
-//                        val rawCurrency = currencyRateDao.getCurrency(currency.name)
-//                        rawCurrency.exchangeRate = currency.exchangeRate
-//                        currencyRateDao.updateCurrency(rawCurrency)
-//                    }
-//                }
-//                executors.mainThread().execute { callback.updated() }
-//            } else {
-//                executors.mainThread().execute { callback.connectFailed("connect failed") }
-//            }
-//        }
     }
 
     override fun getCurrencyInfo(name: String, callback: LoadCurrencyInfoCallback) {
@@ -865,13 +817,8 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         private const val INCOME_TYPES = "INCOME_TYPES"
         private const val EXPENSE_TYPES = "EXPENSE_TYPES"
         private const val DEBUG = false
-        private val sAccountCache: MutableMap<UUID, Account> = ConcurrentHashMap()
-        private val sAccountsCache: MutableMap<String, List<Account>> = ConcurrentHashMap()
-        //private static Map<UUID, Bill> sBillCache = new ConcurrentHashMap<>();
-        private val sTypeCache: MutableMap<UUID, Type?> = ConcurrentHashMap()
         @Volatile
         private var INSTANCE: AppRepository? = null
-        private val sTypesCache: MutableMap<String, List<Type>?> = ConcurrentHashMap()
 
         @JvmStatic
         fun getInstance(executors: AppExecutors, context: Context): AppRepository? =
@@ -890,11 +837,6 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         @VisibleForTesting
         fun clearInstance() {
             INSTANCE = null
-            sTypesCache.clear()
-            sAccountsCache.clear()
-            //sBillCache.clear();
-            sTypeCache.clear()
-            sAccountCache.clear()
         }
     }
 }
