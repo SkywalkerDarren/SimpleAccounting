@@ -11,11 +11,12 @@
 直接安装地址：[下载地址](https://github.com/SkywalkerDarren/SimpleAccounting/releases)
 
 截图如图：
-![](example/bill.png)
-![](example/detail.png)
-![](example/edit.png)
-![](example/account.png)
+![](example/main.gif)
+![](example/bill.gif)
+![](example/billdetail.gif)
+![](example/detail.gif)
 ![](example/discovery.png)
+![](example/edit.png)
 ![](example/classify.png)
 ![](example/journal.png)
 
