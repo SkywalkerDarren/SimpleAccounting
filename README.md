@@ -11,11 +11,13 @@
 直接安装地址：[下载地址](https://github.com/SkywalkerDarren/SimpleAccounting/releases)
 
 截图如图：
-
-![截图1]()
-![截图2]()
-![截图3]()
-![截图4]()
+![](example/bill.png)
+![](example/detail.png)
+![](example/edit.png)
+![](example/account.png)
+![](example/discovery.png)
+![](example/classify.png)
+![](example/journal.png)
 
 如需自己编译请继续往下看
 
@@ -61,7 +63,7 @@ jetpack组件：
 * Preference
 * ~~SQLiteDatabase~~ 改用框架
 * Room 持久化框架
-* ~~DataBinding 数据绑定库~~ 已迁移
+* DataBinding 数据绑定
 * ViewModel 具有生命周期感知的数据绑定库
 * LiveData 具有生命周期感知的数据存储器
 * LifeCycle 生命周期管理框架
@@ -77,22 +79,23 @@ jetpack组件：
 
 第三方组件：
 
-* Apache-csv csv格式化工具
-* Gson json转换工具
-* Okhttp 网络请求库
-* Glide 异步图片加载库
-* JodaTime 时间库
-* MPAndroidChart 图表库
-* SegmentedButton 选择按钮库
-* BRVAH adapter辅助库
-* PinnedSectionItemDecoration recyclerview吸顶装饰器
+* [Apache Commons CSV](http://commons.apache.org/proper/commons-csv/) csv格式化工具
+* [Gson](https://github.com/google/gson) json转换工具
+* [OkHttp](https://square.github.io/okhttp/) 网络请求库
+* [Retrofit2](https://square.github.io/retrofit/) RESTful网络请求框架
+* [Glide](https://github.com/bumptech/glide) 异步图片加载库
+* [Joda Time](https://www.joda.org/joda-time/) 时间库
+* [MPAndroidChart](https://github.com/PhilJay/MPAndroidChart) 图表库
+* [Segmented Button](https://github.com/addisonElliott/SegmentedButton) 分段按钮库
+* [BRVAH](https://github.com/CymChad/BaseRecyclerViewAdapterHelper) adapter辅助库
+* [Pinned Section Item Decoration](https://github.com/oubowu/PinnedSectionItemDecoration) recyclerview吸顶装饰器
 
 测试框架：
 
 * Junit4 一般单元测试库
 * Espresso 视图单元测试库
 * AndroidJunit 安卓单元测试库
-* Mocktio Mock库
+* [Mocktio](https://site.mockito.org/) Mock库
 
 ## 版本管理
 
