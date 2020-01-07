@@ -71,46 +71,53 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "androidx.preference:preference:${preferenceVersion}"
-    implementation "androidx.navigation:navigation-fragment:${navVersion}"
-    implementation "androidx.navigation:navigation-ui:${navVersion}"
-    implementation "androidx.navigation:navigation-fragment-ktx:${navVersion}"
-    implementation "androidx.navigation:navigation-ui-ktx:${navVersion}"
-    implementation "androidx.work:work-runtime-ktx:${workVersion}"
-    implementation "androidx.work:work-runtime:${workVersion}"
-    implementation "androidx.room:room-ktx:${roomVersion}"
+
     implementation "androidx.legacy:legacy-support-v4:${legacyVersion}"
+    implementation "androidx.legacy:legacy-support-v13:${legacyVersion}"
+    implementation "androidx.appcompat:appcompat:${appcompatVersion}"
+    implementation "androidx.cardview:cardview:${cardviewVersion}"
+    implementation "androidx.vectordrawable:vectordrawable:${vectordrawableVersion}"
+    implementation "androidx.constraintlayout:constraintlayout:${constraintlayoutVersion}"
+    implementation "androidx.recyclerview:recyclerview:${recyclerviewVersion}"
+
+    implementation "androidx.preference:preference:${preferenceVersion}"
+
     implementation "androidx.lifecycle:lifecycle-extensions:${lifecycleVersion}"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${lifecycleVersion}"
-    androidTestImplementation "androidx.test.espresso:espresso-core:${espressoVersion}"
-    androidTestImplementation "androidx.test.ext:junit:${androidJunitVersion}"
-    testImplementation "junit:junit:${junitVersion}"
+
+    implementation "androidx.work:work-runtime-ktx:${workVersion}"
+    implementation "androidx.work:work-runtime:${workVersion}"
+
+    implementation "androidx.room:room-runtime:${roomVersion}"
+    implementation "androidx.room:room-ktx:${roomVersion}"
+    annotationProcessor "androidx.room:room-compiler:${roomVersion}"
+    kapt "androidx.room:room-compiler:${roomVersion}"
+    androidTestImplementation "androidx.room:room-testing:${roomVersion}"
+
+    implementation "com.google.android.material:material:${materialVersion}"
+
+    implementation "com.github.bumptech.glide:glide:${glideVersion}"
+    annotationProcessor "com.github.bumptech.glide:compiler:${glideVersion}"
+    kapt "com.github.bumptech.glide:compiler:${glideVersion}"
+
+    implementation "com.squareup.okhttp3:okhttp:${okhttpVersion}"
+    implementation "com.squareup.retrofit2:retrofit:${retrofitVersion}"
+    implementation "com.squareup.retrofit2:retrofit-converters:${retrofitVersion}"
+    implementation "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
+
+    implementation "org.apache.commons:commons-csv:${csvVersion}"
+    implementation "com.google.code.gson:gson:${gsonVersion}"
     implementation "joda-time:joda-time:${jodaTimeVersion}"
     implementation "com.github.PhilJay:MPAndroidChart:${MPAndroidChartVersion}"
     implementation "com.github.ceryle:SegmentedButton:${segmentedButtonVersion}"
     implementation "com.github.CymChad:BaseRecyclerViewAdapterHelper:${brvahVersion}"
     implementation "com.oushangfeng:PinnedSectionItemDecoration:${pinnedSectionItemDecorationVersion}"
-    implementation "androidx.cardview:cardview:${cardviewVersion}"
-    implementation "androidx.legacy:legacy-support-v13:${legacyVersion}"
-    implementation "androidx.appcompat:appcompat:${appcompatVersion}"
-    implementation "androidx.recyclerview:recyclerview:${recyclerviewVersion}"
-    implementation "androidx.vectordrawable:vectordrawable:${vectordrawableVersion}"
-    implementation "androidx.lifecycle:lifecycle-extensions:${lifecycleVersion}"
-    implementation "androidx.room:room-runtime:${roomVersion}"
-    annotationProcessor "androidx.room:room-compiler:${roomVersion}"
-    kapt "androidx.room:room-compiler:${roomVersion}"
-    implementation "com.google.android.material:material:${materialVersion}"
-    implementation "com.github.bumptech.glide:glide:${glideVersion}"
-    annotationProcessor "com.github.bumptech.glide:compiler:${glideVersion}"
-    kapt "com.github.bumptech.glide:compiler:${glideVersion}"
-    implementation "org.apache.commons:commons-csv:${csvVersion}"
-    implementation "io.reactivex.rxjava2:rxandroid:${rxandroidVersion}"
-    implementation "com.squareup.okhttp3:okhttp:${okhttpVersion}"
-    implementation "com.google.code.gson:gson:${gsonVersion}"
-    androidTestImplementation "androidx.room:room-testing:${roomVersion}"
-    implementation "androidx.constraintlayout:constraintlayout:${constraintlayoutVersion}"
+
+    androidTestImplementation "androidx.test.espresso:espresso-core:${espressoVersion}"
+    androidTestImplementation "androidx.test.ext:junit:${androidJunitVersion}"
+    testImplementation "junit:junit:${junitVersion}"
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}"
-    implementation 'com.squareup.retrofit2:retrofit:2.7.1'
-    implementation 'com.squareup.retrofit2:retrofit-converters:2.7.1'
-    implementation 'com.squareup.retrofit2:converter-gson:2.7.1'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${coroutinesVersion}"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${coroutinesVersion}"
 }

@@ -38,6 +38,7 @@ ext {
 
     javaVersion = JavaVersion.VERSION_1_8
     kotlinVersion = '1.3.61'
+    coroutinesVersion = '1.3.3'
     // sdk
     compileSdkVersion = 29
     minSdkVersion = 21
@@ -62,7 +63,8 @@ ext {
     csvVersion = '1.7'
     rxandroidVersion = '2.1.1'
     gsonVersion = '2.8.6'
-    okhttpVersion = '4.2.2'
+    okhttpVersion = '4.3.0'
+    retrofitVersion = '2.7.1'
     glideVersion = '4.10.0'
     jodaTimeVersion = '2.10.5'
     MPAndroidChartVersion = 'v3.0.3'
