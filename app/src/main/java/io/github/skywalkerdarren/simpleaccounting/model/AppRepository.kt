@@ -536,7 +536,9 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
                 Log.d(TAG, "getCurrencyInfos: in " + Thread.currentThread().name)
                 var infos: List<CurrencyInfo>? = null
                 dbLock.read {
-                    infos = currencyInfoDao.infos
+                    val t1 = currencyInfoDao.infos?.filter { it.fullNameCN == null } ?: listOf()
+                    val t2 = currencyInfoDao.infos?.filter { it.fullNameCN != null } ?: listOf()
+                    infos = listOf(t2, t1).flatten()
                 }
                 if (infos == null) {
                     executors.mainThread().execute { callback.onDataUnavailable() }
