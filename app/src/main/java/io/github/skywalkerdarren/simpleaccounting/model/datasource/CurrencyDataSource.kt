@@ -1,50 +1,23 @@
 package io.github.skywalkerdarren.simpleaccounting.model.datasource
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Currency
+import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrencyAndInfo
 import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrencyInfo
 
 interface CurrencyDataSource {
-    fun getCurrency(name: String, callback: LoadExchangeRateCallback)
-    fun getCurrencyExchangeRate(from: String, to: String, callback: LoadExchangeRateCallback)
-    fun getCurrenciesExchangeRate(from: String, callback: LoadExchangeRatesCallback)
-    fun getFavouriteCurrenciesExchangeRate(from: String, callback: LoadExchangeRatesCallback)
-    fun getCurrencyInfo(name: String, callback: LoadCurrencyInfoCallback)
-    fun getFavouriteCurrenciesInfo(callback: LoadCurrenciesInfoCallback)
-    fun updateCurrencies(context: Context, callback: UpdateCallback)
-    fun initCurrenciesAndInfos(context: Context)
-    fun changeCurrencyPosition(currencyA: Currency, currencyB: Currency)
-    fun setCurrencyFav(name: String, isChecked: Boolean)
-    fun getAllCurrencies(callback: LoadPairCurrenicesCallback)
-    fun getCurrencyInfos(callback: LoadCurrenciesInfoCallback)
+    suspend fun updateCurrencies(context: Context)
+    suspend fun initCurrenciesAndInfos(context: Context)
+    suspend fun changeCurrencyPosition(currencyA: Currency, currencyB: Currency)
+    suspend fun setCurrencyFav(name: String, isChecked: Boolean)
 
-    interface LoadPairCurrenicesCallback {
-        fun onPairCurrenicesLoaded(currency: List<Pair<Currency, CurrencyInfo>>)
-        fun onDataUnavailable()
-    }
-
-    interface LoadExchangeRateCallback {
-        fun onExchangeRateLoaded(currency: Currency?)
-        fun onDataUnavailable()
-    }
-
-    interface LoadExchangeRatesCallback {
-        fun onExchangeRatesLoaded(currencies: List<Currency>?)
-        fun onDataUnavailable()
-    }
-
-    interface LoadCurrencyInfoCallback {
-        fun onCurrencyInfoLoaded(info: CurrencyInfo?)
-        fun onDataUnavailable()
-    }
-
-    interface LoadCurrenciesInfoCallback {
-        fun onCurrenciesInfoLoaded(infos: List<CurrencyInfo>?)
-        fun onDataUnavailable()
-    }
-
-    interface UpdateCallback {
-        fun connectFailed(msg: String?)
-        fun updated()
-    }
+    fun getCurrency(name: String): LiveData<Currency>
+    fun getCurrencyExchangeRate(from: String, to: String): LiveData<Currency>
+    fun getCurrenciesExchangeRate(from: String): LiveData<List<Currency>>
+    fun getFavouriteCurrenciesExchangeRate(from: String): LiveData<List<CurrencyAndInfo>>
+    fun getCurrencyInfo(name: String): LiveData<CurrencyInfo>
+    val favouriteCurrenciesInfo: LiveData<List<CurrencyInfo>>
+    val allCurrencies: LiveData<List<CurrencyAndInfo>>
+    val currencyInfos: LiveData<List<CurrencyInfo>>
 }

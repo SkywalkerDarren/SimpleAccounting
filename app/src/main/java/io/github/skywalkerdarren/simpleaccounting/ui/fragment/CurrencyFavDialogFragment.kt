@@ -21,7 +21,7 @@ class CurrencyFavDialogFragment : BaseDialogFragment() {
         val root = inflater.inflate(R.layout.fragment_dialog_currency_fav, container, false)
         val binding = FragmentDialogCurrencyFavBinding.bind(root)
         val viewModel = ViewModelProviders.of(this, factory).get(CurrencyFavViewModel::class.java)
-        val adapter = AllCurrenciesAdapter(requireContext())
+        val adapter = AllCurrenciesAdapter(requireActivity().application)
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
         viewModel.getCurrencies().observe(viewLifecycleOwner, Observer {
@@ -29,7 +29,6 @@ class CurrencyFavDialogFragment : BaseDialogFragment() {
         })
         binding.vm = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
-        viewModel.start()
         return root
     }
 

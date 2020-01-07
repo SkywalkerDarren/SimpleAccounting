@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
+import io.github.skywalkerdarren.simpleaccounting.model.repository.CurrencyRepo;
 import io.github.skywalkerdarren.simpleaccounting.view_model.AccountViewModel;
 import io.github.skywalkerdarren.simpleaccounting.view_model.BillDetailViewModel;
 import io.github.skywalkerdarren.simpleaccounting.view_model.BillEditViewModel;
@@ -24,16 +25,21 @@ import io.github.skywalkerdarren.simpleaccounting.view_model.JournalViewModel;
 public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     private static volatile ViewModelFactory INSTANCE;
     private final AppRepository mRepository;
+    private final CurrencyRepo mCurrencyRepo;
 
-    private ViewModelFactory(AppRepository repository) {
+    private ViewModelFactory(AppRepository repository, CurrencyRepo currencyRepo) {
         mRepository = repository;
+        mCurrencyRepo = currencyRepo;
     }
 
     public static ViewModelFactory getInstance(Application application) {
         if (INSTANCE == null) {
             synchronized (ViewModelFactory.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new ViewModelFactory(AppRepository.getInstance(new AppExecutors(), application));
+                    INSTANCE = new ViewModelFactory(
+                            AppRepository.getInstance(new AppExecutors(), application),
+                            InjectorUtils.INSTANCE.getCurrencyRepo(application)
+                    );
                 }
             }
         }
@@ -45,8 +51,8 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         INSTANCE = null;
     }
 
-    public AppRepository getRepository() {
-        return mRepository;
+    public CurrencyRepo getRepository() {
+        return mCurrencyRepo;
     }
 
     @NonNull
@@ -75,7 +81,7 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
             return (T) new ChartViewModel(mRepository);
         } else if (modelClass.isAssignableFrom(DiscoveryViewModel.class)) {
             //noinspection unchecked
-            return (T) new DiscoveryViewModel(mRepository);
+            return (T) new DiscoveryViewModel(mRepository, mCurrencyRepo);
         } else if (modelClass.isAssignableFrom(EmptyListViewModel.class)) {
             //noinspection unchecked
             return (T) new EmptyListViewModel();
@@ -84,10 +90,10 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
             return (T) new FeedBackViewModel();
         } else if (modelClass.isAssignableFrom(CurrencyFavViewModel.class)) {
             //noinspection unchecked
-            return (T) new CurrencyFavViewModel(mRepository);
+            return (T) new CurrencyFavViewModel(mCurrencyRepo);
         } else if (modelClass.isAssignableFrom(CurrencySelectViewModel.class)) {
             //noinspection unchecked
-            return (T) new CurrencySelectViewModel(mRepository);
+            return (T) new CurrencySelectViewModel(mCurrencyRepo);
         }
 
         throw new IllegalArgumentException("no this ViewModel");

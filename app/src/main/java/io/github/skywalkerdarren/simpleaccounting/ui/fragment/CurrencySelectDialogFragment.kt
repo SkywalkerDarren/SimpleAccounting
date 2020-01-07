@@ -34,7 +34,6 @@ class CurrencySelectDialogFragment : BaseDialogFragment() {
         })
         binding.vm = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
-        viewModel.start()
         return root
     }
 

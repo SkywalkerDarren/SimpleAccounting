@@ -12,28 +12,17 @@ import io.github.skywalkerdarren.simpleaccounting.model.datasource.AccountDataSo
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.AccountDataSource.LoadAccountsCallBack
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.AppDataSource
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.BillDataSource.*
-import io.github.skywalkerdarren.simpleaccounting.model.datasource.CurrencyDataSource.*
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.StatsDataSource.*
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.TypeDataSource.LoadTypeCallBack
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.TypeDataSource.LoadTypesCallBack
 import io.github.skywalkerdarren.simpleaccounting.model.entity.*
-import io.github.skywalkerdarren.simpleaccounting.model.entity.Currency
 import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors
-import io.github.skywalkerdarren.simpleaccounting.util.data.JsonConvertor
-import io.github.skywalkerdarren.simpleaccounting.util.data.PreferenceUtil
-import io.github.skywalkerdarren.simpleaccounting.util.network.RequestService
 import org.joda.time.DateTime
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.io.IOException
-import java.io.InputStreamReader
-import java.io.Reader
 import java.math.BigDecimal
 import java.util.*
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.collections.ArrayList
-import kotlin.concurrent.read
 import kotlin.concurrent.withLock
 import kotlin.concurrent.write
 
@@ -475,215 +464,49 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         })
     }
 
-    override fun changeCurrencyPosition(currencyA: Currency, currencyB: Currency) {
-        execute(object : LoadData {
-            override fun load() {
-                dbLock.writeLock().lock()
-                Log.d(TAG, "changeCurrencyPosition: in " + Thread.currentThread().name)
-                val i = currencyA.id
-                val j = currencyB.id
-                currencyA.id = j
-                currencyB.id = i
-                currencyRateDao.updateCurrencyId(currencyA.name, -1)
-                currencyRateDao.updateCurrencyId(currencyB.name, i)
-                currencyRateDao.updateCurrencyId(currencyA.name, j)
-                dbLock.writeLock().unlock()
-            }
-        })
-    }
-
-    override fun setCurrencyFav(name: String, isChecked: Boolean) {
-        execute(object : LoadData {
-            override fun load() {
-                Log.d(TAG, "setCurrencyFav: in " + Thread.currentThread().name)
-                dbLock.write {
-                    currencyRateDao.getCurrency(name).apply {
-                        favourite = isChecked
-                    }.let {
-                        currencyRateDao.updateCurrency(it)
-                    }
-                }
-            }
-        })
-    }
-
-    override fun getAllCurrencies(callback: LoadPairCurrenicesCallback) {
-        execute(object : LoadData {
-            override fun load() {
-                Log.d(TAG, "getAllCurrencies: in " + Thread.currentThread().name)
-                val pairs: MutableList<Pair<Currency, CurrencyInfo>> = ArrayList()
-                dbLock.read {
-                    val temp: MutableList<Pair<Currency, CurrencyInfo>> = ArrayList()
-                    currencyInfoDao.infos?.forEach { info ->
-                        val currency: Currency = currencyRateDao.getCurrency(info.name)
-
-                        if (info.fullNameCN == null) {
-                            temp.add(Pair(currency, info))
-                        } else {
-                            pairs.add(Pair(currency, info))
-                        }
-                    }
-                    pairs.addAll(temp)
-                }
-                executors.mainThread().execute { callback.onPairCurrenicesLoaded(pairs.toList()) }
-            }
-        })
-    }
-
-    override fun getCurrencyInfos(callback: LoadCurrenciesInfoCallback) {
-        execute(object : LoadData {
-            override fun load() {
-                Log.d(TAG, "getCurrencyInfos: in " + Thread.currentThread().name)
-                var infos: List<CurrencyInfo>? = null
-                dbLock.read {
-                    val t1 = currencyInfoDao.infos?.filter { it.fullNameCN == null } ?: listOf()
-                    val t2 = currencyInfoDao.infos?.filter { it.fullNameCN != null } ?: listOf()
-                    infos = listOf(t2, t1).flatten()
-                }
-                if (infos == null) {
-                    executors.mainThread().execute { callback.onDataUnavailable() }
-                } else {
-                    executors.mainThread().execute { callback.onCurrenciesInfoLoaded(infos) }
-                }
-            }
-        })
-    }
-
-    override fun updateCurrencies(context: Context, callback: UpdateCallback) {
-        val timestamp = PreferenceUtil.getString(context, PreferenceUtil.LAST_UPDATE_TIMESTAMP, "0")
-        val before = DateTime(timestamp.toLong() * 1000)
-        val after = DateTime.now()
-        if (!after.minusDays(1).isAfter(before)) {
-            callback.connectFailed("updated too frequently")
-            return
-        }
-
-        val request2 = RequestService().requestCurrenciesInfo(context)
-        request2.enqueue(object : Callback<CurrenciesInfo> {
-            override fun onFailure(call: Call<CurrenciesInfo>, t: Throwable) {
-                callback.connectFailed(t.message)
-            }
-
-            override fun onResponse(call: Call<CurrenciesInfo>, response: Response<CurrenciesInfo>) {
-                val currenciesInfo = response.body()
-
-                if ("false" == currenciesInfo?.success) {
-                    callback.connectFailed(currenciesInfo.error.toString())
-                    return
-                }
-
-                PreferenceUtil.setString(context, PreferenceUtil.LAST_UPDATE_TIMESTAMP, currenciesInfo?.timestamp)
-                val currencies: List<Currency>? = currenciesInfo?.quotes
-                if (currencies == null) {
-                    callback.connectFailed("no currency")
-                    return
-                }
-                execute(object : LoadData {
-                    override fun load() {
-                        for (currency in currencies) {
-                            val rawCurrency = currencyRateDao.getCurrency(currency.name)
-                            rawCurrency.exchangeRate = currency.exchangeRate
-                            currencyRateDao.updateCurrency(rawCurrency)
-                        }
-                        executors.mainThread().execute { callback.updated() }
-                    }
-                })
-
-            }
-        })
-    }
-
-    override fun getCurrencyInfo(name: String, callback: LoadCurrencyInfoCallback) {
-        execute(object : LoadData {
-            override fun load() {
-                val info = currencyInfoDao.getInfo(name)
-                if (info != null) {
-                    executors.mainThread().execute { callback.onCurrencyInfoLoaded(info) }
-                } else {
-                    executors.mainThread().execute { callback.onDataUnavailable() }
-                }
-            }
-        })
-    }
-
-    override fun getFavouriteCurrenciesInfo(callback: LoadCurrenciesInfoCallback) {
-        execute(object : LoadData {
-            override fun load() {
-                val favouriteCurrencies = currencyRateDao.getFavouriteCurrencies(true)
-                val infos: MutableList<CurrencyInfo> = ArrayList()
-                if (favouriteCurrencies != null) {
-                    for (currency in favouriteCurrencies) {
-                        val info = currencyInfoDao.getInfo(currency.name)
-                        info?.let { infos.add(it) }
-                    }
-                }
-                if (infos.isEmpty()) {
-                    executors.mainThread().execute { callback.onDataUnavailable() }
-                } else {
-                    executors.mainThread().execute { callback.onCurrenciesInfoLoaded(infos) }
-                }
-            }
-        })
-    }
-
-    override fun getFavouriteCurrenciesExchangeRate(from: String, callback: LoadExchangeRatesCallback) {
-        execute(object : LoadData {
-            override fun load() {
-                val currencyFrom = currencyRateDao.getCurrency(from)
-                val favouriteCurrencies = currencyRateDao.getFavouriteCurrencies(true)
-                if (favouriteCurrencies != null && favouriteCurrencies.isNotEmpty()) {
-                    for (currencyTo in favouriteCurrencies) {
-                        val rate = currencyTo.exchangeRate / currencyFrom.exchangeRate
-                        currencyTo.exchangeRate = rate
-                        currencyTo.source = from
-                    }
-                    executors.mainThread().execute { callback.onExchangeRatesLoaded(favouriteCurrencies) }
-                } else {
-                    executors.mainThread().execute { callback.onDataUnavailable() }
-                }
-            }
-        })
-    }
-
-    override fun getCurrenciesExchangeRate(from: String, callback: LoadExchangeRatesCallback) {
-        execute(object : LoadData {
-            override fun load() {
-                val currencyFrom = currencyRateDao.getCurrency(from)
-                val currencies = currencyRateDao.currencies
-                if (currencies != null && currencies.isNotEmpty()) {
-                    for (currencyTo in currencies) {
-                        val rate = currencyTo.exchangeRate / currencyFrom.exchangeRate
-                        currencyTo.exchangeRate = rate
-                        currencyTo.source = from
-                    }
-                    executors.mainThread().execute { callback.onExchangeRatesLoaded(currencies) }
-                } else {
-                    executors.mainThread().execute { callback.onDataUnavailable() }
-                }
-            }
-        })
-    }
-
-    override fun getCurrencyExchangeRate(from: String, to: String, callback: LoadExchangeRateCallback) {
-        execute(object : LoadData {
-            override fun load() {
-                val currencyFrom = currencyRateDao.getCurrency(from)
-                val currencyTo = currencyRateDao.getCurrency(to)
-                val rate = currencyTo.exchangeRate / currencyFrom.exchangeRate
-                val currency = Currency(from, to, rate)
-                executors.mainThread().execute { callback.onExchangeRateLoaded(currency) }
-            }
-        })
-    }
-
-    override fun getCurrency(name: String, callback: LoadExchangeRateCallback) {
-        execute(object : LoadData {
-            override fun load() {
-                val currency = currencyRateDao.getCurrency(name)
-                executors.mainThread().execute { callback.onExchangeRateLoaded(currency) }
-            }
-        })
-    }
+//    override fun updateCurrencies(context: Context, callback: UpdateCallback) {
+//        val timestamp = PreferenceUtil.getString(context, PreferenceUtil.LAST_UPDATE_TIMESTAMP, "0")
+//        val before = DateTime(timestamp.toLong() * 1000)
+//        val after = DateTime.now()
+//        if (!after.minusDays(1).isAfter(before)) {
+//            callback.connectFailed("updated too frequently")
+//            return
+//        }
+//
+//        val request2 = RequestService().requestCurrenciesInfo(context)
+//        request2.enqueue(object : Callback<CurrenciesInfo> {
+//            override fun onFailure(call: Call<CurrenciesInfo>, t: Throwable) {
+//                callback.connectFailed(t.message)
+//            }
+//
+//            override fun onResponse(call: Call<CurrenciesInfo>, response: Response<CurrenciesInfo>) {
+//                val currenciesInfo = response.body()
+//
+//                if ("false" == currenciesInfo?.success) {
+//                    callback.connectFailed(currenciesInfo.error.toString())
+//                    return
+//                }
+//
+//                PreferenceUtil.setString(context, PreferenceUtil.LAST_UPDATE_TIMESTAMP, currenciesInfo?.timestamp)
+//                val currencies: List<Currency>? = currenciesInfo?.quotes
+//                if (currencies == null) {
+//                    callback.connectFailed("no currency")
+//                    return
+//                }
+//                execute(object : LoadData {
+//                    override fun load() {
+//                        for (currency in currencies) {
+//                            val rawCurrency = currencyRateDao.getCurrency(currency.name)
+//                            rawCurrency.exchangeRate = currency.exchangeRate
+//                            currencyRateDao.updateCurrency(rawCurrency)
+//                        }
+//                        executors.mainThread().execute { callback.updated() }
+//                    }
+//                })
+//
+//            }
+//        })
+//    }
 
     fun initDb() {
         execute(object : LoadData {
@@ -733,67 +556,27 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         })
     }
 
-    override fun initCurrenciesAndInfos(context: Context) {
+    fun initCurrenciesAndInfos(context: Context) {
         execute(object : LoadData {
             override fun load() {
                 try {
-                    context.resources.assets.open("currency/default_rate.json").use { inputStream ->
-                        val reader: Reader = InputStreamReader(inputStream)
-                        val info = JsonConvertor.toCurrenciesInfo(reader)
-                        PreferenceUtil.setString(context, PreferenceUtil.LAST_UPDATE_TIMESTAMP, info.timestamp)
-                        if (info.quotes != null) {
-                            for (currency in info.quotes) {
-                                when (currency.name) {
-                                    "CNY", "USD", "HKD", "JPY", "MOP", "TWD", "CAD", "EUR", "GBP", "AUD" ->
-                                        currency.favourite = java.lang.Boolean.TRUE
-                                    else -> currency.favourite = java.lang.Boolean.FALSE
-                                }
-                                currencyRateDao.addCurrency(currency)
-                            }
-                        }
-                    }
+
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
 
-                updateCurrencies(context, object : UpdateCallback {
-                    override fun connectFailed(msg: String?) {
-                        Log.e(TAG, "connectFailed: $msg")
-                    }
-
-                    override fun updated() {
-                        Log.d(TAG, "updated: ")
-                    }
-                })
+//                updateCurrencies(context, object : UpdateCallback {
+//                    override fun connectFailed(msg: String?) {
+//                        Log.e(TAG, "connectFailed: $msg")
+//                    }
+//
+//                    override fun updated() {
+//                        Log.d(TAG, "updated: ")
+//                    }
+//                })
 
                 try {
-                    val nameIs = context.resources.assets.open("currency/name.json")
-                    val translationCnIs = context.resources.assets.open("currency/translation_cn.json")
-                    val flagPath = "currency/flag"
-                    val flags = context.resources.assets.list(flagPath)
-                    val nameReader: Reader = InputStreamReader(nameIs)
-                    val translationCnReader: Reader = InputStreamReader(translationCnIs)
-                    val codeMap = JsonConvertor.toCurrencyCodeMap(nameReader)
-                    val translationCnCodeMap = JsonConvertor.toCurrencyCodeMap(translationCnReader)
-                    val flagsMap: MutableMap<String, String> = HashMap()
-                    if (flags != null) {
-                        for (s in flags) {
-                            val key = s.replace(".png", "")
-                            flagsMap[key] = "$flagPath/$s"
-                        }
-                    }
-                    for (key in codeMap.keys) {
-                        val info = CurrencyInfo(
-                                key,
-                                codeMap[key],
-                                translationCnCodeMap[key],
-                                flagsMap[key])
-                        currencyInfoDao.addInfo(info)
-                    }
-                    nameIs.close()
-                    translationCnIs.close()
-                    nameReader.close()
-                    translationCnReader.close()
+
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }

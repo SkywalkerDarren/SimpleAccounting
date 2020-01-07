@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,7 +30,6 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.ExchangeRateAdapter;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentDiscoveryBinding;
-import io.github.skywalkerdarren.simpleaccounting.model.datasource.CurrencyDataSource;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.MyAccountActivity;
 import io.github.skywalkerdarren.simpleaccounting.util.ViewModelFactory;
 import io.github.skywalkerdarren.simpleaccounting.util.data.PreferenceUtil;
@@ -114,17 +112,17 @@ public class DiscoveryFragment extends BaseFragment {
         popupMenu.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.refresh:
-                    mViewModel.refreshCurrency(requireContext(), new CurrencyDataSource.UpdateCallback() {
-                        @Override
-                        public void connectFailed(@Nullable String msg) {
-                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void updated() {
-                            updateUI();
-                        }
-                    });
+                    //mViewModel.refreshCurrency(requireContext(), new CurrencyDataSource.UpdateCallback() {
+                    //    @Override
+                    //    public void connectFailed(@Nullable String msg) {
+                    //        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                    //    }
+                    //
+                    //    @Override
+                    //    public void updated() {
+                    //        updateUI();
+                    //    }
+                    //});
                     break;
                 case R.id.modify_fav_currency:
                     showMultiAlertDialog();
@@ -151,7 +149,7 @@ public class DiscoveryFragment extends BaseFragment {
         CurrencySelectDialogFragment currencySelectDialogFragment = new CurrencySelectDialogFragment();
         currencySelectDialogFragment.setOnDismissListener(() -> {
             String current = currencySelectDialogFragment.getCurrencyAdapter().getCurrent();
-            mViewModel.setCurrency(current);
+            mViewModel.getDefCurrency().setValue(current == null ? "CNY" : current);
             updateUI();
         });
         currencySelectDialogFragment.show(requireFragmentManager(), "currencySelectDialogFragment");
@@ -186,7 +184,7 @@ public class DiscoveryFragment extends BaseFragment {
         mViewModel.setCumulativeDays(days + getString(R.string.day));
 
         if (mAdapter == null) {
-            mAdapter = new ExchangeRateAdapter(requireContext());
+            mAdapter = new ExchangeRateAdapter(requireActivity().getApplication(), mViewModel);
             mAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_RIGHT);
         }
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemDragAndSwipeCallback(mAdapter));
@@ -195,11 +193,8 @@ public class DiscoveryFragment extends BaseFragment {
         mAdapter.setDuration(100);
         mBinding.exchangeRateRecyclerView.setAdapter(mAdapter);
 
-        mViewModel.getFavoriteCurrencies().observe(getViewLifecycleOwner(), currencies -> {
-            if (isResumed()) {
-                mAdapter.setNewList(currencies);
-            }
-        });
+        mViewModel.getFavoriteCurrencies().observe(getViewLifecycleOwner(),
+                currencies -> mAdapter.setNewList(currencies));
     }
 
     @Override

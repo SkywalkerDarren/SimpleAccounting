@@ -1,22 +1,26 @@
 package io.github.skywalkerdarren.simpleaccounting.model.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrencyInfo
 
 @Dao
 interface CurrencyInfoDao {
     @get:Query("SELECT * FROM currency_info ORDER BY full_name_cn")
-    val infos: List<CurrencyInfo>?
+    val infos: LiveData<List<CurrencyInfo>>
 
     @Query("SELECT * FROM currency_info WHERE name == :name")
-    fun getInfo(name: String): CurrencyInfo?
+    fun getInfo(name: String): LiveData<CurrencyInfo>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addInfo(info: CurrencyInfo)
+    suspend fun addInfo(info: CurrencyInfo)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun updateInfo(info: CurrencyInfo)
+    suspend fun updateInfo(info: CurrencyInfo)
 
     @Query("DELETE FROM currency_info WHERE name == :name")
-    fun deleteInfo(name: String)
+    suspend fun deleteInfo(name: String)
+
+    @get:Query("SELECT * FROM currency_info WHERE name IN (SELECT name FROM currency WHERE favourite == 1)")
+    val favInfos: LiveData<List<CurrencyInfo>>
 }
