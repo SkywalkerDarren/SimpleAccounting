@@ -8,14 +8,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import io.github.skywalkerdarren.simpleaccounting.R
-import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentAboutBinding
 import io.github.skywalkerdarren.simpleaccounting.model.Demo
 import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget
 import org.joda.time.DateTime
 
-class AboutFragment : BaseFragment() {
+class AboutFragment : Fragment() {
     companion object {
         const val TAG = "AboutFragment"
         fun newInstance() = AboutFragment()
@@ -63,9 +63,5 @@ class AboutFragment : BaseFragment() {
             startActivity(intent)
         }
         return root
-    }
-
-    override fun updateUI() {
-
     }
 }

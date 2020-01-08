@@ -7,14 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.*
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import io.github.skywalkerdarren.simpleaccounting.R
-import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentFeedBackBinding
 import io.github.skywalkerdarren.simpleaccounting.util.ViewModelFactory
 import io.github.skywalkerdarren.simpleaccounting.view_model.FeedBackViewModel
 
-class FeedBackFragment : BaseFragment() {
+class FeedBackFragment : Fragment() {
     companion object {
         const val TAG = "FeedBackFragment"
         fun newInstance() = FeedBackFragment()
@@ -30,7 +30,6 @@ class FeedBackFragment : BaseFragment() {
         val url = "https://support.qq.com/product/113692"
 
         binding = FragmentFeedBackBinding.bind(root)
-        binding.toolbar.collapseIcon
         binding.title.text = getString(R.string.feedback)
         fun close() {
             requireFragmentManager().beginTransaction().apply {
@@ -104,9 +103,5 @@ class FeedBackFragment : BaseFragment() {
         viewModel = ViewModelProviders.of(this, factory).get(FeedBackViewModel::class.java)
         binding.feedback = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
-    }
-
-    override fun updateUI() {
-
     }
 }
