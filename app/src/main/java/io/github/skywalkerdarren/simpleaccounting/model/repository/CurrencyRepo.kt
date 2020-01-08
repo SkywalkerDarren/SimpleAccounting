@@ -147,7 +147,11 @@ class CurrencyRepo private constructor(
 
     override val favouriteCurrenciesInfo: LiveData<List<CurrencyInfo>> = infoDao.favInfos
 
-    override val currencyInfos: LiveData<List<CurrencyInfo>> = infoDao.infos
+    override val currencyInfos: LiveData<List<CurrencyInfo>> = Transformations.map(infoDao.infos) { list ->
+        val noName = list.filter { it.fullNameCN == null }
+        val haveName = list.filter { it.fullNameCN != null }
+        return@map listOf(haveName, noName).flatten()
+    }
 
     override val allCurrencies: LiveData<List<CurrencyAndInfo>>
         get() {

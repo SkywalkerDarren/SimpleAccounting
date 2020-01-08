@@ -6,7 +6,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrencyInfo
 import io.github.skywalkerdarren.simpleaccounting.model.repository.CurrencyRepo
 
 class CurrencySelectViewModel(repository: CurrencyRepo) : ViewModel() {
-    private val currencies: LiveData<List<CurrencyInfo>> = repository.favouriteCurrenciesInfo
+    private val currencies: LiveData<List<CurrencyInfo>> = repository.currencyInfos
 
 
     fun getCurrencies(): LiveData<List<CurrencyInfo>> {
