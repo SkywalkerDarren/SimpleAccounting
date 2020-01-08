@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -196,7 +195,7 @@ public class DiscoveryFragment extends BaseFragment {
 
         mViewModel.getFavoriteCurrencies().observe(getViewLifecycleOwner(),
                 currencies -> {
-                    if (getLifecycle().getCurrentState() == (Lifecycle.State.STARTED)) {
+                    if (!mAdapter.isDrag()) {
                         mAdapter.setNewList(currencies);
                     }
                 });
