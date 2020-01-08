@@ -254,7 +254,7 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
     private fun updateAccountBalanceByAdd(bill: Bill) {
         val type = typeDao.getType(bill.typeId) ?: return
         val account = accountDao.getAccount(bill.accountId)
-        val balance = account.balance.add(if (type.isExpense) bill.balance!!.negate() else bill.balance)
+        val balance = account.balance.add(if (type.isExpense) bill.balance?.negate() else bill.balance)
         accountDao.updateAccountBalance(account.uuid, balance)
     }
 

@@ -11,6 +11,7 @@ import com.chad.library.adapter.base.listener.OnItemDragListener;
 import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
+import io.github.skywalkerdarren.simpleaccounting.adapter.diff.AccountDiff;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseDraggableDataBindingAdapter;
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemAccountBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;

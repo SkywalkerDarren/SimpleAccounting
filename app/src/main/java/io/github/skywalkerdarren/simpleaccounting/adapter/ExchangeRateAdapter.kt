@@ -5,6 +5,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.listener.OnItemDragListener
 import io.github.skywalkerdarren.simpleaccounting.R
+import io.github.skywalkerdarren.simpleaccounting.adapter.diff.CurrencyAndInfoDiff
 import io.github.skywalkerdarren.simpleaccounting.base.BaseDraggableDataBindingAdapter
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemExchangeRateBinding
 import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrencyAndInfo

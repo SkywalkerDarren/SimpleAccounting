@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentActivity;
 import java.util.List;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
+import io.github.skywalkerdarren.simpleaccounting.adapter.diff.BillInfoDiff;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseMultiItemDataBindingAdapter;
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemListBillBinding;
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemListBillHeaderBinding;
