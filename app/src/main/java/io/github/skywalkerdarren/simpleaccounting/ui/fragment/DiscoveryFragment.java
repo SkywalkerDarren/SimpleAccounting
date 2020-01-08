@@ -50,6 +50,7 @@ public class DiscoveryFragment extends BaseFragment {
     private ArrayList<ImageView> mImageViews;
     private FragmentDiscoveryBinding mBinding;
     private DiscoveryViewModel mViewModel;
+    private String current;
 
     public static DiscoveryFragment newInstance() {
         Bundle args = new Bundle();
@@ -112,17 +113,7 @@ public class DiscoveryFragment extends BaseFragment {
         popupMenu.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.refresh:
-                    //mViewModel.refreshCurrency(requireContext(), new CurrencyDataSource.UpdateCallback() {
-                    //    @Override
-                    //    public void connectFailed(@Nullable String msg) {
-                    //        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-                    //    }
-                    //
-                    //    @Override
-                    //    public void updated() {
-                    //        updateUI();
-                    //    }
-                    //});
+                    mViewModel.refreshCurrency(requireContext());
                     break;
                 case R.id.modify_fav_currency:
                     showMultiAlertDialog();
@@ -138,7 +129,6 @@ public class DiscoveryFragment extends BaseFragment {
         popupMenu.show();
     }
 
-
     private void showMultiAlertDialog() {
         CurrencyFavDialogFragment currencyFavDialogFragment = new CurrencyFavDialogFragment();
         currencyFavDialogFragment.setOnDismissListener(this::updateUI);
@@ -148,8 +138,9 @@ public class DiscoveryFragment extends BaseFragment {
     private void showSingleAlertDialog() {
         CurrencySelectDialogFragment currencySelectDialogFragment = new CurrencySelectDialogFragment();
         currencySelectDialogFragment.setOnDismissListener(() -> {
-            String current = currencySelectDialogFragment.getCurrencyAdapter().getCurrent();
-            mViewModel.getDefCurrency().setValue(current == null ? "CNY" : current);
+            current = currencySelectDialogFragment.getCurrencyAdapter().getCurrent();
+            mViewModel.getDefCurrency().setValue(current == null ?
+                    mViewModel.getDefCurrency().getValue() : current);
             updateUI();
         });
         currencySelectDialogFragment.show(requireFragmentManager(), "currencySelectDialogFragment");
