@@ -110,13 +110,16 @@ class CurrencyRepo private constructor(
                         ?: return@CombineLatestMediatorLiveDataOfTwo listOf(CurrencyAndInfo(null, null))
                 list
                         ?: return@CombineLatestMediatorLiveDataOfTwo listOf(CurrencyAndInfo(null, null))
-                return@CombineLatestMediatorLiveDataOfTwo list.map {
+                val result = list.map {
                     it.currency ?: return@map CurrencyAndInfo(null, null)
                     if (it.currency.source != "USD") return@map it
                     it.currency.source = currency.name
                     it.currency.exchangeRate /= currency.exchangeRate
                     return@map it
                 }
+                val t1 = result.filter { it.currencyInfo?.fullNameCN == null }
+                val t2 = result.filter { it.currencyInfo?.fullNameCN != null }
+                return@CombineLatestMediatorLiveDataOfTwo listOf(t2, t1).flatten()
             }
 
     private class CombineLatestMediatorLiveDataOfTwo<T1, T2, R>(
