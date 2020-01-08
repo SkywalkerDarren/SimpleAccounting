@@ -16,6 +16,9 @@ interface CurrencyRateDao {
     @Query("SELECT * FROM currency WHERE name == :name")
     fun getCurrency(name: String): LiveData<Currency>
 
+    @Query("SELECT * FROM currency WHERE name == :name")
+    suspend fun getCurrencyRaw(name: String): Currency
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addCurrency(currency: Currency)
 
@@ -27,4 +30,13 @@ interface CurrencyRateDao {
 
     @Query("UPDATE currency SET id = :id WHERE name == :name")
     suspend fun updateCurrencyId(name: String, id: Int)
+
+    @Transaction
+    suspend fun changeCurrency(currencyA: Currency, currencyB: Currency) {
+        val a = getCurrencyRaw(currencyA.name).id
+        val b = getCurrencyRaw(currencyB.name).id
+        updateCurrencyId(currencyA.name, -1)
+        updateCurrencyId(currencyB.name, a)
+        updateCurrencyId(currencyA.name, b)
+    }
 }

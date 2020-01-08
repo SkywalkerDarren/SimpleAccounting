@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -184,7 +185,7 @@ public class DiscoveryFragment extends BaseFragment {
         mViewModel.setCumulativeDays(days + getString(R.string.day));
 
         if (mAdapter == null) {
-            mAdapter = new ExchangeRateAdapter(requireActivity().getApplication(), mViewModel);
+            mAdapter = new ExchangeRateAdapter(mViewModel);
             mAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_RIGHT);
         }
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemDragAndSwipeCallback(mAdapter));
@@ -194,7 +195,11 @@ public class DiscoveryFragment extends BaseFragment {
         mBinding.exchangeRateRecyclerView.setAdapter(mAdapter);
 
         mViewModel.getFavoriteCurrencies().observe(getViewLifecycleOwner(),
-                currencies -> mAdapter.setNewList(currencies));
+                currencies -> {
+                    if (getLifecycle().getCurrentState() == (Lifecycle.State.STARTED)) {
+                        mAdapter.setNewList(currencies);
+                    }
+                });
     }
 
     @Override

@@ -1,15 +1,15 @@
 package io.github.skywalkerdarren.simpleaccounting.view_model
 
 import android.content.Context
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.BillDataSource.LoadBillCountCallBack
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Currency
 import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrencyAndInfo
 import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrencyInfo
 import io.github.skywalkerdarren.simpleaccounting.model.repository.CurrencyRepo
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 
 class DiscoveryViewModel(private val mRepository: AppRepository, private val currencyRepo: CurrencyRepo) : ViewModel() {
@@ -26,6 +26,7 @@ class DiscoveryViewModel(private val mRepository: AppRepository, private val cur
     val favoriteCurrencies: LiveData<List<CurrencyAndInfo>> = Transformations.switchMap(defCurrency) {
         currencyRepo.getFavouriteCurrenciesExchangeRate(it)
     }
+
     val currencyDate = MutableLiveData<String>()
 
     fun setCurrencyDate(date: String) {
@@ -56,5 +57,13 @@ class DiscoveryViewModel(private val mRepository: AppRepository, private val cur
         monthReport.value = dateTime.monthOfYear.toString() + "月报表"
         yearReport.value = dateTime.year.toString() + "年报表"
         weekReport.value = "第" + dateTime.weekOfWeekyear + "周报表"
+    }
+
+    fun changeCurrency(currencyA: Currency?, currencyB: Currency?) {
+        currencyA ?: return
+        currencyB ?: return
+        viewModelScope.launch(context = Dispatchers.IO) {
+            currencyRepo.changeCurrencyPosition(currencyA, currencyB)
+        }
     }
 }

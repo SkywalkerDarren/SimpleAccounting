@@ -1,6 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.model.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -84,11 +85,8 @@ class CurrencyRepo private constructor(
     }
 
     override suspend fun changeCurrencyPosition(currencyA: Currency, currencyB: Currency) {
-        val a = currencyA.id
-        val b = currencyB.id
-        rateDao.updateCurrencyId(currencyA.name, -1)
-        rateDao.updateCurrencyId(currencyB.name, a)
-        rateDao.updateCurrencyId(currencyA.name, b)
+        Log.d("wtf", "\n$currencyA ${currencyA.id}\n$currencyB ${currencyB.id}")
+        rateDao.changeCurrency(currencyA, currencyB)
     }
 
     override suspend fun setCurrencyFav(name: String, isChecked: Boolean) {
@@ -117,7 +115,33 @@ class CurrencyRepo private constructor(
             rateDao.currencies
 
     override fun getFavouriteCurrenciesExchangeRate(from: String): LiveData<List<CurrencyAndInfo>> =
-            rateDao.getFavouriteCurrencies(true)
+            CombineLatestMediatorLiveDataOfTwo(rateDao.getCurrency(from), rateDao.getFavouriteCurrencies(true)) { currency, list ->
+                currency
+                        ?: return@CombineLatestMediatorLiveDataOfTwo listOf(CurrencyAndInfo(null, null))
+                list
+                        ?: return@CombineLatestMediatorLiveDataOfTwo listOf(CurrencyAndInfo(null, null))
+                return@CombineLatestMediatorLiveDataOfTwo list.map {
+                    it.currency ?: return@map CurrencyAndInfo(null, null)
+                    it.currency.source = currency.name
+                    it.currency.exchangeRate /= currency.exchangeRate
+                    return@map it
+                }
+            }
+
+    private class CombineLatestMediatorLiveDataOfTwo<T1, T2, R>(
+            source1: LiveData<T1>,
+            source2: LiveData<T2>,
+            combiner: (T1?, T2?) -> R?
+    ) : MediatorLiveData<R>() {
+        init {
+            addSource(source1) {
+                value = combiner(it, source2.value)
+            }
+            addSource(source2) {
+                value = combiner(source1.value, it)
+            }
+        }
+    }
 
     override fun getCurrencyInfo(name: String): LiveData<CurrencyInfo> = infoDao.getInfo(name)
 
@@ -129,7 +153,7 @@ class CurrencyRepo private constructor(
         get() {
             val rate = rateDao.currencies
             val info = infoDao.infos
-            return CombineLatestMediatorLiveDataOfTwo(rate, info) { t1, t2 ->
+            return CombineToCurrencyAndInfoList(rate, info) { t1, t2 ->
                 t1?.map { currency ->
                     val ci = t2?.filter { currencyInfo -> currencyInfo.name == currency.name }?.get(0)
                     CurrencyAndInfo(currency, ci)
@@ -137,7 +161,7 @@ class CurrencyRepo private constructor(
             }
         }
 
-    class CombineLatestMediatorLiveDataOfTwo<T1, T2, R>(
+    private class CombineToCurrencyAndInfoList<T1, T2, R>(
             source1: LiveData<T1>,
             source2: LiveData<T2>,
             combiner: (T1?, T2?) -> R?
