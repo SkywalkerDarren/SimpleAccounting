@@ -13,6 +13,9 @@ interface CurrencyRateDao {
     @Query("SELECT r.name as r_name, r.favourite as r_favourite, r.exchange_rate as r_exchange_rate, r.source as r_source, r.id as r_id,\ni.id as i_id, i.name as i_name, i.full_name_cn as i_full_name_cn, i.full_name as i_full_name, i.flag_location as i_flag_location\nFROM currency r LEFT JOIN currency_info i ON i.name == r.name WHERE favourite == :favourite ORDER BY r.id DESC")
     fun getFavouriteCurrencies(favourite: Boolean): LiveData<List<CurrencyAndInfo>>
 
+    @Query("SELECT * FROM currency ORDER BY name")
+    suspend fun getCurrenciesRaw(): List<Currency>
+
     @Query("SELECT * FROM currency WHERE name == :name")
     fun getCurrency(name: String): LiveData<Currency>
 

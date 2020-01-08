@@ -10,7 +10,7 @@ class LogInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request: Request = chain.request()
         val t1 = System.nanoTime()
-        Log.d(TAG, "Sending request on ${chain.connection()}\n" +
+        Log.d(TAG, "Sending ${request.url} request on ${chain.connection()}\n" +
                 "${request.headers}")
 
         val response = chain.proceed(request)

@@ -17,6 +17,11 @@ class RequestService {
             .build()
 
     fun requestCurrenciesInfo(context: Context): Call<CurrenciesInfo> {
+        // manifest 信息
+        val info = context.packageManager.getApplicationInfo(
+                context.packageName, PackageManager.GET_META_DATA)
+        val baseToken = info.metaData.getString("com.currencylayer.TOKEN")
+
         val currenciesInfoGson = JsonConvertor.getCurrenciesInfoGson()
         val converter = GsonConverterFactory.create(currenciesInfoGson)
 
@@ -26,10 +31,6 @@ class RequestService {
                 .addConverterFactory(converter)
                 .build()
 
-
-        val info = context.packageManager.getApplicationInfo(
-                context.packageName, PackageManager.GET_META_DATA)
-        val baseToken = info.metaData.getString("com.currencylayer.TOKEN")
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
         val token = preferences.getString("token", baseToken)
                 ?: throw IllegalArgumentException("no token found")

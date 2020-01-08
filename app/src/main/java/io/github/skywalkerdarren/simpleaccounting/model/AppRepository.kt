@@ -18,7 +18,6 @@ import io.github.skywalkerdarren.simpleaccounting.model.datasource.TypeDataSourc
 import io.github.skywalkerdarren.simpleaccounting.model.entity.*
 import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors
 import org.joda.time.DateTime
-import java.io.IOException
 import java.math.BigDecimal
 import java.util.*
 import java.util.concurrent.locks.ReentrantReadWriteLock
@@ -464,50 +463,6 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         })
     }
 
-//    override fun updateCurrencies(context: Context, callback: UpdateCallback) {
-//        val timestamp = PreferenceUtil.getString(context, PreferenceUtil.LAST_UPDATE_TIMESTAMP, "0")
-//        val before = DateTime(timestamp.toLong() * 1000)
-//        val after = DateTime.now()
-//        if (!after.minusDays(1).isAfter(before)) {
-//            callback.connectFailed("updated too frequently")
-//            return
-//        }
-//
-//        val request2 = RequestService().requestCurrenciesInfo(context)
-//        request2.enqueue(object : Callback<CurrenciesInfo> {
-//            override fun onFailure(call: Call<CurrenciesInfo>, t: Throwable) {
-//                callback.connectFailed(t.message)
-//            }
-//
-//            override fun onResponse(call: Call<CurrenciesInfo>, response: Response<CurrenciesInfo>) {
-//                val currenciesInfo = response.body()
-//
-//                if ("false" == currenciesInfo?.success) {
-//                    callback.connectFailed(currenciesInfo.error.toString())
-//                    return
-//                }
-//
-//                PreferenceUtil.setString(context, PreferenceUtil.LAST_UPDATE_TIMESTAMP, currenciesInfo?.timestamp)
-//                val currencies: List<Currency>? = currenciesInfo?.quotes
-//                if (currencies == null) {
-//                    callback.connectFailed("no currency")
-//                    return
-//                }
-//                execute(object : LoadData {
-//                    override fun load() {
-//                        for (currency in currencies) {
-//                            val rawCurrency = currencyRateDao.getCurrency(currency.name)
-//                            rawCurrency.exchangeRate = currency.exchangeRate
-//                            currencyRateDao.updateCurrency(rawCurrency)
-//                        }
-//                        executors.mainThread().execute { callback.updated() }
-//                    }
-//                })
-//
-//            }
-//        })
-//    }
-
     fun initDb() {
         execute(object : LoadData {
             override fun load() {
@@ -552,34 +507,6 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
                 typeDao.newType(Type("其他", R.color.other,
                         false, "type/other.png"))
                 dbLock.writeLock().unlock()
-            }
-        })
-    }
-
-    fun initCurrenciesAndInfos(context: Context) {
-        execute(object : LoadData {
-            override fun load() {
-                try {
-
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-
-//                updateCurrencies(context, object : UpdateCallback {
-//                    override fun connectFailed(msg: String?) {
-//                        Log.e(TAG, "connectFailed: $msg")
-//                    }
-//
-//                    override fun updated() {
-//                        Log.d(TAG, "updated: ")
-//                    }
-//                })
-
-                try {
-
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
             }
         })
     }

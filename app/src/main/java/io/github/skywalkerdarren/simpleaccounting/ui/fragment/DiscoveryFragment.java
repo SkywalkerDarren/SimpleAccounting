@@ -112,17 +112,7 @@ public class DiscoveryFragment extends BaseFragment {
         popupMenu.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.refresh:
-                    //mViewModel.refreshCurrency(requireContext(), new CurrencyDataSource.UpdateCallback() {
-                    //    @Override
-                    //    public void connectFailed(@Nullable String msg) {
-                    //        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-                    //    }
-                    //
-                    //    @Override
-                    //    public void updated() {
-                    //        updateUI();
-                    //    }
-                    //});
+                    mViewModel.refreshCurrency(requireContext());
                     break;
                 case R.id.modify_fav_currency:
                     showMultiAlertDialog();

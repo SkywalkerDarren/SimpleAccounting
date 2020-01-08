@@ -1,6 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.model.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -34,8 +35,18 @@ class CurrencyRepo private constructor(
                 }
     }
 
-    override suspend fun updateCurrencies(context: Context) {
-        TODO("not implemented")
+    override suspend fun updateCurrencies(newData: List<Currency>) {
+        val currenciesRaw = rateDao.getCurrenciesRaw()
+        newData.forEach { newCur ->
+            val raw = currenciesRaw.find { newCur.name == it.name && newCur.source == it.source }
+            if (raw == null) {
+                Log.d("wtf", "not find $newCur to $raw then add new one")
+                rateDao.addCurrency(newCur)
+            } else {
+                raw.exchangeRate = newCur.exchangeRate
+                rateDao.updateCurrency(raw)
+            }
+        }
     }
 
     override suspend fun initCurrenciesAndInfos(context: Context) {
@@ -46,7 +57,7 @@ class CurrencyRepo private constructor(
             if (info.quotes != null) {
                 for (currency in info.quotes) {
                     when (currency.name) {
-                        "CNY", "USD", "HKD", "JPY", "MOP", "TWD", "CAD", "EUR", "GBP", "AUD" ->
+                        "CNY", "USD", "HKD", "JPY", "MOP", "CAD", "EUR", "GBP", "AUD" ->
                             currency.favourite = java.lang.Boolean.TRUE
                         else -> currency.favourite = java.lang.Boolean.FALSE
                     }
@@ -57,27 +68,27 @@ class CurrencyRepo private constructor(
 
         val flagPath = "currency/flag"
         val flags = context.resources.assets.list(flagPath)
-        val nameReader = context.resources.assets.open("currency/name.json").reader()
-        val translationCnReader = context.resources.assets.open("currency/translation_cn.json").reader()
-        val codeMap = JsonConvertor.toCurrencyCodeMap(nameReader)
-        val translationCnCodeMap = JsonConvertor.toCurrencyCodeMap(translationCnReader)
-        val flagsMap: MutableMap<String, String> = HashMap()
-        if (flags != null) {
-            for (s in flags) {
-                val key = s.replace(".png", "")
-                flagsMap[key] = "$flagPath/$s"
+        context.resources.assets.open("currency/name.json").reader().use { name ->
+            context.resources.assets.open("currency/translation_cn.json").reader().use { translationCn ->
+                val codeMap = JsonConvertor.toCurrencyCodeMap(name)
+                val translationCnCodeMap = JsonConvertor.toCurrencyCodeMap(translationCn)
+                val flagsMap: MutableMap<String, String> = HashMap()
+                if (flags != null) {
+                    for (s in flags) {
+                        val key = s.replace(".png", "")
+                        flagsMap[key] = "$flagPath/$s"
+                    }
+                }
+                for (key in codeMap.keys) {
+                    val info = CurrencyInfo(
+                            key,
+                            codeMap[key],
+                            translationCnCodeMap[key],
+                            flagsMap[key])
+                    infoDao.addInfo(info)
+                }
             }
         }
-        for (key in codeMap.keys) {
-            val info = CurrencyInfo(
-                    key,
-                    codeMap[key],
-                    translationCnCodeMap[key],
-                    flagsMap[key])
-            infoDao.addInfo(info)
-        }
-        nameReader.close()
-        translationCnReader.close()
     }
 
     override suspend fun changeCurrencyPosition(currencyA: Currency, currencyB: Currency) {

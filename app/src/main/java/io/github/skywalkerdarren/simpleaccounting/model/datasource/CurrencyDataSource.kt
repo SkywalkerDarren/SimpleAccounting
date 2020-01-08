@@ -7,7 +7,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrencyAndInfo
 import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrencyInfo
 
 interface CurrencyDataSource {
-    suspend fun updateCurrencies(context: Context)
+    suspend fun updateCurrencies(newData: List<Currency>)
     suspend fun initCurrenciesAndInfos(context: Context)
     suspend fun changeCurrencyPosition(currencyA: Currency, currencyB: Currency)
     suspend fun setCurrencyFav(currency: Currency, isChecked: Boolean)
