@@ -6,5 +6,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrencyAndInfo
 class CurrencyAndInfoDiff(newList: List<CurrencyAndInfo>?) : BaseQuickDiffCallback<CurrencyAndInfo>(newList) {
     override fun areItemsTheSame(oldItem: CurrencyAndInfo, newItem: CurrencyAndInfo) = oldItem == newItem
 
-    override fun areContentsTheSame(oldItem: CurrencyAndInfo, newItem: CurrencyAndInfo) = false
+    override fun areContentsTheSame(oldItem: CurrencyAndInfo, newItem: CurrencyAndInfo) =
+            oldItem.currency == newItem.currency && oldItem.currencyInfo == newItem.currencyInfo
+
 }

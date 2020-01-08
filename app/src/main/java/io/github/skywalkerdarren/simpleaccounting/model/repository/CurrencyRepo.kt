@@ -16,6 +16,7 @@ import io.github.skywalkerdarren.simpleaccounting.util.data.PreferenceUtil
 import java.io.InputStreamReader
 import java.io.Reader
 import java.util.*
+import java.util.concurrent.atomic.AtomicInteger
 
 class CurrencyRepo private constructor(
         private val infoDao: CurrencyInfoDao,
@@ -102,6 +103,7 @@ class CurrencyRepo private constructor(
     override fun getCurrenciesExchangeRate(from: String): LiveData<List<Currency>> =
             rateDao.currencies
 
+    val i: AtomicInteger = AtomicInteger(0)
     override fun getFavouriteCurrenciesExchangeRate(from: String): LiveData<List<CurrencyAndInfo>> =
             CombineLatestMediatorLiveDataOfTwo(rateDao.getCurrency(from), rateDao.getFavouriteCurrencies(true)) { currency, list ->
                 currency
@@ -110,6 +112,7 @@ class CurrencyRepo private constructor(
                         ?: return@CombineLatestMediatorLiveDataOfTwo listOf(CurrencyAndInfo(null, null))
                 return@CombineLatestMediatorLiveDataOfTwo list.map {
                     it.currency ?: return@map CurrencyAndInfo(null, null)
+                    if (it.currency.source != "USD") return@map it
                     it.currency.source = currency.name
                     it.currency.exchangeRate /= currency.exchangeRate
                     return@map it
