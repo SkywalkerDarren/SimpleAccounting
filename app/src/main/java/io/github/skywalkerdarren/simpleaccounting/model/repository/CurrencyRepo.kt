@@ -1,7 +1,6 @@
 package io.github.skywalkerdarren.simpleaccounting.model.repository
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -81,7 +80,6 @@ class CurrencyRepo private constructor(
     }
 
     override suspend fun changeCurrencyPosition(currencyA: Currency, currencyB: Currency) {
-        Log.d("wtf", "\n$currencyA ${currencyA.id}\n$currencyB ${currencyB.id}")
         rateDao.changeCurrency(currencyA, currencyB)
     }
 

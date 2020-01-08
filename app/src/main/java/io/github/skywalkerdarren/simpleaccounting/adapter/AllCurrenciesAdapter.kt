@@ -1,6 +1,5 @@
 package io.github.skywalkerdarren.simpleaccounting.adapter
 
-import android.util.Log
 import io.github.skywalkerdarren.simpleaccounting.R
 import io.github.skywalkerdarren.simpleaccounting.base.BaseDataBindingAdapter
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemCurrencyMultiBinding
@@ -19,7 +18,6 @@ class AllCurrenciesAdapter(private val viewModel: CurrencyFavViewModel) :
         binding.info = item.currencyInfo
         binding.favCurrency.setOnClickListener {
             viewModel.setCurrencyFav(item.currency, binding.favCurrency.isChecked)
-            Log.d("wtf", "${item.currencyInfo} ${binding.favCurrency.isChecked}")
         }
     }
 }
