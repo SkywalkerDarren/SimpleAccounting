@@ -1,6 +1,6 @@
 package io.github.skywalkerdarren.simpleaccounting.adapter
 
-import android.widget.CompoundButton
+import android.util.Log
 import io.github.skywalkerdarren.simpleaccounting.R
 import io.github.skywalkerdarren.simpleaccounting.base.BaseDataBindingAdapter
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemCurrencyMultiBinding
@@ -17,8 +17,9 @@ class AllCurrenciesAdapter(private val viewModel: CurrencyFavViewModel) :
     override fun convert(binding: ItemCurrencyMultiBinding, item: CurrencyAndInfo) {
         binding.currency = item.currency
         binding.info = item.currencyInfo
-        binding.favCurrency.setOnCheckedChangeListener { buttonView: CompoundButton?, isChecked: Boolean ->
-            viewModel.setCurrencyFav(item.currency?.name, isChecked)
+        binding.favCurrency.setOnClickListener {
+            viewModel.setCurrencyFav(item.currency, binding.favCurrency.isChecked)
+            Log.d("wtf", "${item.currencyInfo} ${binding.favCurrency.isChecked}")
         }
     }
 }

@@ -14,10 +14,6 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrencyAndInfo
 import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrencyInfo
 import io.github.skywalkerdarren.simpleaccounting.util.data.JsonConvertor
 import io.github.skywalkerdarren.simpleaccounting.util.data.PreferenceUtil
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.InputStreamReader
 import java.io.Reader
 import java.util.*
@@ -89,15 +85,9 @@ class CurrencyRepo private constructor(
         rateDao.changeCurrency(currencyA, currencyB)
     }
 
-    override suspend fun setCurrencyFav(name: String, isChecked: Boolean) {
-        Transformations.map(rateDao.getCurrency(name)) {
-            it.favourite = isChecked
-            GlobalScope.launch {
-                withContext(Dispatchers.IO) {
-                    rateDao.updateCurrency(it)
-                }
-            }
-        }
+    override suspend fun setCurrencyFav(currency: Currency, isChecked: Boolean) {
+        currency.favourite = isChecked
+        rateDao.updateCurrency(currency)
     }
 
     override fun getCurrency(name: String): LiveData<Currency> = rateDao.getCurrency(name)

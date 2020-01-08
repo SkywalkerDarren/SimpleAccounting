@@ -10,7 +10,7 @@ interface CurrencyDataSource {
     suspend fun updateCurrencies(context: Context)
     suspend fun initCurrenciesAndInfos(context: Context)
     suspend fun changeCurrencyPosition(currencyA: Currency, currencyB: Currency)
-    suspend fun setCurrencyFav(name: String, isChecked: Boolean)
+    suspend fun setCurrencyFav(currency: Currency, isChecked: Boolean)
 
     fun getCurrency(name: String): LiveData<Currency>
     fun getCurrencyExchangeRate(from: String, to: String): LiveData<Currency>
