@@ -3,11 +3,12 @@ package io.github.skywalkerdarren.simpleaccounting.adapter
 import android.animation.Animator
 import android.animation.AnimatorInflater
 import android.view.View
+import android.widget.ImageView
 import io.github.skywalkerdarren.simpleaccounting.R
 import io.github.skywalkerdarren.simpleaccounting.base.BaseDataBindingAdapter
-import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillEditBinding
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemTypeBinding
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type
+import io.github.skywalkerdarren.simpleaccounting.view_model.BillEditViewModel
 
 /**
  * 类型适配器
@@ -15,7 +16,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.Type
  * @author darren
  * @date 2018/3/8
  */
-class TypeAdapter(private val mBinding: FragmentBillEditBinding)
+class TypeAdapter(private val viewModel: BillEditViewModel, private val typeIv: ImageView)
     : BaseDataBindingAdapter<Type, ItemTypeBinding>(R.layout.item_type, null) {
     @JvmField
     var isOpen = false
@@ -28,9 +29,9 @@ class TypeAdapter(private val mBinding: FragmentBillEditBinding)
 
     private fun click(item: Type) {
         isOpen = true
-        mBinding.edit?.setType(item)
+        viewModel.type.value = item
         val appear = AnimatorInflater.loadAnimator(mContext, R.animator.type_appear)
-        appear.setTarget(mBinding.typeImageView)
+        appear.setTarget(typeIv)
         appear.start()
     }
 
