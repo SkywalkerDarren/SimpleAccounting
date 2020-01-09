@@ -530,14 +530,14 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         private var INSTANCE: AppRepository? = null
 
         @JvmStatic
-        fun getInstance(executors: AppExecutors, context: Context): AppRepository? =
+        fun getInstance(executors: AppExecutors, context: Context): AppRepository =
                 INSTANCE ?: synchronized(this) {
                     INSTANCE ?: AppRepository(executors, context).also { INSTANCE = it }
                 }
 
         @JvmStatic
         @VisibleForTesting
-        fun getInstance(executors: AppExecutors, database: AppDatabase): AppRepository? =
+        fun getInstance(executors: AppExecutors, database: AppDatabase): AppRepository =
                 INSTANCE ?: synchronized(this) {
                     INSTANCE ?: AppRepository(executors, database).also { INSTANCE = it }
                 }
