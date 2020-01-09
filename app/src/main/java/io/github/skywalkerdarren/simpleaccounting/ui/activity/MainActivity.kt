@@ -16,6 +16,6 @@ class MainActivity : BaseFragmentActivity() {
 
     companion object {
         @JvmStatic
-        fun newIntent(context: Context?) = Intent(context, MainActivity::class.java)
+        fun newIntent(context: Context) = Intent(context, MainActivity::class.java)
     }
 }

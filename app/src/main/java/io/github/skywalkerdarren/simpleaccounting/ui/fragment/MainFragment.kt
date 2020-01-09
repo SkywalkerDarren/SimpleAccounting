@@ -76,7 +76,7 @@ class MainFragment : Fragment() {
         override fun onPageScrollStateChanged(state: Int) {}
     }
 
-    fun newIntent(context: Context?): Intent? {
+    fun newIntent(context: Context): Intent {
         return Intent(context, MainActivity::class.java)
     }
 
