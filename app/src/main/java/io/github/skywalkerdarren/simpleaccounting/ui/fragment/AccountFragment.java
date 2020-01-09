@@ -18,13 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.AccountAdapter;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentAccountBinding;
-import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.util.ViewModelFactory;
 import io.github.skywalkerdarren.simpleaccounting.view_model.AccountViewModel;
 
@@ -37,8 +33,6 @@ import io.github.skywalkerdarren.simpleaccounting.view_model.AccountViewModel;
  * @author darren
  */
 public class AccountFragment extends Fragment {
-    private static final String TAG = "AccountFragment";
-    private static final List<Account> accountsCache = new ArrayList<>();
     private RecyclerView mAccountRecyclerView;
     private AccountAdapter mAdapter;
     private FragmentAccountBinding mBinding;
@@ -89,9 +83,8 @@ public class AccountFragment extends Fragment {
         itemTouchHelper.attachToRecyclerView(mAccountRecyclerView);
         mAdapter.enableDragItem(itemTouchHelper);
         mAccountRecyclerView.setAdapter(mAdapter);
-        mViewModel.getAccounts().observe(getViewLifecycleOwner(), accounts -> {
-            mAdapter.setNewList(accounts);
-        });
+        mViewModel.getAccounts().observe(getViewLifecycleOwner(),
+                accounts -> mAdapter.setNewList(accounts));
     }
 
     @Override
