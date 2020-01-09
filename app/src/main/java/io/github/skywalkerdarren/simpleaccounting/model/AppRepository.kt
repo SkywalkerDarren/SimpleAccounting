@@ -5,7 +5,10 @@ import android.util.Log
 import androidx.annotation.VisibleForTesting
 import io.github.skywalkerdarren.simpleaccounting.R
 import io.github.skywalkerdarren.simpleaccounting.adapter.DateHeaderDivider
-import io.github.skywalkerdarren.simpleaccounting.model.dao.*
+import io.github.skywalkerdarren.simpleaccounting.model.dao.AccountDao
+import io.github.skywalkerdarren.simpleaccounting.model.dao.BillDao
+import io.github.skywalkerdarren.simpleaccounting.model.dao.StatsDao
+import io.github.skywalkerdarren.simpleaccounting.model.dao.TypeDao
 import io.github.skywalkerdarren.simpleaccounting.model.database.AppDatabase
 import io.github.skywalkerdarren.simpleaccounting.model.database.AppDatabase.Companion.getInstance
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.AccountDataSource.LoadAccountCallBack
@@ -31,8 +34,6 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
     private val typeDao: TypeDao = database.typeDao()
     private val billDao: BillDao = database.billDao()
     private val statsDao: StatsDao = database.statsDao()
-    private val currencyInfoDao: CurrencyInfoDao = database.currencyInfoDao()
-    private val currencyRateDao: CurrencyRateDao = database.currencyRateDao()
 
     private constructor(executors: AppExecutors, context: Context) : this(
             executors = executors,
@@ -208,15 +209,6 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
             override fun load() {
                 Log.d(TAG, "getBill: in " + Thread.currentThread().name)
                 dbLock.readLock().lock()
-                //Bill bill = sBillCache.get(id);
-                //if (bill == null) {
-                //    bill = mBillDao.getBill(id);
-                //    try {
-                //        sBillCache.put(id, bill);
-                //    } catch (NullPointerException ignore) {
-                //
-                //    }
-                //}
                 val bill = billDao.getBill(id)
                 dbLock.readLock().unlock()
                 executors.mainThread().execute { callBack.onBillLoaded(bill) }
@@ -231,7 +223,6 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
                 dbLock.writeLock().lock()
                 updateAccountBalanceByAdd(bill)
                 billDao.addBill(bill)
-                //sBillCache.put(bill.getUuid(), bill);
                 dbLock.writeLock().unlock()
             }
         })

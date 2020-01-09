@@ -544,7 +544,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
                             android:onClick="@{() -> detail.setDate()}"
-                            android:text="@{context.getString(detail.mode)}"
+                            android:text="@{context.getString(detail.modeText)}"
                             android:textAllCaps="false"
                             android:textColor="@color/colorPrimary"
                             tools:ignore="RtlHardcoded" />
