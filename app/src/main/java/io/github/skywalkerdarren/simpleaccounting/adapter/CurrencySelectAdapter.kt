@@ -19,9 +19,4 @@ class CurrencySelectAdapter @JvmOverloads constructor(data: MutableList<Currency
         helper.addOnClickListener(R.id.item)
         helper.addOnClickListener(R.id.selected)
     }
-
-    fun setNewData(data: MutableList<CurrencyInfo>, current: String) {
-        super.setNewData(data)
-        this.current = current
-    }
 }

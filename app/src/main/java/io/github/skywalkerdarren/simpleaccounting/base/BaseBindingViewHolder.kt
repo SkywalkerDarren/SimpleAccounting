@@ -8,8 +8,8 @@ import com.chad.library.adapter.base.BaseViewHolder
  * @author darren
  * @date 2018/4/5
  */
-abstract class BaseBindingViewHolder<Binding : ViewDataBinding?> internal constructor(view: View?) : BaseViewHolder(view) {
-    var binding: Binding? = null
+abstract class BaseBindingViewHolder<Binding : ViewDataBinding> internal constructor(view: View) : BaseViewHolder(view) {
+    lateinit var binding: Binding
         private set
 
     fun setBinding(binding: Binding) {

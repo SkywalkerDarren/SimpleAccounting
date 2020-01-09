@@ -4,14 +4,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import com.chad.library.adapter.base.BaseItemDraggableAdapter
+import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
+import com.chad.library.adapter.base.entity.MultiItemEntity
 
 /**
  * @author darren
- * @date 2018/4/9
+ * @date 2018/4/5
  */
-abstract class BaseDraggableDataBindingAdapter<T, Binding : ViewDataBinding>(layoutResId: Int, data: List<T>?)
-    : BaseItemDraggableAdapter<T, BaseBindingViewHolder<Binding>>(layoutResId, data) {
+abstract class BaseMultiItemDataBindingAdapter<T : MultiItemEntity, Binding : ViewDataBinding>(data: List<T>?)
+    : BaseMultiItemQuickAdapter<T, BaseBindingViewHolder<Binding>>(data) {
     override fun createBaseViewHolder(view: View): BaseBindingViewHolder<Binding> {
         return object : BaseBindingViewHolder<Binding>(view) {}
     }

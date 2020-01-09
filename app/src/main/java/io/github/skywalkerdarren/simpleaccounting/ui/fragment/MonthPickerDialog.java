@@ -59,13 +59,13 @@ public class MonthPickerDialog extends DialogFragment {
         monthPicker.setValue(month);
 
         builder.setTitle("选择日期")
-                .setPositiveButton("确认", (dialogInterface, i) -> {
+                .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
                     DateTime newDate = new DateTime(yearPicker.getValue(), monthPicker.getValue(),
                             1, 0, 0);
                     newDate.plusMonths(1);
                     sendResult(newDate);
                 })
-                .setNegativeButton("取消", (dialogInterface, i) -> {
+                .setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
                     dialogInterface.cancel();
                 })
                 .setView(view);

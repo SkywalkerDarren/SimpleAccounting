@@ -25,8 +25,8 @@ abstract class BaseDataBindingAdapter<T, Binding : ViewDataBinding>(layoutResId:
     }
 
     override fun convert(helper: BaseBindingViewHolder<Binding>, item: T) {
-        helper.binding?.let { convert(it, item) }
-        helper.binding?.executePendingBindings()
+        convert(helper.binding, item)
+        helper.binding.executePendingBindings()
     }
 
     protected abstract fun convert(binding: Binding, item: T)
