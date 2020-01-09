@@ -36,6 +36,7 @@ class ExchangeRateAdapter(private val viewModel: DiscoveryViewModel) :
             override fun onItemDragStart(viewHolder: RecyclerView.ViewHolder, pos: Int) {
                 isDrag = true
             }
+
             override fun onItemDragMoving(source: RecyclerView.ViewHolder, from: Int, target: RecyclerView.ViewHolder, to: Int) {
                 viewModel.changeCurrency(getItem(from)?.currency, getItem(to)?.currency)
             }

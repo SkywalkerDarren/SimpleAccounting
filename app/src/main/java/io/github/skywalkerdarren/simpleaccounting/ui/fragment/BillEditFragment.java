@@ -312,7 +312,7 @@ public class BillEditFragment extends BaseFragment {
                                 types.get(0).getUuid(),
                                 Objects.requireNonNull(accounts.get(0).getUuid()),
                                 types.get(0).getName());
-                    mViewModel.setBill(mBill);
+                        mViewModel.setBill(mBill);
                     }));
         } else {
             mViewModel.setBill(mBill);

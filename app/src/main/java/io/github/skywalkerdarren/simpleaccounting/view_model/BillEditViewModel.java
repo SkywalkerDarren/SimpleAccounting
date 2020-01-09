@@ -186,10 +186,6 @@ public class BillEditViewModel extends ViewModel {
         }
     }
 
-    public interface SaveFailed {
-        void saveFailed(String msg);
-    }
-
     /**
      * @return true为支出类型
      */
@@ -205,5 +201,9 @@ public class BillEditViewModel extends ViewModel {
     @NonNull
     public LiveData<List<Account>> getAccounts() {
         return accounts;
+    }
+
+    public interface SaveFailed {
+        void saveFailed(String msg);
     }
 }
