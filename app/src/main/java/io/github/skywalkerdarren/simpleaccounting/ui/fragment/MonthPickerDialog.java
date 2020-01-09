@@ -26,9 +26,8 @@ import io.github.skywalkerdarren.simpleaccounting.R;
 
 public class MonthPickerDialog extends DialogFragment {
     static final String EXTRA_DATE = "io.github.skywalkerdarren.simpleaccounting.datetime";
-    private final static String ARG_DATE_TIME = "datetime";
-    private NumberPicker mYearPicker;
-    private NumberPicker mMonthPicker;
+    private int year;
+    private int month;
 
     /**
      * 构造对话框构造
@@ -45,29 +44,28 @@ public class MonthPickerDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        DateTime dateTime = DateTime.now();
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         View view = LayoutInflater.from(requireActivity()).inflate(R.layout.month_picker, null);
 
-        mMonthPicker = view.findViewById(R.id.month_picker);
-        mYearPicker = view.findViewById(R.id.year_picker);
+        NumberPicker yearPicker = view.findViewById(R.id.year_picker);
+        NumberPicker monthPicker = view.findViewById(R.id.month_picker);
 
-        mYearPicker.setMinValue(1900);
-        mYearPicker.setMaxValue(2100);
-        mMonthPicker.setMaxValue(12);
-        mMonthPicker.setMinValue(1);
-        setYearPicker(dateTime.getYear());
-        setMonthPicker(dateTime.getMonthOfYear());
+        yearPicker.setMinValue(1900);
+        yearPicker.setMaxValue(2100);
+        monthPicker.setMaxValue(12);
+        monthPicker.setMinValue(1);
+
+        yearPicker.setValue(year);
+        monthPicker.setValue(month);
 
         builder.setTitle("选择日期")
                 .setPositiveButton("确认", (dialogInterface, i) -> {
-                    DateTime newDate = new DateTime(mYearPicker.getValue(), mMonthPicker.getValue(),
+                    DateTime newDate = new DateTime(yearPicker.getValue(), monthPicker.getValue(),
                             1, 0, 0);
                     newDate.plusMonths(1);
-                    sendResult(Activity.RESULT_OK, newDate);
+                    sendResult(newDate);
                 })
                 .setNegativeButton("取消", (dialogInterface, i) -> {
-                    sendResult(Activity.RESULT_CANCELED, dateTime);
                     dialogInterface.cancel();
                 })
                 .setView(view);
@@ -79,11 +77,8 @@ public class MonthPickerDialog extends DialogFragment {
      *
      * @param year 年份
      */
-    public void setYearPicker(@IntRange(from = 1900, to = 2100) int year) {
-        if (mYearPicker == null) {
-            return;
-        }
-        mYearPicker.setValue(year);
+    public void setYear(@IntRange(from = 1900, to = 2100) int year) {
+        this.year = year;
     }
 
     /**
@@ -91,25 +86,21 @@ public class MonthPickerDialog extends DialogFragment {
      *
      * @param month 月份
      */
-    public void setMonthPicker(@IntRange(from = 1, to = 12) int month) {
-        if (mMonthPicker == null) {
-            return;
-        }
-        mMonthPicker.setValue(month);
+    public void setMonth(@IntRange(from = 1, to = 12) int month) {
+        this.month = month;
     }
 
     /**
      * 打包发送数据
      *
-     * @param resultCode 结果响应代码
      * @param dateTime   日期
      */
-    private void sendResult(int resultCode, DateTime dateTime) {
+    private void sendResult(DateTime dateTime) {
         if (getTargetFragment() == null) {
             return;
         }
         Intent intent = new Intent();
         intent.putExtra(EXTRA_DATE, dateTime);
-        getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, intent);
+        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
     }
 }

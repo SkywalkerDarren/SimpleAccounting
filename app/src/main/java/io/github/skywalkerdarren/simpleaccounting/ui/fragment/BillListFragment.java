@@ -42,6 +42,7 @@ import static io.github.skywalkerdarren.simpleaccounting.adapter.BillAdapter.HEA
 
 public class BillListFragment extends BaseFragment {
     private static final int REQUEST_DATE_TIME = 0;
+    private MonthPickerDialog mMonthPickerDialog;
     private FragmentBillListBinding mBinding;
     private BillListViewModel mViewModel;
     private RecyclerView mBillListRecyclerView;
@@ -74,19 +75,16 @@ public class BillListFragment extends BaseFragment {
         mBinding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_bill_list, container, false);
 
+        mMonthPickerDialog = MonthPickerDialog.newInstance();
+        mMonthPickerDialog.setTargetFragment(BillListFragment.this, REQUEST_DATE_TIME);
+
         mBillListRecyclerView = mBinding.billRecycleView;
 
         mBinding.dateImageView.setOnClickListener(view1 -> {
-            MonthPickerDialog monthPickerDialog = MonthPickerDialog.newInstance();
-            monthPickerDialog.setTargetFragment(BillListFragment.this, REQUEST_DATE_TIME);
-            monthPickerDialog.show(requireFragmentManager(), "month picker");
-            mViewModel.getDate().observe(this, dateTime -> {
-                monthPickerDialog.setYearPicker(dateTime.getYear());
-                monthPickerDialog.setMonthPicker(dateTime.getMonthOfYear());
-            });
-
+            mMonthPickerDialog.setYear(mDateTime.getYear());
+            mMonthPickerDialog.setMonth(mDateTime.getMonthOfYear());
+            mMonthPickerDialog.show(requireFragmentManager(), "month picker");
         });
-
 
         mBillListRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
 

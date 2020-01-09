@@ -28,7 +28,7 @@ import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors
  * @author darren
  * @date 2018/2/12
  */
-class BillAdapter(bills: List<BillInfo?>?, private val mActivity: FragmentActivity)
+class BillAdapter(bills: List<BillInfo>?, private val mActivity: FragmentActivity)
     : BaseMultiItemDataBindingAdapter<BillInfo, ViewDataBinding>(bills) {
     private val mRepository: AppRepository? = getInstance(AppExecutors(), mActivity)
     private var mX = 0
