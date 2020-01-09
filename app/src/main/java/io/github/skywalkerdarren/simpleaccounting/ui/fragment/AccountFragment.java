@@ -82,7 +82,7 @@ public class AccountFragment extends Fragment {
         mBinding.setAccount(mViewModel);
         mBinding.setLifecycleOwner(getViewLifecycleOwner());
         if (mAdapter == null) {
-            mAdapter = new AccountAdapter(requireContext());
+            mAdapter = new AccountAdapter(mViewModel);
         }
         mAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemDragAndSwipeCallback(mAdapter));
