@@ -289,7 +289,7 @@ public class CalculateUtil {
         BigDecimal a;
         BigDecimal c;
         String f = flag.pop();
-        Operators.Operator op = Operators.operatorHashMap.get(f);
+        Operator op = Operators.operatorHashMap.get(f);
         switch (op.getAry()) {
             case 2:
                 b = val.pop();
