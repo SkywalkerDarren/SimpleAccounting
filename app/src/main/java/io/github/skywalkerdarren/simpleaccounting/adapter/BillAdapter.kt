@@ -78,7 +78,7 @@ class BillAdapter(bills: List<BillInfo>?, private val mActivity: FragmentActivit
                         bill, mX, mY, R.color.orangea200)
                 intent.putExtra(BillDetailActivity.EXTRA_START_COLOR, R.color.orangea200)
                 val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        mActivity, imageView, "type_image_view")
+                        mActivity, imageView, imageView.transitionName)
                 mContext.startActivity(intent, options.toBundle())
             }
         })
