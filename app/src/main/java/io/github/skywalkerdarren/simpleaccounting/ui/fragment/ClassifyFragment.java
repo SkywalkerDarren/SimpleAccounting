@@ -7,7 +7,6 @@ import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,12 +33,6 @@ import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentClassifyBi
 import io.github.skywalkerdarren.simpleaccounting.util.ViewModelFactory;
 import io.github.skywalkerdarren.simpleaccounting.view_model.ClassifyViewModel;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ClassifyFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ClassifyFragment extends BaseFragment {
     private static final String TAG = "ClassifyFragment";
 
@@ -50,12 +43,6 @@ public class ClassifyFragment extends BaseFragment {
     private ImageView mToIncomeImageView;
     private ImageView mToExpenseImageView;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment ClassifyFragment.
-     */
     public static ClassifyFragment newInstance() {
         ClassifyFragment fragment = new ClassifyFragment();
         Bundle args = new Bundle();
@@ -105,7 +92,7 @@ public class ClassifyFragment extends BaseFragment {
 
         binding.classifyRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        mClassifyAdapter = new ClassifyAdapter(requireContext());
+        mClassifyAdapter = new ClassifyAdapter();
         mClassifyAdapter.setDuration(100);
         mClassifyAdapter.setEmptyView(emptyView());
         binding.classifyRecyclerView.setAdapter(mClassifyAdapter);
@@ -117,9 +104,8 @@ public class ClassifyFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel.getStatsList().observe(getViewLifecycleOwner(), typeStats -> {
-            Log.d(TAG, "onActivityCreated: " + getLifecycle().getCurrentState());
-            mClassifyAdapter.setNewList(typeStats);
+        mViewModel.getTypeAndStatsList().observe(getViewLifecycleOwner(), typeAndStats -> {
+            mClassifyAdapter.setNewList(typeAndStats);
         });
     }
 

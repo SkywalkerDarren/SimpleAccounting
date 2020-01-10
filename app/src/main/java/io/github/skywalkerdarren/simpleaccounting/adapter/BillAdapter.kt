@@ -30,7 +30,7 @@ import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors
  */
 class BillAdapter(bills: List<BillInfo>?, private val mActivity: FragmentActivity)
     : BaseMultiItemDataBindingAdapter<BillInfo, ViewDataBinding>(bills) {
-    private val mRepository: AppRepository? = getInstance(AppExecutors(), mActivity)
+    private val mRepository: AppRepository = getInstance(AppExecutors(), mActivity)
     private var mX = 0
     private var mY = 0
     fun setNewList(data: List<BillInfo>?) {
@@ -72,7 +72,7 @@ class BillAdapter(bills: List<BillInfo>?, private val mActivity: FragmentActivit
     }
 
     private fun click(item: BillInfo, imageView: ImageView) {
-        mRepository?.getBill(item.uuid ?: return, object : LoadBillCallBack {
+        mRepository.getBill(item.uuid ?: return, object : LoadBillCallBack {
             override fun onBillLoaded(bill: Bill?) {
                 val intent = BillDetailActivity.newIntent(mContext,
                         bill, mX, mY, R.color.orangea200)
