@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.github.mikephil.charting.animation.Easing;
@@ -82,8 +81,8 @@ public class JournalFragment extends BaseFragment implements View.OnClickListene
         // Inflate the layout for this fragment
         FragmentJournalBinding binding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_journal, container, false);
-        ViewModelFactory factory = ViewModelFactory.getInstance(requireActivity().getApplication());
-        mViewModel = ViewModelProviders.of(this, factory).get(JournalViewModel.class);
+        mViewModel = ViewModelFactory.getInstance(requireActivity().getApplication())
+                .obtainViewModel(this, JournalViewModel.class);
         binding.setJournal(mViewModel);
         binding.setLifecycleOwner(this);
 

@@ -2,8 +2,10 @@ package io.github.skywalkerdarren.simpleaccounting.util
 
 import android.app.Application
 import androidx.annotation.VisibleForTesting
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.NewInstanceFactory
+import androidx.lifecycle.ViewModelProviders
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository
 import io.github.skywalkerdarren.simpleaccounting.model.repository.CurrencyRepo
 import io.github.skywalkerdarren.simpleaccounting.view_model.*
@@ -51,6 +53,9 @@ class ViewModelFactory private constructor(private val mRepository: AppRepositor
             else -> throw IllegalArgumentException("no this ViewModel")
         }
     }
+
+    fun <T : ViewModel> obtainViewModel(fragment: Fragment, modelClass: Class<T>) =
+            ViewModelProviders.of(fragment, this).get(modelClass)
 
     companion object {
         @Volatile

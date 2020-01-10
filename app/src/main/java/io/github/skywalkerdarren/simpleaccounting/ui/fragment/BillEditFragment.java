@@ -32,7 +32,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.databinding.DataBindingUtil;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -112,8 +111,8 @@ public class BillEditFragment extends BaseFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ViewModelFactory factory = ViewModelFactory.getInstance(requireActivity().getApplication());
-        mViewModel = ViewModelProviders.of(this, factory).get(BillEditViewModel.class);
+        mViewModel = ViewModelFactory.getInstance(requireActivity().getApplication())
+                .obtainViewModel(this, BillEditViewModel.class);
         mViewModel.setBill(mBill);
         // Inflate the layout for this fragment
         mBinding = DataBindingUtil

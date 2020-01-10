@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -70,8 +69,8 @@ public class AccountFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (mViewModel == null) {
-            ViewModelFactory factory = ViewModelFactory.getInstance(requireActivity().getApplication());
-            mViewModel = ViewModelProviders.of(requireActivity(), factory).get(AccountViewModel.class);
+            mViewModel = ViewModelFactory.getInstance(requireActivity().getApplication())
+                    .obtainViewModel(this, AccountViewModel.class);
         }
         mBinding.setAccount(mViewModel);
         mBinding.setLifecycleOwner(getViewLifecycleOwner());

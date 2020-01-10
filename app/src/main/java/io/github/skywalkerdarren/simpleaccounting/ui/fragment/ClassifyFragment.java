@@ -17,7 +17,6 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager.widget.ViewPager;
 
@@ -61,8 +60,8 @@ public class ClassifyFragment extends BaseFragment {
         // Inflate the layout for this fragment
         FragmentClassifyBinding binding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_classify, container, false);
-        ViewModelFactory factory = ViewModelFactory.getInstance(requireActivity().getApplication());
-        mViewModel = ViewModelProviders.of(this, factory).get(ClassifyViewModel.class);
+        mViewModel = ViewModelFactory.getInstance(requireActivity().getApplication())
+                .obtainViewModel(this, ClassifyViewModel.class);
         mViewModel.setExpense(true);
         binding.setLifecycleOwner(this);
 

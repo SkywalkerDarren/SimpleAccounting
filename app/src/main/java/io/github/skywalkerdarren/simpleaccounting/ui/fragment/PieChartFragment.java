@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
@@ -88,8 +87,8 @@ public class PieChartFragment extends BaseFragment {
             mIsExpense = true;
         }
 
-        ViewModelFactory factory = ViewModelFactory.getInstance(requireActivity().getApplication());
-        mViewModel = ViewModelProviders.of(this, factory).get(ChartViewModel.class);
+        mViewModel = ViewModelFactory.getInstance(requireActivity().getApplication())
+                .obtainViewModel(this, ChartViewModel.class);
         mBinding.setChart(mViewModel);
         mBinding.setLifecycleOwner(this);
 

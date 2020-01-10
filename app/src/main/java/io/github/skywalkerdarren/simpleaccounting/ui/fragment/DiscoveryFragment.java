@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager.widget.PagerAdapter;
@@ -150,8 +149,8 @@ public class DiscoveryFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ViewModelFactory factory = ViewModelFactory.getInstance(requireActivity().getApplication());
-        mViewModel = ViewModelProviders.of(this, factory).get(DiscoveryViewModel.class);
+        mViewModel = ViewModelFactory.getInstance(requireActivity().getApplication())
+                .obtainViewModel(this, DiscoveryViewModel.class);
         mBinding.setDiscovery(mViewModel);
         mBinding.setLifecycleOwner(getViewLifecycleOwner());
         int days = Integer.parseInt(PreferenceUtil.getString(requireContext(), CUMULATIVE_DAYS, "1"));

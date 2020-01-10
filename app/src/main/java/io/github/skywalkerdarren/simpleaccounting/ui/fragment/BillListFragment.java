@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -99,8 +98,8 @@ public class BillListFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ViewModelFactory factory = ViewModelFactory.getInstance(requireActivity().getApplication());
-        mViewModel = ViewModelProviders.of(this, factory).get(BillListViewModel.class);
+        mViewModel = ViewModelFactory.getInstance(requireActivity().getApplication())
+                .obtainViewModel(this, BillListViewModel.class);
         mBinding.setBillList(mViewModel);
         mBinding.setLifecycleOwner(this);
     }
@@ -146,8 +145,9 @@ public class BillListFragment extends BaseFragment {
      */
     private View emptyView() {
         EmptyLayoutBinding binding = EmptyLayoutBinding.inflate(LayoutInflater.from(requireContext()));
-        ViewModelFactory factory = ViewModelFactory.getInstance(requireActivity().getApplication());
-        binding.setEmpty(ViewModelProviders.of(this, factory).get(EmptyListViewModel.class));
+        EmptyListViewModel viewModel = ViewModelFactory.getInstance(requireActivity().getApplication())
+                .obtainViewModel(this, EmptyListViewModel.class);
+        binding.setEmpty(viewModel);
         binding.getRoot().setOnClickListener(view -> updateUI());
         return binding.getRoot();
     }

@@ -31,7 +31,6 @@ import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.appbar.AppBarLayout;
 
@@ -98,11 +97,8 @@ public class BillDetailFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() == null) {
-            return;
-        }
         setHasOptionsMenu(true);
-        mBill = (Bill) getArguments().getSerializable(ARG_BILL);
+        mBill = (Bill) requireArguments().getSerializable(ARG_BILL);
     }
 
     @Override
@@ -262,8 +258,8 @@ public class BillDetailFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ViewModelFactory factory = ViewModelFactory.getInstance(requireActivity().getApplication());
-        mViewModel = ViewModelProviders.of(this, factory).get(BillDetailViewModel.class);
+        mViewModel = ViewModelFactory.getInstance(requireActivity().getApplication())
+                .obtainViewModel(this, BillDetailViewModel.class);
         mBinding.setDetail(mViewModel);
         mBinding.setLifecycleOwner(this);
     }
