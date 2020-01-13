@@ -12,7 +12,6 @@ import io.github.skywalkerdarren.simpleaccounting.model.dao.TypeDao
 import io.github.skywalkerdarren.simpleaccounting.model.database.AppDatabase
 import io.github.skywalkerdarren.simpleaccounting.model.database.AppDatabase.Companion.getInstance
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.AppDataSource
-import io.github.skywalkerdarren.simpleaccounting.model.datasource.StatsDataSource.*
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.TypeDataSource.LoadTypeCallBack
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.TypeDataSource.LoadTypesCallBack
 import io.github.skywalkerdarren.simpleaccounting.model.entity.*
@@ -298,7 +297,7 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         return billStats
     }
 
-    override fun getBillsAnnualStats(year: Int, callBack: LoadBillsStatsCallBack) {
+    override fun getBillsAnnualStats(year: Int, callBack: (List<BillStats>?) -> Unit) {
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "getBillsAnnualStats: in " + Thread.currentThread().name)
@@ -321,12 +320,12 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
                     start = start.plusMonths(1)
                     end = end.plusMonths(1)
                 }
-                executors.mainThread().execute { callBack.onBillStatsLoaded(billStatsList) }
+                executors.mainThread().execute { callBack(billStatsList) }
             }
         })
     }
 
-    override fun getBillStats(start: DateTime, end: DateTime, callBack: LoadBillStatsCallBack) {
+    override fun getBillStats(start: DateTime, end: DateTime, callBack: (BillStats?) -> Unit) {
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "getBillStats: in " + Thread.currentThread().name)
@@ -341,42 +340,42 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
                         }
                     }
                 }
-                executors.mainThread().execute { callBack.onBillStatsLoaded(billStats) }
+                executors.mainThread().execute { callBack(billStats) }
             }
         })
     }
 
-    override fun getTypesStats(start: DateTime, end: DateTime, isExpense: Boolean, callBack: LoadTypesStatsCallBack) {
+    override fun getTypesStats(start: DateTime, end: DateTime, isExpense: Boolean, callBack: (List<TypeStats>?) -> Unit) {
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "getTypesStats: in " + Thread.currentThread().name)
                 val typesStats = statsDao.getTypesStats(start, end, isExpense)
-                executors.mainThread().execute { callBack.onTypesStatsLoaded(typesStats) }
+                executors.mainThread().execute { callBack(typesStats) }
             }
         })
     }
 
-    override fun getTypeStats(start: DateTime, end: DateTime, typeId: UUID, callBack: LoadTypeStatsCallBack) {
+    override fun getTypeStats(start: DateTime, end: DateTime, typeId: UUID, callBack: (TypeStats?) -> Unit) {
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "getTypeStats: in " + Thread.currentThread().name)
                 val typeStats = statsDao.getTypeStats(start, end, typeId)
-                executors.mainThread().execute { callBack.onTypeStatsLoaded(typeStats) }
+                executors.mainThread().execute { callBack(typeStats) }
             }
         })
     }
 
-    override fun getTypeAverage(start: DateTime, end: DateTime, typeId: UUID, callBack: LoadTypeStatsCallBack) {
+    override fun getTypeAverage(start: DateTime, end: DateTime, typeId: UUID, callBack: (TypeStats?) -> Unit) {
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "getTypeAverage: in " + Thread.currentThread().name)
                 val typeStats = statsDao.getTypeAverageStats(start, end, typeId)
-                executors.mainThread().execute { callBack.onTypeStatsLoaded(typeStats) }
+                executors.mainThread().execute { callBack(typeStats) }
             }
         })
     }
 
-    override fun getAccountStats(accountId: UUID, start: DateTime, end: DateTime, callBack: LoadAccountStatsCallBack) {
+    override fun getAccountStats(accountId: UUID, start: DateTime, end: DateTime, callBack: (AccountStats?) -> Unit) {
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "getAccountStats: in " + Thread.currentThread().name)
@@ -389,7 +388,7 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
                                 accountStats.income = balance
                             }
                         }
-                executors.mainThread().execute { callBack.onAccountStatsLoaded(accountStats) }
+                executors.mainThread().execute { callBack(accountStats) }
             }
         })
     }

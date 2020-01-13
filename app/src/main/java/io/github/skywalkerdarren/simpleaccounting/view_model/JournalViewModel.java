@@ -11,6 +11,7 @@ import java.util.Objects;
 
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
+import kotlin.Unit;
 
 /**
  * 流水vm
@@ -55,6 +56,7 @@ public class JournalViewModel extends ViewModel {
             mIncome.setValue(income);
             mSum.setValue(sum);
             mStats.setValue(billsStats);
+            return Unit.INSTANCE;
         });
     }
 

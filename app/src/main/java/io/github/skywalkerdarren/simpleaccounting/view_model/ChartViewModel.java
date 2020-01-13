@@ -23,6 +23,7 @@ import java.util.List;
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.TypeStats;
+import kotlin.Unit;
 
 public class ChartViewModel extends ViewModel {
     private final AppRepository mRepository;
@@ -57,9 +58,12 @@ public class ChartViewModel extends ViewModel {
                     mPieData.setValue(pieData);
                 });
             }
+            return Unit.INSTANCE;
         });
-        mRepository.getBillStats(startDateTime, endDateTime, billStats ->
-                mBillStats.setValue(billStats));
+        mRepository.getBillStats(startDateTime, endDateTime, billStats -> {
+            mBillStats.setValue(billStats);
+            return Unit.INSTANCE;
+        });
     }
 
     @NonNull

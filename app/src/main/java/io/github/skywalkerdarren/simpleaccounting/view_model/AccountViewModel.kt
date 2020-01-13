@@ -5,9 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository
-import io.github.skywalkerdarren.simpleaccounting.model.datasource.StatsDataSource.LoadBillStatsCallBack
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account
-import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats
 import io.github.skywalkerdarren.simpleaccounting.util.view.FormatUtil
 import org.joda.time.DateTime
 
@@ -40,13 +38,11 @@ class AccountViewModel(private val mRepository: AppRepository) : ViewModel() {
         mRepository.getAccounts { accounts: List<Account>? ->
             this@AccountViewModel.accounts.value = accounts
         }
-        mRepository.getBillStats(DateTime(0), DateTime.now(), object : LoadBillStatsCallBack {
-            override fun onBillStatsLoaded(billStats: BillStats?) {
-                nav.value = FormatUtil.getNumeric(billStats?.sum)
-                liability.value = FormatUtil.getNumeric(billStats?.expense)
-                totalAssets.value = FormatUtil.getNumeric(billStats?.income)
-            }
-        })
+        mRepository.getBillStats(DateTime(0), DateTime.now()) { billStats ->
+            nav.value = FormatUtil.getNumeric(billStats?.sum)
+            liability.value = FormatUtil.getNumeric(billStats?.expense)
+            totalAssets.value = FormatUtil.getNumeric(billStats?.income)
+        }
     }
 
     fun changePosition(a: Account, b: Account) {

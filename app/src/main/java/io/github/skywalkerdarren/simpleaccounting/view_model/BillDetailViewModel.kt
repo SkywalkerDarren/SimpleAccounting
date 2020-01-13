@@ -4,9 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.github.skywalkerdarren.simpleaccounting.R
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository
-import io.github.skywalkerdarren.simpleaccounting.model.datasource.StatsDataSource.*
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.TypeDataSource.LoadTypeCallBack
-import io.github.skywalkerdarren.simpleaccounting.model.entity.*
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Type
 import io.github.skywalkerdarren.simpleaccounting.util.view.FormatUtil
 import org.joda.time.DateTime
 import java.math.BigDecimal
@@ -71,48 +71,41 @@ class BillDetailViewModel(private val mRepository: AppRepository) : ViewModel() 
                     typeName.value = t.name
                     balanceColor.value = if (t.isExpense) R.color.deeporange800 else R.color.lightgreen700
                     expensePercentHint.value = if (t.isExpense) R.string.expense_percent else R.string.income_percent
-                    mRepository.getAccountStats(bill.accountId, start, end, object : LoadAccountStatsCallBack {
-                        override fun onAccountStatsLoaded(accountStats: AccountStats?) {
-                            accountStats?.let {
-                                accountPercent.value = if (t.isExpense) getPercent(bill, it.expense) else getPercent(bill, it.income)
-                            }
+                    mRepository.getAccountStats(bill.accountId, start, end) { accountStats ->
+                        accountStats?.let {
+                            accountPercent.value = if (t.isExpense) getPercent(bill, it.expense) else getPercent(bill, it.income)
                         }
-                    })
-                    mRepository.getBillStats(start, end, object : LoadBillStatsCallBack {
-                        override fun onBillStatsLoaded(billStats: BillStats?) {
-                            billStats?.let {
-                                expensePercent.value = if (t.isExpense) getPercent(bill, it.expense) else getPercent(bill, it.income)
-                            }
-                        }
-                    })
-                }
-            }
-        })
-        mRepository.getTypeStats(start, end, bill.typeId, object : LoadTypeStatsCallBack {
-            override fun onTypeStatsLoaded(typeStats: TypeStats?) {
-                typeStats?.let {
-                    typePercent.value = getPercent(bill, it.balance)
-                }
-            }
-        })
-        mRepository.getTypeAverage(start, end, bill.typeId, object : LoadTypeStatsCallBack {
-            override fun onTypeStatsLoaded(typeStats: TypeStats?) {
-                typeStats?.let {
-                    val sub = bill.balance?.subtract(it.balance)?.abs()
-                    try {
-                        thanAverage.value = sub?.multiply(BigDecimal.valueOf(100))
-                                ?.divide(it.balance, 2, BigDecimal.ROUND_HALF_UP).toString() + "%"
-                    } catch (e: ArithmeticException) {
-                        thanAverage.value = "ERROR"
                     }
-                    typeAverage.value = FormatUtil.getNumeric(it.balance)
-                    thanAverageHint.value = if (bill.balance ?: return >= it.balance) R.string.higher_than_average else R.string.less_than_average
+                    mRepository.getBillStats(start, end) { billStats ->
+                        billStats?.let {
+                            expensePercent.value = if (t.isExpense) getPercent(bill, it.expense) else getPercent(bill, it.income)
+                        }
+                    }
                 }
             }
         })
-        balance.value = FormatUtil.getNumeric(bill.balance)
-        time.value = bill.date.toString("yyyy-MM-dd hh:mm")
-        remark.value = bill.remark
+        mRepository.getTypeStats(start, end, bill.typeId) { typeStats ->
+            typeStats?.let {
+                typePercent.value = getPercent(bill, it.balance)
+            }
+        }
+        mRepository.getTypeAverage(start, end, bill.typeId) { typeStats ->
+            typeStats?.let {
+                val sub = bill.balance?.subtract(it.balance)?.abs()
+                try {
+                    thanAverage.value = sub?.multiply(BigDecimal.valueOf(100))
+                            ?.divide(it.balance, 2, BigDecimal.ROUND_HALF_UP).toString() + "%"
+                } catch (e: ArithmeticException) {
+                    thanAverage.value = "ERROR"
+                }
+                typeAverage.value = FormatUtil.getNumeric(it.balance)
+                thanAverageHint.value = if (bill.balance ?: return@let >= it.balance) R.string.higher_than_average else R.string.less_than_average
+            }
+
+            balance.value = FormatUtil.getNumeric(bill.balance)
+            time.value = bill.date.toString("yyyy-MM-dd hh:mm")
+            remark.value = bill.remark
+        }
     }
 
     /**

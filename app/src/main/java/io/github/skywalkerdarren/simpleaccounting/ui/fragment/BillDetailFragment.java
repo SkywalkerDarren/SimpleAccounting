@@ -36,7 +36,6 @@ import com.google.android.material.appbar.AppBarLayout;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseAppBarStateChangeListener;
-import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillDetailBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillEditActivity;
@@ -53,8 +52,7 @@ import io.github.skywalkerdarren.simpleaccounting.view_model.BillDetailViewModel
  * @author darren
  * @date 2018/2/21
  */
-public class BillDetailFragment extends BaseFragment {
-    private static final String TAG = "BillDetailFragment";
+public class BillDetailFragment extends Fragment {
 
     private static final String ARG_BILL = "bill";
     private static final String ARG_CX = "cx";
@@ -266,7 +264,8 @@ public class BillDetailFragment extends BaseFragment {
     }
 
     @Override
-    protected void updateUI() {
+    public void onResume() {
+        super.onResume();
         mViewModel.start(mBill);
     }
 

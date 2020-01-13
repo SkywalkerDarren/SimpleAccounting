@@ -5,10 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository
-import io.github.skywalkerdarren.simpleaccounting.model.datasource.StatsDataSource.LoadBillStatsCallBack
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillInfo
-import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.StatsActivity
 import io.github.skywalkerdarren.simpleaccounting.util.view.FormatUtil
 import org.joda.time.DateTime
@@ -39,16 +37,12 @@ class BillListViewModel(private val mRepository: AppRepository) : ViewModel() {
         mDateTime.value = date
         val month = DateTime(date.year, date.monthOfYear,
                 1, 0, 0)
-        mRepository.getBillStats(month, month.plusMonths(1), object : LoadBillStatsCallBack {
-            override fun onBillStatsLoaded(billStats: BillStats?) {
-                income.value = FormatUtil.getNumeric(billStats?.income)
-            }
-        })
-        mRepository.getBillStats(month, month.plusMonths(1), object : LoadBillStatsCallBack {
-            override fun onBillStatsLoaded(billStats: BillStats?) {
-                expense.value = FormatUtil.getNumeric(billStats?.expense)
-            }
-        })
+        mRepository.getBillStats(month, month.plusMonths(1)) {
+            income.value = FormatUtil.getNumeric(it?.income)
+        }
+        mRepository.getBillStats(month, month.plusMonths(1)) {
+            expense.value = FormatUtil.getNumeric(it?.expense)
+        }
         mRepository.getBillInfoList(date.year, date.monthOfYear) { billInfoList.value = it }
         this.month.value = month.monthOfYear.toString()
     }
