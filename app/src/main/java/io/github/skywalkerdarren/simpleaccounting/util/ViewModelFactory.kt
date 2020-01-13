@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.NewInstanceFactory
 import androidx.lifecycle.ViewModelProviders
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepository
+import io.github.skywalkerdarren.simpleaccounting.model.repository.AppRepository
 import io.github.skywalkerdarren.simpleaccounting.model.repository.CurrencyRepo
 import io.github.skywalkerdarren.simpleaccounting.view_model.*
 

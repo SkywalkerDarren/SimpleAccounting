@@ -1,8 +1,8 @@
 package io.github.skywalkerdarren.simpleaccounting.util
 
 import android.content.Context
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepository
 import io.github.skywalkerdarren.simpleaccounting.model.database.AppDatabase
+import io.github.skywalkerdarren.simpleaccounting.model.repository.AppRepository
 import io.github.skywalkerdarren.simpleaccounting.model.repository.CurrencyRepo
 
 object InjectorUtils {

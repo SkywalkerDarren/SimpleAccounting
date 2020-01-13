@@ -2,8 +2,8 @@ package io.github.skywalkerdarren.simpleaccounting.view_model
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepository
 import io.github.skywalkerdarren.simpleaccounting.model.entity.TypeAndStats
+import io.github.skywalkerdarren.simpleaccounting.model.repository.AppRepository
 import org.joda.time.DateTime
 import org.joda.time.Period
 

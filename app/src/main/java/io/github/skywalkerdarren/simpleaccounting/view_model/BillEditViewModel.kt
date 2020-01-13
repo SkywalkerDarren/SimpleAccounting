@@ -5,10 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepository
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type
+import io.github.skywalkerdarren.simpleaccounting.model.repository.AppRepository
 import org.joda.time.DateTime
 import java.math.BigDecimal
 

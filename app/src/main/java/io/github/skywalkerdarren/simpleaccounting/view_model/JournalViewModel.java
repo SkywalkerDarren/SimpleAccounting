@@ -9,8 +9,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
+import io.github.skywalkerdarren.simpleaccounting.model.repository.AppRepository;
 import kotlin.Unit;
 
 /**

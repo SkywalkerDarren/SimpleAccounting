@@ -4,11 +4,11 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.*
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepository
 import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrenciesInfo
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Currency
 import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrencyAndInfo
 import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrencyInfo
+import io.github.skywalkerdarren.simpleaccounting.model.repository.AppRepository
 import io.github.skywalkerdarren.simpleaccounting.model.repository.CurrencyRepo
 import io.github.skywalkerdarren.simpleaccounting.util.data.PreferenceUtil
 import io.github.skywalkerdarren.simpleaccounting.util.network.RequestService

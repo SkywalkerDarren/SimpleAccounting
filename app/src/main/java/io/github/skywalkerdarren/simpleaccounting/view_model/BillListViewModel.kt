@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepository
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillInfo
+import io.github.skywalkerdarren.simpleaccounting.model.repository.AppRepository
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.StatsActivity
 import io.github.skywalkerdarren.simpleaccounting.util.view.FormatUtil
 import org.joda.time.DateTime

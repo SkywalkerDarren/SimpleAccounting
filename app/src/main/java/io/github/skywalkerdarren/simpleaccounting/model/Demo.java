@@ -14,6 +14,7 @@ import java.util.concurrent.CountDownLatch;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type;
+import io.github.skywalkerdarren.simpleaccounting.model.repository.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;
 import kotlin.Unit;
 

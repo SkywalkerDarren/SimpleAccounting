@@ -20,9 +20,9 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.TypeStats;
+import io.github.skywalkerdarren.simpleaccounting.model.repository.AppRepository;
 import kotlin.Unit;
 
 public class ChartViewModel extends ViewModel {

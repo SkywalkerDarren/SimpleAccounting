@@ -1,4 +1,4 @@
-package io.github.skywalkerdarren.simpleaccounting.model
+package io.github.skywalkerdarren.simpleaccounting.model.repository
 
 import android.content.Context
 import android.util.Log
@@ -401,15 +401,19 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
 
         @JvmStatic
         fun getInstance(executors: AppExecutors, context: Context): AppRepository =
-                INSTANCE ?: synchronized(this) {
-                    INSTANCE ?: AppRepository(executors, context).also { INSTANCE = it }
+                INSTANCE
+                        ?: synchronized(this) {
+                            INSTANCE
+                                    ?: AppRepository(executors, context).also { INSTANCE = it }
                 }
 
         @JvmStatic
         @VisibleForTesting
         fun getInstance(executors: AppExecutors, database: AppDatabase): AppRepository =
-                INSTANCE ?: synchronized(this) {
-                    INSTANCE ?: AppRepository(executors, database).also { INSTANCE = it }
+                INSTANCE
+                        ?: synchronized(this) {
+                            INSTANCE
+                                    ?: AppRepository(executors, database).also { INSTANCE = it }
                 }
 
         @JvmStatic

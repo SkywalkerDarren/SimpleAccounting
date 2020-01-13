@@ -11,8 +11,8 @@ import android.widget.RemoteViews;
 import org.joda.time.DateTime;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
+import io.github.skywalkerdarren.simpleaccounting.model.repository.AppRepository;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillEditActivity;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.MainActivity;
 import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors;

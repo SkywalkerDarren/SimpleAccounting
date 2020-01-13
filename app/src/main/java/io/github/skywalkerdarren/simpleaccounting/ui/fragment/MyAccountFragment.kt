@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import io.github.skywalkerdarren.simpleaccounting.R
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepository.Companion.getInstance
+import io.github.skywalkerdarren.simpleaccounting.model.repository.AppRepository.Companion.getInstance
 import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget
 import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors
 import kotlinx.android.synthetic.main.fragment_my_account.*

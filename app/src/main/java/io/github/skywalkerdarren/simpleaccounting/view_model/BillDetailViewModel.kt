@@ -3,8 +3,8 @@ package io.github.skywalkerdarren.simpleaccounting.view_model
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.github.skywalkerdarren.simpleaccounting.R
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepository
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill
+import io.github.skywalkerdarren.simpleaccounting.model.repository.AppRepository
 import io.github.skywalkerdarren.simpleaccounting.util.view.FormatUtil
 import org.joda.time.DateTime
 import java.math.BigDecimal

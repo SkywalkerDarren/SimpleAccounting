@@ -14,7 +14,7 @@ import androidx.viewpager.widget.ViewPager
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import io.github.skywalkerdarren.simpleaccounting.R
 import io.github.skywalkerdarren.simpleaccounting.databinding.ActivityWelcomeBinding
-import io.github.skywalkerdarren.simpleaccounting.model.AppRepository.Companion.getInstance
+import io.github.skywalkerdarren.simpleaccounting.model.repository.AppRepository.Companion.getInstance
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.MainActivity.Companion.newIntent
 import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors
 import io.github.skywalkerdarren.simpleaccounting.util.InjectorUtils.getCurrencyRepo
