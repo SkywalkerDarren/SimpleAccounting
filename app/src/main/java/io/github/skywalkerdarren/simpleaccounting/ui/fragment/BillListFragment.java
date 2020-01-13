@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,6 +26,7 @@ import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.EmptyLayoutBinding;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentBillListBinding;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillInfo;
+import io.github.skywalkerdarren.simpleaccounting.ui.activity.BillDetailActivity;
 import io.github.skywalkerdarren.simpleaccounting.util.ViewModelFactory;
 import io.github.skywalkerdarren.simpleaccounting.util.data.PreferenceUtil;
 import io.github.skywalkerdarren.simpleaccounting.view_model.BillListViewModel;
@@ -127,7 +129,15 @@ public class BillListFragment extends BaseFragment {
      */
     private void updateAdapter(List<BillInfo> billInfoList) {
         if (mBillAdapter == null) {
-            mBillAdapter = new BillAdapter(billInfoList, requireActivity());
+            mBillAdapter = new BillAdapter(billInfoList);
+            mBillAdapter.setListener((item, imageView) -> mViewModel.getBill(item.getUuid(), bill -> {
+                Intent intent = BillDetailActivity.newIntent(requireContext(),
+                        bill, mBillAdapter.getMX(), mBillAdapter.getMY(), R.color.orangea200);
+                intent.putExtra(BillDetailActivity.EXTRA_START_COLOR, R.color.orangea200);
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        requireActivity(), imageView, imageView.getTransitionName());
+                startActivity(intent, options.toBundle());
+            }));
             configAdapter();
             mBillListRecyclerView.setAdapter(mBillAdapter);
             mBillListRecyclerView.addItemDecoration(new PinnedHeaderItemDecoration
