@@ -6,7 +6,7 @@ package io.github.skywalkerdarren.simpleaccounting.adapter
  * @author darren
  * @date 2018/2/16
  */
-internal interface HeaderDivider {
+interface HeaderDivider {
     /**
      * 获取账单支出类型名称
      *

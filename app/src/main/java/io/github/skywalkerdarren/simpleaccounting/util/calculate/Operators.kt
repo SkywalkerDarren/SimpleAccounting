@@ -10,7 +10,7 @@ import java.util.*
  * @author darren
  * @date 2018/3/10
  */
-internal object Operators {
+object Operators {
     /**
      * 存放运算符的哈希表，通过运算符字符串获取Operator运算符
      *
