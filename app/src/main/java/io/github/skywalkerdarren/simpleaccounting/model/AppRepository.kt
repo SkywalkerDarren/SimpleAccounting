@@ -11,8 +11,6 @@ import io.github.skywalkerdarren.simpleaccounting.model.dao.StatsDao
 import io.github.skywalkerdarren.simpleaccounting.model.dao.TypeDao
 import io.github.skywalkerdarren.simpleaccounting.model.database.AppDatabase
 import io.github.skywalkerdarren.simpleaccounting.model.database.AppDatabase.Companion.getInstance
-import io.github.skywalkerdarren.simpleaccounting.model.datasource.AccountDataSource.LoadAccountCallBack
-import io.github.skywalkerdarren.simpleaccounting.model.datasource.AccountDataSource.LoadAccountsCallBack
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.AppDataSource
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.BillDataSource.*
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.StatsDataSource.*
@@ -51,14 +49,14 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
     }
 
 
-    fun getAccountsOnBackground(callBack: LoadAccountsCallBack) {
+    fun getAccountsOnBackground(callBack: (account: List<Account>?) -> Unit) {
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "getAccountsOnBackground: in " + Thread.currentThread().name)
                 dbLock.readLock().lock()
                 val accounts = accountDao.accounts
                 dbLock.readLock().unlock()
-                callBack.onAccountsLoaded(accounts)
+                callBack(accounts)
             }
         })
     }
@@ -101,14 +99,14 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         })
     }
 
-    override fun getAccount(uuid: UUID, callBack: LoadAccountCallBack) {
+    override fun getAccount(uuid: UUID, callBack: (Account) -> Unit) {
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "getAccount: in " + Thread.currentThread().name)
                 dbLock.readLock().lock()
                 val account = accountDao.getAccount(uuid)
                 dbLock.readLock().unlock()
-                executors.mainThread().execute { callBack.onAccountLoaded(account) }
+                executors.mainThread().execute { callBack(account) }
             }
         })
     }

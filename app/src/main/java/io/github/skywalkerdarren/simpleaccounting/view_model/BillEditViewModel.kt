@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository
-import io.github.skywalkerdarren.simpleaccounting.model.datasource.AccountDataSource.LoadAccountCallBack
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.BillDataSource.LoadBillCallBack
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.TypeDataSource.LoadTypeCallBack
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.TypeDataSource.LoadTypesCallBack
@@ -62,11 +61,7 @@ class BillEditViewModel(private val mRepository: AppRepository) : ViewModel() {
             }
         } else {
             bill.value = b
-            mRepository.getAccount(b.accountId, object : LoadAccountCallBack {
-                override fun onAccountLoaded(account: Account) {
-                    this@BillEditViewModel.account.value = account
-                }
-            })
+            mRepository.getAccount(b.accountId) { this@BillEditViewModel.account.value = it }
             mRepository.getType(b.typeId, object : LoadTypeCallBack {
                 override fun onTypeLoaded(type: Type?) {
                     this@BillEditViewModel.type.value = type ?: return
