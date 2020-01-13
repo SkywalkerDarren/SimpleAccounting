@@ -12,6 +12,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.*
 import io.github.skywalkerdarren.simpleaccounting.util.view.FormatUtil
 import org.joda.time.DateTime
 import java.math.BigDecimal
+import java.util.*
 
 /**
  * 账单详单vm
@@ -175,5 +176,9 @@ class BillDetailViewModel(private val mRepository: AppRepository) : ViewModel(),
         } catch (e: ArithmeticException) {
             "ERROR"
         }
+    }
+
+    fun delBill(billId: UUID) {
+        mRepository.delBill(billId)
     }
 }

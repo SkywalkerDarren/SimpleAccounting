@@ -247,6 +247,7 @@ public class BillDetailFragment extends BaseFragment {
                 return true;
             case R.id.del:
                 DeleteBillAlertDialog dialog = DeleteBillAlertDialog.newInstance(mBill.getUuid());
+                dialog.setViewModel(mViewModel);
                 dialog.setTargetFragment(this, REQUEST_DESTROY);
                 dialog.show(requireFragmentManager(), "alertDialog");
                 return true;
