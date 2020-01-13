@@ -3,8 +3,6 @@ package io.github.skywalkerdarren.simpleaccounting.view_model
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository
-import io.github.skywalkerdarren.simpleaccounting.model.datasource.TypeDataSource.LoadTypesCallBack
-import io.github.skywalkerdarren.simpleaccounting.model.entity.Type
 import io.github.skywalkerdarren.simpleaccounting.model.entity.TypeAndStats
 import org.joda.time.DateTime
 import org.joda.time.Period
@@ -41,18 +39,16 @@ class ClassifyViewModel(private val mRepository: AppRepository) : ViewModel() {
     private fun setStatsList(start: DateTime, end: DateTime, isExpense: Boolean) {
         val pattern = "yyyy年MM月dd日"
         date.value = start.toString(pattern) + " - " + end.toString(pattern)
-        mRepository.getTypes(isExpense, object : LoadTypesCallBack {
-            override fun onTypesLoaded(types: List<Type>?) {
-                types ?: return
-                mRepository.getTypesStats(start, end, isExpense) { typesStats ->
-                    typesStats ?: return@getTypesStats
-                    typeAndStatsList.value = typesStats.map { typeStats ->
-                        TypeAndStats(types.find { it.uuid == typeStats.typeId }
-                                ?: return@getTypesStats, typeStats)
-                    }
+        mRepository.getTypes(isExpense) { types ->
+            types ?: return@getTypes
+            mRepository.getTypesStats(start, end, isExpense) { typesStats ->
+                typesStats ?: return@getTypesStats
+                typeAndStatsList.value = typesStats.map { typeStats ->
+                    TypeAndStats(types.find { it.uuid == typeStats.typeId }
+                            ?: return@getTypesStats, typeStats)
                 }
             }
-        })
+        }
     }
 
     /**

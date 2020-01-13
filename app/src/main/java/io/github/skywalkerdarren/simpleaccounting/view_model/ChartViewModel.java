@@ -56,6 +56,7 @@ public class ChartViewModel extends ViewModel {
                     PieData pieData = new PieData();
                     pieData.addDataSet(pieDataSet);
                     mPieData.setValue(pieData);
+                    return Unit.INSTANCE;
                 });
             }
             return Unit.INSTANCE;

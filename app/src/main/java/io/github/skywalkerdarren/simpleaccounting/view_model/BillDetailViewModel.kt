@@ -4,9 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.github.skywalkerdarren.simpleaccounting.R
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository
-import io.github.skywalkerdarren.simpleaccounting.model.datasource.TypeDataSource.LoadTypeCallBack
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill
-import io.github.skywalkerdarren.simpleaccounting.model.entity.Type
 import io.github.skywalkerdarren.simpleaccounting.util.view.FormatUtil
 import org.joda.time.DateTime
 import java.math.BigDecimal
@@ -64,26 +62,24 @@ class BillDetailViewModel(private val mRepository: AppRepository) : ViewModel() 
         mRepository.getAccount(bill.accountId) {
             accountName.value = it.name
         }
-        mRepository.getType(bill.typeId, object : LoadTypeCallBack {
-            override fun onTypeLoaded(type: Type?) {
-                type?.let { t ->
-                    typeImage.value = t.assetsName
-                    typeName.value = t.name
-                    balanceColor.value = if (t.isExpense) R.color.deeporange800 else R.color.lightgreen700
-                    expensePercentHint.value = if (t.isExpense) R.string.expense_percent else R.string.income_percent
-                    mRepository.getAccountStats(bill.accountId, start, end) { accountStats ->
-                        accountStats?.let {
-                            accountPercent.value = if (t.isExpense) getPercent(bill, it.expense) else getPercent(bill, it.income)
-                        }
+        mRepository.getType(bill.typeId) { type ->
+            type?.let { t ->
+                typeImage.value = t.assetsName
+                typeName.value = t.name
+                balanceColor.value = if (t.isExpense) R.color.deeporange800 else R.color.lightgreen700
+                expensePercentHint.value = if (t.isExpense) R.string.expense_percent else R.string.income_percent
+                mRepository.getAccountStats(bill.accountId, start, end) { accountStats ->
+                    accountStats?.let {
+                        accountPercent.value = if (t.isExpense) getPercent(bill, it.expense) else getPercent(bill, it.income)
                     }
-                    mRepository.getBillStats(start, end) { billStats ->
-                        billStats?.let {
-                            expensePercent.value = if (t.isExpense) getPercent(bill, it.expense) else getPercent(bill, it.income)
-                        }
+                }
+                mRepository.getBillStats(start, end) { billStats ->
+                    billStats?.let {
+                        expensePercent.value = if (t.isExpense) getPercent(bill, it.expense) else getPercent(bill, it.income)
                     }
                 }
             }
-        })
+        }
         mRepository.getTypeStats(start, end, bill.typeId) { typeStats ->
             typeStats?.let {
                 typePercent.value = getPercent(bill, it.balance)

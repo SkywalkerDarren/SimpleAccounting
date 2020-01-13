@@ -6,8 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository
-import io.github.skywalkerdarren.simpleaccounting.model.datasource.TypeDataSource.LoadTypeCallBack
-import io.github.skywalkerdarren.simpleaccounting.model.datasource.TypeDataSource.LoadTypesCallBack
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type
@@ -50,22 +48,18 @@ class BillEditViewModel(private val mRepository: AppRepository) : ViewModel() {
             mRepository.getAccounts {
                 val account = it?.get(0) ?: return@getAccounts
                 this@BillEditViewModel.account.value = account
-                mRepository.getTypes(true, object : LoadTypesCallBack {
-                    override fun onTypesLoaded(types: List<Type>?) {
-                        val type = types?.get(0) ?: return
+                mRepository.getTypes(true) { types ->
+                    val type = types?.get(0) ?: return@getTypes
                         this@BillEditViewModel.type.value = type
                         bill.value = Bill(type.uuid, account.uuid, DateTime(), type.name)
-                    }
-                })
+                }
             }
         } else {
             bill.value = b
             mRepository.getAccount(b.accountId) { this@BillEditViewModel.account.value = it }
-            mRepository.getType(b.typeId, object : LoadTypeCallBack {
-                override fun onTypeLoaded(type: Type?) {
-                    this@BillEditViewModel.type.value = type ?: return
-                }
-            })
+            mRepository.getType(b.typeId) { type ->
+                this@BillEditViewModel.type.value = type ?: return@getType
+            }
             balance.value = if (b.balance == null) null else b.balance.toString()
         }
     }
@@ -127,16 +121,12 @@ class BillEditViewModel(private val mRepository: AppRepository) : ViewModel() {
     }
 
     init {
-        mRepository.getTypes(true, object : LoadTypesCallBack {
-            override fun onTypesLoaded(types: List<Type>?) {
-                expenseTypes.value = types
-            }
-        })
-        mRepository.getTypes(false, object : LoadTypesCallBack {
-            override fun onTypesLoaded(types: List<Type>?) {
-                incomeTypes.value = types
-            }
-        })
+        mRepository.getTypes(true) {
+            expenseTypes.value = it
+        }
+        mRepository.getTypes(false) {
+            incomeTypes.value = it
+        }
         mRepository.getAccounts {
             this@BillEditViewModel.accounts.value = it
         }

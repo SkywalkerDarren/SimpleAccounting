@@ -36,10 +36,12 @@ public class Demo {
         mRepository.getTypesOnBackground(true, types -> {
             mExpense = types;
             mLatch.countDown();
+            return Unit.INSTANCE;
         });
         mRepository.getTypesOnBackground(false, types -> {
             mIncome = types;
             mLatch.countDown();
+            return Unit.INSTANCE;
         });
         mRepository.getAccountsOnBackground(accounts -> {
             mAccounts = accounts;
