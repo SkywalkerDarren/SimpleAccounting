@@ -6,7 +6,7 @@ import java.util.*
 
 interface AccountDataSource {
     fun getAccount(uuid: UUID, callBack: LoadAccountCallBack)
-    fun getAccounts(callBack: LoadAccountsCallBack)
+    fun getAccounts(callBack: (List<Account>?) -> Unit)
     fun delAccount(uuid: UUID)
     fun changePosition(a: Account, b: Account)
     fun updateAccountBalance(uuid: UUID, balance: BigDecimal)

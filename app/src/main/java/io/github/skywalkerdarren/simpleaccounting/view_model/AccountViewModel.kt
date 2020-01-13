@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository
-import io.github.skywalkerdarren.simpleaccounting.model.datasource.AccountDataSource.LoadAccountsCallBack
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.StatsDataSource.LoadBillStatsCallBack
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats
@@ -38,11 +37,9 @@ class AccountViewModel(private val mRepository: AppRepository) : ViewModel() {
     val accountSize = Transformations.map(accounts) { input: List<Account> -> input.size.toString() }
 
     fun start() {
-        mRepository.getAccounts(object : LoadAccountsCallBack {
-            override fun onAccountsLoaded(accounts: List<Account>?) {
-                this@AccountViewModel.accounts.value = accounts
-            }
-        })
+        mRepository.getAccounts { accounts: List<Account>? ->
+            this@AccountViewModel.accounts.value = accounts
+        }
         mRepository.getBillStats(DateTime(0), DateTime.now(), object : LoadBillStatsCallBack {
             override fun onBillStatsLoaded(billStats: BillStats?) {
                 nav.value = FormatUtil.getNumeric(billStats?.sum)

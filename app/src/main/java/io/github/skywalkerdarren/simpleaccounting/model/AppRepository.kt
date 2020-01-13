@@ -127,14 +127,14 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         })
     }
 
-    override fun getAccounts(callBack: LoadAccountsCallBack) {
+    override fun getAccounts(callBack: (List<Account>?) -> Unit) {
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "getAccounts: in " + Thread.currentThread().name)
                 dbLock.readLock().lock()
                 val accounts = accountDao.accounts
                 dbLock.readLock().unlock()
-                executors.mainThread().execute { callBack.onAccountsLoaded(accounts) }
+                executors.mainThread().execute { callBack(accounts) }
             }
         })
     }
