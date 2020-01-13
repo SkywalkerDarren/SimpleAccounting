@@ -5,7 +5,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.*
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository
-import io.github.skywalkerdarren.simpleaccounting.model.datasource.BillDataSource.LoadBillCountCallBack
 import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrenciesInfo
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Currency
 import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrencyAndInfo
@@ -101,18 +100,11 @@ class DiscoveryViewModel(private val mRepository: AppRepository, private val cur
     }
 
     fun start() {
-        mRepository.getBillsCount(object : LoadBillCountCallBack {
-            override fun onBillCountLoaded(count: Int) {
-                sumOfAccountingCounts.value = count.toString() + "单"
-            }
-        })
+        mRepository.getBillsCount { sumOfAccountingCounts.value = it.toString() + "单" }
         val dateTime = DateTime()
-        mRepository.getBillsCount(dateTime.year, dateTime.monthOfYear,
-                object : LoadBillCountCallBack {
-                    override fun onBillCountLoaded(count: Int) {
-                        monthOfAccountingCounts.value = count.toString() + "单"
-                    }
-                })
+        mRepository.getBillsCount(dateTime.year, dateTime.monthOfYear) {
+            monthOfAccountingCounts.value = it.toString() + "单"
+        }
         monthReport.value = dateTime.monthOfYear.toString() + "月报表"
         yearReport.value = dateTime.year.toString() + "年报表"
         weekReport.value = "第" + dateTime.weekOfWeekyear + "周报表"

@@ -5,9 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository
-import io.github.skywalkerdarren.simpleaccounting.model.datasource.BillDataSource
-import io.github.skywalkerdarren.simpleaccounting.model.datasource.BillDataSource.LoadBillsInfoCallBack
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.StatsDataSource.LoadBillStatsCallBack
+import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillInfo
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.StatsActivity
@@ -50,11 +49,7 @@ class BillListViewModel(private val mRepository: AppRepository) : ViewModel() {
                 expense.value = FormatUtil.getNumeric(billStats?.expense)
             }
         })
-        mRepository.getBillInfoList(date.year, date.monthOfYear, object : LoadBillsInfoCallBack {
-            override fun onBillsInfoLoaded(billsInfo: List<BillInfo>?) {
-                billInfoList.value = billsInfo
-            }
-        })
+        mRepository.getBillInfoList(date.year, date.monthOfYear) { billInfoList.value = it }
         this.month.value = month.monthOfYear.toString()
     }
 
@@ -70,7 +65,7 @@ class BillListViewModel(private val mRepository: AppRepository) : ViewModel() {
         return billInfoList
     }
 
-    fun getBill(billId: UUID, callBack: BillDataSource.LoadBillCallBack) {
+    fun getBill(billId: UUID, callBack: (bill: Bill?) -> Unit) {
         mRepository.getBill(billId, callBack)
     }
 

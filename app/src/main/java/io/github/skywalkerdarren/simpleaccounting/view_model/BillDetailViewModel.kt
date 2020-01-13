@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.github.skywalkerdarren.simpleaccounting.R
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository
-import io.github.skywalkerdarren.simpleaccounting.model.datasource.BillDataSource.LoadBillCallBack
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.StatsDataSource.*
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.TypeDataSource.LoadTypeCallBack
 import io.github.skywalkerdarren.simpleaccounting.model.entity.*
@@ -19,7 +18,7 @@ import java.util.*
  * @author darren
  * @date 2018/4/4
  */
-class BillDetailViewModel(private val mRepository: AppRepository) : ViewModel(), LoadBillCallBack {
+class BillDetailViewModel(private val mRepository: AppRepository) : ViewModel() {
     private var mode = 0
     val modeText = MutableLiveData(R.string.monthly_stats)
     val typeImage = MutableLiveData<String>()
@@ -37,8 +36,17 @@ class BillDetailViewModel(private val mRepository: AppRepository) : ViewModel(),
     val expensePercentHint = MutableLiveData(R.string.brvah_loading)
     val expensePercent = MutableLiveData("加载中...")
     val bill = MutableLiveData<Bill?>()
+
     fun start(b: Bill) {
-        mRepository.getBill(b.uuid, this)
+        mRepository.getBill(b.uuid) {
+            this.bill.value = it ?: return@getBill
+            val month = it.date.monthOfYear
+            val year = it.date.year
+            // 默认为月度统计
+            val start = DateTime(year, month, 1, 0, 0)
+            val end = start.plusMonths(1)
+            update(it, start, end)
+        }
     }
 
     private fun setLoading() {
@@ -51,19 +59,9 @@ class BillDetailViewModel(private val mRepository: AppRepository) : ViewModel(),
         expensePercentHint.value = R.string.brvah_loading
     }
 
-    override fun onBillLoaded(bill: Bill?) {
-        this.bill.value = bill ?: return
-        val month = bill.date.monthOfYear
-        val year = bill.date.year
-        // 默认为月度统计
-        val start = DateTime(year, month, 1, 0, 0)
-        val end = start.plusMonths(1)
-        update(bill, start, end)
-    }
-
     private fun update(bill: Bill?, start: DateTime, end: DateTime) {
         bill ?: return
-        mRepository.getAccount(bill.uuid) {
+        mRepository.getAccount(bill.accountId) {
             accountName.value = it.name
         }
         mRepository.getType(bill.typeId, object : LoadTypeCallBack {

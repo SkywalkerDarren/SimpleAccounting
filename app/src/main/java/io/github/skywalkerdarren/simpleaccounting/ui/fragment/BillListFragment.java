@@ -31,6 +31,7 @@ import io.github.skywalkerdarren.simpleaccounting.util.ViewModelFactory;
 import io.github.skywalkerdarren.simpleaccounting.util.data.PreferenceUtil;
 import io.github.skywalkerdarren.simpleaccounting.view_model.BillListViewModel;
 import io.github.skywalkerdarren.simpleaccounting.view_model.EmptyListViewModel;
+import kotlin.Unit;
 
 import static io.github.skywalkerdarren.simpleaccounting.adapter.BillAdapter.HEADER;
 
@@ -103,7 +104,9 @@ public class BillListFragment extends BaseFragment {
         mViewModel = ViewModelFactory.getInstance(requireActivity().getApplication())
                 .obtainViewModel(this, BillListViewModel.class);
         mBinding.setBillList(mViewModel);
-        mBinding.setLifecycleOwner(this);
+        mBinding.setLifecycleOwner(getViewLifecycleOwner());
+        mViewModel.getDate().observe(getViewLifecycleOwner(), dateTime -> mDateTime = dateTime);
+        mViewModel.getBillInfoList().observe(getViewLifecycleOwner(), this::updateAdapter);
     }
 
     /**
@@ -114,8 +117,6 @@ public class BillListFragment extends BaseFragment {
     public void updateUI() {
         String budget = PreferenceUtil.getString(requireContext(), PreferenceUtil.BUDGET, "0");
         mBinding.moneyBudgeTextView.setText(budget);
-        mViewModel.getDate().observe(this, dateTime ->
-                mViewModel.getBillInfoList().observe(this, this::updateAdapter));
         if (mDateTime == null) {
             mDateTime = DateTime.now();
         }
@@ -137,6 +138,7 @@ public class BillListFragment extends BaseFragment {
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         requireActivity(), imageView, imageView.getTransitionName());
                 startActivity(intent, options.toBundle());
+                return Unit.INSTANCE;
             }));
             configAdapter();
             mBillListRecyclerView.setAdapter(mBillAdapter);
@@ -178,10 +180,6 @@ public class BillListFragment extends BaseFragment {
             case REQUEST_DATE_TIME:
                 mViewModel.setDate((DateTime) data
                         .getSerializableExtra(MonthPickerDialog.EXTRA_DATE));
-                mViewModel.getDate().observe(this, dateTime -> {
-                    mDateTime = dateTime;
-                    mViewModel.getBillInfoList().observe(this, this::updateAdapter);
-                });
                 break;
             default:
                 break;

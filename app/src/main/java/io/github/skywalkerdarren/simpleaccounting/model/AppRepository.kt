@@ -12,7 +12,6 @@ import io.github.skywalkerdarren.simpleaccounting.model.dao.TypeDao
 import io.github.skywalkerdarren.simpleaccounting.model.database.AppDatabase
 import io.github.skywalkerdarren.simpleaccounting.model.database.AppDatabase.Companion.getInstance
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.AppDataSource
-import io.github.skywalkerdarren.simpleaccounting.model.datasource.BillDataSource.*
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.StatsDataSource.*
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.TypeDataSource.LoadTypeCallBack
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.TypeDataSource.LoadTypesCallBack
@@ -21,13 +20,9 @@ import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors
 import org.joda.time.DateTime
 import java.math.BigDecimal
 import java.util.*
-import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.collections.ArrayList
-import kotlin.concurrent.withLock
-import kotlin.concurrent.write
 
 class AppRepository private constructor(val executors: AppExecutors, val database: AppDatabase) : AppDataSource {
-    private val dbLock = ReentrantReadWriteLock(true)
     private val accountDao: AccountDao = database.accountDao()
     private val typeDao: TypeDao = database.typeDao()
     private val billDao: BillDao = database.billDao()
@@ -53,22 +48,19 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "getAccountsOnBackground: in " + Thread.currentThread().name)
-                dbLock.readLock().lock()
                 val accounts = accountDao.accounts
-                dbLock.readLock().unlock()
                 callBack(accounts)
             }
         })
     }
 
-    override fun getBillInfoList(year: Int, month: Int, callBack: LoadBillsInfoCallBack) {
+    override fun getBillInfoList(year: Int, month: Int, callBack: (billsInfo: List<BillInfo>?) -> Unit) {
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "getBillInfoList: in " + Thread.currentThread().name)
                 val start = DateTime(year, month, 1, 1, 0, 0)
                 val end = start.plusMonths(1)
 
-                dbLock.readLock().lock()
                 val bills = billDao.getsBillsByDate(start, end)
                 val billInfoList: MutableList<BillInfo> = ArrayList()
                 var date: DateTime? = null
@@ -93,8 +85,7 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
                     Log.d(TAG, "getBillInfoList: $bill")
                     if (type != null) billInfoList.add(BillInfo(bill, type))
                 }
-                dbLock.readLock().unlock()
-                executors.mainThread().execute { callBack.onBillsInfoLoaded(billInfoList) }
+                executors.mainThread().execute { callBack(billInfoList) }
             }
         })
     }
@@ -103,24 +94,20 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "getAccount: in " + Thread.currentThread().name)
-                dbLock.readLock().lock()
                 val account = accountDao.getAccount(uuid)
-                dbLock.readLock().unlock()
                 executors.mainThread().execute { callBack(account) }
             }
         })
     }
 
-    override fun getsBills(year: Int, month: Int, callBack: LoadBillsCallBack) {
+    override fun getsBills(year: Int, month: Int, callBack: (bills: List<Bill>?) -> Unit) {
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "getsBills: in " + Thread.currentThread().name)
                 val start = DateTime(year, month, 1, 1, 0, 0)
                 val end = start.plusMonths(1)
-                dbLock.readLock().lock()
                 val bills = billDao.getsBillsByDate(start, end)
-                dbLock.readLock().unlock()
-                executors.mainThread().execute { callBack.onBillsLoaded(bills) }
+                executors.mainThread().execute { callBack(bills) }
             }
         })
     }
@@ -129,9 +116,7 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "getAccounts: in " + Thread.currentThread().name)
-                dbLock.readLock().lock()
                 val accounts = accountDao.accounts
-                dbLock.readLock().unlock()
                 executors.mainThread().execute { callBack(accounts) }
             }
         })
@@ -141,9 +126,7 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "updateAccountBalance" + Thread.currentThread().name)
-                dbLock.writeLock().withLock {
-                    accountDao.updateAccountBalance(uuid, balance)
-                }
+                accountDao.updateAccountBalance(uuid, balance)
             }
         })
     }
@@ -152,9 +135,7 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "delAccount: in " + Thread.currentThread().name)
-                dbLock.writeLock().lock()
                 accountDao.delAccount(uuid)
-                dbLock.writeLock().unlock()
             }
         })
     }
@@ -162,7 +143,6 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
     override fun changePosition(a: Account, b: Account) {
         execute(object : LoadData {
             override fun load() {
-                dbLock.writeLock().lock()
                 Log.d(TAG, "changePosition: in " + Thread.currentThread().name)
                 val i = a.id
                 val j = b.id
@@ -171,45 +151,38 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
                 accountDao.updateAccountId(a.uuid, -1)
                 accountDao.updateAccountId(b.uuid, i)
                 accountDao.updateAccountId(a.uuid, j)
-                dbLock.writeLock().unlock()
             }
         })
     }
 
-    override fun getBillsCount(callBack: LoadBillCountCallBack) {
+    override fun getBillsCount(callBack: (count: Int) -> Unit) {
         execute(object : LoadData {
             override fun load() {
-                dbLock.readLock().lock()
                 Log.d(TAG, "getBillsCount: in " + Thread.currentThread().name)
                 val count = billDao.billsCount
-                dbLock.readLock().unlock()
-                executors.mainThread().execute { callBack.onBillCountLoaded(count) }
+                executors.mainThread().execute { callBack(count) }
             }
         })
     }
 
-    override fun getBillsCount(year: Int, month: Int, callBack: LoadBillCountCallBack) {
+    override fun getBillsCount(year: Int, month: Int, callBack: (count: Int) -> Unit) {
         execute(object : LoadData {
             override fun load() {
-                dbLock.readLock().lock()
                 Log.d(TAG, "getBillsCount: in " + Thread.currentThread().name)
                 val start = DateTime(year, month, 1, 0, 0)
                 val end = start.plusMonths(1)
                 val count = billDao.getBillsCount(start, end)
-                dbLock.readLock().unlock()
-                executors.mainThread().execute { callBack.onBillCountLoaded(count) }
+                executors.mainThread().execute { callBack(count) }
             }
         })
     }
 
-    override fun getBill(id: UUID, callBack: LoadBillCallBack) {
+    override fun getBill(id: UUID, callBack: (bill: Bill?) -> Unit) {
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "getBill: in " + Thread.currentThread().name)
-                dbLock.readLock().lock()
-                val bill = billDao.getBill(id)
-                dbLock.readLock().unlock()
-                executors.mainThread().execute { callBack.onBillLoaded(bill) }
+                val bill: Bill? = billDao.getBill(id)
+                executors.mainThread().execute { callBack(bill) }
             }
         })
     }
@@ -218,10 +191,7 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "addBill: in " + Thread.currentThread().name)
-                dbLock.writeLock().lock()
                 updateAccountBalanceByAdd(bill)
-                billDao.addBill(bill)
-                dbLock.writeLock().unlock()
             }
         })
     }
@@ -231,10 +201,8 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
             override fun load() {
                 Log.d(TAG, "delBill: in " + Thread.currentThread().name)
                 val bill = billDao.getBill(id) ?: return
-                dbLock.writeLock().lock()
                 updateAccountBalanceByMinus(bill)
                 billDao.delBill(id)
-                dbLock.writeLock().unlock()
             }
         })
     }
@@ -255,13 +223,11 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
     override fun updateBill(bill: Bill) {
         execute(object : LoadData {
             override fun load() {
-                dbLock.write {
-                    Log.d(TAG, "updateBill: in " + Thread.currentThread().name + bill)
-                    val old = billDao.getBill(bill.uuid) ?: return
-                    updateAccountBalanceByMinus(old)
-                    updateAccountBalanceByAdd(bill)
-                    billDao.updateBill(bill)
-                }
+                Log.d(TAG, "updateBill: in " + Thread.currentThread().name + bill)
+                val old = billDao.getBill(bill.uuid) ?: return
+                updateAccountBalanceByMinus(old)
+                updateAccountBalanceByAdd(bill)
+                billDao.updateBill(bill)
             }
         })
     }
@@ -270,11 +236,9 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "clearBill: in " + Thread.currentThread().name)
-                dbLock.writeLock().lock()
                 val accounts = accountDao.accounts
                 accounts.forEach { accountDao.updateAccountBalance(it.uuid, BigDecimal.ZERO) }
                 billDao.clearBill()
-                dbLock.writeLock().unlock()
             }
         })
     }
@@ -283,9 +247,7 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "getType: in " + Thread.currentThread().name)
-                dbLock.readLock().lock()
                 val type = typeDao.getType(uuid)
-                dbLock.readLock().unlock()
                 executors.mainThread().execute { callBack.onTypeLoaded(type) }
             }
         })
@@ -295,10 +257,8 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "getTypes: in " + Thread.currentThread().name)
-                dbLock.readLock().lock()
                 val types = typeDao.getTypes(isExpense)
 
-                dbLock.readLock().unlock()
                 executors.mainThread().execute { callBack.onTypesLoaded(types) }
             }
         })
@@ -308,9 +268,7 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "getTypesOnBackground: in " + Thread.currentThread().name)
-                dbLock.readLock().lock()
                 val types = typeDao.getTypes(isExpense)
-                dbLock.readLock().unlock()
                 callBack.onTypesLoaded(types)
             }
         })
@@ -320,17 +278,13 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "delType: in " + Thread.currentThread().name)
-                dbLock.writeLock().lock()
                 typeDao.delType(uuid)
-                dbLock.writeLock().unlock()
             }
         })
     }
 
     private fun getBillStats(start: DateTime, end: DateTime): BillStats {
-        dbLock.readLock().lock()
         val stats = statsDao.getBillsStats(start, end)
-        dbLock.readLock().unlock()
         val billStats = BillStats()
         if (stats != null) {
             for ((balance, expense) in stats) {
@@ -351,7 +305,6 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
                 var start = DateTime(year, 1, 1, 0, 0, 0)
                 var end = start.plusMonths(1)
                 val billStatsList: MutableList<BillStats> = ArrayList(12)
-                dbLock.readLock().lock()
                 for (i in 1..12) {
                     val stats = statsDao.getBillsStats(start, end)
                     val billStats = BillStats()
@@ -368,7 +321,6 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
                     start = start.plusMonths(1)
                     end = end.plusMonths(1)
                 }
-                dbLock.readLock().unlock()
                 executors.mainThread().execute { callBack.onBillStatsLoaded(billStatsList) }
             }
         })
@@ -378,9 +330,7 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "getBillStats: in " + Thread.currentThread().name)
-                dbLock.readLock().lock()
                 val stats = statsDao.getBillsStats(start, end)
-                dbLock.readLock().unlock()
                 val billStats = BillStats()
                 if (stats != null) {
                     for ((balance, expense) in stats) {
@@ -400,10 +350,8 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "getTypesStats: in " + Thread.currentThread().name)
-                dbLock.readLock().lock()
                 val typesStats = statsDao.getTypesStats(start, end, isExpense)
                 executors.mainThread().execute { callBack.onTypesStatsLoaded(typesStats) }
-                dbLock.readLock().unlock()
             }
         })
     }
@@ -412,9 +360,7 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "getTypeStats: in " + Thread.currentThread().name)
-                dbLock.readLock().lock()
                 val typeStats = statsDao.getTypeStats(start, end, typeId)
-                dbLock.readLock().unlock()
                 executors.mainThread().execute { callBack.onTypeStatsLoaded(typeStats) }
             }
         })
@@ -424,9 +370,7 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "getTypeAverage: in " + Thread.currentThread().name)
-                dbLock.readLock().lock()
                 val typeStats = statsDao.getTypeAverageStats(start, end, typeId)
-                dbLock.readLock().unlock()
                 executors.mainThread().execute { callBack.onTypeStatsLoaded(typeStats) }
             }
         })
@@ -436,7 +380,6 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "getAccountStats: in " + Thread.currentThread().name)
-                dbLock.readLock().lock()
                 val accountStats = AccountStats()
                 statsDao.getAccountStats(accountId, start, end)
                         ?.forEach { (balance, expense) ->
@@ -446,7 +389,6 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
                                 accountStats.income = balance
                             }
                         }
-                dbLock.readLock().unlock()
                 executors.mainThread().execute { callBack.onAccountStatsLoaded(accountStats) }
             }
         })
@@ -456,7 +398,6 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         execute(object : LoadData {
             override fun load() {
                 Log.d(TAG, "initDb: in " + Thread.currentThread().name)
-                dbLock.writeLock().lock()
                 accountDao.newAccount(Account("现金", "现金金额",
                         BigDecimal.ZERO, R.color.amber500, "account/cash.png"))
                 accountDao.newAccount(Account("支付宝", "在线支付余额",
@@ -495,7 +436,6 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
                         false, "type/red_package.png"))
                 typeDao.newType(Type("其他", R.color.other,
                         false, "type/other.png"))
-                dbLock.writeLock().unlock()
             }
         })
     }

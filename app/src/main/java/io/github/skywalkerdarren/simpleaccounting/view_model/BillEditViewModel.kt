@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import io.github.skywalkerdarren.simpleaccounting.model.AppRepository
-import io.github.skywalkerdarren.simpleaccounting.model.datasource.BillDataSource.LoadBillCallBack
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.TypeDataSource.LoadTypeCallBack
 import io.github.skywalkerdarren.simpleaccounting.model.datasource.TypeDataSource.LoadTypesCallBack
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account
@@ -24,7 +23,7 @@ class BillEditViewModel(private val mRepository: AppRepository) : ViewModel() {
     val isExpense = MutableLiveData<Boolean>(true)
     val types = Transformations.switchMap(isExpense) {
         if (it) {
-            return@switchMap expenseTypes
+            expenseTypes
         } else {
             incomeTypes
         }
@@ -89,6 +88,7 @@ class BillEditViewModel(private val mRepository: AppRepository) : ViewModel() {
 
         finalBill.accountId = finalAccount.uuid
         finalBill.typeId = finalType.uuid
+        finalBill.name = finalType.name
         return try {
             val r = BigDecimal(balance.value)
             if (r == BigDecimal.ZERO) {
@@ -98,17 +98,15 @@ class BillEditViewModel(private val mRepository: AppRepository) : ViewModel() {
             finalBill.balance = r
 
             // 刷新账单数据库
-            mRepository.getBill(finalBill.uuid, object : LoadBillCallBack {
-                override fun onBillLoaded(bill: Bill?) {
-                    if (bill == null) {
-                        mRepository.addBill(finalBill)
-                    } else {
-                        finalBill.id = bill.id
-                        finalBill.uuid = bill.uuid
-                        mRepository.updateBill(finalBill)
-                    }
+            mRepository.getBill(finalBill.uuid) {
+                if (it == null) {
+                    mRepository.addBill(finalBill)
+                } else {
+                    finalBill.id = it.id
+                    finalBill.uuid = it.uuid
+                    mRepository.updateBill(finalBill)
                 }
-            })
+            }
             true
         } catch (e: Exception) {
             failed.saveFailed("表达式错误")
