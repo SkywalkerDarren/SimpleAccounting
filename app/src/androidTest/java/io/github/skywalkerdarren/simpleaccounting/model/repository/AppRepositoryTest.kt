@@ -262,6 +262,7 @@ class AppRepositoryTest {
         defaultInit()
         repo.delType(tB.uuid)
         repo.getBillsCount { assertEquals(it, 1) }
+        // TODO accounts balance have a bug ,but now hadn't implements delType method
     }
 
     @Test
