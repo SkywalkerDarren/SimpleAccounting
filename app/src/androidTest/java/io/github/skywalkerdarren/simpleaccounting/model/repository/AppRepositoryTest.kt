@@ -267,29 +267,63 @@ class AppRepositoryTest {
 
     @Test
     fun getBillsAnnualStats() {
+        defaultInit()
+        repo.getBillsAnnualStats(DateTime().year) { list ->
+            list?.forEachIndexed { index, billStats ->
+                when (index) {
+                    0 -> assertEquals(billStats.income, BigDecimal(3))
+                    1 -> assertEquals(billStats.expense, BigDecimal(3))
+                }
+            }
+        }
     }
 
     @Test
     fun getBillStats() {
+        defaultInit()
+        repo.getBillStats(DateTime().minusMonths(1), DateTime()) {
+            assertEquals(it?.expense, BigDecimal(3))
+            assertEquals(it?.income, BigDecimal(0))
+            assertEquals(it?.sum, BigDecimal(-3))
+        }
     }
 
     @Test
     fun getTypesStats() {
+        defaultInit()
+        repo.getTypesStats(DateTime().minusMonths(1), DateTime(), true) here@{
+            it ?: return@here fail()
+            assertEquals(it.size, 1)
+            assertEquals(it[0].balance, BigDecimal(3))
+        }
     }
 
     @Test
     fun getTypeStats() {
+        defaultInit()
+        repo.getTypeStats(DateTime().minusMonths(1), DateTime(), tA.uuid) {
+            assertEquals(it?.balance, BigDecimal(3))
+        }
     }
 
     @Test
     fun getTypeAverage() {
+        defaultInit()
+        repo.getTypeAverage(DateTime().minusMonths(1), DateTime(), tA.uuid) {
+            assertEquals(it?.balance, BigDecimal(1.5))
+        }
     }
 
     @Test
     fun getAccountStats() {
+        defaultInit()
+        repo.getAccountStats(aA.uuid, DateTime().minusMonths(1), DateTime()) {
+            assertEquals(it?.expense, BigDecimal(1))
+        }
     }
 
     @Test
     fun initDb() {
+        defaultInit()
     }
 }
