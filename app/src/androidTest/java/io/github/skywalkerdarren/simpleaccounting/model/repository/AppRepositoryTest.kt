@@ -1,6 +1,5 @@
 package io.github.skywalkerdarren.simpleaccounting.model.repository
 
-import android.util.Log
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -205,9 +204,7 @@ class AppRepositoryTest {
         repo.run {
             val b1 = Bill(tB.uuid, aB.uuid, DateTime(), tB.name, BigDecimal(666), null)
             addBill(b1)
-            getsBills(DateTime().year, DateTime().monthOfYear) {
-                it?.forEach { b -> Log.d("test", b.toString()) }
-            }
+            getBillsCount { assertEquals(it, 4) }
         }
     }
 
@@ -242,18 +239,29 @@ class AppRepositoryTest {
 
     @Test
     fun getType() {
+        defaultInit()
+        repo.getType(tA.uuid) here@{ assertType(it ?: return@here fail(), tA) }
     }
 
     @Test
     fun getTypes() {
+        defaultInit()
+        repo.getTypes(true) { assertEquals(it, 1) }
+        repo.getTypes(false) { assertEquals(it, 1) }
     }
 
     @Test
     fun getTypesOnBackground() {
+        defaultInit()
+        repo.getTypesOnBackground(true) { assertEquals(it, 1) }
+        repo.getTypesOnBackground(false) { assertEquals(it, 1) }
     }
 
     @Test
     fun delType() {
+        defaultInit()
+        repo.delType(tB.uuid)
+        repo.getBillsCount { assertEquals(it, 1) }
     }
 
     @Test
