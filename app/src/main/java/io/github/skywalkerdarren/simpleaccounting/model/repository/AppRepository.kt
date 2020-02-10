@@ -240,6 +240,7 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
         execute {
             Log.d(TAG, "delType: in " + Thread.currentThread().name)
             typeDao.delType(uuid)
+            //TODO should modify accountDao balance
         }
     }
 
