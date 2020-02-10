@@ -165,6 +165,7 @@ class AppRepository private constructor(val executors: AppExecutors, val databas
     override fun addBill(bill: Bill) {
         execute {
             Log.d(TAG, "addBill: in " + Thread.currentThread().name)
+            billDao.addBill(bill)
             updateAccountBalanceByAdd(bill)
         }
     }

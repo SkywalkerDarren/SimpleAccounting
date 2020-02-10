@@ -1,5 +1,6 @@
 package io.github.skywalkerdarren.simpleaccounting.model.repository
 
+import android.util.Log
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -133,9 +134,12 @@ class AppRepositoryTest {
     fun getsBills() {
         defaultInit()
         val current = DateTime()
-        repo.getsBills(current.year, current.monthOfYear) { assertEquals(it?.size, 2) }
         val lastMonth = DateTime().minusMonths(1)
-        repo.getsBills(lastMonth.year, lastMonth.monthOfYear) { assertEquals(it?.size, 1) }
+
+        repo.run {
+            getsBills(current.year, current.monthOfYear) { assertEquals(it?.size, 2) }
+            getsBills(lastMonth.year, lastMonth.monthOfYear) { assertEquals(it?.size, 1) }
+        }
     }
 
     @Test
@@ -147,48 +151,93 @@ class AppRepositoryTest {
     @Test
     fun updateAccountBalance() {
         defaultInit()
-        repo.updateAccountBalance(aA.uuid, BigDecimal(233))
-        repo.getAccount(aA.uuid) { assertEquals(it.balance, BigDecimal(233)) }
+        repo.run {
+            updateAccountBalance(aA.uuid, BigDecimal(233))
+            getAccount(aA.uuid) { assertEquals(it.balance, BigDecimal(233)) }
+        }
     }
 
     @Test
     fun delAccount() {
         defaultInit()
-        repo.delAccount(aA.uuid)
-        repo.getAccounts { assertEquals(it?.size, 1) }
-        repo.getBillsCount { assertEquals(it, 1) }
+        repo.run {
+            delAccount(aA.uuid)
+            getAccounts { assertEquals(it?.size, 1) }
+            getBillsCount { assertEquals(it, 1) }
+        }
     }
 
     @Test
     fun changePosition() {
+        defaultInit()
+        repo.run {
+            var a = aA
+            var b = aB
+            getAccount(aA.uuid) { a = it }
+            getAccount(aB.uuid) { b = it }
+            changePosition(a, b)
+            getAccount(aA.uuid) { assertEquals(aB.id, aA.id) }
+            getAccount(aB.uuid) { assertEquals(aB.id, aA.id) }
+        }
     }
 
     @Test
     fun getBillsCount() {
-    }
-
-    @Test
-    fun getBillsCount1() {
+        defaultInit()
+        val current = DateTime()
+        val lastMonth = DateTime().minusMonths(1)
+        repo.run {
+            getBillsCount(current.year, current.monthOfYear) { assertEquals(it, 2) }
+            getBillsCount(lastMonth.year, lastMonth.monthOfYear) { assertEquals(it, 1) }
+            getBillsCount { assertEquals(it, 3) }
+        }
     }
 
     @Test
     fun getBill() {
+        defaultInit()
+        repo.getBill(bA.uuid) { assertEquals(it, bA) }
     }
 
     @Test
     fun addBill() {
+        defaultInit()
+        repo.run {
+            val b1 = Bill(tB.uuid, aB.uuid, DateTime(), tB.name, BigDecimal(666), null)
+            addBill(b1)
+            getsBills(DateTime().year, DateTime().monthOfYear) {
+                it?.forEach { b -> Log.d("test", b.toString()) }
+            }
+        }
     }
 
     @Test
     fun delBill() {
+        defaultInit()
+        repo.run {
+            delBill(bA.uuid)
+            getBillsCount { assertEquals(it, 2) }
+        }
     }
 
     @Test
     fun updateBill() {
+        defaultInit()
+        repo.getBill(bA.uuid) {
+            it ?: return@getBill fail()
+            it.balance = BigDecimal(233)
+            repo.updateBill(it)
+        }
+        repo.getBill(bA.uuid) {
+            assertEquals(it?.balance, BigDecimal(233))
+        }
     }
 
     @Test
     fun clearBill() {
+        defaultInit()
+        repo.clearBill()
+        repo.getBillsCount { assertEquals(it, 0) }
     }
 
     @Test
