@@ -121,4 +121,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${coroutinesVersion}"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${coroutinesVersion}"
+
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:${leakCanaryVersion}"
 }

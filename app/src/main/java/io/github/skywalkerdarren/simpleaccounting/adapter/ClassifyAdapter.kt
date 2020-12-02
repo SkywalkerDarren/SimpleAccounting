@@ -21,8 +21,12 @@ class ClassifyAdapter : BaseDataBindingAdapter<TypeAndStats, ItemClassifyBinding
         setNewDiffData(TypeAndStatsDiff(data))
         mSum = BigDecimal.ZERO
         data ?: return
-        mSum = data.map { it.typeStats.balance }
-                .reduce { acc, bigDecimal -> acc + bigDecimal }
+        mSum = try {
+            data.map { it.typeStats.balance }
+                    .reduce { acc, bigDecimal -> acc + bigDecimal }
+        } catch (e: Exception) {
+            BigDecimal.ZERO
+        }
     }
 
     override fun startAnim(anim: Animator, index: Int) {

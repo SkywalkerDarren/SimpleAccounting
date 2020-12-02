@@ -1,18 +1,19 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext{
-        kotlin_version = '1.3.61'
-        gradle_version = '3.5.3'
+        kotlin_version = '1.4.20'
+        gradle_version = '4.1.0'
     }
     repositories {
-        maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
-        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
+        maven { url "https://maven.aliyun.com/repository/public" }
+        maven { url "https://maven.aliyun.com/repository/google"}
         maven { url "https://jitpack.io" }
-        google()
+//        google()
+//        jcenter()
         mavenCentral()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:$gradle_version"
+        classpath "com.android.tools.build:gradle:${gradle_version}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -21,10 +22,11 @@ buildscript {
 }
 allprojects {
     repositories {
-        maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
-        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
+        maven { url "https://maven.aliyun.com/repository/public" }
+        maven { url "https://maven.aliyun.com/repository/google"}
         maven { url "https://jitpack.io" }
-        google()
+//        google()
+//        jcenter()
         mavenCentral()
     }
 }
@@ -37,8 +39,8 @@ ext {
     appSemVersion = 'v0.4.1'
 
     javaVersion = JavaVersion.VERSION_1_8
-    kotlinVersion = '1.3.61'
-    coroutinesVersion = '1.3.3'
+    kotlinVersion = '1.4.20'
+    coroutinesVersion = '1.4.2-native-mt'
     // sdk
     compileSdkVersion = 29
     minSdkVersion = 21
@@ -46,36 +48,39 @@ ext {
     buildToolsVersion = '29.0.2'
 
     // androidx
-    preferenceVersion = '1.1.0'
+    preferenceVersion = '1.1.1'
     legacyVersion = '1.0.0'
     cardviewVersion = '1.0.0'
-    roomVersion = '2.2.3'
-    lifecycleVersion = '2.1.0'
+    roomVersion = '2.2.5'
+    lifecycleVersion = '2.2.0'
     vectordrawableVersion = '1.1.0'
     recyclerviewVersion = '1.1.0'
-    appcompatVersion = '1.1.0'
-    constraintlayoutVersion = '1.1.3'
-    materialVersion = '1.0.0'
-    workVersion = '2.2.0'
+    appcompatVersion = '1.2.0'
+    constraintlayoutVersion = '2.0.4'
+    materialVersion = '1.2.1'
+    workVersion = '2.4.0'
     navVersion = '2.1.0'
 
     // custom
-    csvVersion = '1.7'
+    csvVersion = '1.8'
     rxandroidVersion = '2.1.1'
     gsonVersion = '2.8.6'
-    okhttpVersion = '4.3.0'
-    retrofitVersion = '2.7.1'
-    glideVersion = '4.10.0'
-    jodaTimeVersion = '2.10.5'
+    okhttpVersion = '4.5.0'
+    retrofitVersion = '2.9.0'
+    glideVersion = '4.11.0'
+    jodaTimeVersion = '2.10.8'
     MPAndroidChartVersion = 'v3.1.0'
     segmentedButtonVersion = 'v2.0.2'
     brvahVersion = '2.9.50'
     pinnedSectionItemDecorationVersion = '1.3.2-androidx'
 
     // test
-    junitVersion = '4.12'
-    espressoVersion = '3.2.0'
-    androidJunitVersion = '1.1.1'
+    junitVersion = '4.13.1'
+    espressoVersion = '3.3.0'
+    androidJunitVersion = '1.1.2'
+
+    // analysis
+    leakCanaryVersion = '2.5'
 }
 
 dependencies {

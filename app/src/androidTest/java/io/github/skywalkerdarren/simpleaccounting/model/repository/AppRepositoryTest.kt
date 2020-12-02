@@ -69,9 +69,9 @@ class AppRepositoryTest {
         db.accountDao().newAccount(aB)
         db.typeDao().newType(tA)
         db.typeDao().newType(tB)
-        db.billDao().addBill(bA)
-        db.billDao().addBill(bB)
-        db.billDao().addBill(bC)
+        repo.addBill(bA)
+        repo.addBill(bB)
+        repo.addBill(bC)
     }
 
     @Before
@@ -214,6 +214,7 @@ class AppRepositoryTest {
         repo.run {
             delBill(bA.uuid)
             getBillsCount { assertEquals(it, 2) }
+            getAccount(bA.accountId) { assertEquals(it.balance, BigDecimal(3)) }
         }
     }
 
