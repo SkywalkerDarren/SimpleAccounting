@@ -92,7 +92,6 @@ public class ClassifyFragment extends BaseFragment {
         binding.classifyRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         mClassifyAdapter = new ClassifyAdapter();
-        mClassifyAdapter.setDuration(100);
         mClassifyAdapter.setEmptyView(emptyView());
         binding.classifyRecyclerView.setAdapter(mClassifyAdapter);
         binding.setClassify(mViewModel);
@@ -187,8 +186,8 @@ public class ClassifyFragment extends BaseFragment {
     private void setStatsData(boolean t, ClassifyAdapter adapter) {
         changeImageView(t);
         mViewModel.setExpense(t);
-        adapter.openLoadAnimation(t ?
-                BaseQuickAdapter.SLIDEIN_RIGHT : BaseQuickAdapter.SLIDEIN_LEFT);
+        adapter.setAnimationWithDefault(t ?
+                BaseQuickAdapter.AnimationType.SlideInRight : BaseQuickAdapter.AnimationType.SlideInLeft);
     }
 
     private View emptyView() {

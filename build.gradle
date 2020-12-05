@@ -71,7 +71,7 @@ ext {
     jodaTimeVersion = '2.10.8'
     MPAndroidChartVersion = 'v3.1.0'
     segmentedButtonVersion = 'v2.0.2'
-    brvahVersion = '2.9.50'
+    brvahVersion = '3.0.6'
     pinnedSectionItemDecorationVersion = '1.3.2-androidx'
 
     // test

@@ -4,8 +4,9 @@ import android.animation.ObjectAnimator
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.listener.OnItemDragListener
+import com.chad.library.adapter.base.viewholder.BaseDataBindingHolder
 import io.github.skywalkerdarren.simpleaccounting.R
-import io.github.skywalkerdarren.simpleaccounting.adapter.diff.AccountDiff
+import io.github.skywalkerdarren.simpleaccounting.adapter.diff.DefaultDiff
 import io.github.skywalkerdarren.simpleaccounting.base.BaseDraggableDataBindingAdapter
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemAccountBinding
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Account
@@ -15,7 +16,8 @@ import io.github.skywalkerdarren.simpleaccounting.view_model.AccountViewModel
  * @author darren
  * @date 2018/3/24
  */
-class AccountAdapter(private val viewModel: AccountViewModel) : BaseDraggableDataBindingAdapter<Account, ItemAccountBinding>(R.layout.item_account, null) {
+class AccountAdapter(private val viewModel: AccountViewModel)
+    : BaseDraggableDataBindingAdapter<Account, ItemAccountBinding>(R.layout.item_account, null) {
     private fun itemRaiseAnimator(view: View, start: Float, raise: Boolean) {
         val end = start * 2
         val animator = ObjectAnimator.ofFloat(view, "elevation",
@@ -24,16 +26,18 @@ class AccountAdapter(private val viewModel: AccountViewModel) : BaseDraggableDat
         animator.start()
     }
 
-    override fun convert(binding: ItemAccountBinding, item: Account) {
-        binding.account = item
+
+    override fun convert(holder: BaseDataBindingHolder<ItemAccountBinding>, item: Account) {
+        holder.dataBinding?.account = item
     }
 
     fun setNewList(accounts: List<Account>?) {
-        setNewDiffData(AccountDiff(accounts))
+        setDiffNewData(accounts?.toMutableList())
     }
 
     init {
-        setOnItemDragListener(object : OnItemDragListener {
+        setDiffCallback(DefaultDiff())
+        draggableModule.setOnItemDragListener(object : OnItemDragListener {
             override fun onItemDragStart(viewHolder: RecyclerView.ViewHolder, pos: Int) {
                 val st = viewHolder.itemView.elevation
                 itemRaiseAnimator(viewHolder.itemView, st, true)

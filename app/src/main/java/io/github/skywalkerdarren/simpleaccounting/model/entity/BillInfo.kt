@@ -58,7 +58,6 @@ data class BillInfo @JvmOverloads constructor(
             income = header.income
     )
 
-    override fun getItemType(): Int {
-        return type
-    }
+    override val itemType: Int
+        get() = type
 }

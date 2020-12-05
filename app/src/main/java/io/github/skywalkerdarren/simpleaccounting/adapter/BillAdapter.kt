@@ -5,8 +5,9 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
 import androidx.databinding.ViewDataBinding
+import com.chad.library.adapter.base.viewholder.BaseDataBindingHolder
 import io.github.skywalkerdarren.simpleaccounting.R
-import io.github.skywalkerdarren.simpleaccounting.adapter.diff.BillInfoDiff
+import io.github.skywalkerdarren.simpleaccounting.adapter.diff.DefaultDiff
 import io.github.skywalkerdarren.simpleaccounting.base.BaseMultiItemDataBindingAdapter
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemListBillBinding
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemListBillHeaderBinding
@@ -27,14 +28,14 @@ class BillAdapter(bills: List<BillInfo>?)
     var mY = 0
         private set
     fun setNewList(data: List<BillInfo>?) {
-        setNewDiffData(BillInfoDiff(data))
+        setDiffNewData(data?.toMutableList())
     }
 
     var listener: OnClickListener? = null
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun convert(binding: ViewDataBinding, item: BillInfo) {
-        when (binding) {
+    override fun convert(holder: BaseDataBindingHolder<ViewDataBinding>, item: BillInfo) {
+        when (val binding = holder.dataBinding) {
             is ItemListBillBinding -> {
                 binding.billInfo = item
                 val imageView = binding.typeImageView
@@ -86,6 +87,7 @@ class BillAdapter(bills: List<BillInfo>?)
     }
 
     init {
+        setDiffCallback(DefaultDiff())
         addItemType(WITH_REMARK, R.layout.item_list_bill)
         addItemType(WITHOUT_REMARK, R.layout.item_list_bill_without_remark)
         addItemType(HEADER, R.layout.item_list_bill_header)

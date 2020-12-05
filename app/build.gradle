@@ -80,7 +80,7 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:${constraintlayoutVersion}"
     implementation "androidx.recyclerview:recyclerview:${recyclerviewVersion}"
 
-    implementation "androidx.preference:preference:${preferenceVersion}"
+    implementation "androidx.preference:preference-ktx:${preferenceVersion}"
 
     implementation "androidx.lifecycle:lifecycle-extensions:${lifecycleVersion}"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${lifecycleVersion}"
@@ -103,7 +103,6 @@ dependencies {
 
     implementation "com.squareup.okhttp3:okhttp:${okhttpVersion}"
     implementation "com.squareup.retrofit2:retrofit:${retrofitVersion}"
-    implementation "com.squareup.retrofit2:retrofit-converters:${retrofitVersion}"
     implementation "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
 
     implementation "org.apache.commons:commons-csv:${csvVersion}"
