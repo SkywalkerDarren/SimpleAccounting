@@ -10,12 +10,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
 
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.AccountAdapter;
@@ -77,10 +75,8 @@ public class AccountFragment extends Fragment {
         if (mAdapter == null) {
             mAdapter = new AccountAdapter(mViewModel);
         }
-        mAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemDragAndSwipeCallback(mAdapter));
-        itemTouchHelper.attachToRecyclerView(mAccountRecyclerView);
-        mAdapter.enableDragItem(itemTouchHelper);
+        mAdapter.setAnimationWithDefault(BaseQuickAdapter.AnimationType.SlideInLeft);
+        mAdapter.getDraggableModule().setDragOnLongPressEnabled(true);
         mAccountRecyclerView.setAdapter(mAdapter);
         mViewModel.getAccounts().observe(getViewLifecycleOwner(),
                 accounts -> mAdapter.setNewList(accounts));

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.github.skywalkerdarren.simpleaccounting.R
@@ -24,9 +23,9 @@ class CurrencyFavDialogFragment : BaseDialogFragment() {
         val adapter = AllCurrenciesAdapter(viewModel)
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
-        viewModel.getCurrencies().observe(viewLifecycleOwner, Observer {
-            adapter.setNewData(it)
-        })
+        viewModel.getCurrencies().observe(viewLifecycleOwner) {
+            adapter.setDiffNewData(it.toMutableList())
+        }
         binding.vm = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         return root

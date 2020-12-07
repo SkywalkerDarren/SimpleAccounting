@@ -4,8 +4,9 @@ import android.animation.Animator
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.listener.OnItemDragListener
+import com.chad.library.adapter.base.viewholder.BaseDataBindingHolder
 import io.github.skywalkerdarren.simpleaccounting.R
-import io.github.skywalkerdarren.simpleaccounting.adapter.diff.CurrencyAndInfoDiff
+import io.github.skywalkerdarren.simpleaccounting.adapter.diff.DefaultDiff
 import io.github.skywalkerdarren.simpleaccounting.base.BaseDraggableDataBindingAdapter
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemExchangeRateBinding
 import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrencyAndInfo
@@ -16,9 +17,9 @@ class ExchangeRateAdapter(private val viewModel: DiscoveryViewModel) :
     var isDrag = false
         private set
 
-    override fun convert(binding: ItemExchangeRateBinding, item: CurrencyAndInfo) {
-        binding.data = item.currency
-        binding.info = item.currencyInfo
+    override fun convert(holder: BaseDataBindingHolder<ItemExchangeRateBinding>, item: CurrencyAndInfo) {
+        holder.dataBinding?.data = item.currency
+        holder.dataBinding?.info = item.currencyInfo
     }
 
     override fun startAnim(anim: Animator, index: Int) {
@@ -28,17 +29,18 @@ class ExchangeRateAdapter(private val viewModel: DiscoveryViewModel) :
     }
 
     fun setNewList(currencies: List<CurrencyAndInfo>) {
-        setNewDiffData(CurrencyAndInfoDiff(currencies))
+        setDiffNewData(currencies.toMutableList())
     }
 
     init {
-        setOnItemDragListener(object : OnItemDragListener {
+        setDiffCallback(DefaultDiff())
+        draggableModule.setOnItemDragListener(object : OnItemDragListener {
             override fun onItemDragStart(viewHolder: RecyclerView.ViewHolder, pos: Int) {
                 isDrag = true
             }
 
             override fun onItemDragMoving(source: RecyclerView.ViewHolder, from: Int, target: RecyclerView.ViewHolder, to: Int) {
-                viewModel.changeCurrency(getItem(from)?.currency, getItem(to)?.currency)
+                viewModel.changeCurrency(getItem(from).currency, getItem(to).currency)
             }
 
             override fun onItemDragEnd(viewHolder: RecyclerView.ViewHolder, pos: Int) {

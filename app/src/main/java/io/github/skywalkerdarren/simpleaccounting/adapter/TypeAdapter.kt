@@ -4,7 +4,10 @@ import android.animation.Animator
 import android.animation.AnimatorInflater
 import android.view.View
 import android.widget.ImageView
+import com.chad.library.adapter.base.animation.BaseAnimation
+import com.chad.library.adapter.base.viewholder.BaseDataBindingHolder
 import io.github.skywalkerdarren.simpleaccounting.R
+import io.github.skywalkerdarren.simpleaccounting.adapter.diff.DefaultDiff
 import io.github.skywalkerdarren.simpleaccounting.base.BaseDataBindingAdapter
 import io.github.skywalkerdarren.simpleaccounting.databinding.ItemTypeBinding
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type
@@ -21,16 +24,16 @@ class TypeAdapter(private val viewModel: BillEditViewModel, private val typeIv: 
     @JvmField
     var isOpen = false
 
-    override fun convert(binding: ItemTypeBinding, item: Type) {
-        binding.typeItem.alpha = 0f
-        binding.type = item
-        binding.circle.setOnClickListener { click(item) }
+    override fun convert(holder: BaseDataBindingHolder<ItemTypeBinding>, item: Type) {
+        holder.dataBinding?.typeItem?.alpha = 0f
+        holder.dataBinding?.type = item
+        holder.dataBinding?.circle?.setOnClickListener { click(item) }
     }
 
     private fun click(item: Type) {
         isOpen = true
         viewModel.type.value = item
-        val appear = AnimatorInflater.loadAnimator(mContext, R.animator.type_appear)
+        val appear = AnimatorInflater.loadAnimator(context, R.animator.type_appear)
         appear.setTarget(typeIv)
         appear.start()
     }
@@ -46,15 +49,18 @@ class TypeAdapter(private val viewModel: BillEditViewModel, private val typeIv: 
     }
 
     init {
-        openLoadAnimation { view: View ->
-            if (isOpen) {
-                view.alpha = 1f
-                return@openLoadAnimation arrayOf<Animator>()
+        setDiffCallback(DefaultDiff())
+        adapterAnimation = object : BaseAnimation {
+            override fun animators(view: View): Array<Animator> {
+                if (isOpen) {
+                    view.alpha = 1f
+                    return arrayOf()
+                }
+                val animator = AnimatorInflater.loadAnimator(context,
+                        R.animator.type_item_appear)
+                animator.setTarget(view)
+                return arrayOf(animator)
             }
-            val animator = AnimatorInflater.loadAnimator(mContext,
-                    R.animator.type_item_appear)
-            animator.setTarget(view)
-            arrayOf(animator)
         }
     }
 }

@@ -13,13 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
 
 import org.joda.time.DateTime;
 
@@ -175,12 +173,9 @@ public class DiscoveryFragment extends BaseFragment {
 
         if (mAdapter == null) {
             mAdapter = new ExchangeRateAdapter(mViewModel);
-            mAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_RIGHT);
+            mAdapter.setAnimationWithDefault(BaseQuickAdapter.AnimationType.SlideInRight);
         }
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemDragAndSwipeCallback(mAdapter));
-        itemTouchHelper.attachToRecyclerView(mBinding.exchangeRateRecyclerView);
-        mAdapter.enableDragItem(itemTouchHelper);
-        mAdapter.setDuration(100);
+        mAdapter.getDraggableModule().setDragOnLongPressEnabled(true);
         mBinding.exchangeRateRecyclerView.setAdapter(mAdapter);
 
         mViewModel.getFavoriteCurrencies().observe(getViewLifecycleOwner(),
